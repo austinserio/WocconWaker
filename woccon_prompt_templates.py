@@ -1,7 +1,6 @@
 """
-Prompt templates for the Woccon language revitalization T5 model.
-These templates are designed to be filled with specific grammar rules
-and examples from the Woccon language data.
+Modified prompt templates for the Woccon language revitalization T5 model.
+Focused on analyzing existing words rather than generating new content.
 """
 
 import json
@@ -89,39 +88,34 @@ class WocconPromptGenerator:
             result += f"- Woccon '{corr['woccon']}' corresponds to Catawba '{corr['catawba']}'{example_text}\n"
             
         return result
-            
-    def translate_prompt(self, english_text: str) -> str:
+    
+    def word_lookup_prompt(self, search_term: str) -> str:
         """
-        Template for English-to-Woccon translation prompts
+        Template for looking up a Woccon word or English meaning
         """
-        # Get some relevant grammar rules to include
-        phonology_rules = "Woccon has the following consonants: p, t, k, m, n, r, s, h, w, y."
-        morphology_example = "Common roots include: ya- (water), roo- (cloth/hide), yau- (path), watta- (container)"
+        # Check if this is a Woccon word first
+        is_woccon_word = any(word["woccon"].lower() == search_term.lower() for word in self.dictionary.get("lexicon", []))
         
-        # Find similar words if possible
-        keywords = english_text.lower().split()
-        similar_examples = []
+        if is_woccon_word:
+            search_direction = "Woccon to English"
+            direction_note = "Find the English meaning of this Woccon word."
+        else:
+            search_direction = "English to Woccon"
+            direction_note = "Find Woccon words that match this English meaning."
         
-        for word in self.dictionary.get("lexicon", []):
-            eng = word["english"].lower()
-            for keyword in keywords:
-                if keyword in eng and len(keyword) > 2:  # Only match substantial keywords
-                    similar_examples.append(f"{word['woccon']} = {word['english']}")
-                    break
-                    
-        examples_text = "\nSimilar vocabulary:\n" + "\n".join(similar_examples) if similar_examples else ""
-                    
-        prompt = f"""Translate the English text to Woccon language using the following rules:
+        prompt = f"""Look up the following term in the Woccon language dictionary:
 
-{phonology_rules}
-{morphology_example}
-{examples_text}
+Search term: "{search_term}"
+Search direction: {search_direction}
+Task: {direction_note}
 
-English text: "{english_text}"
-Woccon translation:"""
+Provide the complete dictionary entry including part of speech, and note whether 
+this is an exact match or a partial match.
+
+Dictionary lookup result:"""
 
         return prompt
-    
+            
     def word_analysis_prompt(self, woccon_word: str) -> str:
         """
         Template for analyzing the structure of a Woccon word
@@ -134,22 +128,59 @@ Woccon translation:"""
                 break
                 
         meaning = word_info["english"] if word_info else "unknown"
+        pos = word_info["pos"] if word_info else "unknown"
         
         # Get relevant roots that might be in this word
         possible_roots = []
         for root_name, root_info in self.roots.items():
-            if root_name.rstrip('-') in woccon_word.lower():
+            root_clean = root_name.rstrip('-')
+            if woccon_word.lower().startswith(root_clean) or f"-{root_clean}" in woccon_word.lower():
                 possible_roots.append(f"{root_name} = {root_info['meaning']}")
                 
         roots_text = "\n".join(possible_roots) if possible_roots else "No known roots identified."
+        
+        # Get known affixes that might be in this word
+        known_suffixes = ["-wa", "-he", "-iune", "-pe"]
+        suffix_info = []
+        
+        for suffix in known_suffixes:
+            clean_suffix = suffix.lstrip("-")
+            if woccon_word.lower().endswith(clean_suffix):
+                if suffix == "-wa":
+                    suffix_info.append(f"{suffix} = indicates natural phenomena (rain, snow)")
+                elif suffix == "-he":
+                    suffix_info.append(f"{suffix} = nominal suffix for animate beings (Indians, dog)")
+                elif suffix == "-iune":
+                    suffix_info.append(f"{suffix} = indicates manufactured items (blankets)")
+                elif suffix == "-pe":
+                    suffix_info.append(f"{suffix} = indicates containers (bottle, gourd)")
+                    
+        suffix_text = "\n".join(suffix_info) if suffix_info else "No known suffixes identified."
+        
+        # Find related words with the same root
+        related_words = []
+        if possible_roots:
+            first_root = possible_roots[0].split("=")[0].strip().rstrip('-')
+            for word in self.dictionary.get("lexicon", []):
+                if word["woccon"].lower() != woccon_word.lower() and word["woccon"].lower().startswith(first_root):
+                    related_words.append(f"{word['woccon']} = {word['english']}")
+        
+        related_text = "\n".join(related_words[:5]) if related_words else "No clearly related words identified."
         
         prompt = f"""Analyze the structure of the Woccon word using linguistic principles:
 
 Word: {woccon_word}
 Meaning: {meaning}
+Part of speech: {pos}
 
 Possible roots:
 {roots_text}
+
+Possible suffixes:
+{suffix_text}
+
+Related words with similar roots:
+{related_text}
 
 Analyze the morphological structure, possible root-affix combinations, and any 
 sound patterns in this word. Provide the most likely breakdown of this word's structure.
@@ -158,136 +189,110 @@ Morphological analysis:"""
 
         return prompt
     
-    def word_generation_prompt(self, meaning: str, root: Optional[str] = None) -> str:
+    def category_browse_prompt(self, category: str) -> str:
         """
-        Template for generating a new Woccon word based on a meaning
+        Template for browsing words by semantic category
         """
-        # Get related words that might serve as examples
-        related_words = []
+        # Define category patterns
+        category_keywords = {
+            "animals": ["fish", "snake", "bird", "dog", "wolf", "squirrel", "panther"],
+            "water": ["water", "rain", "fish", "river", "stream", "wet"],
+            "clothing": ["cloth", "blanket", "shirt", "wear", "breech", "stocking", "hide", "skin", "buckskin"],
+            "containers": ["container", "bottle", "bowl", "basket", "box", "gourd"],
+            "body_parts": ["head", "hand", "body", "foot", "hair", "face"],
+            "natural_elements": ["tree", "wood", "fire", "stone", "rock", "earth"],
+            "tools": ["tool", "knife", "axe", "spoon", "hoe", "needle", "gunpowder", "weapon"],
+            "cultural": ["indian", "chief", "warrior", "spirit", "ceremony", "hominy", "skin", "hide", "buckskin"]
+        }
         
-        if root:
-            root_words = self.get_related_words(root)
-            related_text = "\n".join([f"{w['woccon']} = {w['english']}" for w in root_words])
-            root_info = f"Requested root: {root}\nWords with this root:\n{related_text}"
-        else:
-            # Find similar semantic domain
-            keywords = meaning.lower().split()
-            for word in self.dictionary.get("lexicon", []):
-                eng = word["english"].lower()
-                for keyword in keywords:
-                    if keyword in eng and len(keyword) > 2:
-                        related_words.append(word)
-                        break
+        # Handle category aliases
+        category_map = {
+            "animal": "animals",
+            "water_related": "water",
+            "nature": "natural_elements",
+            "weapon": "tools",
+            "culture": "cultural",
+            "body": "body_parts",
+            "container": "containers"
+        }
+        
+        # Normalize category name
+        norm_category = category.lower()
+        if norm_category in category_map:
+            norm_category = category_map[norm_category]
             
-            # Try to identify an appropriate root
-            semantic_domains = {
-                "water": ["water", "rain", "fish", "wet"],
-                "cloth": ["cloth", "clothing", "hide", "blanket"],
-                "path": ["path", "way", "road", "Indians"],
-                "container": ["container", "bottle", "vessel", "gourd"],
-                "wood": ["wood", "tree", "box"]
-            }
+        # Find keywords for this category
+        keywords = category_keywords.get(norm_category, [])
+        if not keywords:
+            # If category not found, list available categories
+            available = ", ".join(list(category_keywords.keys()))
+            prompt = f"""The category "{category}" is not recognized. 
+
+Available categories are: {available}
+
+Please specify one of the available categories to browse Woccon words in that semantic domain.
+
+Category browse results:"""
+            return prompt
             
-            suggested_root = None
-            for domain, terms in semantic_domains.items():
-                if any(term in meaning.lower() for term in terms):
-                    if domain == "water":
-                        suggested_root = "ya-"
-                    elif domain == "cloth":
-                        suggested_root = "roo-"
-                    elif domain == "path":
-                        suggested_root = "yau-"
-                    elif domain == "container":
-                        suggested_root = "watta-"
-                    elif domain == "wood":
-                        suggested_root = "yon-"
-                    break
-                    
-            if suggested_root:
-                root_words = self.get_related_words(suggested_root)
-                related_text = "\n".join([f"{w['woccon']} = {w['english']}" for w in root_words])
-                root_info = f"Suggested root: {suggested_root}\nWords with this root:\n{related_text}"
-            else:
-                related_text = "\n".join([f"{w['woccon']} = {w['english']}" for w in related_words[:5]])
-                root_info = f"Similar words in vocabulary:\n{related_text}"
+        # Find words matching this category
+        matching_words = []
+        for word in self.dictionary.get("lexicon", []):
+            eng = word["english"].lower()
+            if any(keyword in eng for keyword in keywords):
+                matching_words.append(word)
+                
+        words_text = "\n".join([f"- {w['woccon']} = {w['english']} ({w['pos']})" for w in matching_words])
         
-        # Add some affix examples
-        affix_examples = []
-        for affix in self.affixes.get("suffix", []):
-            if "form" in affix and "function" in affix:
-                affix_examples.append(f"{affix['form']} = {affix['function']}")
-        
-        affix_text = "\nCommon suffixes:\n" + "\n".join(affix_examples) if affix_examples else ""
-        
-        prompt = f"""Generate a new Woccon word for the following meaning using linguistic principles:
+        prompt = f"""Browse Woccon words in the following semantic category:
 
-Requested meaning: "{meaning}"
+Category: {category} ({norm_category})
+Keywords: {', '.join(keywords)}
 
-{root_info}
-{affix_text}
+List all Woccon words in this category with their meanings and parts of speech.
 
-The sound patterns of Woccon include: p, t, k, m, n, r, s, h, w, y
-Common word structures include: root+suffix, compound nouns
+Category browse results:
+{words_text}
 
-Generate a plausible Woccon word:"""
+Summary: Found {len(matching_words)} words in the {norm_category} category."""
 
         return prompt
     
     def sound_correspondence_prompt(self, catawba_word: str) -> str:
         """
-        Template for converting a Catawba word to its likely Woccon equivalent
+        Template for analyzing how a Catawba word might correspond to Woccon
         """
         correspondence_text = self.get_sound_correspondences()
         
-        prompt = f"""Convert the Catawba word to its likely Woccon equivalent using sound correspondence rules:
+        prompt = f"""Analyze how the Catawba word would likely correspond to a Woccon form:
 
 Catawba word: {catawba_word}
 
 {correspondence_text}
 
-Apply the sound correspondence rules systematically to generate the most 
-likely Woccon equivalent of this Catawba word.
+Apply the sound correspondence rules systematically to explain how this Catawba word 
+would likely appear in Woccon based on historical sound changes between the languages.
 
-Woccon equivalent:"""
+Correspondence analysis:"""
 
         return prompt
     
-    def sentence_structure_prompt(self, english_sentence: str) -> str:
+    def language_info_prompt(self) -> str:
         """
-        Template for generating Woccon sentence structure based on limited evidence
+        Template for providing information about the Woccon language
         """
-        # Extract key words from the sentence to find vocabulary
-        words = english_sentence.lower().replace("?", "").replace(".", "").replace(",", "").split()
-        found_words = []
-        
-        for word in words:
-            if len(word) > 2:  # Skip short function words
-                for dict_word in self.dictionary.get("lexicon", []):
-                    if word in dict_word["english"].lower():
-                        found_words.append(dict_word)
-                        break
-        
-        vocab_text = "\n".join([f"{w['woccon']} = {w['english']}" for w in found_words])
-        vocab_section = f"Relevant vocabulary:\n{vocab_text}" if found_words else "No direct vocabulary matches found."
-        
-        # Add example phrases from the dictionary if available
-        phrases = self.dictionary.get("phrases", [])
-        phrase_text = ""
-        if phrases:
-            phrase_examples = "\n".join([f"{p['woccon']} = {p['english']}" for p in phrases])
-            phrase_text = f"\nExample phrases in Woccon:\n{phrase_examples}"
-        
-        prompt = f"""Construct a plausible Woccon sentence structure for the following English sentence:
+        prompt = f"""Provide educational information about the Woccon language:
 
-English: "{english_sentence}"
+Compile key information about the Woccon language, including:
+1. Historical and geographical context
+2. Linguistic classification and relationships
+3. Known vocabulary size and sources
+4. Key grammatical features based on available evidence
+5. Current status and revitalization efforts
 
-{vocab_section}
-{phrase_text}
+Format the information as an educational overview suitable for language learners.
 
-Based on limited evidence, Woccon likely follows subject-verb-object order similar to other Siouan languages.
-Use the available vocabulary and phrase patterns to construct a plausible Woccon sentence.
-
-Woccon sentence:"""
+Woccon language information:"""
 
         return prompt
     
@@ -295,27 +300,27 @@ Woccon sentence:"""
         """Generate example prompts for all template types"""
         examples = {}
         
-        # Translation example
-        examples["translation"] = self.translate_prompt("The fire is hot")
+        # Word lookup example
+        examples["word_lookup"] = self.word_lookup_prompt("yau")
         
         # Word analysis example
         examples["word_analysis"] = self.word_analysis_prompt("yawowa")
         
-        # Word generation example
-        examples["word_generation"] = self.word_generation_prompt("river", root="ya-")
+        # Category browse example
+        examples["category_browse"] = self.category_browse_prompt("animals")
         
         # Sound correspondence example
         examples["sound_correspondence"] = self.sound_correspondence_prompt("tasi")
         
-        # Sentence structure example
-        examples["sentence_structure"] = self.sentence_structure_prompt("The dog sees the fire")
+        # Language info example
+        examples["language_info"] = self.language_info_prompt()
         
         return examples
 
 
 # Example usage
 if __name__ == "__main__":
-    generator = WocconPromptGenerator("woccon_language/dictionary.json", "woccon_language/rules.json")
+    generator = WocconPromptGenerator("dictionary.json", "rules.json")
     
     # Generate and display example prompts
     examples = generator.generate_all_examples()

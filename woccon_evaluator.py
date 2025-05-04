@@ -1,7 +1,7 @@
 """
-Evaluation script for testing T5 model responses to Woccon prompts.
-This script generates prompts, submits them to the model, and evaluates the responses
-based on linguistic rules from the Woccon language.
+Modified evaluation script focused on existing Woccon word analysis rather than generation.
+This script generates prompts for word analysis and lookup, tests them against the model,
+and evaluates the quality of the responses.
 """
 
 import json
@@ -43,23 +43,20 @@ class WocconEvaluator:
         
     def generate_prompt(self, prompt_type: str, **kwargs) -> str:
         """Generate a prompt of the specified type"""
-        if prompt_type == "translation":
-            return self.prompt_generator.translate_prompt(kwargs.get("english_text", "The dog is running"))
+        if prompt_type == "word_lookup":
+            return self.prompt_generator.word_lookup_prompt(kwargs.get("search_term", "yau"))
         elif prompt_type == "word_analysis":
             return self.prompt_generator.word_analysis_prompt(kwargs.get("woccon_word", "yawowa"))
-        elif prompt_type == "word_generation":
-            return self.prompt_generator.word_generation_prompt(
-                kwargs.get("meaning", "river"), 
-                root=kwargs.get("root")
-            )
+        elif prompt_type == "category_browse":
+            return self.prompt_generator.category_browse_prompt(kwargs.get("category", "animals"))
         elif prompt_type == "sound_correspondence":
             return self.prompt_generator.sound_correspondence_prompt(kwargs.get("catawba_word", "tasi"))
-        elif prompt_type == "sentence_structure":
-            return self.prompt_generator.sentence_structure_prompt(kwargs.get("english_sentence", "The dog sees the fire"))
+        elif prompt_type == "language_info":
+            return self.prompt_generator.language_info_prompt()
         else:
             raise ValueError(f"Unknown prompt type: {prompt_type}")
             
-    def query_model(self, prompt: str, max_length: int = 100) -> str:
+    def query_model(self, prompt: str, max_length: int = 256) -> str:
         """Submit a prompt to the T5 model and get the response"""
         input_ids = self.tokenizer(prompt, return_tensors="pt").input_ids
         
@@ -75,101 +72,277 @@ class WocconEvaluator:
         response = self.tokenizer.decode(output_ids[0], skip_special_tokens=True)
         return response
         
-    def evaluate_phonology(self, woccon_word: str) -> Dict[str, Any]:
-        """Evaluate if a generated word follows Woccon phonological patterns"""
-        # Define regular expressions for valid consonant and vowel patterns
-        valid_consonants = r'[ptkmnrshwy]'
-        valid_vowels = r'[aeiou]'
-        
-        # Check if the word contains only valid phonemes
-        invalid_chars = re.sub(f'{valid_consonants}|{valid_vowels}|-', '', woccon_word.lower())
-        
-        # Check syllable structure (approximate CV, CVC patterns)
-        syllable_pattern = re.compile(f'({valid_consonants}?{valid_vowels}+{valid_consonants}*)')
-        syllables = syllable_pattern.findall(woccon_word.lower())
-        
-        evaluation = {
-            "follows_phonology": len(invalid_chars) == 0,
-            "invalid_characters": list(invalid_chars) if invalid_chars else None,
-            "approximate_syllables": syllables,
-            "syllable_count": len(syllables)
-        }
-        
-        return evaluation
-        
-    def evaluate_morphology(self, woccon_word: str, meaning: str = None) -> Dict[str, Any]:
-        """Evaluate if a generated word follows Woccon morphological patterns"""
-        # Check for known roots
-        found_roots = []
+    def evaluate_word_analysis(self, woccon_word: str, response: str) -> Dict[str, Any]:
+        """Evaluate the quality of a word analysis response"""
+        # Look up the correct information about this word
+        word_info = None
+        for word in self.dictionary.get("lexicon", []):
+            if word["woccon"].lower() == woccon_word.lower():
+                word_info = word
+                break
+                
+        if not word_info:
+            return {"error": f"Word {woccon_word} not found in dictionary"}
+            
+        # Find correct roots
+        correct_roots = []
         for root_name, root_info in self.roots.items():
-            clean_root = root_name.rstrip('-')
-            if clean_root in woccon_word.lower():
-                root_match = {
-                    "root": root_name,
-                    "meaning": root_info["meaning"],
-                    "position": woccon_word.lower().find(clean_root)
-                }
+            root_clean = root_name.rstrip('-')
+            if word_info["woccon"].lower().startswith(root_clean):
+                correct_roots.append(root_name)
                 
-                # Check if the meaning matches (if provided)
-                if meaning:
-                    semantic_match = any(term in meaning.lower() for term in root_info["meaning"].lower().split(", "))
-                    root_match["semantic_match"] = semantic_match
-                    
-                found_roots.append(root_match)
-                
-        # Check for known affixes
+        # Find correct suffixes
+        correct_suffixes = []
         known_suffixes = ["-wa", "-he", "-iune", "-pe"]
-        found_suffixes = []
-        
         for suffix in known_suffixes:
             clean_suffix = suffix.lstrip("-")
-            if woccon_word.lower().endswith(clean_suffix):
-                found_suffixes.append(suffix)
+            if word_info["woccon"].lower().endswith(clean_suffix):
+                correct_suffixes.append(suffix)
                 
+        # Check if the response contains the correct information
+        response_lower = response.lower()
+        
+        # Check for meaning
+        has_correct_meaning = word_info["english"].lower() in response_lower
+        
+        # Check for roots
+        root_mentions = []
+        for root in correct_roots:
+            if root.lower() in response_lower:
+                root_mentions.append(root)
+                
+        # Check for suffixes
+        suffix_mentions = []
+        for suffix in correct_suffixes:
+            if suffix.lower() in response_lower:
+                suffix_mentions.append(suffix)
+                
+        # Evaluate completeness and accuracy
+        completeness = 0.0
+        if has_correct_meaning:
+            completeness += 0.3
+            
+        if len(root_mentions) > 0:
+            completeness += 0.4 * (len(root_mentions) / max(1, len(correct_roots)))
+            
+        if len(suffix_mentions) > 0:
+            completeness += 0.3 * (len(suffix_mentions) / max(1, len(correct_suffixes)))
+            
+        # Check for linguistic depth
+        depth_markers = [
+            "morpholog", "structur", "analys", "root", "suffix", "prefix", 
+            "affix", "compound", "phonolog", "sound", "pattern"
+        ]
+        
+        depth_score = sum(1 for marker in depth_markers if marker in response_lower) / len(depth_markers)
+        
+        # Overall quality rating
+        if completeness >= 0.7 and depth_score >= 0.5:
+            quality = "high"
+        elif completeness >= 0.4 and depth_score >= 0.3:
+            quality = "medium"
+        else:
+            quality = "low"
+            
         evaluation = {
-            "found_roots": found_roots,
-            "found_suffixes": found_suffixes,
-            "has_recognizable_structure": len(found_roots) > 0 or len(found_suffixes) > 0
+            "word": woccon_word,
+            "meaning": word_info["english"],
+            "has_correct_meaning": has_correct_meaning,
+            "correct_roots": correct_roots,
+            "found_roots": root_mentions,
+            "correct_suffixes": correct_suffixes,
+            "found_suffixes": suffix_mentions,
+            "linguistic_depth": depth_score,
+            "completeness": completeness,
+            "overall_quality": quality
         }
         
         return evaluation
         
-    def evaluate_translation(self, english: str, woccon: str) -> Dict[str, Any]:
-        """Evaluate a translation from English to Woccon"""
-        # Look for words we know should be in the translation
-        expected_words = []
-        found_words = []
+    def evaluate_word_lookup(self, search_term: str, response: str) -> Dict[str, Any]:
+        """Evaluate the quality of a word lookup response"""
+        # Find the correct matches for this search term
+        correct_matches = []
         
-        # Extract key content words from English
-        content_words = [word.lower() for word in english.split() if len(word) > 3]
-        
-        # Find dictionary entries that might match these content words
-        for word in content_words:
-            for entry in self.dictionary.get("lexicon", []):
-                if word in entry["english"].lower():
-                    expected_words.append({
-                        "english": word,
-                        "woccon": entry["woccon"]
-                    })
+        # Check if it's a Woccon word first
+        exact_match = None
+        for word in self.dictionary.get("lexicon", []):
+            if word["woccon"].lower() == search_term.lower():
+                exact_match = word
+                correct_matches.append(word)
+                break
+                
+        # If not an exact Woccon match, look for English matches
+        if not exact_match:
+            for word in self.dictionary.get("lexicon", []):
+                if search_term.lower() in word["english"].lower():
+                    correct_matches.append(word)
                     
-                    # Check if this word appears in the translation
-                    if entry["woccon"].lower() in woccon.lower():
-                        found_words.append(entry["woccon"])
+        # Check if the response contains the correct matches
+        response_lower = response.lower()
         
-        # Evaluate phonology
-        phonology_evaluation = self.evaluate_phonology(woccon)
+        found_matches = []
+        for match in correct_matches:
+            # Check for both the Woccon word and English meaning
+            if match["woccon"].lower() in response_lower and match["english"].lower() in response_lower:
+                found_matches.append(match)
+                
+        # Calculate coverage
+        coverage = len(found_matches) / max(1, len(correct_matches))
         
-        # Combine evaluations
+        # Check for part of speech and additional context
+        detail_score = 0.0
+        detail_markers = ["part of speech", "pos", "noun", "verb", "adjective", "adverb"]
+        
+        for marker in detail_markers:
+            if marker in response_lower:
+                detail_score += 1.0 / len(detail_markers)
+                break
+                
+        # Overall quality rating
+        if coverage >= 0.7 and detail_score >= 0.5:
+            quality = "high"
+        elif coverage >= 0.4 and detail_score >= 0.3:
+            quality = "medium"
+        else:
+            quality = "low"
+            
         evaluation = {
-            "expected_words": expected_words,
-            "found_words": found_words,
-            "word_coverage": len(found_words) / len(expected_words) if expected_words else 0,
-            "phonology": phonology_evaluation,
-            "overall_quality": "high" if phonology_evaluation["follows_phonology"] and (len(found_words) / max(1, len(expected_words)) > 0.5) else "medium" if phonology_evaluation["follows_phonology"] else "low"
+            "search_term": search_term,
+            "correct_matches": len(correct_matches),
+            "found_matches": len(found_matches),
+            "coverage": coverage,
+            "includes_details": detail_score,
+            "overall_quality": quality
         }
         
         return evaluation
         
+    def evaluate_category_browse(self, category: str, response: str) -> Dict[str, Any]:
+        """Evaluate the quality of a category browse response"""
+        # Define keywords for each category
+        category_keywords = {
+            "animals": ["fish", "snake", "bird", "dog", "wolf", "squirrel", "panther"],
+            "water": ["water", "rain", "fish", "river", "stream", "wet"],
+            "clothing": ["cloth", "blanket", "shirt", "wear", "breech", "stocking", "hide", "skin", "buckskin"],
+            "containers": ["container", "bottle", "bowl", "basket", "box", "gourd"],
+            "body_parts": ["head", "hand", "body", "foot", "hair", "face"],
+            "natural_elements": ["tree", "wood", "fire", "stone", "rock", "earth"],
+            "tools": ["tool", "knife", "axe", "spoon", "hoe", "needle", "gunpowder", "weapon"],
+            "cultural": ["indian", "chief", "warrior", "spirit", "ceremony", "hominy", "skin", "hide", "buckskin"]
+        }
+        
+        # Handle category aliases
+        category_map = {
+            "animal": "animals",
+            "water_related": "water",
+            "nature": "natural_elements",
+            "weapon": "tools",
+            "culture": "cultural",
+            "body": "body_parts",
+            "container": "containers"
+        }
+        
+        # Normalize category name
+        norm_category = category.lower()
+        if norm_category in category_map:
+            norm_category = category_map[norm_category]
+            
+        # Find keywords for this category
+        keywords = category_keywords.get(norm_category, [])
+        if not keywords:
+            return {"error": f"Category {category} not recognized"}
+            
+        # Find correct matches for this category
+        correct_matches = []
+        for word in self.dictionary.get("lexicon", []):
+            eng = word["english"].lower()
+            if any(keyword in eng for keyword in keywords):
+                correct_matches.append(word)
+                
+        # Check if the response contains the correct matches
+        response_lower = response.lower()
+        
+        found_matches = []
+        for match in correct_matches:
+            # Check for both the Woccon word and English meaning
+            if match["woccon"].lower() in response_lower and match["english"].lower() in response_lower:
+                found_matches.append(match)
+                
+        # Calculate coverage
+        coverage = len(found_matches) / max(1, len(correct_matches))
+        
+        # Check for organization and formatting
+        organization_score = 0.0
+        organization_markers = ["category", "list", "found", "words", "summary"]
+        
+        for marker in organization_markers:
+            if marker in response_lower:
+                organization_score += 1.0 / len(organization_markers)
+                
+        # Overall quality rating
+        if coverage >= 0.7 and organization_score >= 0.5:
+            quality = "high"
+        elif coverage >= 0.4 and organization_score >= 0.3:
+            quality = "medium"
+        else:
+            quality = "low"
+            
+        evaluation = {
+            "category": category,
+            "normalized_category": norm_category,
+            "correct_matches": len(correct_matches),
+            "found_matches": len(found_matches),
+            "coverage": coverage,
+            "organization": organization_score,
+            "overall_quality": quality
+        }
+        
+        return evaluation
+    
+    def evaluate_sound_correspondence(self, catawba_word: str, response: str) -> Dict[str, Any]:
+        """Evaluate the quality of a sound correspondence analysis"""
+        # Get sound correspondences from rules
+        correspondences = self.dictionary.get("sound_correspondences", {}).get("woccon_to_catawba", [])
+        
+        # Check if the response mentions the sound correspondences
+        response_lower = response.lower()
+        
+        mentioned_correspondences = []
+        for corr in correspondences:
+            if f"{corr['catawba']}" in response_lower and f"{corr['woccon']}" in response_lower:
+                mentioned_correspondences.append(corr)
+                
+        # Calculate coverage
+        coverage = len(mentioned_correspondences) / max(1, len(correspondences))
+        
+        # Check for linguistic analysis
+        analysis_score = 0.0
+        analysis_markers = ["correspond", "sound change", "phonolog", "historical", "language", "pattern"]
+        
+        for marker in analysis_markers:
+            if marker in response_lower:
+                analysis_score += 1.0 / len(analysis_markers)
+                
+        # Overall quality rating
+        if coverage >= 0.3 and analysis_score >= 0.5:  # Lower threshold since not all correspondences are relevant
+            quality = "high"
+        elif coverage >= 0.2 and analysis_score >= 0.3:
+            quality = "medium"
+        else:
+            quality = "low"
+            
+        evaluation = {
+            "catawba_word": catawba_word,
+            "total_correspondences": len(correspondences),
+            "mentioned_correspondences": len(mentioned_correspondences),
+            "coverage": coverage,
+            "linguistic_analysis": analysis_score,
+            "overall_quality": quality
+        }
+        
+        return evaluation
+            
     def batch_evaluate(self, prompt_type: str, test_cases: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Run a batch of test cases and evaluate results"""
         results = []
@@ -183,13 +356,14 @@ class WocconEvaluator:
             
             # Evaluate based on prompt type
             evaluation = {}
-            if prompt_type == "translation":
-                evaluation = self.evaluate_translation(test_case["english_text"], response)
-            elif prompt_type == "word_generation":
-                evaluation = {
-                    "phonology": self.evaluate_phonology(response),
-                    "morphology": self.evaluate_morphology(response, test_case.get("meaning"))
-                }
+            if prompt_type == "word_lookup":
+                evaluation = self.evaluate_word_lookup(test_case["search_term"], response)
+            elif prompt_type == "word_analysis":
+                evaluation = self.evaluate_word_analysis(test_case["woccon_word"], response)
+            elif prompt_type == "category_browse":
+                evaluation = self.evaluate_category_browse(test_case["category"], response)
+            elif prompt_type == "sound_correspondence":
+                evaluation = self.evaluate_sound_correspondence(test_case["catawba_word"], response)
             
             # Store result
             result = {
@@ -207,15 +381,20 @@ class WocconEvaluator:
         """Run a comprehensive evaluation suite across different prompt types"""
         # Define test cases for each prompt type
         test_suites = {
-            "translation": [
-                {"english_text": "The dog is black"},
-                {"english_text": "I see a fire"},
-                {"english_text": "The rain is falling"}
+            "word_lookup": [
+                {"search_term": "yau"},
+                {"search_term": "fire"},
+                {"search_term": "dog"}
             ],
-            "word_generation": [
-                {"meaning": "river", "root": "ya-"},
-                {"meaning": "shirt", "root": "roo-"},
-                {"meaning": "forest", "root": "yon-"}
+            "word_analysis": [
+                {"woccon_word": "yawowa"},
+                {"woccon_word": "tauh-he"},
+                {"woccon_word": "wattape"}
+            ],
+            "category_browse": [
+                {"category": "animals"},
+                {"category": "tools"},
+                {"category": "clothing"}
             ]
         }
         
@@ -235,48 +414,59 @@ class WocconEvaluator:
             
             for i, result in enumerate(test_results):
                 report += f"Test Case {i+1}: {result['test_case']}\n"
-                report += f"Prompt: {result['prompt'][:100]}...\n"
-                report += f"Response: {result['response']}\n"
+                report += f"Response: {result['response'][:150]}...\n"
                 
                 # Format evaluation details
                 eval_info = result['evaluation']
                 report += "Evaluation:\n"
                 
-                if prompt_type == "translation":
-                    report += f"  Word Coverage: {eval_info['word_coverage']:.2f}\n"
-                    report += f"  Expected Words: {', '.join([w['woccon'] for w in eval_info['expected_words']])}\n"
-                    report += f"  Found Words: {', '.join(eval_info['found_words'])}\n"
-                    report += f"  Follows Phonology: {eval_info['phonology']['follows_phonology']}\n"
-                    report += f"  Overall Quality: {eval_info['overall_quality']}\n"
+                if prompt_type == "word_lookup":
+                    report += f"  Correct Matches: {eval_info.get('correct_matches', 0)}\n"
+                    report += f"  Found Matches: {eval_info.get('found_matches', 0)}\n"
+                    report += f"  Coverage: {eval_info.get('coverage', 0):.2f}\n"
+                    report += f"  Includes Details: {eval_info.get('includes_details', 0):.2f}\n"
+                    report += f"  Overall Quality: {eval_info.get('overall_quality', 'unknown')}\n"
                     
-                elif prompt_type == "word_generation":
-                    report += f"  Follows Phonology: {eval_info['phonology']['follows_phonology']}\n"
-                    report += f"  Syllable Count: {eval_info['phonology']['syllable_count']}\n"
-                    
-                    morphology = eval_info['morphology']
-                    report += f"  Found Roots: {len(morphology['found_roots'])}\n"
-                    for root in morphology.get('found_roots', []):
-                        report += f"    {root['root']} = {root['meaning']}\n"
-                        
-                    report += f"  Found Suffixes: {', '.join(morphology['found_suffixes'])}\n"
-                    report += f"  Has Recognizable Structure: {morphology['has_recognizable_structure']}\n"
+                elif prompt_type == "word_analysis":
+                    report += f"  Has Correct Meaning: {eval_info.get('has_correct_meaning', False)}\n"
+                    report += f"  Correct Roots: {', '.join(eval_info.get('correct_roots', []))}\n"
+                    report += f"  Found Roots: {', '.join(eval_info.get('found_roots', []))}\n"
+                    report += f"  Correct Suffixes: {', '.join(eval_info.get('correct_suffixes', []))}\n"
+                    report += f"  Found Suffixes: {', '.join(eval_info.get('found_suffixes', []))}\n"
+                    report += f"  Linguistic Depth: {eval_info.get('linguistic_depth', 0):.2f}\n"
+                    report += f"  Completeness: {eval_info.get('completeness', 0):.2f}\n"
+                    report += f"  Overall Quality: {eval_info.get('overall_quality', 'unknown')}\n"
+                
+                elif prompt_type == "category_browse":
+                    report += f"  Category: {eval_info.get('category', '')}\n"
+                    report += f"  Correct Matches: {eval_info.get('correct_matches', 0)}\n"
+                    report += f"  Found Matches: {eval_info.get('found_matches', 0)}\n"
+                    report += f"  Coverage: {eval_info.get('coverage', 0):.2f}\n"
+                    report += f"  Organization: {eval_info.get('organization', 0):.2f}\n"
+                    report += f"  Overall Quality: {eval_info.get('overall_quality', 'unknown')}\n"
+                
+                elif prompt_type == "sound_correspondence":
+                    report += f"  Catawba Word: {eval_info.get('catawba_word', '')}\n"
+                    report += f"  Total Correspondences: {eval_info.get('total_correspondences', 0)}\n"
+                    report += f"  Mentioned Correspondences: {eval_info.get('mentioned_correspondences', 0)}\n"
+                    report += f"  Coverage: {eval_info.get('coverage', 0):.2f}\n"
+                    report += f"  Linguistic Analysis: {eval_info.get('linguistic_analysis', 0):.2f}\n"
+                    report += f"  Overall Quality: {eval_info.get('overall_quality', 'unknown')}\n"
                 
                 report += "\n" + "-"*50 + "\n\n"
             
         return report
 
-
-# Add this at the end of the file before the if __name__ == "__main__" block
 def run_simple_test():
     """Run a simple test with just one or two examples"""
     evaluator = WocconEvaluator()
     
     print("\n=== RUNNING SIMPLE MODEL TEST ===")
     
-    # Test a single translation prompt
+    # Test word analysis prompt
     test_prompt = evaluator.generate_prompt(
-        "translation", 
-        english_text="The dog is black"
+        "word_analysis", 
+        woccon_word="yawowa"
     )
     print("Test prompt:")
     print(test_prompt)
@@ -288,38 +478,57 @@ def run_simple_test():
     print(response)
     
     print("\nEvaluating response...")
-    evaluation = evaluator.evaluate_translation("The dog is black", response)
+    evaluation = evaluator.evaluate_word_analysis("yawowa", response)
     
     print("Evaluation results:")
-    print(f"Word coverage: {evaluation['word_coverage']:.2f}")
-    print(f"Follows phonology: {evaluation['phonology']['follows_phonology']}")
+    print(f"Has correct meaning: {evaluation['has_correct_meaning']}")
+    print(f"Found roots: {evaluation['found_roots']}")
+    print(f"Found suffixes: {evaluation['found_suffixes']}")
+    print(f"Linguistic depth: {evaluation['linguistic_depth']:.2f}")
+    print(f"Completeness: {evaluation['completeness']:.2f}")
     print(f"Overall quality: {evaluation['overall_quality']}")
     
-    return {"prompt": test_prompt, "response": response, "evaluation": evaluation}
+    # Also test a word lookup
+    print("\n--- Testing Word Lookup ---")
+    lookup_prompt = evaluator.generate_prompt(
+        "word_lookup", 
+        search_term="fire"
+    )
+    lookup_response = evaluator.query_model(lookup_prompt)
+    lookup_eval = evaluator.evaluate_word_lookup("fire", lookup_response)
+    
+    print("Word lookup evaluation:")
+    print(f"Coverage: {lookup_eval['coverage']:.2f}")
+    print(f"Overall quality: {lookup_eval['overall_quality']}")
+    
+    return {
+        "word_analysis": {"prompt": test_prompt, "response": response, "evaluation": evaluation},
+        "word_lookup": {"prompt": lookup_prompt, "response": lookup_response, "evaluation": lookup_eval}
+    }
 
 # Example usage
 if __name__ == "__main__":
     evaluator = WocconEvaluator()
     
     # Generate a few example prompts
-    translation_prompt = evaluator.generate_prompt(
-        "translation", 
-        english_text="The dog is running"
+    word_lookup_prompt = evaluator.generate_prompt(
+        "word_lookup", 
+        search_term="fire"
     )
     
-    word_generation_prompt = evaluator.generate_prompt(
-        "word_generation",
-        meaning="river",
-        root="ya-"
+    word_analysis_prompt = evaluator.generate_prompt(
+        "word_analysis",
+        woccon_word="yawowa"
     )
     
-
-
     print("=== EXAMPLE PROMPTS ===\n")
-    print("Translation Prompt:")
-    print(translation_prompt)
-    print("\nWord Generation Prompt:")
-    print(word_generation_prompt)
+    print("Word Lookup Prompt:")
+    print(word_lookup_prompt)
+    print("\nWord Analysis Prompt:")
+    print(word_analysis_prompt)
+    
+    # Uncomment to run a simple test
+    # test_result = run_simple_test()
     
     print("\n=== NOTE ON EVALUATION ===")
     print("Full evaluation requires running the model, which may take time.")
@@ -330,6 +539,12 @@ if __name__ == "__main__":
     report = evaluator.format_results(results)
     print(report)
     """)
-
-        # Uncomment to run a simple test
+    
+    # Alternatively, to run a simple test:
+    print("""
+    # Run a simple test
     test_result = run_simple_test()
+    """)
+    test_result = run_simple_test()
+
+        

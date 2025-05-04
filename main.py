@@ -3,6 +3,7 @@ import os
 from transformers import T5ForConditionalGeneration, ByT5Tokenizer
 import torch
 from typing import Dict, List, Tuple, Optional
+import random
 
 class WocconT5:
     def _load_json(self, filepath: str) -> Dict:
@@ -22,7 +23,11 @@ class WocconT5:
         
         # Initialize lookups
         self._initialize_lookups()
-        
+
+    def get_random_example(self) -> Dict:
+        """Return a random lexicon entry for lesson selection."""
+        return random.choice(self.dictionary.get("lexicon", []))
+
     def _initialize_lookups(self):
         """Initialize all lookup dictionaries and rules"""
         # Word lookups
