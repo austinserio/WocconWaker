@@ -1,0 +1,133 @@
+{
+  "language_name": "Woccon",
+  "language_family": "Eastern Siouan",
+  "historical_location": "North Carolina coastal plain (lower Neuse River)",
+  "documentation_source": "John Lawson's word list (1709)",
+  "phonology": {
+    "consonants": [
+      {"grapheme": "p", "features": "bilabial stop"},
+      {"grapheme": "t", "features": "alveolar stop"},
+      {"grapheme": "k", "features": "velar stop"},
+      {"grapheme": "m", "features": "bilabial nasal"},
+      {"grapheme": "n", "features": "alveolar nasal"},
+      {"grapheme": "r", "features": "liquid"},
+      {"grapheme": "s", "features": "alveolar fricative"},
+      {"grapheme": "h", "features": "glottal fricative"},
+      {"grapheme": "w", "features": "labial-velar approximant"},
+      {"grapheme": "y", "features": "palatal approximant"}
+    ],
+    "sound_correspondences": {
+      "Woccon_to_Catawba": [
+        {"Woccon": "p", "Catawba": "p"},
+        {"Woccon": "t", "Catawba": "t"},
+        {"Woccon": "k", "Catawba": "k"},
+        {"Woccon": "s", "Catawba": "s"},
+        {"Woccon": "š", "Catawba": "š"},
+        {"Woccon": "ś", "Catawba": "s"},
+        {"Woccon": "h", "Catawba": "s"},
+        {"Woccon": "h", "Catawba": "h"},
+        {"Woccon": "m", "Catawba": "m"},
+        {"Woccon": "n", "Catawba": "n"},
+        {"Woccon": "n", "Catawba": "r"},
+        {"Woccon": "r", "Catawba": "n"},
+        {"Woccon": "r", "Catawba": "r"},
+        {"Woccon": "w", "Catawba": "w"},
+        {"Woccon": "y", "Catawba": "y"},
+        {"Woccon": "m", "Catawba": "mn"}
+      ]
+    }
+  },
+  "morphology": {
+    "number_system": {
+      "type": "partial_quinary",
+      "numerals": [
+        {"value": 1, "form": "Tonne"},
+        {"value": 2, "form": "Num-perre", "root": "nqp"},
+        {"value": 3, "form": "Nam-mee", "root": "nam"},
+        {"value": 4, "form": "Punnum-punne"},
+        {"value": 5, "form": "Webtau"},
+        {"value": 6, "form": "Is-sto"},
+        {"value": 7, "form": "Nommis-sau", "note": "possibly contains root for 3"},
+        {"value": 8, "form": "Nupsau", "note": "possibly contains root for 2"},
+        {"value": 10, "form": "Soone noponne", "alternate_form": "pi ~ wi"},
+        {"value": 11, "form": "Tonne hauk pea", "structure": "1 + 10"},
+        {"value": 20, "form": "Winnop", "structure": "compound of [pi ~ wi] 10 and [nup] 2"}
+      ],
+      "note": "Possible subtractive formation for 7 and 8 meaning '(10) lacking 3' and '(10) lacking 2'"
+    },
+    "affixes": {
+      "suffixes": [
+        {"form": "-re", "function": "predicative suffix", "example": "Num-perre", "meaning": "two"},
+        {"form": "-wa", "function": "modal suffix", "example": "Wawawa", "meaning": "snow"},
+        {"form": "-hauk", "function": "connective", "meaning": "plus"}
+      ]
+    },
+    "noun_composition": {
+      "patterns": [
+        {"structure": "Noun + Noun", "example": "Yau-hauk", "meaning": "snake"},
+        {"structure": "Root + Descriptive", "example": "Wattapi untakeer", "meaning": "star"}
+      ]
+    },
+    "compounding": {
+      "patterns": [
+        {"example": "Yopoonitsa", "meaning": "box", "components": "yop (wood) + container"},
+        {"example": "Tooseawau", "meaning": "kettle", "components": "tus + container"}
+      ]
+    }
+  },
+  "lexical_semantics": {
+    "semantic_domains": {
+      "water_terms": {
+        "root": "ya-",
+        "derivatives": [
+          {"form": "Yawowa", "meaning": "rain"},
+          {"form": "Yacunne", "meaning": "fish", "note": "possibly contains water root"}
+        ]
+      },
+      "wood_terms": {
+        "root": "yap/yop",
+        "derivatives": [
+          {"form": "Yonne", "meaning": "wood"},
+          {"form": "Yopoonitsa", "meaning": "box"}
+        ]
+      }
+    },
+    "relic_forms": [
+      {"form": "Yau", "meaning": "fire", "note": "This appears to be a relic form in Catawba, where the usual root for fire is [ipi?]"},
+      {"form": "Yonne", "meaning": "wood", "note": "This appears to be a relic form in Catawba, a compound of [yana] tree and [pis] skin"}
+    ]
+  },
+  "syntax": {
+    "word_order": {
+      "note": "Limited syntactic information available due to nature of word list documentation"
+    }
+  },
+  "lexicon": {
+    "core_vocabulary": [
+      {"Woccon": "Tauh-he", "meaning": "dog", "Catawba": "tasi"},
+      {"Woccon": "Yauh", "meaning": "path", "Catawba": "yq"},
+      {"Woccon": "Yau", "meaning": "fire", "Catawba": "yamu"},
+      {"Woccon": "Cose", "meaning": "corn", "Catawba": "kus/kusi"},
+      {"Woccon": "Yicau", "meaning": "old woman", "Catawba": "ya (woman), yamusi (old woman)"},
+      {"Woccon": "Wawawa", "meaning": "snow", "Catawba": "wa?/wa?wo"}
+    ],
+    "cross_family_cognates": [
+      {"Woccon": "Wattapi untakeer", "meaning": "star", "Proto-North-Caddoan": "*hu-piri"},
+      {"Woccon": "Wawawa", "meaning": "snow", "Proto-Siouan": "*wa"}
+    ]
+  },
+  "dialectal_information": {
+    "relation_to_catawba": "Distant relative in Eastern Siouan subfamily",
+    "note": "Woccon and Catawba show considerable divergence despite genetic relationship"
+  },
+  "training_considerations": {
+    "data_limitations": "Only 143 items in Lawson's word list",
+    "orthographic_variation": "Original transcription from 1709 with potential spelling inconsistencies",
+    "potential_errors": "Some numerals may have been confused or transposed in original documentation",
+    "reconstruction_approaches": [
+      "Leverage Catawba cognates where available",
+      "Use Proto-Siouan reconstructions for missing items",
+      "Consider sound correspondences with other Siouan languages"
+    ]
+  }
+}
