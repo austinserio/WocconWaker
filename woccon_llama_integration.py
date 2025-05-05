@@ -56,6 +56,20 @@ class WocconAssistant:
 
         lower = text.lower().strip()
 
+        # 1️⃣  If a lesson is in progress, delegate straight to it
+        if session["lesson"] is not None:
+            resp, done = session["lesson"].handle(text)
+            if done:
+                session["lesson"] = None
+            return resp
+
+        # 2️⃣  If the user mentioned "lesson" (or "vocab"/"learn"), start a new one
+        if re.search(r"\b(lesson|vocab|teach me|learn)\b", lower):
+            words = random.sample(self.dictionary["lexicon"], 3)
+            session["lesson"] = LessonManager(words, parent=self)
+            return "📚 Starting a mini-lesson!\n\n" + session["lesson"].prompt()
+
+
         # Handle part-of-speech queries
         if re.search(r'what are some (adverbs|verbs|nouns|adjectives)', lower):
             pos_type = re.search(r'what are some (adverbs|verbs|nouns|adjectives)', lower).group(1)
