@@ -1,3 +1,4 @@
+
 """
 Enhanced Woccon Assistant with RAG capabilities.
 This version combines rule-based responses with strategic LLM usage.
@@ -154,6 +155,93 @@ I cannot create or generate new Woccon words beyond this documentation.
         logger.info(f"Prepared RAG components: {len(self.dictionary_chunks)} dictionary chunks, "
                    f"{len(self.rules_chunks)} rules chunks, {len(self.general_chunks)} general info chunks")
     
+    def _process_with_simple_rag(self, user_id: str, message_text: str) -> str:
+            """Process queries using simplified RAG with minimal verification."""
+            if not self.llm_available:
+                return "I can only answer specific questions about documented Woccon words. Try 'lookup:', 'analyze:', or 'help'."
+            
+            # Retrieve relevant chunks based on query
+            relevant_chunks = self._retrieve_relevant_chunks(message_text)
+            
+            # Create a prompt that includes retrieved chunks but with more flexibility
+            system_prompt = f"""You are a helpful assistant specializing in the documented Woccon language from John Lawson's 1709 list.
+
+    Guidelines:
+    - Focus primarily on documented Woccon words and features
+    - When information is unavailable, acknowledge the limitations
+    - For common general questions, provide helpful information about what is known
+    - Use a conversational, friendly tone
+    - For educational questions, provide guidance based on documented information
+    - Be helpful and positive rather than overly restrictive
+
+    DOCUMENTATION:
+    {'\n\n'.join(relevant_chunks)}
+
+    Respond to questions about the Woccon language in a helpful and educational manner.
+    Remember, if the user wants vocabulary lessons or direct language exploration, guide them to use 
+    specific commands like 'learn: vocabulary', 'lookup: [word]', or 'category: [category]'.
+    """
+            
+            try:
+                # Use the LLM with the RAG-enhanced system prompt
+                response = ollama.chat(
+                    model=self.llm_model,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": message_text}
+                    ],
+                    options={
+                        "temperature": 0.3  # Slightly higher temperature for more natural responses
+                    }
+                )
+                
+                llm_response = response["message"]["content"]
+                
+                # Minimal verification - only block obviously made-up Woccon words
+                verified_response = self._minimally_verify_response(llm_response)
+                
+                return verified_response
+                
+            except Exception as e:
+                logger.error(f"Error using LLM: {str(e)}")
+                return "I encountered an error processing your question. Please try using specific commands like 'lookup:', 'analyze:', or 'help'."
+                
+    def _minimally_verify_response(self, response: str) -> str:
+        """Minimal verification that only blocks obvious made-up Woccon words."""
+        # Only check for explicit claims about Woccon words
+        invention_patterns = [
+            r"woccon word for .* is ['\"]*([a-z-]+)['\"]*",
+            r"['\"]*([a-z-]+)['\"]*( means| translates to) .* in (english|translation)",
+            r"in woccon, .*['\"]*([a-z-]+)['\"]*.*means",
+            r"the greeting .* ['\"]*([a-z-]+)['\"]*",
+            r"to say .* in woccon, .*['\"]*([a-z-]+)['\"]*"
+        ]
+        
+        # Check if any word that's claimed to be Woccon isn't in our documented list
+        for pattern in invention_patterns:
+            matches = re.finditer(pattern, response.lower())
+            for match in matches:
+                word = match.group(1).strip().lower()
+                # If this claimed Woccon word isn't in our dictionary
+                if word not in self.documented_words:
+                    # Log the issue
+                    logger.warning(f"Detected invented Woccon word in response: '{word}'")
+                    # Add a disclaimer rather than completely replacing the response
+                    disclaimer = """Note: I've identified some information in my response that might go beyond the documented Woccon vocabulary. Remember that our knowledge of Woccon is limited to approximately 140 words from Lawson's 1709 list. Any interpretations beyond these documented words should be taken as speculative."""
+                    
+                    # If it's a teaching request, suggest using the built-in lesson features
+                    if any(term in response.lower() for term in ["teach", "learn", "lesson", "vocabulary"]):
+                        disclaimer += "\n\nFor structured language learning, try using commands like 'learn: vocabulary' or 'learn: analysis'."
+                        
+                    # Add the disclaimer to the beginning of the response
+                    return disclaimer + "\n\n" + response
+        
+        # If no obvious inventions were found, return the original response
+        return response
+
+
+
+
     def _get_session(self, user_id: str) -> Dict[str, Any]:
         """Get or create a user session."""
         if user_id not in self.user_sessions:
@@ -181,6 +269,14 @@ I cannot create or generate new Woccon words beyond this documentation.
         elif message_lower in ["quit", "exit", "stop", "end"]:
             session["current_activity"] = None
             response = "Session ended. Type 'help' to see available commands."
+        
+        # Direct requests for lessons with minimal text
+        elif any(term in message_lower for term in ["teach me", "lesson", "learn", "vocabulary", "words", "teach"]):
+            # Check if they're asking for a specific type of lesson
+            if "analy" in message_lower or "structure" in message_lower:
+                response = self._start_lesson(user_id, "analysis")
+            else:
+                response = self._start_lesson(user_id, "vocabulary")
         
         # Command patterns
         elif message_lower.startswith(("lookup:", "find:", "search:")):
@@ -242,10 +338,10 @@ I cannot create or generate new Woccon words beyond this documentation.
                 # Try to look it up as an English word
                 response = self._lookup_english_term(term)
         
-        # Use RAG for general questions
+        # Use RAG for general questions - with reduced verification
         elif self.llm_available:
             logger.info(f"Using RAG for general question: '{message_lower}'")
-            response = self._process_with_rag(user_id, message_text)
+            response = self._process_with_simple_rag(user_id, message_text)
         else:
             response = "I didn't understand that command. Type 'help' to see what I can do."
         
@@ -685,12 +781,17 @@ This word is documented in John Lawson's 1709 Woccon word list."""
         
         return "\n".join(result)
     
-    def _start_lesson(self, user_id: str, lesson_type: str) -> str:
+    def _start_lesson(self, user_id: str, lesson_type: str = "") -> str:
         """Start an interactive lesson."""
         session = self._get_session(user_id)
+        
+        # If no specific lesson type provided, default to vocabulary
+        if not lesson_type or lesson_type.lower() in ["", "any", "vocab", "lesson", "something"]:
+            lesson_type = "vocabulary"
+        
         lesson_type = lesson_type.lower()
         
-        if lesson_type in ["vocab", "vocabulary", "words"]:
+        if lesson_type in ["vocab", "vocabulary", "words", "word"]:
             return self._start_vocabulary_lesson(user_id)
         elif lesson_type in ["analyze", "analysis", "structure"]:
             return self._start_analysis_lesson(user_id)
@@ -1271,6 +1372,9 @@ class MessengerBot:
         return chunks
 
 
+
+
+
 # Flask web server for Messenger webhook
 from flask import Flask, request, Response
 
@@ -1341,6 +1445,9 @@ def run_cli():
             
         except Exception as e:
             print(f"Error: {str(e)}")
+
+
+
 
 
 if __name__ == "__main__":
