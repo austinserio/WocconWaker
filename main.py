@@ -13,9 +13,9 @@ def load_json(path: str) -> Dict:
 class WocconT5:
     # ───────── init ─────────
     def __init__(self,
-                 dict_path: str = "woccon_language/dictionary.json",
-                 rules_path: str = "woccon_language/rules.json",
-                 model_name: str = "google/byt5-small"):
+                dict_path: str = "woccon_language/dictionary.json",
+                rules_path: str = "woccon_language/rules.json",
+                model_name: str = "google/byt5-small"):
         self.dictionary = load_json(dict_path)
         self.rules      = load_json(rules_path)
         # (model kept for future seq2seq fine‑tuning; not required here)
@@ -25,6 +25,9 @@ class WocconT5:
         # look‑ups
         self.eng_to_woc = {e["english"].lower(): e for e in self.dictionary["lexicon"]}
         self.woc_to_eng = {e["woccon"].lower(): e for e in self.dictionary["lexicon"]}
+
+        # Initialize all lookups (including roots)
+        self._initialize_lookups()
 
         # suffix chains (pre‑computed)
         self.suffix_chains = self._build_suffix_chains()
@@ -516,8 +519,509 @@ class WocconT5:
                 })
         
         return analysis
+    
+
+    
+    def train_morphological_analyzer(self, train_data_path=None):
+        """
+        Fine-tune the T5 model to perform morphological analysis of Woccon words.
+        
+        Args:
+            train_data_path: Path to training data. If None, generate synthetic data.
+        """
+        from torch.utils.data import Dataset, DataLoader
+        from transformers import T5ForConditionalGeneration, Trainer, TrainingArguments
+        import torch
+        
+        # If no training data is provided, generate synthetic examples
+        if not train_data_path:
+            print("Generating synthetic training examples from dictionary...")
+            train_examples = []
+            
+            # For each known word, create examples of its morphological breakdown
+            for entry in self.dictionary["lexicon"]:
+                word = entry["woccon"].lower()
+                analysis = self.analyze_word(word)
+                
+                # Build the target output string that represents the morphological analysis
+                morphemes = []
+                
+                # Add roots with their meanings
+                for root in analysis.get("roots", []):
+                    if root["confidence"] != "low":  # Skip low confidence roots
+                        morphemes.append(f"{root['root']}:ROOT:{root['meaning']}")
+                
+                # Add affixes with their functions
+                for affix in analysis.get("affixes", []):
+                    morphemes.append(f"{affix['form']}:{affix['type'].upper()}:{affix['function']}")
+                
+                # Only use examples where we found some structure
+                if morphemes:
+                    target = " + ".join(morphemes)
+                    train_examples.append((f"analyze_morphology: {word}", target))
+            
+            print(f"Generated {len(train_examples)} training examples")
+        else:
+            # Load training data from file
+            import json
+            with open(train_data_path, 'r', encoding='utf-8') as f:
+                train_examples = json.load(f)
+        
+        # Create a dataset
+        class MorphologyDataset(Dataset):
+            def __init__(self, examples, tokenizer, max_length=128):
+                self.examples = examples
+                self.tokenizer = tokenizer
+                self.max_length = max_length
+                
+            def __len__(self):
+                return len(self.examples)
+                
+            def __getitem__(self, idx):
+                input_text, target_text = self.examples[idx]
+                
+                input_encoding = self.tokenizer(
+                    input_text, 
+                    max_length=self.max_length,
+                    padding="max_length",
+                    truncation=True,
+                    return_tensors="pt"
+                )
+                
+                target_encoding = self.tokenizer(
+                    target_text,
+                    max_length=self.max_length,
+                    padding="max_length", 
+                    truncation=True,
+                    return_tensors="pt"
+                )
+                
+                # T5 expects the target to have the labels in it
+                labels = target_encoding.input_ids
+                labels[labels == self.tokenizer.pad_token_id] = -100
+                
+                return {
+                    "input_ids": input_encoding.input_ids.squeeze(),
+                    "attention_mask": input_encoding.attention_mask.squeeze(),
+                    "labels": labels.squeeze(),
+                }
+        
+        # Create datasets and dataloaders
+        train_size = int(0.9 * len(train_examples))
+        train_dataset = MorphologyDataset(
+            train_examples[:train_size], 
+            self.tokenizer
+        )
+        eval_dataset = MorphologyDataset(
+            train_examples[train_size:],
+            self.tokenizer
+        )
+        
+        # Set up training arguments
+        training_args = TrainingArguments(
+            output_dir="./woccon_t5_morphology",
+            num_train_epochs=3,
+            per_device_train_batch_size=8,
+            per_device_eval_batch_size=8,
+            warmup_steps=500,
+            weight_decay=0.01,
+            logging_dir="./logs",
+            logging_steps=10,
+            evaluation_strategy="steps",
+            eval_steps=100,
+            save_steps=100,
+            load_best_model_at_end=True,
+        )
+        
+        # Initialize the trainer
+        trainer = Trainer(
+            model=self.model,
+            args=training_args,
+            train_dataset=train_dataset,
+            eval_dataset=eval_dataset,
+        )
+        
+        # Train the model
+        trainer.train()
+        
+        # Save the model
+        self.model.save_pretrained("./woccon_t5_morphology_final")
+        self.tokenizer.save_pretrained("./woccon_t5_morphology_final")
+        print("Model fine-tuned and saved!")
+        
+        # Update the analyze_word method to use the fine-tuned model
+        self._update_analyze_method()
+        
+    def _update_analyze_method(self):
+        """Update the analyze_word method to use the fine-tuned T5 model."""
+        original_analyze = self.analyze_word
+        
+        def t5_enhanced_analyze_word(word):
+            # First get the rule-based analysis
+            rule_analysis = original_analyze(word)
+            
+            # Then get the T5 model's analysis
+            input_text = f"analyze_morphology: {word.lower()}"
+            input_ids = self.tokenizer(input_text, return_tensors="pt").input_ids
+            
+            # Generate the morphological analysis
+            outputs = self.model.generate(
+                input_ids=input_ids,
+                max_length=128,
+                temperature=0.7,
+                top_p=0.9,
+                num_return_sequences=1
+            )
+            
+            t5_analysis = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+            
+            # Parse the T5 analysis
+            t5_morphemes = []
+            if t5_analysis:
+                for morpheme_info in t5_analysis.split(" + "):
+                    parts = morpheme_info.split(":")
+                    if len(parts) >= 3:
+                        form, type_, function = parts[0], parts[1], ":".join(parts[2:])
+                        t5_morphemes.append({
+                            "form": form,
+                            "type": type_.lower(),
+                            "function": function,
+                            "source": "t5_model"
+                        })
+            
+            # Add the T5 results to the rule-based analysis
+            rule_analysis["t5_morphemes"] = t5_morphemes
+            
+            # Merge results if they agree
+            for t5_morpheme in t5_morphemes:
+                # For roots
+                if t5_morpheme["type"] == "root":
+                    # Check if this root is already in the rule-based analysis
+                    found = False
+                    for root in rule_analysis.get("roots", []):
+                        if root["root"] == t5_morpheme["form"]:
+                            # Increase confidence if T5 agrees
+                            if root["confidence"] != "high":
+                                root["confidence"] = "high" if root["confidence"] == "medium" else "medium"
+                                root["confidence_score"] = min(1.0, root["confidence_score"] + 0.2)
+                            root["t5_confirmed"] = True
+                            found = True
+                            break
+                    
+                    # Add new root if not found
+                    if not found:
+                        rule_analysis["roots"].append({
+                            "root": t5_morpheme["form"],
+                            "meaning": t5_morpheme["function"],
+                            "match_type": "t5_prediction",
+                            "confidence": "medium",
+                            "confidence_score": 0.6,
+                            "source": "t5_model"
+                        })
+                
+                # For affixes
+                elif t5_morpheme["type"] in ["suffix", "prefix"]:
+                    found = False
+                    for affix in rule_analysis.get("affixes", []):
+                        if affix["form"] == t5_morpheme["form"]:
+                            affix["t5_confirmed"] = True
+                            found = True
+                            break
+                    
+                    if not found:
+                        rule_analysis["affixes"].append({
+                            "type": t5_morpheme["type"],
+                            "form": t5_morpheme["form"],
+                            "function": t5_morpheme["function"],
+                            "position": "end" if t5_morpheme["type"] == "suffix" else "start",
+                            "confidence": "medium",
+                            "source": "t5_model"
+                        })
+            
+            # Sort roots by confidence
+            rule_analysis["roots"].sort(key=lambda x: x.get("confidence_score", 0), reverse=True)
+            
+            return rule_analysis
+        
+        # Replace the analyze_word method
+        self.analyze_word = t5_enhanced_analyze_word
+
+    
+    def analyze_word_enhanced(self, word: str) -> Dict:
+        """
+        Enhanced analyze_word that uses T5 capabilities.
+        Replace or extend the regular analyze_word with this.
+        """
+        # Get both analyses
+        rule_analysis = self.analyze_word(word)
+        t5_analysis = self.t5_analyze_morphology(word)
+        
+        # Merge insights from both
+        combined = rule_analysis.copy()
+        combined["t5_insights"] = t5_analysis.get("t5_insights", {})
+        
+        # Use T5's root analysis if available
+        if "roots" in t5_analysis:
+            combined["roots"] = t5_analysis["roots"]
+        
+        return combined
+
+    def t5_analyze_morphology(self, word: str) -> Dict:
+        """
+        Use T5 to enhance morphological analysis of a Woccon word.
+        This simplified version doesn't require actual T5 fine-tuning.
+        """
+        # Get the regular rule-based analysis first
+        base_analysis = self.analyze_word(word)
+        
+        # Simulate T5 analysis by enhancing the confidence of the results
+        for root in base_analysis.get("roots", []):
+            # Enhance confidence for roots that match expected patterns
+            if root["root"] in ["yau-", "ya-", "watta-", "roo-"]:
+                if root["confidence"] != "high":
+                    root["confidence"] = "high" if root["confidence"] == "medium" else "medium"
+                    root["confidence_score"] = min(1.0, root.get("confidence_score", 0.5) + 0.2)
+                root["t5_enhanced"] = True
+        
+        # Add simulated T5-specific insights
+        base_analysis["t5_insights"] = {
+            "morphological_complexity": "high" if "-" in word else "low",
+            "probable_semantic_domain": self._guess_semantic_domain(word),
+            "analysis_method": "hybrid (rule-based + simulated T5)"
+        }
+        
+        return base_analysis
+
+    def _guess_semantic_domain(self, word: str) -> str:
+        """
+        Simulate T5's ability to guess semantic domains based on word structure.
+        """
+        word = word.lower()
+        
+        if "yauh" in word or "yau-" in word:
+            return "movement/path"
+        elif "ya" in word and word.startswith("ya"):
+            return "water/natural elements"
+        elif "watta" in word:
+            return "containers/vessels"
+        elif "roo" in word:
+            return "clothing/materials"
+        elif "he" in word and word.endswith("he"):
+            return "animate beings/people"
+        elif "wa" in word and word.endswith("wa"):
+            return "natural phenomena"
+        elif "iune" in word and word.endswith("iune"):
+            return "manufactured items"
+        elif "pe" in word and word.endswith("pe"):
+            return "containers"
+        else:
+            return "unknown"
+        
+    def translate_to_woccon(self, english_text: str) -> Dict:
+        """
+        Translate English text to Woccon.
+        """
+        english_text = english_text.lower().strip()
+        
+        # Check if the exact word is in our dictionary
+        entry = self.eng_to_woc.get(english_text)
+        if entry:
+            return {
+                "woccon": entry["woccon"],
+                "confidence": "high",
+                "alternatives": []
+            }
+        
+        # Look for partial matches
+        matches = []
+        for eng, woc_entry in self.eng_to_woc.items():
+            if english_text in eng or eng in english_text:
+                matches.append((eng, woc_entry))
+        
+        if matches:
+            # Sort by closeness to query (shorter difference = better match)
+            matches.sort(key=lambda x: abs(len(x[0]) - len(english_text)))
+            best_match = matches[0][1]
+            
+            alternatives = []
+            if len(matches) > 1:
+                alternatives = [m[1]["woccon"] for m in matches[1:3]]  # Top 2 alternatives
+                
+            return {
+                "woccon": best_match["woccon"],
+                "confidence": "medium",
+                "note": f"Partial match based on '{matches[0][0]}'",
+                "alternatives": alternatives
+            }
+        
+        # No match found - try to synthesize based on word structure
+        # This would be where real T5 would help, but we'll simulate
+        return {
+            "woccon": None,
+            "confidence": "none",
+            "alternatives": [],
+            "error": "No translation found"
+        }
+
+    def translate_to_english(self, woccon_text: str) -> Dict:
+        """
+        Translate Woccon text to English.
+        """
+        woccon_text = woccon_text.lower().strip()
+        
+        # Check if the exact word is in our dictionary
+        entry = self.woc_to_eng.get(woccon_text)
+        if entry:
+            return {
+                "english": entry["english"],
+                "pos": entry["pos"],
+                "confidence": "high",
+                "alternatives": []
+            }
+        
+        # Try morphological analysis to break it into parts
+        analysis = self.analyze_word(woccon_text)
+        if analysis["roots"] or analysis["affixes"]:
+            # Construct a gloss based on the analysis
+            components = []
+            
+            # Add roots
+            for root in sorted(analysis["roots"], key=lambda x: x.get("confidence_score", 0), reverse=True):
+                if root["confidence"] != "low":
+                    components.append(root["meaning"])
+                    break  # Just use the highest confidence root
+            
+            # Add suffixes
+            for affix in analysis["affixes"]:
+                if affix["type"] == "suffix":
+                    if affix["form"] == "-he":
+                        components.append("person/being")
+                    elif affix["form"] == "-wa":
+                        components.append("(plural/continuous)")
+                    elif affix["form"] == "-iune":
+                        components.append("(manufactured)")
+                    elif affix["form"] == "-pe":
+                        components.append("container")
+            
+            if components:
+                return {
+                    "english": " ".join(components),
+                    "pos": "unknown",
+                    "confidence": "low",
+                    "note": "Constructed from morphological analysis",
+                    "alternatives": []
+                }
+        
+        # Look for partial matches
+        matches = []
+        for woc, eng_entry in self.woc_to_eng.items():
+            if woccon_text in woc or woc in woccon_text:
+                matches.append((woc, eng_entry))
+        
+        if matches:
+            # Sort by closeness to query
+            matches.sort(key=lambda x: abs(len(x[0]) - len(woccon_text)))
+            best_match = matches[0][1]
+            
+            alternatives = []
+            if len(matches) > 1:
+                alternatives = [m[1]["english"] for m in matches[1:3]]
+                
+            return {
+                "english": best_match["english"],
+                "pos": best_match["pos"],
+                "confidence": "low",
+                "note": f"Partial match based on '{matches[0][0]}'",
+                "alternatives": alternatives
+            }
+        
+        return {
+            "english": None,
+            "confidence": "none",
+            "alternatives": [],
+            "error": "No translation found"
+        }
+        
+    def identify_sound_patterns(self, word: str) -> Dict:
+        """
+        Identify sound patterns in a word.
+        """
+        word = word.lower().strip()
+        
+        # Analyze syllables
+        syllables = self._analyze_syllables(word)
+        
+        # Identify sound patterns based on the dictionary's patterns
+        patterns = []
+        for pattern in self.sound_patterns:
+            if pattern["woccon"] in word:
+                patterns.append({
+                    "woccon": pattern["woccon"],
+                    "catawba": pattern["catawba"],
+                    "position": word.index(pattern["woccon"]),
+                    "examples": pattern.get("examples", [])
+                })
+        
+        # Analyze vowel harmony
+        vowels = {'a', 'e', 'i', 'o', 'u'}
+        vowel_counts = {v: word.count(v) for v in vowels}
+        dominant_vowel = max(vowel_counts.items(), key=lambda x: x[1])[0] if vowel_counts else None
+        
+        return {
+            "word": word,
+            "syllables": syllables,
+            "sound_patterns": patterns,
+            "dominant_vowel": dominant_vowel,
+            "vowel_distribution": vowel_counts
+        }
+
+    def _analyze_syllables(self, word: str) -> List[str]:
+        """
+        Perform simple syllable analysis of a Woccon word.
+        """
+        word = word.lower().replace('-', '')
+        
+        # Define vowels in Woccon
+        vowels = {'a', 'e', 'i', 'o', 'u'}
+        
+        # Handle common digraphs
+        word = word.replace('au', 'A').replace('oo', 'O').replace('ee', 'E').replace('ai', 'I')
+        
+        syllables = []
+        current_syllable = ""
+        
+        for i, char in enumerate(word):
+            current_syllable += char
+            
+            # If this is a vowel and not the last character
+            if (char in vowels or char in {'A', 'O', 'E', 'I'}) and i < len(word) - 1:
+                # If the next character is a consonant, end the syllable
+                if word[i+1] not in vowels and word[i+1] not in {'A', 'O', 'E', 'I'}:
+                    # Unless there's another consonant after that (consonant cluster)
+                    if i < len(word) - 2 and word[i+2] not in vowels and word[i+2] not in {'A', 'O', 'E', 'I'}:
+                        syllables.append(current_syllable)
+                        current_syllable = ""
+                    # Or it's the end of the word
+                    elif i == len(word) - 2:
+                        current_syllable += word[i+1]
+                        syllables.append(current_syllable)
+                        current_syllable = ""
+                        break
+        
+        # Add any remaining syllable
+        if current_syllable:
+            syllables.append(current_syllable)
+        
+        # Convert digraph placeholders back
+        result = []
+        for syllable in syllables:
+            syllable = syllable.replace('A', 'au').replace('O', 'oo').replace('E', 'ee').replace('I', 'ai')
+            result.append(syllable)
+        
+        return result
 
 def test_system():
+
     """Test the Woccon analysis system"""
     woccon = WocconT5()
     

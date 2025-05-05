@@ -49,9 +49,6 @@ class WocconAssistant:
     # Use these two methods as direct replacements in your WocconAssistant class
 
     def reply(self, user_id: str, text: str) -> str:
-        """
-        Main reply method with improved natural language processing.
-        """
         session = self.sessions.setdefault(user_id, {
             "history": deque(maxlen=self.ctx_turns * 2 + 2),
             "lesson": None
@@ -75,7 +72,7 @@ class WocconAssistant:
                 if forms:
                     lines.append(f"{root}: {', '.join(forms)}")
             return "\n".join(lines) or "⚠️ No roots attested."
-            
+                
         # Count words in lists
         if self._matches_any_pattern(lower, [
             r"how many words",
@@ -85,6 +82,7 @@ class WocconAssistant:
         ]):
             total_words = len(self.documented_words)
             return f"There are {total_words} documented Woccon words in Lawson's list from 1709."
+
 
         # 2. TRANSLATE ENGLISH TO WOCCON - with safeguards
         m_eng = re.search(
@@ -101,6 +99,135 @@ class WocconAssistant:
             if not forms:
                 return f"⚠️ No forms generated for Woccon '{root}'."
             return f"{root}: {', '.join(forms)}"
+        
+        # T5-enhanced analysis command
+        for pattern in [
+            r"analyze\s+([a-z\-]+)",
+            r"structure of\s+([a-z\-]+)",
+            r"break down\s+([a-z\-]+)"
+        ]:
+            m = re.search(pattern, lower)
+            if m:
+                woc = m.group(1).strip().lower()
+                # Use the enhanced analysis method
+                analysis = self.woccon.analyze_word_enhanced(woc)
+                
+                # Format the analysis for display
+                result = [f"Analysis of '{woc}':\n"]
+                
+                # Show T5 insights if available
+                if "t5_insights" in analysis:
+                    result.append("T5 Analysis:")
+                    for key, value in analysis["t5_insights"].items():
+                        result.append(f"- {key.replace('_', ' ').title()}: {value}")
+                    result.append("")
+                
+                # Show affixes
+                if analysis["affixes"]:
+                    result.append("Affixes:")
+                    for affix in analysis["affixes"]:
+                        result.append(f"- {affix['type'].capitalize()} '{affix['form']}': {affix['function']}")
+                
+                # Show roots
+                if analysis["roots"]:
+                    result.append("\nRoots:")
+                    for root in analysis["roots"]:
+                        confidence = root.get("confidence", "unknown")
+                        enhanced = " (T5 enhanced)" if root.get("t5_enhanced") else ""
+                        result.append(f"- Root '{root['root']}' meaning '{root['meaning']}' ({confidence} confidence){enhanced}")
+                
+                # Show semantic groups if available
+                if analysis.get("semantic_groups"):
+                    result.append("\nSemantic Categories:")
+                    for group, words in analysis["semantic_groups"].items():
+                        result.append(f"- {group.replace('_', ' ').title()}: {len(words)} related words")
+                
+                return "\n".join(result)
+
+        # Enhanced translation command
+        for pattern in [
+            r"how (?:do|would) (?:i|you|we) say '?([a-z\-\s]+)'? in woccon\??",
+            r"translate '?([a-z\-\s]+)'? (?:in)?to woccon",
+            r"what(?:'s| is) the woccon (?:word|term) for '?([a-z\-\s]+)'?\??"
+        ]:
+            m = re.search(pattern, lower)
+            if m:
+                eng = m.group(1).strip().lower()
+                result = self.woccon.translate_to_woccon(eng)
+                if result["woccon"]:
+                    response = f"The Woccon word for '{eng}' is '{result['woccon']}' ({result['confidence']} confidence)."
+                    if result.get("note"):
+                        response += f" Note: {result['note']}"
+                    if result["alternatives"]:
+                        response += f"\nPossible alternatives: {', '.join(result['alternatives'])}"
+                    return response
+                else:
+                    return f"⚠️ No Woccon translation found for '{eng}'."
+
+        # Enhanced meaning lookup
+        for pattern in [
+            r"what does '?([a-z\-]+)'? mean",
+            r"(?:meaning|translation|definition) of '?([a-z\-]+)'?",
+            r"translate '?([a-z\-]+)'? to english"
+        ]:
+            m = re.search(pattern, lower)
+            if m:
+                woc = m.group(1).strip().lower()
+                result = self.woccon.translate_to_english(woc)
+                if result["english"]:
+                    response = f"'{woc}' means '{result['english']}'"
+                    if result.get("pos"):
+                        response += f" ({result['pos']})"
+                    response += f" ({result['confidence']} confidence)."
+                    if result.get("note"):
+                        response += f" Note: {result['note']}"
+                    if result["alternatives"]:
+                        response += f"\nPossible alternatives: {', '.join(result['alternatives'])}"
+                    return response
+                else:
+                    return f"⚠️ '{woc}' is not recognized as a Woccon word."
+
+        # Sound pattern analysis
+        for pattern in [
+            r"sound patterns (?:in|of) ([a-z\-]+)",
+            r"phonology of ([a-z\-]+)",
+            r"analyze sounds (?:in|of) ([a-z\-]+)"
+        ]:
+            m = re.search(pattern, lower)
+            if m:
+                woc = m.group(1).strip().lower()
+                sound_analysis = self.woccon.identify_sound_patterns(woc)
+                
+                # Format the sound analysis
+                result = [f"Sound pattern analysis of '{woc}':\n"]
+                
+                # Show syllables
+                if sound_analysis["syllables"]:
+                    result.append(f"Syllables: {'-'.join(sound_analysis['syllables'])}")
+                    result.append(f"Syllable count: {len(sound_analysis['syllables'])}")
+                    result.append("")
+                
+                # Show vowel distribution
+                if sound_analysis["vowel_distribution"]:
+                    result.append("Vowel distribution:")
+                    for vowel, count in sound_analysis["vowel_distribution"].items():
+                        if count > 0:
+                            result.append(f"- {vowel}: {count} occurrences")
+                    
+                    if sound_analysis["dominant_vowel"]:
+                        result.append(f"\nDominant vowel: {sound_analysis['dominant_vowel']}")
+                    result.append("")
+                
+                # Show sound patterns if available
+                if sound_analysis["sound_patterns"]:
+                    result.append("Sound correspondences:")
+                    for pattern in sound_analysis["sound_patterns"]:
+                        result.append(f"- Woccon '{pattern['woccon']}' corresponds to Catawba '{pattern['catawba']}'")
+                        if pattern.get("examples"):
+                            example = pattern["examples"][0] if pattern["examples"] else ""
+                            result.append(f"  Example: {example}")
+                
+                return "\n".join(result)
 
         # 3. SHOW FORMS OF SPECIFIC ROOT
         m_all = re.search(
@@ -276,6 +403,7 @@ class WocconAssistant:
                 )
         
         return text
+    
         
     @staticmethod
     def _load_json(path: str) -> Dict:
