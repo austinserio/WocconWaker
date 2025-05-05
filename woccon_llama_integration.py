@@ -51,6 +51,22 @@ class WocconAssistant:
 
         lower = text.lower().strip()
 
+        # English-to-Woccon + all-forms (handles “all the forms of dog?”, etc.)
+        m_eng = re.search(
+            r"all (?:the )?(?:legal )?forms (?:of|for)\s+'?([a-z\-\s]+)'?\??",
+            lower
+        )
+        if m_eng:
+            eng = m_eng.group(1).strip().lower()
+            entry = self.woccon.eng_to_woc.get(eng)
+            if not entry:
+                return f"⚠️ No Woccon entry found for English '{eng}'."
+            root = entry["woccon"]
+            forms = self.woccon.generate_all_forms(root)
+            if not forms:
+                return f"⚠️ No forms generated for Woccon '{root}'."
+            return f"{root}: {', '.join(forms)}"
+
         # 1) “all legal forms of all words”
         if "all legal forms of all words" in lower or "all forms of all words" in lower:
             lines = []
@@ -83,24 +99,20 @@ class WocconAssistant:
             form = self.woccon.generate_form(root, suffixes)
             return form or "⚠️ Illegal suffix chain."
 
-        # …then your existing lesson-start and RAG/LLaMA fallback…
-
-
-        # 2) if a lesson is active, delegate to it
+        # 4) lesson in progress?
         if session["lesson"] is not None:
             resp, done = session["lesson"].handle(text)
             if done:
                 session["lesson"] = None
             return resp
 
-        # 3) detect lesson start
+        # 5) start a new lesson?
         if any(k in lower for k in ("lesson", "vocab", "teach me", "learn")):
-            # sample 3 words for a micro-lesson
             words = random.sample(self.dictionary["lexicon"], 3)
             session["lesson"] = LessonManager(words)
             return "📚 Starting a mini-lesson!\n\n" + session["lesson"].prompt()
 
-        # 4) fallback: RAG + Llama
+        # 6) fallback: RAG + LLaMA
         retrieved = self._retrieve(text)
         messages = self._build_prompt(text, retrieved, session["history"])
         raw = ollama.chat(
@@ -110,12 +122,10 @@ class WocconAssistant:
         )["message"]["content"]
         answer = self._minimal_verify(raw)
 
-        # record turn
         session["history"].append({"role": "user", "content": text})
         session["history"].append({"role": "assistant", "content": answer})
-
         return answer
-
+    
     # ————————————— retrieval + prompting —————————————
     def _retrieve(self, query: str, k: int = 12) -> List[str]:
         tokens = set(re.findall(r"[a-z]+", query.lower()))

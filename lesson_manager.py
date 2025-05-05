@@ -17,80 +17,70 @@ class LessonManager:
     def __init__(self, words: List[Dict]):
         self.words = words
         self.i = 0
-        self.stage = "meaning"  # stages: meaning -> pronunciation -> spelling
+        self.stage = "prompt"  # stages: meaning -> pronunciation -> spelling
 
     def prompt(self) -> str:
         w = self.words[self.i]
-        # Stage: meaning
-        if self.stage == "meaning":
+        if self.stage == "prompt":
             return (
-                f"🆕 Word {self.i+1}/{len(self.words)}\n"
-                f"• Woccon: **{w['woccon']}** ({w['pos']})\n"
-                "❓ What does this mean in English? (or type 'I don't know' to reveal)"
+                f"🆕 Word {self.i + 1}/{len(self.words)}\n"
+                f"❓ What’s the Woccon word for **{w['english']}**?\n"
+                "(Type it, or “I don’t know” to reveal.)"
             )
-        # Stage: pronunciation
-        if self.stage == "pronunciation":
-            phon = self._phonetic(w['woccon'])
+        if self.stage == "reinforce":
             return (
-                f"🔊 Pronunciation practice:\n"
-                f"I spell it phonetically as **{phon}**.\n"
-                "✍️ Please type that phonetic spelling as you say it out loud:"
+                f"✍️ Please type **{w['woccon']}** again to reinforce the spelling:"
             )
-        # Stage: spelling
-        if self.stage == "spelling":
-            return (
-                f"✍️ Now, please type the Woccon word **{w['woccon']}** to practice spelling:"
-            )
-        return ""
+        return "⚠️ Unexpected stage."
+
 
     def handle(self, user_text: str) -> Tuple[str, bool]:
         usr = user_text.strip().lower()
         w = self.words[self.i]
-        exp_eng = w['english'].lower()
         exp_woc = w['woccon'].lower()
-        exp_phon = self._phonetic(w['woccon'])
 
         # allow exit
         if usr in ("exit", "quit", "stop", "cancel"):
             return ("👋 Lesson exited. Type 'lesson' to start another.", True)
 
-        # Meaning stage
-        if self.stage == "meaning":
-            if exp_eng in usr:
-                resp = f"✅ Correct! **{w['woccon']}** means '{w['english']}'."
-            elif any(p in usr for p in ("i don't know", "idk", "dont know", "not sure", "no idea")):
-                resp = f"ℹ️ No worries — **{w['woccon']}** means '{w['english']}'."
-            else:
-                resp = f"❌ Not quite. **{w['woccon']}** means '{w['english']}'."
-            self.stage = "pronunciation"
-            return (resp + "\n\n" + self.prompt(), False)
-
-        # Pronunciation stage
-        if self.stage == "pronunciation":
-            if usr == exp_phon:
-                resp = f"✅ Nice pronunciation! You spelled it '{exp_phon}'."
-            else:
-                resp = f"❌ Almost — the phonetic spelling is **{exp_phon}**."
-            self.stage = "spelling"
-            return (resp + "\n\n" + self.prompt(), False)
-
-        # Spelling stage
-        if self.stage == "spelling":
+        # 1️⃣  Initial prompt – expect the Woccon word
+        if self.stage == "prompt":
             if usr == exp_woc:
-                # Completed one word; move to next or finish
-                if self.i >= len(self.words) - 1:
-                    return (
-                        "🎉 Well done! You've completed the lesson. "
-                        "Type 'lesson' to try again or ask something else.",
-                        True
-                    )
-                # next word
-                self.i += 1
-                self.stage = "meaning"
-                return ("✅ Correct spelling! 👏\n\n" + self.prompt(), False)
-            return ("❌ Oops, not quite. Try typing it again:", False)
+                return self._advance("✅ Correct! 🎉")
+            elif any(t in usr for t in ("i don't know", "idk", "dont know")):
+                self.stage = "reinforce"
+                return (
+                    f"ℹ️ No worries — the word is **{w['woccon']}**.\n\n" +
+                    self.prompt(),
+                    False
+                )
+            else:
+                self.stage = "reinforce"
+                return (
+                    f"❌ Not quite. The correct word is **{w['woccon']}**.\n\n" +
+                    self.prompt(),
+                    False
+                )
 
-        return ("Unexpected stage.", False)
+        # 2️⃣  Reinforce – learner must type the revealed word exactly
+        if self.stage == "reinforce":
+            if usr == exp_woc:
+                return self._advance("✅ Great! On to the next one 👏")
+            return ("❌ Try again:", False)
+
+        return ("⚠️ Something went wrong.", True)
+
+    def _advance(self, success_msg: str) -> Tuple[str, bool]:
+        """Move to the next word or finish the lesson."""
+        if self.i >= len(self.words) - 1:
+            return (
+                success_msg +
+                "\n\n🎉 Lesson complete! Type 'lesson' to start another.",
+                True
+            )
+        self.i += 1
+        self.stage = "prompt"
+        return (success_msg + "\n\n" + self.prompt(), False)
 
     def _current(self):
         return self.words[self.i]
