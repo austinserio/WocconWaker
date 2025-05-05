@@ -56,6 +56,33 @@ class WocconAssistant:
 
         lower = text.lower().strip()
 
+        # Handle part-of-speech queries
+        if re.search(r'what are some (adverbs|verbs|nouns|adjectives)', lower):
+            pos_type = re.search(r'what are some (adverbs|verbs|nouns|adjectives)', lower).group(1)
+            
+            # Map to your dictionary's terminology
+            pos_map = {
+                'adverbs': 'adverb',
+                'verbs': 'verb phrase',
+                'nouns': 'noun',
+                'adjectives': 'adjective'
+            }
+            
+            # Look up all words with this part of speech
+            matches = []
+            for entry in self.dictionary["lexicon"]:
+                if entry.get("pos", "").lower() == pos_map.get(pos_type, ""):
+                    matches.append(entry)
+            
+            if matches:
+                result = [f"Here are the {pos_type} in Woccon from the dictionary:"]
+                for entry in matches:
+                    result.append(f"- {entry['woccon']} (English: {entry['english']})")
+                return "\n".join(result)
+            else:
+                return f"I couldn't find any {pos_type} in the Woccon dictionary."
+
+
         # 1. SHOW ALL WORDS - Handle with flexible patterns
         if self._matches_any_pattern(lower, [
             r"all (?:(?:the )?(?:legal )?)?forms of all(?: the)? words",
