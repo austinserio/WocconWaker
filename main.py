@@ -4,25 +4,109 @@ from transformers import T5ForConditionalGeneration, ByT5Tokenizer
 import torch
 from typing import Dict, List, Tuple, Optional
 import random
+import re
+
+def load_json(path: str) -> Dict:
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 class WocconT5:
-    def _load_json(self, filepath: str) -> Dict:
-        """Load and return JSON file"""
-        with open(filepath, 'r', encoding='utf-8') as f:
-            return json.load(f)
+    # ───────── init ─────────
+    def __init__(self,
+                 dict_path: str = "woccon_language/dictionary.json",
+                 rules_path: str = "woccon_language/rules.json",
+                 model_name: str = "google/byt5-small"):
+        self.dictionary = load_json(dict_path)
+        self.rules      = load_json(rules_path)
+        # (model kept for future seq2seq fine‑tuning; not required here)
+        self.tokenizer  = ByT5Tokenizer.from_pretrained(model_name)
+        self.model      = T5ForConditionalGeneration.from_pretrained(model_name)
 
-    def __init__(self, model_name: str = "google/byt5-small"):
-        """Initialize the WocconT5 with rules and dictionary"""
-        self.model_name = model_name
-        self.tokenizer = ByT5Tokenizer.from_pretrained(model_name)
-        self.model = T5ForConditionalGeneration.from_pretrained(model_name)
-        
-        # Load data
-        self.rules = self._load_json("woccon_language/rules.json")
-        self.dictionary = self._load_json("woccon_language/dictionary.json")
-        
-        # Initialize lookups
-        self._initialize_lookups()
+        # look‑ups
+        self.eng_to_woc = {e["english"].lower(): e for e in self.dictionary["lexicon"]}
+        self.woc_to_eng = {e["woccon"].lower(): e for e in self.dictionary["lexicon"]}
+
+        # suffix chains (pre‑computed)
+        self.suffix_chains = self._build_suffix_chains()
+        # quick diagnostics
+        print(f"Loaded {len(self.eng_to_woc)} attested lexemes; {len(self.suffix_chains)} legal suffix chains.")
+
+    # ───────── suffix utilities ─────────
+    def _build_suffix_chains(self, max_len: int = 3) -> List[List[str]]:
+        """Return every legal chain per ordering rules in rules.json."""
+        # simple read: rules.json must list suffixes in legal order; permutations w/ same order are allowed
+        ordered = [r["form"].lstrip("-") for r in self.rules.get("suffixes", [])]
+        chains: List[List[str]] = [[]]
+        def backtrack(start, path):
+            chains.append(path.copy())
+            if len(path) == max_len:
+                return
+            for i in range(start, len(ordered)):
+                backtrack(i+1, path + [ordered[i]])
+        backtrack(0, [])
+        return chains
+
+    # ───────── generation ─────────
+    def _smooth(self, stem: str, suffix: str) -> str:
+        """Phonological smoothing: if boundary duplicates a vowel, collapse it."""
+        if stem[-1] == suffix[0]:
+            return stem[:-1] + suffix
+        return f"{stem}-{suffix}"
+
+    def generate_form(self, root: str, suffixes: List[str]) -> Optional[str]:
+        """Return inflected form or None if illegal chain/root."""
+        root = root.lower().strip()
+        if root not in self.woc_to_eng:
+            return None
+        chain = [s.lstrip("-") for s in suffixes]
+        if chain not in self.suffix_chains:
+            return None
+        form = root.rstrip("-")
+        for s in chain:
+            form = self._smooth(form, s)
+        return form
+
+    def generate_all_forms(self, root: str) -> List[str]:
+        """Generate all legal combinations of this root with known suffixes."""
+        root = root.lower().strip()
+        base_form = root.replace("-", "")
+        forms = {root}  # Use a set to avoid duplicates
+
+        suffixes = ["-he", "-wa", "-iune", "-pe"]
+        for s1 in suffixes:
+            form1 = f"{base_form}{s1.strip('-')}"
+            if self._is_legal_combination(root, [s1]):
+                forms.add(form1)
+            for s2 in suffixes:
+                if s1 != s2 and self._is_legal_combination(root, [s1, s2]):
+                    form2 = f"{base_form}{s1.strip('-')}{s2.strip('-')}"
+                    forms.add(form2)
+
+        return sorted(forms)
+
+    def _is_legal_combination(self, root: str, suffixes: List[str]) -> bool:
+        """Simple legality check based on known affix compatibility rules."""
+        # For now: allow combos if each suffix is allowed individually
+        affix_forms = {"-he", "-wa", "-iune", "-pe"}
+        for suffix in suffixes:
+            if suffix not in affix_forms:
+                return False
+        # More advanced rule checks can be plugged in here
+        return True
+
+    # ───────── glossary helpers ─────────
+    def lookup_word(self, english: str) -> Optional[str]:
+        entry = self.eng_to_woc.get(english.lower())
+        if entry:
+            return f"Woccon: {entry['woccon']}  |  English: {entry['english']}  |  POS: {entry['pos']}"
+        return None
+
+    def gloss_query(self, q: str) -> Optional[str]:
+        m = re.search(r"for\s+'?([a-z\- ]+)'?", q.lower())
+        if not m:
+            return None
+        return self.lookup_word(m.group(1))
+
 
     def get_random_example(self) -> Dict:
         """Return a random lexicon entry for lesson selection."""
@@ -526,4 +610,7 @@ def test_system():
                     print(f"- {word['woccon']} = {word['english']}")
 
 if __name__ == "__main__":
-    test_system()
+    w = WocconT5()
+    print(w.lookup_word("water"))
+    print("All forms of 'yauh-he':", w.generate_all_forms("yauh-he")[:10], "…")
+    #test_system()

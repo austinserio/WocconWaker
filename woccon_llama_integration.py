@@ -44,13 +44,47 @@ class WocconAssistant:
         self.sessions: Dict[str, Dict] = {}
 
     def reply(self, user_id: str, text: str) -> str:
-        # 1) grab or create session
         session = self.sessions.setdefault(user_id, {
             "history": deque(maxlen=self.ctx_turns * 2 + 2),
             "lesson": None
         })
 
         lower = text.lower().strip()
+
+        # 1) “all legal forms of all words”
+        if "all legal forms of all words" in lower or "all forms of all words" in lower:
+            lines = []
+            for root in sorted(self.woccon.woc_to_eng.keys()):
+                forms = self.woccon.generate_all_forms(root)
+                if forms:
+                    lines.append(f"{root}: {', '.join(forms)}")
+            return "\n".join(lines) or "⚠️ No roots attested."
+
+        # 2) “all (legal )?forms of <root>”
+        m_all = re.search(
+            r"(?:all (?:legal )?forms (?:of|for))\s+([a-z\-]+)",
+            lower
+        )
+        if m_all:
+            root = m_all.group(1)
+            forms = self.woccon.generate_all_forms(root)
+            if not forms:
+                return f"⚠️ “{root}” is not an attested Woccon root."
+            return "\n".join(forms)
+
+        # 3) “generate <root> with suffixes …”
+        m_gen = re.search(
+            r"generate\s+([a-z\-]+)\s+with suffixes\s+(.+)",
+            lower
+        )
+        if m_gen:
+            root = m_gen.group(1)
+            suffixes = [s.strip() for s in m_gen.group(2).split(",")]
+            form = self.woccon.generate_form(root, suffixes)
+            return form or "⚠️ Illegal suffix chain."
+
+        # …then your existing lesson-start and RAG/LLaMA fallback…
+
 
         # 2) if a lesson is active, delegate to it
         if session["lesson"] is not None:
