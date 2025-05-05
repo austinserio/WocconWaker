@@ -147,6 +147,8 @@ class LessonManager:
                     self.prompt(),
                     False
                 )
+            elif usr == "explain":
+                return self.explain(), False
             else:
                 # Check for close answers
                 close_enough = False
@@ -186,6 +188,15 @@ class LessonManager:
             return ("❌ Try again:", False)
 
         return ("⚠️ Something went wrong.", True)
+
+    def explain(self) -> str:
+        """Ask the LLM to explain this grammar rule or word form."""
+        itm = self.items[self.i]
+        query = f"Explain the grammar behind: {itm['question']}. The correct answer is: {itm['answer']}."
+        retrieved = self.parent._retrieve(query)
+        messages = self.parent._build_prompt(query, retrieved, deque())  # no convo history
+        resp = ollama.chat(model=self.parent.model, messages=messages)["message"]["content"]
+        return resp
 
     def _advance(self, message: str) -> Tuple[str, bool]:
         self.i += 1

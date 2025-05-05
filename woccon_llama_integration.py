@@ -7,6 +7,7 @@ from typing import Dict, List, Tuple
 import ollama                     # your local Llama server client
 from main import WocconT5         # the rule-based analyzer
 from lesson_manager import LessonManager
+from grammar_lesson_manager import GrammarLessonManager
 
 logging.basicConfig(level=logging.INFO,
                     format="%(asctime)s - %(levelname)s - %(message)s")
@@ -64,10 +65,20 @@ class WocconAssistant:
             return resp
 
         # 2️⃣  If the user mentioned "lesson" (or "vocab"/"learn"), start a new one
-        if re.search(r"\b(lesson|vocab|teach me|learn)\b", lower):
+        # START VOCAB LESSON
+        if re.search(r"\b(vocab|vocabulary|learn words)\b", lower):
             words = random.sample(self.dictionary["lexicon"], 3)
-            session["lesson"] = LessonManager(words, parent=self)
-            return "📚 Starting a mini-lesson!\n\n" + session["lesson"].prompt()
+            session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+            return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
+
+        # START A GRAMMAR LESSON
+        if re.search(r"\b(grammar|grammar lesson|learn grammar)\b", lower):
+            items = GrammarLessonManager.build_items(
+                self.rules,
+                self.dictionary["lexicon"]
+            )
+            session["lesson"] = GrammarLessonManager(items, parent=self)
+            return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
 
 
         # Handle part-of-speech queries
