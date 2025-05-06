@@ -14,7 +14,7 @@ log = logging.getLogger("woccon_assistant")
 
 
 class WocconAssistant:
-    """RAG-powered Woccon assistant with enhanced mini-lessons and better decision logic."""
+    """RAG-powered Woccon assistant with smarter context-aware lesson offers."""
 
     def __init__(self,
                  dict_path="woccon_language/dictionary.json",
@@ -43,44 +43,8 @@ class WocconAssistant:
         # Session state per user
         self.sessions: Dict[str, Dict] = {}
     
-    def _is_direct_question_about_language(self, text: str) -> bool:
-        """Determine if text is a direct question about the language rather than a request for interactive features."""
-        text = text.lower().strip()
-        
-        # Patterns that indicate information requests rather than lesson requests
-        info_patterns = [
-            r"what (?:is|are) (?:the )?(?:sound patterns|phonology|pronunciation)",
-            r"how (?:is|are) (?:the )?(?:sounds|phonology|pronunciation)",
-            r"can you (?:tell|give) me (?:the )?(?:sound patterns|phonology)",
-            r"what (?:does|do) (?:the )?(?:word|suffixes|prefixes)",
-            r"explain (?:the )?(?:grammar|syntax|structure|phonology)",
-            r"(?:sound|phonological) (?:pattern|structure|analysis)",
-            r"how many (?:sounds|phonemes|vowels|consonants)",
-        ]
-        
-        return any(re.search(pattern, text) for pattern in info_patterns)
-    
-    def _is_request_for_sound_analysis(self, text: str) -> Tuple[bool, Optional[str]]:
-        """Check if the text is requesting sound pattern analysis for a specific word."""
-        text = text.lower().strip()
-        
-        # Patterns to identify requests for sound analysis of specific words
-        sound_patterns = [
-            r"(?:sound patterns|phonology|pronunciation) (?:of|for) (?:the )?(?:word )?'?([a-z\-]+)'?",
-            r"(?:analyze|examine) (?:the )?(?:sound|phonology|pronunciation) (?:of|in|for) '?([a-z\-]+)'?",
-            r"how (?:is|are) '?([a-z\-]+)'? pronounced",
-            r"what are (?:the )?(?:sound patterns|phonological features) (?:of|for) '?([a-z\-]+)'?",
-        ]
-        
-        for pattern in sound_patterns:
-            match = re.search(pattern, text)
-            if match:
-                return True, match.group(1)
-        
-        return False, None
-
     def reply(self, user_id: str, text: str) -> str:
-        """Enhanced reply method with conversational lesson offering."""
+        """Enhanced reply method with smarter context-aware lesson offers."""
         # Initialize or get session
         session = self.sessions.setdefault(user_id, {
             "history": deque(maxlen=self.ctx_turns * 2 + 2),
@@ -89,18 +53,46 @@ class WocconAssistant:
             "last_interaction": None,   # Store last user input
             "pending_action": None,     # Store a pending action choice if needed
             "context": {},              # Store context between interactions
-            "topic_history": [],        # Track recent topics discussed
+            "topic_sequence": [],       # Track recent topics discussed (sequence matters)
             "question_count": 0,        # Track how many questions about a topic  
+            "direct_lesson_request": False,  # Track if the current query is a direct lesson request
         })
 
         # Store last interaction
         session["last_interaction"] = text
         lower = text.lower().strip()
         
-        # Update question count and track topics
+        # Update question count and reset direct lesson request flag
         session["question_count"] += 1
+        session["direct_lesson_request"] = False
         
-        # 1️⃣ Handle pending actions first (confirmations, choices, etc.)
+        # 1️⃣ Check for direct lesson requests first
+        direct_lesson_request = self._check_direct_lesson_request(lower)
+        if direct_lesson_request:
+            session["direct_lesson_request"] = True
+            lesson_type = direct_lesson_request.get("type", "unspecified")
+            
+            if lesson_type != "unspecified":
+                # Start the requested lesson type directly
+                if lesson_type == "vocab":
+                    words = random.sample(self.dictionary["lexicon"], 3)
+                    session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+                    return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
+                else:  # grammar lesson
+                    items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
+                    session["lesson"] = GrammarLessonManager(items, parent=self)
+                    return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
+            else:
+                # Ask which type they want
+                session["pending_action"] = "choose_lesson_type"
+                
+                return (
+                    "📚 I'd be happy to start a lesson! What type would you like?\n\n"
+                    "• Say 'vocabulary' to learn Woccon words\n"
+                    "• Say 'grammar' to learn grammar rules and patterns"
+                )
+        
+        # 2️⃣ Handle pending actions (confirmations, choices, etc.)
         if session["pending_action"]:
             action = session["pending_action"]
             context = session["context"]
@@ -142,14 +134,14 @@ class WocconAssistant:
             
             elif action == "choose_lesson_type":
                 # Check if they specified a type
-                if re.search(r"\b(vocab|vocabulary|words|terms)\b", lower):
+                if re.search(r"\b(vocab|vocabulary|words|lexicon|terms)\b", lower):
                     session["pending_action"] = None
                     
                     words = random.sample(self.dictionary["lexicon"], 3)
                     session["lesson"] = LessonManager(words, parent=self, mode="vocab")
                     return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
                     
-                elif re.search(r"\b(grammar|structure|syntax|rules)\b", lower):
+                elif re.search(r"\b(grammar|structure|syntax|rules|suffixes|prefixes)\b", lower):
                     session["pending_action"] = None
                     
                     items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
@@ -166,7 +158,7 @@ class WocconAssistant:
                     session["pending_action"] = None
                     # Continue with normal processing - fall through
 
-        # 2️⃣ If a lesson is in progress, delegate straight to it
+        # 3️⃣ If a lesson is in progress, delegate straight to it
         if session["lesson"] is not None:
             resp, done = session["lesson"].handle(text)
             
@@ -179,7 +171,7 @@ class WocconAssistant:
             
             return resp
 
-        # 3️⃣ Handle continuation of previous lessons
+        # 4️⃣ Handle continuation of previous lessons
         if session["last_lesson_state"] and self._is_continue_request(lower):
             lesson_state = session["last_lesson_state"]
             
@@ -210,7 +202,7 @@ class WocconAssistant:
                 
                 return f"📚 Starting a new grammar lesson!\n\n{lesson.prompt()}"
 
-        # 4️⃣ Process the query using RAG + LLM
+        # 5️⃣ Process the query using RAG + LLM
         # Get answer from LLM
         retrieved = self._retrieve(text)
         messages = self._build_prompt(text, retrieved, session["history"])
@@ -225,26 +217,41 @@ class WocconAssistant:
         session["history"].append({"role": "user", "content": text})
         session["history"].append({"role": "assistant", "content": answer})
         
-        # 5️⃣ Determine if we should offer a lesson based on the context
-        # Only offer lessons if:
-        # - We have answered their question first
-        # - They've asked multiple questions about the same topic
-        # - We haven't offered recently
-        # - They haven't declined multiple offers already
+        # 6️⃣ Update topic tracking
+        current_topic = self._determine_current_topic(lower, answer)
+        if current_topic:
+            # Add to topic sequence
+            session["topic_sequence"].append(current_topic)
+            # Keep only the last 5 topics
+            if len(session["topic_sequence"]) > 5:
+                session["topic_sequence"] = session["topic_sequence"][-5:]
+                
+        # 7️⃣ Determine if we should offer a lesson based on the context
         should_offer_lesson = (
             not session["context"].get("suppress_lesson_offers", False) and
-            session["question_count"] >= 3 and
+            session["question_count"] >= 2 and
             not self._is_help_request(lower) and
-            random.random() < 0.4  # 40% chance to offer after the conditions are met
+            not session["direct_lesson_request"]  # Don't offer if they just explicitly declined
         )
         
         # Check what kind of topic they're asking about to offer the right lesson
         lesson_type = None
         if should_offer_lesson:
-            if self._is_about_vocabulary(lower, answer):
+            # Look at recent topics for patterns
+            recent_topics = session["topic_sequence"][-3:] if len(session["topic_sequence"]) >= 3 else session["topic_sequence"]
+            
+            # If they're consistently asking about one topic, offer that lesson type
+            if recent_topics and recent_topics.count("vocab") >= 2:
                 lesson_type = "vocab"
+            elif recent_topics and recent_topics.count("grammar") >= 2:
+                lesson_type = "grammar"
+            elif "grammar" in lower or any(term in lower for term in ["suffix", "prefix", "conjugation", "declension", "morphology"]):
+                # Direct grammar topic in current question
+                lesson_type = "grammar"
             elif self._is_about_grammar(lower, answer):
                 lesson_type = "grammar"
+            elif self._is_about_vocabulary(lower, answer):
+                lesson_type = "vocab"
             else:
                 # If we can't determine which type is most relevant, we won't offer
                 should_offer_lesson = False
@@ -262,13 +269,92 @@ class WocconAssistant:
         
         return answer
     
+    def _determine_current_topic(self, query: str, answer: str) -> Optional[str]:
+        """Analyze the query and answer to determine the current topic of conversation."""
+        combined_text = (query + " " + answer).lower()
+        
+        # Check for vocabulary focus
+        if any(term in combined_text for term in ["vocabulary", "dictionary", "word", "lexicon", "meaning", "translate"]):
+            return "vocab"
+            
+        # Check for grammar focus
+        if any(term in combined_text for term in ["grammar", "suffix", "prefix", "conjugate", "syntax", "structure"]):
+            return "grammar"
+            
+        # Check for phonology focus
+        if any(term in combined_text for term in ["phonology", "pronunciation", "sound", "syllable", "vowel", "consonant"]):
+            return "phonology"
+            
+        # Default to None if we can't determine
+        return None
+    
+    def _check_direct_lesson_request(self, text: str) -> Optional[Dict]:
+        """
+        Improved detection of direct lesson requests with clearer differentiation between
+        grammar and vocabulary lessons.
+        """
+        text = text.lower().strip()
+        
+        # Very explicit grammar lesson requests - high confidence
+        grammar_patterns = [
+            r"^\s*grammar lesson\s*\??$",  # Just "grammar lesson" or "grammar lesson?"
+            r"\b(start|begin|do|give me) (?:a )?grammar lesson\b",
+            r"\bcan you (?:do|teach|give) (?:a )?grammar lesson\b",
+            r"^\s*teach me grammar\s*$",  # Exact match for "teach me grammar"
+            r"^\s*grammar\s*\?$",  # Just "grammar?"
+        ]
+        
+        if any(re.search(pattern, text) for pattern in grammar_patterns):
+            return {"type": "grammar", "confidence": "high"}
+        
+        # Very explicit vocabulary lesson requests - high confidence
+        vocab_patterns = [
+            r"^\s*vocab(?:ulary)? lesson\s*\??$",  # Just "vocab lesson" or "vocabulary lesson?"
+            r"\b(start|begin|do|give me) (?:a )?vocab(?:ulary) lesson\b",
+            r"\bcan you (?:do|teach|give) (?:a )?vocab(?:ulary) lesson\b",
+            r"^\s*teach me vocab(?:ulary)\s*$",  # Exact match for "teach me vocabulary"
+            r"^\s*words\s*\?$",  # Just "words?"
+        ]
+        
+        if any(re.search(pattern, text) for pattern in vocab_patterns):
+            return {"type": "vocab", "confidence": "high"}
+        
+        # Less explicit but still pretty clear grammar requests
+        grammar_medium_patterns = [
+            r"\b(?:teach|show|learn) (?:me |us )?(?:about )?grammar\b",
+            r"\bgrammar (?:help|practice|exercises|tutorial)\b",
+            r"\b(?:i want to|let's|i'd like to) learn grammar\b",
+        ]
+        
+        if any(re.search(pattern, text) for pattern in grammar_medium_patterns):
+            return {"type": "grammar", "confidence": "medium"}
+        
+        # Less explicit but still pretty clear vocabulary requests
+        vocab_medium_patterns = [
+            r"\b(?:teach|show|learn) (?:me |us )?(?:about )?vocab(?:ulary)?\b",
+            r"\bvocab(?:ulary) (?:help|practice|exercises|tutorial)\b",
+            r"\b(?:i want to|let's|i'd like to) learn vocab(?:ulary)\b",
+            r"\blearn (?:some |a few )?words\b",
+        ]
+        
+        if any(re.search(pattern, text) for pattern in vocab_medium_patterns):
+            return {"type": "vocab", "confidence": "medium"}
+        
+        # Very general lesson requests
+        if (re.search(r"\b(give|start|begin|teach) (?:a |me )?lesson\b", text) or 
+            re.search(r"\bcan you (?:do|teach|give) (?:a )?lesson\b", text) or
+            re.search(r"^\s*lesson\s*\??$", text)):  # Just "lesson" or "lesson?"
+            return {"type": "unspecified", "confidence": "medium"}
+                
+        return None
+    
     def _is_about_vocabulary(self, query: str, answer: str) -> bool:
         """Determine if the conversation is focused on vocabulary."""
         vocab_indicators = [
             r"\b(word|words|vocabulary|lexicon|lexeme|term|expression)\b",
             r"\b(meaning|definition|translate|translation)\b",
-            r"\bhow to say\b",
-            r"\bwhat does .+ mean\b",
+            r"\bhow (?:do|would|to) say\b",
+            r"\bwhat (?:does|do|is|are) .+ mean\b",
         ]
         
         # Check both query and answer for indicators
@@ -282,116 +368,13 @@ class WocconAssistant:
             r"\b(suffix|prefix|affix|infix|morpheme)\b",
             r"\b(conjugate|conjugation|decline|declension)\b", 
             r"\b(modify|modification|change|transform)\b",
+            r"\b(word order|case|tense|aspect|mood|voice)\b",
         ]
         
         # Check both query and answer for indicators
         combined_text = (query + " " + answer).lower()
         return any(re.search(pattern, combined_text) for pattern in grammar_indicators)
     
-    def _is_help_request(self, text: str) -> bool:
-        """Check if user is asking for help with commands."""
-        help_patterns = [
-            r"\b(help|commands|what can you do|how do i|features|capabilities)\b",
-            r"what (?:can you|do you) do",
-            r"(?:show|list|tell me) (?:the )?commands",
-        ]
-        
-        return any(re.search(pattern, text) for pattern in help_patterns)
-    
-
-    def _analyze_sound_patterns(self, word: str) -> str:
-        """Analyze the sound patterns of a specific word."""
-        try:
-            if not hasattr(self.woccon, 'identify_sound_patterns'):
-                return (
-                    f"I'd like to analyze the sound patterns of '{word}', but the sound pattern "
-                    f"analysis functionality isn't available. Would you like me to tell you about "
-                    f"this word in another way?"
-                )
-                
-            woc_entry = None
-            eng_entry = None
-            
-            # Try to find the word in the dictionary
-            if word in self.woccon.woc_to_eng:
-                woc_entry = word
-                woc = word
-            elif word in self.woccon.eng_to_woc:
-                eng_entry = word
-                woc = self.woccon.eng_to_woc[word]["woccon"]
-            else:
-                # Search through English entries for partial matches
-                for eng, entry in self.woccon.eng_to_woc.items():
-                    if word in eng or eng in word:
-                        eng_entry = eng
-                        woc = entry["woccon"]
-                        break
-                        
-                if not eng_entry:
-                    # Search through Woccon entries for partial matches
-                    for woc_word in self.woccon.woc_to_eng.keys():
-                        if word in woc_word or woc_word in word:
-                            woc_entry = woc_word
-                            woc = woc_word
-                            break
-            
-            if not woc_entry and not eng_entry:
-                return (
-                    f"I couldn't find '{word}' in my Woccon dictionary. Would you like me to analyze "
-                    f"a different word, or tell you about Woccon phonology in general?"
-                )
-            
-            # Now analyze the sound patterns
-            sound_analysis = self.woccon.identify_sound_patterns(woc)
-            
-            # Get the English meaning if needed
-            english = ""
-            if woc_entry:
-                english = self.woccon.woc_to_eng[woc_entry]["english"]
-            elif eng_entry:
-                english = eng_entry
-                
-            # Format the sound analysis
-            result = [f"Sound pattern analysis of '{woc}'" + (f" ('{english}')" if english else "") + ":\n"]
-            
-            # Show syllables
-            if sound_analysis["syllables"]:
-                result.append(f"Syllables: {'-'.join(sound_analysis['syllables'])}")
-                result.append(f"Syllable count: {len(sound_analysis['syllables'])}")
-                result.append("")
-            
-            # Show vowel distribution
-            if sound_analysis["vowel_distribution"]:
-                result.append("Vowel distribution:")
-                for vowel, count in sound_analysis["vowel_distribution"].items():
-                    if count > 0:
-                        result.append(f"- {vowel}: {count} occurrences")
-                
-                if sound_analysis["dominant_vowel"]:
-                    result.append(f"\nDominant vowel: {sound_analysis['dominant_vowel']}")
-                result.append("")
-            
-            # Show sound patterns if available
-            if sound_analysis["sound_patterns"]:
-                result.append("Sound correspondences:")
-                for pattern in sound_analysis["sound_patterns"]:
-                    result.append(f"- Woccon '{pattern['woccon']}' corresponds to Catawba '{pattern['catawba']}'")
-                    if pattern.get("examples"):
-                        example = pattern["examples"][0] if pattern["examples"] else ""
-                        result.append(f"  Example: {example}")
-            
-            return "\n".join(result)
-        except Exception as e:
-            log.error(f"Error analyzing sound patterns: {e}")
-            return (
-                f"I encountered an error while analyzing the sound patterns of '{word}'. "
-                f"Would you like me to try a different analysis approach?"
-            )
-
-    def _matches_any_pattern(self, text: str, patterns: List[str]) -> bool:
-        """Helper method to check if text matches any of the given patterns."""
-        return any(re.search(pattern, text) for pattern in patterns)
-        
     def _is_continue_request(self, text: str) -> bool:
         """Check if user wants to continue a previous lesson."""
         continue_patterns = [
@@ -403,49 +386,19 @@ class WocconAssistant:
         
         return any(re.search(pattern, text) for pattern in continue_patterns)
     
-        
-    def _check_for_lesson_request(self, text: str) -> Optional[Dict]:
-        """Check if user is requesting a lesson, and of what type."""
-        # First check for specific lesson types
-        vocab_patterns = [
-            r"\b(vocab|vocabulary|words|lexicon|terms|phrases|expressions)\b",
-            r"\bteach me (?:some )?words\b",
+    def _is_help_request(self, text: str) -> bool:
+        """Check if user is asking for help with commands."""
+        help_patterns = [
+            r"\b(help|commands|what can you do|how do i|features|capabilities)\b",
+            r"what (?:can you|do you) do",
+            r"(?:show|list|tell me) (?:the )?commands",
         ]
         
-        grammar_patterns = [
-            r"\b(grammar|structure|syntax|rules|patterns|forms)\b",
-            r"\bteach me (?:some )?grammar\b",
-        ]
-        
-        # General lesson patterns
-        lesson_patterns = [
-            r"\b(teach|learn|start|give|do|have) (?:me |us )?(a |another )?(lesson|tutorial|practice|exercise)\b",
-            r"\blearn (?:some |about )?woccon\b",
-            r"\b(?:i want to|let's|i'd like to) learn\b",
-            r"\bstudy woccon\b",
-        ]
-        
-        # Check for direct information requests that might be confused for lesson requests
-        if self._is_direct_question_about_language(text):
-            return None
-            
-        # Check for sound pattern analysis requests
-        is_sound_request, _ = self._is_request_for_sound_analysis(text)
-        if is_sound_request:
-            return None
-        
-        # Check for specific types first
-        if any(re.search(pattern, text) for pattern in vocab_patterns):
-            return {"type": "vocab"}
-            
-        if any(re.search(pattern, text) for pattern in grammar_patterns):
-            return {"type": "grammar"}
-            
-        # Then check for general lesson requests
-        if any(re.search(pattern, text) for pattern in lesson_patterns):
-            return {"type": "unspecified"}
-            
-        return None
+        return any(re.search(pattern, text) for pattern in help_patterns)
+    
+    def _matches_any_pattern(self, text: str, patterns: List[str]) -> bool:
+        """Helper method to check if text matches any of the given patterns."""
+        return any(re.search(pattern, text) for pattern in patterns)
 
     def _retrieve(self, query: str, k: int = 12) -> List[str]:
         """
@@ -540,7 +493,7 @@ if __name__ == "__main__":
         try:
             msg = input("woccon> ").strip()
             #if msg.lower() in ("quit", "exit"):
-                #break
+            #    break
             print("\n" + bot.reply("cli_user", msg) + "\n")
         except KeyboardInterrupt:
             break
