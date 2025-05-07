@@ -4,6 +4,7 @@ from collections import deque
 import re
 import ollama
 import logging
+import json
 
 log = logging.getLogger("woccon_assistant")
 
@@ -462,13 +463,20 @@ class GrammarLessonManager:
         match_ratio = len(matched_concepts) / len(correct_concepts)
         
         return match_ratio, matched_concepts, missing_concepts
-
-    def check_answer_with_llm(self, user_answer: str, correct_answer: str, question: str) -> Tuple[bool, float, str]:
+        
+    def check_answer_with_llm(self, user_answer: str, correct_answer: str, question: str) -> Tuple[bool, float, str, bool]:
         """
         Use the LLM to evaluate if the user's answer is correct or close
-        Returns: (is_correct, confidence_score, explanation)
+        Returns: (is_correct, confidence_score, explanation, is_partial)
         """
         try:
+            # First use key concept extraction as a fallback
+            match_ratio, matched_concepts, missing_concepts = self.compare_key_concepts(user_answer, correct_answer)
+            
+            # If we have a very strong match based on key concepts, don't bother calling the LLM
+            if match_ratio > 0.9 and len(matched_concepts) >= 2:
+                return True, 0.95, "Answer contains all key concepts", False
+            
             # Prepare the evaluation prompt
             prompt = f"""
             Evaluate if this user's answer is correct for a Woccon language grammar lesson.
@@ -504,7 +512,6 @@ class GrammarLessonManager:
             
             # Parse the response
             # The response should be a JSON string, extract it and parse
-            import json
             try:
                 # Try to find JSON structure in the response
                 json_start = response.find("{")
@@ -521,22 +528,39 @@ class GrammarLessonManager:
                 confidence = float(result.get("confidence", 0.5))
                 explanation = result.get("explanation", "")
                 
+                # If LLM confidence is low but key concept matching is high, trust the key concept matching
+                if confidence < 0.7 and match_ratio > 0.75:
+                    if match_ratio > 0.9:
+                        return True, max(confidence, 0.8), explanation, False
+                    else:
+                        return False, max(confidence, 0.7), explanation, True
+                        
+                # If key concept matching and LLM evaluation disagree, log it for analysis
+                if (is_correct and match_ratio < 0.5) or (not is_correct and not is_partial and match_ratio > 0.8):
+                    log.warning(f"LLM and key concept evaluation disagree: LLM={is_correct}, concept_match={match_ratio}")
+                
                 return is_correct, confidence, explanation, is_partial
             
             except (json.JSONDecodeError, ValueError) as e:
                 log.error(f"Error parsing LLM response: {e} - Response: {response}")
-                # Fall back to string similarity if JSON parsing fails
-                similarity = self._string_similarity(self._normalize_answer(user_answer), 
-                                                   self._normalize_answer(correct_answer))
-                return similarity > 0.85, similarity, "Unable to parse detailed evaluation", similarity > 0.7
+                # Fall back to key concept matching if JSON parsing fails
+                if match_ratio > 0.85:
+                    return True, match_ratio, f"Contains key concepts: {', '.join(matched_concepts)}", False
+                elif match_ratio > 0.5:
+                    return False, match_ratio, f"Missing key concepts: {', '.join(missing_concepts)}", True
+                else:
+                    return False, match_ratio, "Answer lacks required key concepts", False
                 
         except Exception as e:
             log.error(f"Error in LLM answer check: {e}")
-            # Fall back to string similarity if LLM call fails
-            similarity = self._string_similarity(self._normalize_answer(user_answer), 
-                                               self._normalize_answer(correct_answer))
-            return similarity > 0.85, similarity, "Unable to get detailed evaluation", similarity > 0.7
-
+            # Fall back to key concept matching if LLM call fails completely
+            if match_ratio > 0.85:
+                return True, match_ratio, f"Contains key concepts: {', '.join(matched_concepts)}", False
+            elif match_ratio > 0.5:
+                return False, match_ratio, f"Missing key concepts: {', '.join(missing_concepts)}", True
+            else:
+                return False, match_ratio, "Answer lacks required key concepts", False
+                
     def handle(self, user_text: str) -> Tuple[str, bool]:
         """Handle user input with natural language understanding."""
         if self.i >= len(self.items):
@@ -685,6 +709,7 @@ class GrammarLessonManager:
             self.current_explanation = explanation_offer
             return (explanation_offer, False)
             
+        # CHECK FOR CORRECT ANSWER WITH FUZZY MATCHING AND LLM
         # Increment attempts counter for the current question
         self.current_question_attempts += 1
         
@@ -726,7 +751,7 @@ class GrammarLessonManager:
             elif self.streak >= 3:
                 celebration = " 🔥 Great streak!"
                 
-            resp = f"✅ Correct! **{correct_answer}**.{celebration}\n\n"
+            resp = f"✅ Correct! **{self.items[self.i]['answer']}**.{celebration}\n\n"
             # Advance to next question
             self.i += 1
             
@@ -736,10 +761,10 @@ class GrammarLessonManager:
             else:
                 resp += self.prompt()
                 return resp, False
-        
-        # PARTIALLY CORRECT ANSWER
+            
+        # PARTIALLY CORRECT ANSWER - using LLM evaluation
         elif is_partial:
-            resp = f"Almost! The correct answer is **{correct_answer}**.\n\n"
+            resp = f"Almost! The correct answer is **{self.items[self.i]['answer']}**.\n\n"
             self.streak = 0
             self.off_topic_counter = 0
             self.current_question_attempts = 0
@@ -755,8 +780,7 @@ class GrammarLessonManager:
                 resp += self.prompt()
                 return resp, False
         
-        # Check if the response seems completely off-topic 
-        # We'll use a combination of our existing method and the LLM's assessment
+        # Detect completely off-topic responses that aren't exit requests
         if confidence < 0.2 or (len(usr_lower.split()) > 3 and self._string_similarity(self._normalize_answer(usr), self._normalize_answer(correct_answer)) < 0.3):
             self.off_topic_counter += 1
             
@@ -811,9 +835,54 @@ class GrammarLessonManager:
             hint = self.generate_hint()
             return (f"{hint}\n\nWould you like to try answering now?", False)
         elif usr_lower == "2" and self.current_question_attempts >= 3:  # See answer
+            correct_answer = self.items[self.i]["answer"]
             self.streak = 0
             resp = f"The answer is **{correct_answer}**.\n\n"
-            self
+            self.i += 1
+            
+            if self.i >= len(self.items):
+                resp += f"🎓 You've finished your grammar lesson! Final score: {self.score}/{len(self.items)}"
+                return resp, True
+            else:
+                resp += self.prompt()
+                return resp, False
+        elif usr_lower == "3" and self.current_question_attempts >= 3:  # Explanation
+            self.paused = True
+            try:
+                explanation = self.explain()
+                explanation_text = (
+                    f"📚 Explanation for '{self.items[self.i]['question']}':\n\n"
+                    f"{explanation}\n\n"
+                    f"Would you like to try answering now, or shall we move on to the next question?"
+                )
+                self.current_explanation = explanation_text
+                return (explanation_text, False)
+            except Exception as e:
+                log.error(f"Error in explanation: {e}")
+                return (
+                    "I'm having trouble generating a detailed explanation. Would you like to skip to the next question?",
+                    False
+                )
+        
+        # Default case - not correct - provide adaptive feedback
+        if self.current_question_attempts == 1:
+            resp = (
+                f"❌ Not quite. Try again, or say 'I don't know' if you'd like the answer. "
+                f"You can also say 'explain' if you'd like more information about this question."
+            )
+        elif self.current_question_attempts == 2:
+            resp = (
+                f"❌ That's not correct. Let me give you a hint: {self.generate_hint()} "
+                f"Try once more, or type 'explain' for more details, or 'idk' to see the answer."
+            )
+        else:
+            resp = (
+                f"❌ Still not correct. Would you like to see the answer? Type 'yes' to see it, "
+                f"or try one more time."
+            )
+            
+        self.streak = 0
+        return resp, False
             
     def get_progress(self) -> Dict:
         """Return the current lesson progress for serialization."""
