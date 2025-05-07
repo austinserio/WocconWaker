@@ -1,6 +1,7 @@
 import json
 import os
 from transformers import T5ForConditionalGeneration, ByT5Tokenizer
+from woccon_morphological_analyzer import WocconMorphologicalAnalyzer
 import torch
 from typing import Dict, List, Tuple, Optional
 import random
@@ -33,6 +34,13 @@ class WocconT5:
         self.suffix_chains = self._build_suffix_chains()
         # quick diagnostics
         print(f"Loaded {len(self.eng_to_woc)} attested lexemes; {len(self.suffix_chains)} legal suffix chains.")
+
+            # Initialize the enhanced morphological analyzer
+        self.morphological_analyzer = WocconMorphologicalAnalyzer(self.rules)
+        
+        # Add direct method access to analyzer functionality
+        self.identify_inflectional_mode = self.morphological_analyzer.identify_inflectional_mode
+        self.detect_reduplication = self.morphological_analyzer.detect_reduplication
 
     # ───────── suffix utilities ─────────
     def _build_suffix_chains(self, max_len: int = 3) -> List[List[str]]:
@@ -433,6 +441,9 @@ class WocconT5:
         entry = self.lookup_word(word, "woc_to_eng")
         meaning = entry["english"] if entry else ""
         
+        # Get the enhanced analysis from the morphological analyzer
+        analysis = self.morphological_analyzer.analyze_word(word, meaning)
+
         # Initialize analysis structure
         analysis = {
             "roots": [],
@@ -1019,6 +1030,95 @@ class WocconT5:
             result.append(syllable)
         
         return result
+
+    def _initialize_phonology(self):
+        """Initialize phonological systems including vowel distinctions"""
+        # Short oral vowels: i, e, a, u
+        self.short_oral_vowels = {'i', 'e', 'a', 'u'}
+        
+        # Long oral vowels: i:, e:, a:, u:
+        self.long_oral_vowels = {'i:', 'e:', 'a:', 'u:'}
+        
+        # Nasal vowels: ĩ, ẽ, ã, ũ
+        self.nasal_vowels = {'ĩ', 'ẽ', 'ã', 'ũ'}
+        
+        # Consonants with special behavior
+        self.consonants = {
+            'p': {'features': 'bilabial stop', 'voicing': False},
+            't': {'features': 'alveolar stop', 'voicing': False},
+            'k': {'features': 'velar stop', 'voicing': False},
+            'č': {'features': 'palatal affricate', 'voicing': False},
+            's': {'features': 'alveolar fricative', 'voicing': False},
+            'h': {'features': 'glottal fricative', 'voicing': False},
+            'm': {'features': 'bilabial nasal', 'voicing': True},
+            'n': {'features': 'alveolar nasal', 'voicing': True},
+            'r': {'features': 'liquid', 'voicing': True},
+            'w': {'features': 'labial-velar approximant', 'voicing': True},
+            'y': {'features': 'palatal approximant', 'voicing': True}
+        }
+
+    def _identify_inflectional_mode(self, word: str) -> dict:
+        """Identify the inflectional mode of a Woccon word"""
+        word = word.lower()
+        
+        # Check for independent/indicative mode with -re suffix
+        if word.endswith('re'):
+            return {
+                'mode': 'independent',
+                'marker': '-re',
+                'stem': word[:-2]
+            }
+        
+        # Check for participial mode with -(a)ʔ suffix
+        if word.endswith('ʔ'):
+            return {
+                'mode': 'participial',
+                'marker': '-ʔ',
+                'stem': word[:-1]
+            }
+        
+        # Check for imperative mode with -de suffix
+        if word.endswith('de'):
+            return {
+                'mode': 'imperative',
+                'marker': '-de',
+                'stem': word[:-2]
+            }
+        
+        # Check for interrogative mode with -ne suffix
+        if word.endswith('ne'):
+            return {
+                'mode': 'interrogative',
+                'marker': '-ne',
+                'stem': word[:-2]
+            }
+        
+        return {'mode': 'unknown', 'marker': None, 'stem': word}
+
+    def _detect_reduplication(self, word: str) -> dict:
+        """Detect reduplication patterns in Woccon words"""
+        # Simple full reduplication (like wawawa for snow)
+        if len(word) >= 4:
+            if word[:2] == word[2:4]:
+                return {
+                    'type': 'full_reduplication',
+                    'pattern': 'intensive',
+                    'base': word[:2],
+                    'confidence': 'high'
+                }
+        
+        # Check for partial reduplication patterns
+        if len(word) >= 6:
+            # Check for patterns like kitkilare (break in pieces)
+            if word[:3] == word[3:6]:
+                return {
+                    'type': 'partial_reduplication',
+                    'pattern': 'frequentive',
+                    'base': word[:3],
+                    'confidence': 'medium'
+                }
+        
+        return None
 
 def test_system():
 

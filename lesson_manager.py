@@ -591,3 +591,45 @@ class LessonManager:
             "total_words": len(self.words),
             "words": self.words
         }
+    
+
+    def _add_linguistic_context(self, word_entry: Dict) -> str:
+        """Add linguistic context to a word based on morphological analysis"""
+        word = word_entry['woccon']
+        
+        # Get analysis if parent exists and has woccon attribute
+        analysis = {}
+        if self.parent and hasattr(self.parent, 'woccon'):
+            try:
+                analysis = self.parent.woccon.analyze_word(word)
+            except Exception as e:
+                log.error(f"Error analyzing word {word}: {e}")
+        
+        context = []
+        
+        # Add root information
+        if analysis.get("roots"):
+            for root in analysis["roots"]:
+                if root.get("confidence") not in ["low"]:
+                    context.append(f"• Contains the root **{root['root']}** meaning '{root['meaning']}'")
+                    break
+        
+        # Add affix information
+        if analysis.get("affixes"):
+            for affix in analysis["affixes"]:
+                context.append(f"• Contains the {affix['type']} **{affix['form']}** ({affix['function']})")
+        
+        # Add reduplication information
+        reduplication = self.parent.woccon._detect_reduplication(word) if hasattr(self.parent.woccon, '_detect_reduplication') else None
+        if reduplication:
+            context.append(f"• Shows {reduplication['type']} pattern indicating {reduplication['pattern']}")
+        
+        # Add inflectional mode information if relevant
+        infl_mode = self.parent.woccon._identify_inflectional_mode(word) if hasattr(self.parent.woccon, '_identify_inflectional_mode') else None
+        if infl_mode and infl_mode['mode'] != 'unknown':
+            context.append(f"• Uses the {infl_mode['mode']} mode marked by {infl_mode['marker']}")
+        
+        if not context:
+            context.append("• No additional morphological information available")
+        
+        return "\n".join(context)

@@ -362,13 +362,21 @@ class WocconAssistant:
         return any(re.search(pattern, combined_text) for pattern in vocab_indicators)
     
     def _is_about_grammar(self, query: str, answer: str) -> bool:
-        """Determine if the conversation is focused on grammar."""
+        """Determine if the conversation is focused on grammar, with enhanced patterns."""
         grammar_indicators = [
+            # Original patterns
             r"\b(grammar|syntax|structure|rule|pattern|form)\b",
             r"\b(suffix|prefix|affix|infix|morpheme)\b",
             r"\b(conjugate|conjugation|decline|declension)\b", 
             r"\b(modify|modification|change|transform)\b",
             r"\b(word order|case|tense|aspect|mood|voice)\b",
+            
+            # New patterns based on updated linguistic knowledge
+            r"\b(reduplication|intensity|frequentive)\b",
+            r"\b(participial|imperative|interrogative)\b",
+            r"\b(possession|possessive|inalienable|alienable)\b",
+            r"\b(pronominal|subject|object|marking)\b",
+            r"\b(independent mode|indicative mode)\b"
         ]
         
         # Check both query and answer for indicators

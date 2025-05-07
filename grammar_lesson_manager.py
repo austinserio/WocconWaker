@@ -29,108 +29,64 @@ class GrammarLessonManager:
         """Build a list of grammar lesson items from the rules and lexicon."""
         items = []
         
-        try:
-            # Add number pattern questions
-            if "numeral_patterns" in rules_json.get("morphology", {}):
-                for pattern in rules_json["morphology"]["numeral_patterns"]:
-                    items.append({
-                        "type": "number_pattern",
-                        "question": f"What pattern do Woccon speakers use to form {pattern['name']}?",
-                        "answer": pattern["description"]
-                    })
-            else:
-                # Fallback if structure is different
+        # Add inflectional mode questions
+        if "inflectional_morphology" in rules_json.get("morphology", {}):
+            modes = rules_json["morphology"]["inflectional_morphology"].get("modes", [])
+            for mode in modes:
                 items.append({
-                    "type": "number_pattern",
-                    "question": "What pattern do Woccon speakers use to form the teens?",
-                    "answer": "Add -pea after the base number (ten + X)"
+                    "type": "inflection_mode",
+                    "question": f"What does the suffix **{mode['marker']}** indicate in Woccon?",
+                    "answer": f"{mode['name']} mode ({mode['description']})"
                 })
-            
-            # Add specific numeral questions
-            if "numerals" in rules_json:
-                for num in range(1, 13):  # Add questions for numbers 1-12
-                    numeral = next((n for n in rules_json.get("numerals", []) if n.get("value") == num), None)
-                    if numeral:
-                        items.append({
-                            "type": "numeral",
-                            "question": f"What's the Woccon word for **{num}**?",
-                            "answer": numeral["woccon"]
-                        })
-            
-            # Add affix function questions
-            if "affixes" in rules_json.get("morphology", {}):
-                for aff_type in ["prefixes", "suffixes"]:
-                    for aff in rules_json["morphology"]["affixes"].get(aff_type, []):
-                        items.append({
-                            "type": "affix_fn",
-                            "question": f"What function does the {aff_type[:-2]} **{aff['form']}** serve?",
-                            "answer": aff["function"]
-                        })
                 
-                # Add affix application questions
-                for aff_type in ["prefixes", "suffixes"]:
-                    for aff in rules_json["morphology"]["affixes"].get(aff_type, []):
-                        if lexicon:
-                            root_entry = random.choice(lexicon)
-                            root = root_entry["woccon"]
-                            
-                            # Determine the correct result based on prefix or suffix
-                            if aff_type == "prefixes":
-                                result = aff["form"] + root
-                            else:  # suffixes
-                                result = root + aff["form"]
-                                
-                            items.append({
-                                "type": "affix_apply",
-                                "question": f"Add {aff_type[:-2]} **{aff['form']}** to **{root}**. What is the resulting form?",
-                                "answer": result
-                            })
+                # Add example-based questions
+                for example in mode.get("examples", []):
+                    items.append({
+                        "type": "mode_identify",
+                        "question": f"What inflectional mode is used in the Woccon word **{example['form']}** ({example['gloss']})?",
+                        "answer": f"{mode['name']} mode, marked by {mode['marker']}"
+                    })
+        
+        # Add reduplication questions
+        if "reduplication" in rules_json.get("morphology", {}):
+            items.append({
+                "type": "reduplication",
+                "question": "What grammatical function does reduplication serve in Woccon?",
+                "answer": "Reduplication signals frequency or intensity"
+            })
             
-            # Add compounding decomposition questions
-            if "compounding" in rules_json.get("morphology", {}):
-                for comp in rules_json["morphology"]["compounding"].get("patterns", []):
-                    if "example" in comp and "components" in comp:
-                        items.append({
-                            "type": "decompose",
-                            "question": f"Decompose **{comp['example']}** into its root + suffix(es).",
-                            "answer": ", ".join(comp["components"])
-                        })
-        except Exception as e:
-            log.error(f"Error building grammar items: {e}")
-            # Provide fallback items
-            items = [
-                {
-                    "type": "affix_apply",
-                    "question": "Add suffix **-wa** to **itto**. What is the resulting form?",
-                    "answer": "itto-wa"
-                },
-                {
-                    "type": "affix_fn",
-                    "question": "What function does the suffix **-hauk** serve?",
-                    "answer": "connective"
-                },
-                {
-                    "type": "number_pattern",
-                    "question": "What pattern do Woccon speakers use to form the teens?",
-                    "answer": "Add -pea after the base number"
-                }
-            ]
-            
-        # Make sure we have at least some items
-        if not items:
-            items = [
-                {
-                    "type": "affix_apply",
-                    "question": "Add suffix **-re** to **rooyaukitte**. What is the resulting form?",
-                    "answer": "rooyaukitte-re"
-                },
-                {
-                    "type": "affix_fn",
-                    "question": "What function does the suffix **-wa** serve?",
-                    "answer": "modal suffix"
-                }
-            ]
-            
+            for example in rules_json["morphology"]["reduplication"].get("examples", []):
+                items.append({
+                    "type": "reduplication_example",
+                    "question": f"The Woccon word **{example['word']}** ({example['gloss']}) shows what morphological pattern?",
+                    "answer": f"Reduplication - {example['derivation']}"
+                })
+        
+        # Add possession pattern questions
+        if "possession" in rules_json.get("morphology", {}).get("inflectional_morphology", {}):
+            items.append({
+                "type": "possession",
+                "question": "How are possessors marked in Woccon?",
+                "answer": "Inalienably possessed nouns mark possessor with prefix; alienably possessed nouns mark possessor with suffix"
+            })
+        
+        # Add questions about common roots
+        if "common_roots" in rules_json.get("morphology", {}):
+            for root in rules_json["morphology"]["common_roots"]:
+                items.append({
+                    "type": "root_meaning",
+                    "question": f"What is the meaning of the Woccon root **{root['root']}**?",
+                    "answer": root['meaning']
+                })
+                
+                # Add derivative questions
+                for derivative in root.get("derivatives", [])[:1]:  # Just one example per root
+                    items.append({
+                        "type": "root_derivative",
+                        "question": f"The Woccon word **{derivative['form']}** contains which root?",
+                        "answer": f"{root['root']} meaning '{root['meaning']}'"
+                    })
+
         return items
 
     def explain(self, specific_query: str = None) -> str:
