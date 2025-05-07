@@ -27,6 +27,17 @@ class GrammarLessonManager:
         self.current_question_attempts = 0  # Track attempts on current question
         self.last_question_index = -1  # Track last question index to detect repetition
         self.repeated_explanation_requests = 0  # Track repeated explanation requests
+        
+        # Store alternative acceptable answers for common question types
+        self.alternative_answers = {}
+        
+        # Set up common alternatives for different question types
+        self._setup_common_alternatives()
+        
+    def _setup_common_alternatives(self):
+        """Set up common alternative answers based on question types."""
+        # This will be populated per-question in the prompt method
+        self.alternative_answers = {}
 
     @staticmethod
     def build_items(rules_json: Dict, lexicon: List[Dict]) -> List[Dict]:
@@ -137,6 +148,9 @@ class GrammarLessonManager:
         if self.last_question_index != self.i:
             self.current_question_attempts = 0
             self.last_question_index = self.i
+            
+            # Set up alternative answers for this specific question
+            self._setup_question_alternatives(itm)
         
         # Add current question to history
         if len(self.question_history) <= self.i or self.question_history[self.i]["question"] != itm["question"]:
@@ -175,15 +189,127 @@ class GrammarLessonManager:
             f"❓ {itm['question']}{hint}\n"
             f"(Type your answer, ask for an explanation, or let me know if you're not sure.)"
         )
+        
+    def _setup_question_alternatives(self, question_item: Dict):
+        """Set up alternative acceptable answers for a specific question."""
+        self.alternative_answers = {}
+        
+        question_type = question_item.get("type", "")
+        answer = question_item.get("answer", "")
+        
+        # Add common alternatives based on question type
+        if "inflection_mode" in question_type or "mode_identify" in question_type:
+            # For mode questions, allow just the mode name or just the description
+            if "imperative mode" in answer.lower():
+                self.alternative_answers = {
+                    "imperative": "imperative mode",
+                    "command": "imperative mode (command)",
+                    "commands": "imperative mode (commands)",
+                    "command form": "imperative mode (command form)",
+                    "instruction": "imperative mode (instruction)"
+                }
+            elif "narrative mode" in answer.lower():
+                self.alternative_answers = {
+                    "narrative": "narrative mode",
+                    "story": "narrative mode (storytelling)",
+                    "storytelling": "narrative mode (storytelling)"
+                }
+            elif "participial mode" in answer.lower():
+                self.alternative_answers = {
+                    "participial": "participial mode",
+                    "participle": "participial mode"
+                }
+            elif "independent mode" in answer.lower():
+                self.alternative_answers = {
+                    "independent": "independent mode",
+                    "primary": "independent mode (primary action)"
+                }
+        
+        elif "reduplication" in question_type:
+            # For reduplication questions
+            self.alternative_answers = {
+                "repetition": "reduplication (repetition)",
+                "repetition for emphasis": "reduplication (repetition for emphasis)",
+                "emphasis": "reduplication (emphasis)",
+                "intensity": "reduplication (intensity)",
+                "frequency": "reduplication (frequency)",
+                "repeating sounds": "reduplication (repeating sounds)",
+                "repeated syllables": "reduplication (repeated syllables)",
+                "repeat": "reduplication (repeating)",
+                "repeated": "reduplication (repeated)",
+                "intensive": "reduplication - intensive"
+            }
+            
+        elif "root_meaning" in question_type:
+            # For root meaning questions, accept any of the meanings
+            parts = answer.split(", ")
+            for part in parts:
+                self.alternative_answers[part] = answer
+                
+        elif "root_derivative" in question_type:
+            # For root questions, accept just the root
+            root_match = re.search(r"([a-z]+)-", answer)
+            if root_match:
+                root = root_match.group(1)
+                self.alternative_answers[root] = f"{root}- root"
+                self.alternative_answers[f"{root}-"] = f"{root}- root"
+                self.alternative_answers[f"{root} root"] = f"{root}- root"
+    
+    def is_answer_attempt(self, text: str) -> bool:
+        """Check if the text is likely a genuine attempt to answer the question."""
+        text_lower = text.lower()
+        
+        # Check for common patterns indicating this is NOT an answer attempt
+        non_answer_patterns = [
+            r"^\s*(idk|not sure|no idea|no clue|confused|don'?t know)\s*$",  # Just expressions of uncertainty
+            r"^\s*(help|hint|clue|explain|what is it|tell me)\s*$",  # Requests for help
+            r"^\s*(next|skip|pass|continue|go on)\s*$",  # Navigation requests
+            r"^\s*(exit|quit|stop|end)\s*$",  # Exit requests
+            r"^\s*(what|who|when|where|why|how)\s*\?",  # Just questions
+            r"^\s*([hm]+|[um]+|[er]+)\s*$",  # Just hesitation noises
+            r"^\s*(lol|lmao|wtf|omg)\s*$"  # Just reactions
+        ]
+        
+        # If it matches any non-answer pattern, it's not an answer attempt
+        if any(re.search(pattern, text_lower) for pattern in non_answer_patterns):
+            return False
+            
+        # If it contains "it's" or "it is" or other answer-like phrases, it's likely an answer attempt
+        answer_indicators = [
+            r"^\s*it'?s\s",
+            r"^\s*that'?s\s",
+            r"^\s*they'?re\s",
+            r"^\s*i\s*think\s*it'?s\s",
+            r"^\s*maybe\s*it'?s\s",
+            r"^\s*probably\s",
+            r"\b(used|means|indicates|shows|expresses|denotes)\b",
+            r"^\s*the\s*answer\s*is\s",
+            r"answer",
+            r"told you",
+            r"already said",
+            r"said",
+            r"mentioned"
+        ]
+        
+        # Extract the answer from the current question
+        if self.i < len(self.items):
+            correct_answer = self._normalize_answer(self.items[self.i]["answer"])
+            
+            # If the text contains any part of the correct answer, it's likely an answer attempt
+            for word in correct_answer.split():
+                if len(word) > 3 and word in text_lower:  # Only consider words longer than 3 chars
+                    return True
+                    
+        # If the text contains any answer indicator, it's likely an answer attempt
+        return any(re.search(pattern, text_lower) for pattern in answer_indicators)
 
     def is_dont_know_response(self, text: str) -> bool:
         """Check if user response indicates they don't know using natural language understanding."""
-        text = text.lower()
+        text = text.lower().strip()
         dont_know_patterns = [
             r"\b(i don't know|idk|not sure|no idea|no clue|uncertain|don't remember|forgot|unsure)\b",
             r"\b(can'?t remember|don'?t have a guess|skip|pass|next)\b",
             r"\b(what is it|what'?s the answer|tell me|reveal|show me)\b",
-            r"\?(don'?t know|\?)",  # Question marks often indicate uncertainty
             r"\b(um|uh|hmm|err)\b",  # Hesitation markers
             r"\b(lol|haha)\b",  # Laughter often indicates uncertainty in this context
             r"\b(whatever|dunno|who knows|doesn't matter|don't care)\b",  # Dismissive responses
@@ -191,6 +317,10 @@ class GrammarLessonManager:
             r"\b(beats me|beyond me|drawing a blank|lost|clueless)\b",  # More expressions
         ]
         
+        # Check if text is just a negative response
+        if text in ["no", "nope", "not", "negative", "nah"]:
+            return True
+            
         return any(re.search(pattern, text) for pattern in dont_know_patterns)
 
     def is_exit_request(self, text: str) -> bool:
@@ -234,6 +364,7 @@ class GrammarLessonManager:
             r"\b(let's go|onward|forward|carry on|next one|another)\b",
             r"\b(more questions|give me another|another one|next one please)\b",
             r"\b(continue lesson|let's do more|ready for more)\b",
+            r"\b(sure|okay|ok|yeah|yes|yep|yup)\b" # Add affirmative responses
         ]
         
         return any(re.search(pattern, text) for pattern in continue_patterns)
@@ -281,6 +412,7 @@ class GrammarLessonManager:
             r"\b(hint|clue|tip|help me out)\b",
             r"\b(give me a hint|need a clue|any hints|can you help)\b",
             r"\b(stuck|struggling|help with this|how do i)\b",
+            r"\b(help|more help)\b"
         ]
         
         return any(re.search(pattern, text) for pattern in hint_patterns)
@@ -427,10 +559,11 @@ class GrammarLessonManager:
         # Extract grammatical terms
         grammatical_terms = []
         grammar_patterns = [
-            r'\b(mode|marker|prefix|suffix|reduplication|possession|root|inflection)\b',
+            r'\b(mode|marker|prefix|suffix|reduplication|possession|root|inflection|command|imperative)\b',
             r'\b(narrative|independent|imperative|subjunctive)\b',
-            r'\b(intensity|frequency|iterative|continuous|progressive)\b',
-            r'\b(meaning|cloth|hide|material|water|path|way|container|wood|tree)\b'
+            r'\b(intensity|intensive|frequency|iterative|continuous|progressive|repetition|emphasis)\b',
+            r'\b(meaning|cloth|hide|material|water|path|way|container|wood|tree)\b',
+            r'\b(ya|yau|watta|yon|roo)\b'  # Common Woccon roots without hyphens
         ]
         
         for pattern in grammar_patterns:
@@ -448,6 +581,12 @@ class GrammarLessonManager:
         Compare key concepts between user answer and correct answer.
         Returns: (match_ratio, matched_concepts, missing_concepts)
         """
+        # Quick check for non-answers
+        non_answer_markers = ['errr', 'umm', 'idk', 'wtf', 'lmao', 'lol', 'clue', 'shit', 'fuck']
+        if any(marker in user_answer.lower() for marker in non_answer_markers) and len(user_answer.split()) <= 3:
+            # This is almost certainly not a real answer attempt
+            return 0.0, [], self.extract_key_concepts(correct_answer.lower())
+            
         # Extract key concepts from both answers
         user_concepts = self.extract_key_concepts(user_answer.lower())
         correct_concepts = self.extract_key_concepts(correct_answer.lower())
@@ -464,34 +603,85 @@ class GrammarLessonManager:
         
         return match_ratio, matched_concepts, missing_concepts
         
+    def check_alternative_answers(self, user_answer: str) -> bool:
+        """Check if the user's answer matches any of the alternative acceptable answers."""
+        if not self.alternative_answers:
+            return False
+            
+        normalized_user_answer = self._normalize_answer(user_answer)
+        
+        # First check for exact match with any alternative
+        if normalized_user_answer in self.alternative_answers:
+            return True
+            
+        # Then check for partial matches (one alternative is fully contained in the user's answer)
+        for alt_key in self.alternative_answers.keys():
+            # Check if alternative is a substantial part of the user's answer
+            if len(alt_key) > 3 and alt_key in normalized_user_answer:
+                return True
+                
+            # Check if user's answer is a substantial part of the alternative
+            if len(normalized_user_answer) > 3 and normalized_user_answer in alt_key:
+                return True
+                
+        # Finally check string similarity
+        for alt_key in self.alternative_answers.keys():
+            if self._string_similarity(normalized_user_answer, alt_key) > 0.8:
+                return True
+                
+        return False
+        
     def check_answer_with_llm(self, user_answer: str, correct_answer: str, question: str) -> Tuple[bool, float, str, bool]:
         """
         Use the LLM to evaluate if the user's answer is correct or close
         Returns: (is_correct, confidence_score, explanation, is_partial)
         """
+        # Always check for alternative answers first
+        if self.check_alternative_answers(user_answer):
+            return True, 0.95, "Matches acceptable alternative answer", False
+            
         try:
-            # First use key concept extraction as a fallback
+            # Check if this is even an answer attempt
+            if not self.is_answer_attempt(user_answer):
+                return False, 0.9, "Not a genuine answer attempt", False
+                
+            # Next use key concept extraction
             match_ratio, matched_concepts, missing_concepts = self.compare_key_concepts(user_answer, correct_answer)
+            
+            # Quick check for obvious wrong answers based on length and content
+            if len(user_answer.split()) > 3 and match_ratio < 0.1 and any(
+                nonsense_marker in user_answer.lower() 
+                for nonsense_marker in ['err', 'errrr', 'umm', 'hmm', 'lol', 'lmao', 'clue',
+                                      'uhh', 'ugh', 'wtf', 'idk', 'omg', 'shit']
+            ):
+                # This is almost certainly not an attempt at answering
+                return False, 0.1, "Response contains expressions of uncertainty", False
             
             # If we have a very strong match based on key concepts, don't bother calling the LLM
             if match_ratio > 0.9 and len(matched_concepts) >= 2:
                 return True, 0.95, "Answer contains all key concepts", False
             
-            # Prepare the evaluation prompt
+            # Prepare a conversational evaluation prompt
             prompt = f"""
-            Evaluate if this user's answer is correct for a Woccon language grammar lesson.
+            Evaluate if this user's answer for a language learning exercise is correct.
             
             QUESTION: {question}
             CORRECT ANSWER: {correct_answer}
             USER'S ANSWER: {user_answer}
             
-            TASK: Determine if the user's answer is:
-            1. Correct (the answer contains the key information needed)
-            2. Partially correct (has some correct elements but is missing information)
-            3. Incorrect (answer is wrong or completely off-topic)
+            Additional context: The user is learning grammar for a constructed language called Woccon.
+            This is an informal learning context, so be forgiving of partial answers if they show understanding.
             
-            First, identify the key concepts required in the correct answer.
-            Then, check if the user's answer includes these key concepts.
+            TASK: Determine if the user's answer is:
+            1. Correct - Contains the key concepts, even if expressed informally (e.g., saying "it's a command" for "imperative mode")
+            2. Partially correct - Has some correct elements but is missing important information
+            3. Incorrect - Wrong or completely off-topic
+            
+            Key considerations:
+            - Accept informal language (e.g., "repetition for emphasis" for "reduplication")
+            - Be understanding of users trying to insist on their answer being correct
+            - Don't accept expressions like "idk", "not sure", random sounds "errr", etc.
+            - If the user is clearly attempting to provide an answer, be generous
             
             RESPONSE FORMAT:
             {{
@@ -528,22 +718,36 @@ class GrammarLessonManager:
                 confidence = float(result.get("confidence", 0.5))
                 explanation = result.get("explanation", "")
                 
-                # If LLM confidence is low but key concept matching is high, trust the key concept matching
-                if confidence < 0.7 and match_ratio > 0.75:
-                    if match_ratio > 0.9:
-                        return True, max(confidence, 0.8), explanation, False
-                    else:
-                        return False, max(confidence, 0.7), explanation, True
-                        
-                # If key concept matching and LLM evaluation disagree, log it for analysis
-                if (is_correct and match_ratio < 0.5) or (not is_correct and not is_partial and match_ratio > 0.8):
+                # Double check with our heuristics
+                
+                # 1. Check for expressions of ignorance/uncertainty as a safeguard
+                uncertainty_markers = ['idk', 'not sure', 'no idea', 'no clue', 'umm', 'uhh', 'err', 
+                                      'lol', 'lmao', 'wtf', 'ugh', 'help', 'plz', 'pls', 'hmm',
+                                      'what', 'huh', 'eh', 'meh', 'dunno', 'help me']
+                                      
+                if any(marker in user_answer.lower() for marker in uncertainty_markers) and is_correct:
+                    # Don't mark answers containing uncertainty markers as correct
+                    log.warning(f"Overriding LLM evaluation: answer contains uncertainty markers but was marked correct")
+                    return False, 0.2, "Response contains expressions of uncertainty", False
+                
+                # Use the LLM result, but log disagreements for monitoring
+                if ((is_correct and match_ratio < 0.3) or 
+                    (not is_correct and not is_partial and match_ratio > 0.7)):
                     log.warning(f"LLM and key concept evaluation disagree: LLM={is_correct}, concept_match={match_ratio}")
                 
                 return is_correct, confidence, explanation, is_partial
             
             except (json.JSONDecodeError, ValueError) as e:
                 log.error(f"Error parsing LLM response: {e} - Response: {response}")
-                # Fall back to key concept matching if JSON parsing fails
+                # Fall back to alternatives and key concept matching if JSON parsing fails
+                
+                # Check for insistence that an answer is correct
+                insistence_indicators = ["i told you", "my answer", "already said", "said", "that's what I said"]
+                if any(indicator in user_answer.lower() for indicator in insistence_indicators) and matched_concepts:
+                    # If user is insisting and they had some matched concepts, be generous
+                    return matched_concepts and len(matched_concepts) >= 1, 0.6, "Accepted based on user insistence with partial match", True
+                
+                # Otherwise use key concept matching
                 if match_ratio > 0.85:
                     return True, match_ratio, f"Contains key concepts: {', '.join(matched_concepts)}", False
                 elif match_ratio > 0.5:
@@ -553,7 +757,15 @@ class GrammarLessonManager:
                 
         except Exception as e:
             log.error(f"Error in LLM answer check: {e}")
-            # Fall back to key concept matching if LLM call fails completely
+            # Fall back to key concept matching and alternatives if LLM call fails completely
+            
+            # Check for insistence that an answer is correct
+            insistence_indicators = ["i told you", "my answer", "already said", "said"]
+            if any(indicator in user_answer.lower() for indicator in insistence_indicators):
+                # If user is insisting, be more generous with matching
+                if matched_concepts and len(matched_concepts) >= 1:
+                    return True, 0.6, "Accepted based on user insistence", False
+            
             if match_ratio > 0.85:
                 return True, match_ratio, f"Contains key concepts: {', '.join(matched_concepts)}", False
             elif match_ratio > 0.5:
@@ -709,11 +921,11 @@ class GrammarLessonManager:
             self.current_explanation = explanation_offer
             return (explanation_offer, False)
             
-        # CHECK FOR CORRECT ANSWER WITH FUZZY MATCHING AND LLM
+        # CHECK FOR CORRECT ANSWER WITH ENHANCED NLP
         # Increment attempts counter for the current question
         self.current_question_attempts += 1
         
-        # Use LLM to evaluate the answer
+        # Use enhanced NLP to evaluate the answer
         question = self.items[self.i]["question"]
         correct_answer = self.items[self.i]["answer"]
         
@@ -721,20 +933,16 @@ class GrammarLessonManager:
             usr, correct_answer, question
         )
         
-        # Fallback to traditional similarity check if LLM confidence is low
-        if confidence < 0.4:
-            # Get normalized answers for comparison
-            correct_norm = self._normalize_answer(self.items[self.i]["answer"])
-            usr_normalized = self._normalize_answer(usr)
-            
-            # Fallback similarity checks
-            exact_match = usr_normalized == correct_norm
-            word_match = all(word in usr_normalized for word in correct_norm.split())
-            high_similarity = self._string_similarity(usr_normalized, correct_norm) > 0.85
-            partial_similarity = self._string_similarity(usr_normalized, correct_norm) > 0.7
-            
-            is_correct = exact_match or high_similarity
-            is_partial = is_partial or word_match or partial_similarity
+        # HANDLE USER INSISTENCE ON ANSWER BEING CORRECT
+        # If user is insisting their answer is correct and we have a close match, be lenient
+        if not is_correct and not is_partial and any(phrase in usr_lower for phrase in 
+                                            ["told you", "my answer", "that's what", "just said", "already said"]):
+            # Check if there's some evidence they might be right
+            match_ratio, matched_concepts, _ = self.compare_key_concepts(usr, correct_answer)
+            if matched_concepts and match_ratio > 0.3:
+                # Override to partial credit if user is insistent and has some matching concepts
+                is_partial = True
+                log.info(f"Giving partial credit based on user insistence with match ratio {match_ratio}")
         
         # CORRECT ANSWER
         if is_correct:
@@ -762,7 +970,7 @@ class GrammarLessonManager:
                 resp += self.prompt()
                 return resp, False
             
-        # PARTIALLY CORRECT ANSWER - using LLM evaluation
+        # PARTIALLY CORRECT ANSWER - using enhanced evaluation
         elif is_partial:
             resp = f"Almost! The correct answer is **{self.items[self.i]['answer']}**.\n\n"
             self.streak = 0
@@ -780,109 +988,118 @@ class GrammarLessonManager:
                 resp += self.prompt()
                 return resp, False
         
-        # Detect completely off-topic responses that aren't exit requests
-        if confidence < 0.2 or (len(usr_lower.split()) > 3 and self._string_similarity(self._normalize_answer(usr), self._normalize_answer(correct_answer)) < 0.3):
-            self.off_topic_counter += 1
-            
-            if self.off_topic_counter >= 2:
-                # If multiple off-topic responses, offer to exit
-                return (
-                    "It seems like you might want to talk about something else. Would you like to:\n\n"
-                    "1. Exit this lesson\n"
-                    "2. Continue with the current question\n"
-                    "3. Skip to the next question\n\n"
-                    "Just type the number or your choice.",
-                    False
+        # Check if response is a genuine answer attempt but incorrect
+        if self.is_answer_attempt(usr) and not self.is_dont_know_response(usr):
+            # It's a genuine attempt, provide feedback
+            if self.current_question_attempts == 1:
+                resp = (
+                    f"❌ Not quite. Try again, or say 'I don't know' if you'd like the answer. "
+                    f"You can also say 'explain' if you'd like more information about this question."
+                )
+            elif self.current_question_attempts == 2:
+                resp = (
+                    f"❌ That's not correct. Let me give you a hint: {self.generate_hint()} "
+                    f"Try once more, or type 'explain' for more details, or 'idk' to see the answer."
                 )
             else:
-                # First off-topic response - just remind them
-                return (
-                    f"That doesn't seem related to the current question. The question is:\n\n"
-                    f"❓ {self.items[self.i]['question']}\n\n"
-                    f"You can type your answer, say 'I don't know', ask for a 'hint', or type 'exit' to leave the lesson.",
-                    False
+                resp = (
+                    f"❌ Still not correct. Would you like to see the answer? Type 'yes' to see it, "
+                    f"or try one more time."
                 )
                 
-        # Handle number responses for menu options
-        if self.off_topic_counter >= 2 and usr_lower in ["1", "2", "3"]:
-            if usr_lower == "1":  # Exit
-                return (f"👋 Grammar lesson exited. Final score: {self.score}/{len(self.items)}.", True)
-            elif usr_lower == "2":  # Continue
-                self.off_topic_counter = 0
-                return (f"Let's continue with the current question.\n\n{self.prompt()}", False)
-            elif usr_lower == "3":  # Skip
-                self.i += 1
-                self.off_topic_counter = 0
-                self.current_question_attempts = 0
-                if self.i >= len(self.items):
-                    return (f"🎓 You've finished your grammar lesson! Final score: {self.score}/{len(self.items)}", True)
-                else:
-                    return (f"Moving on to the next question.\n\n{self.prompt()}", False)
-        
-        # If we've had multiple attempts, offer more help
-        if self.current_question_attempts >= 3:
+            self.streak = 0
+            return resp, False
+            
+        # ——— HANDLE OFF-TOPIC OR NONSENSE RESPONSES ———
+        self.off_topic_counter += 1
+
+        # 1) First off-topic: remind them of the question
+        if self.off_topic_counter < 2:
             return (
-                f"I can see you're having trouble with this question. Would you like to:\n\n"
-                f"1. Get a hint\n"
-                f"2. See the answer and move on\n"
-                f"3. Get an explanation of this concept\n\n"
-                f"Just type the number of your choice or try again with another answer.",
+                "That doesn't seem related to the current question. The question is:\n\n"
+                f"❓ {self.items[self.i]['question']}\n\n"
+                "You can type your answer, say 'I don't know', ask for a 'hint', or type 'exit' to leave the lesson.",
                 False
             )
-        
-        # Handle responses to the "having trouble" menu
-        if usr_lower == "1" and self.current_question_attempts >= 3:  # Hint
-            hint = self.generate_hint()
-            return (f"{hint}\n\nWould you like to try answering now?", False)
-        elif usr_lower == "2" and self.current_question_attempts >= 3:  # See answer
-            correct_answer = self.items[self.i]["answer"]
-            self.streak = 0
-            resp = f"The answer is **{correct_answer}**.\n\n"
+
+        # 2) Second+ off-topic but they haven't chosen 1/2/3 yet: show the menu
+        if usr_lower not in ["1", "2", "3"]:
+            return (
+                "It seems like you might want to talk about something else. Would you like to:\n\n"
+                "1. Exit this lesson\n"
+                "2. Continue with the current question\n"
+                "3. Skip to the next question\n\n"
+                "Just type the number or your choice.",
+                False
+            )
+
+        # 3) Handle number responses after the menu is shown
+        if usr_lower == "1":  # Exit
+            return (f"👋 Grammar lesson exited. Final score: {self.score}/{len(self.items)}.", True)
+
+        elif usr_lower == "2":  # Continue
+            self.off_topic_counter = 0
+            return (f"Let's continue with the current question.\n\n{self.prompt()}", False)
+
+        elif usr_lower == "3":  # Skip
             self.i += 1
-            
+            self.off_topic_counter = 0
+            self.current_question_attempts = 0
+
             if self.i >= len(self.items):
-                resp += f"🎓 You've finished your grammar lesson! Final score: {self.score}/{len(self.items)}"
-                return resp, True
-            else:
-                resp += self.prompt()
-                return resp, False
-        elif usr_lower == "3" and self.current_question_attempts >= 3:  # Explanation
-            self.paused = True
-            try:
-                explanation = self.explain()
-                explanation_text = (
-                    f"📚 Explanation for '{self.items[self.i]['question']}':\n\n"
-                    f"{explanation}\n\n"
-                    f"Would you like to try answering now, or shall we move on to the next question?"
-                )
-                self.current_explanation = explanation_text
-                return (explanation_text, False)
-            except Exception as e:
-                log.error(f"Error in explanation: {e}")
                 return (
-                    "I'm having trouble generating a detailed explanation. Would you like to skip to the next question?",
-                    False
+                    f"🎓 You've finished your grammar lesson! Final score: {self.score}/{len(self.items)}",
+                    True
                 )
-        
-        # Default case - not correct - provide adaptive feedback
-        if self.current_question_attempts == 1:
-            resp = (
-                f"❌ Not quite. Try again, or say 'I don't know' if you'd like the answer. "
-                f"You can also say 'explain' if you'd like more information about this question."
+            return (f"Moving on to the next question.\n\n{self.prompt()}", False)
+
+        # ——— HANDLE "HAVING TROUBLE" MENU RESPONSES ———
+        # First, check if they responded to the having trouble menu
+        if self.current_question_attempts >= 3 and usr_lower in ["1", "2", "3"]:
+            if usr_lower == "1":
+                # Hint
+                hint = self.generate_hint()
+                return (f"{hint}\n\nWould you like to try answering now?", False)
+            elif usr_lower == "2":
+                # Show answer and move on
+                correct = self.items[self.i]["answer"]
+                self.streak = 0
+                resp = f"The answer is **{correct}**.\n\n"
+                self.i += 1
+                if self.i >= len(self.items):
+                    resp += f"🎓 You've finished your grammar lesson! Final score: {self.score}/{len(self.items)}"
+                    return (resp, True)
+                return (resp + self.prompt(), False)
+            else:  # usr_lower == "3"
+                # Explanation
+                self.paused = True
+                try:
+                    explanation = self.explain()
+                    explanation_text = (
+                        f"📚 Explanation for '{self.items[self.i]['question']}':\n\n"
+                        f"{explanation}\n\n"
+                        "Would you like to try answering now, or shall we move on to the next question?"
+                    )
+                    self.current_explanation = explanation_text
+                    return (explanation_text, False)
+                except Exception as e:
+                    log.error(f"Error in explanation: {e}")
+                    return (
+                        "I'm having trouble generating a detailed explanation. "
+                        "Would you like to skip to the next question?",
+                        False
+                    )
+
+        # ——— OFFER "HAVING TROUBLE" MENU ———
+        if self.current_question_attempts >= 3:
+            return (
+                "I can see you're having trouble with this question. Would you like to:\n\n"
+                "1. Get a hint\n"
+                "2. See the answer and move on\n"
+                "3. Get an explanation of this concept\n\n"
+                "Just type the number of your choice or try again with another answer.",
+                False
             )
-        elif self.current_question_attempts == 2:
-            resp = (
-                f"❌ That's not correct. Let me give you a hint: {self.generate_hint()} "
-                f"Try once more, or type 'explain' for more details, or 'idk' to see the answer."
-            )
-        else:
-            resp = (
-                f"❌ Still not correct. Would you like to see the answer? Type 'yes' to see it, "
-                f"or try one more time."
-            )
-            
-        self.streak = 0
-        return resp, False
             
     def get_progress(self) -> Dict:
         """Return the current lesson progress for serialization."""
