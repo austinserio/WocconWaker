@@ -93,6 +93,7 @@ class WocconAssistant:
                 )
         
         # 2️⃣ Handle pending actions (confirmations, choices, etc.)
+        # In the reply method, modify the section that handles pending actions
         if session["pending_action"]:
             action = session["pending_action"]
             context = session["context"]
@@ -100,63 +101,91 @@ class WocconAssistant:
             if action == "confirm_lesson_start":
                 lesson_type = context.get("lesson_type", "vocab")
                 
-                # Check if they confirmed
-                if re.search(r"\b(yes|yeah|yep|sure|ok|okay|start|begin|do it|proceed)\b", lower):
-                    # Clear pending action and start lesson
-                    session["pending_action"] = None
+                # Use the LLM to evaluate the response
+                evaluation_prompt = f"""
+                Classify this user response to an offer about starting a language lesson:
+                
+                USER RESPONSE: "{text}"
+                
+                CLASSIFY AS:
+                1. YES - If they clearly want to start the lesson
+                2. NO - If they clearly decline the lesson
+                3. QUESTION - If they're asking a different question instead of responding to the offer
+                
+                Return ONLY "YES", "NO", or "QUESTION" with no other text.
+                """
+                
+                try:
+                    # Get evaluation from LLM
+                    evaluation_messages = [{"role": "user", "content": evaluation_prompt}]
+                    raw_evaluation = ollama.chat(
+                        model=self.model,
+                        messages=evaluation_messages,
+                        options={"temperature": 0.1}
+                    )["message"]["content"].strip().upper()
                     
-                    if lesson_type == "vocab":
-                        words = random.sample(self.dictionary["lexicon"], 3)
-                        session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-                        return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-                    else:  # grammar lesson
-                        items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
-                        session["lesson"] = GrammarLessonManager(items, parent=self)
-                        return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
+                    if "YES" in raw_evaluation:
+                        # Clear pending action and start lesson
+                        session["pending_action"] = None
                         
-                # Check if they declined
-                elif re.search(r"\b(no|nope|nah|don'?t|not now|later|cancel)\b", lower):
-                    session["pending_action"] = None
+                        if lesson_type == "vocab":
+                            words = random.sample(self.dictionary["lexicon"], 3)
+                            session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+                            return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
+                        else:  # grammar lesson
+                            items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
+                            session["lesson"] = GrammarLessonManager(items, parent=self)
+                            return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
+                            
+                    elif "NO" in raw_evaluation:
+                        session["pending_action"] = None
+                        
+                        # If they declined lessons repeatedly, stop offering for a while
+                        if context.get("declined_count", 0) >= 2:
+                            session["context"]["suppress_lesson_offers"] = True
+                        else:
+                            session["context"]["declined_count"] = context.get("declined_count", 0) + 1
+                            
+                        return "No problem! What would you like to know about Woccon instead?"
                     
-                    # If they declined lessons repeatedly, stop offering for a while
-                    if context.get("declined_count", 0) >= 2:
-                        session["context"]["suppress_lesson_offers"] = True
+                    else:  # QUESTION or any other response
+                        # Clear pending action since they're asking something else
+                        session["pending_action"] = None
+                        # Continue with normal processing - fall through
+                        
+                except Exception as e:
+                    log.error(f"Error evaluating response with LLM: {e}")
+                    # Use regex fallback if LLM call fails
+                    if re.search(r"\b(yes|yeah|yep|sure|ok|okay|start|begin|do it|proceed)\b", lower):
+                        # Clear pending action and start lesson
+                        session["pending_action"] = None
+                        
+                        if lesson_type == "vocab":
+                            words = random.sample(self.dictionary["lexicon"], 3)
+                            session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+                            return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
+                        else:  # grammar lesson
+                            items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
+                            session["lesson"] = GrammarLessonManager(items, parent=self)
+                            return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
+                            
+                    # Check if they declined
+                    elif re.search(r"\b(no|nope|nah|don'?t|not now|later|cancel)\b", lower):
+                        session["pending_action"] = None
+                        
+                        # If they declined lessons repeatedly, stop offering for a while
+                        if context.get("declined_count", 0) >= 2:
+                            session["context"]["suppress_lesson_offers"] = True
+                        else:
+                            session["context"]["declined_count"] = context.get("declined_count", 0) + 1
+                            
+                        return "No problem! What would you like to know about Woccon instead?"
+                    
+                    # If they didn't clearly answer yes or no, process as a regular query
                     else:
-                        session["context"]["declined_count"] = context.get("declined_count", 0) + 1
-                        
-                    return "No problem! What would you like to know about Woccon instead?"
-                
-                # If they didn't clearly answer yes or no, process as a regular query
-                else:
-                    # Clear pending action since they're clearly interested in something else
-                    session["pending_action"] = None
-                    # Continue with normal processing - fall through
-            
-            elif action == "choose_lesson_type":
-                # Check if they specified a type
-                if re.search(r"\b(vocab|vocabulary|words|lexicon|terms)\b", lower):
-                    session["pending_action"] = None
-                    
-                    words = random.sample(self.dictionary["lexicon"], 3)
-                    session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-                    return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-                    
-                elif re.search(r"\b(grammar|structure|syntax|rules|suffixes|prefixes)\b", lower):
-                    session["pending_action"] = None
-                    
-                    items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
-                    session["lesson"] = GrammarLessonManager(items, parent=self)
-                    return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
-                
-                # Check if they'd rather not choose
-                elif re.search(r"\b(neither|none|cancel|quit|exit|stop|never mind|back|return)\b", lower):
-                    session["pending_action"] = None
-                    return "No problem! What would you like to know about Woccon instead?"
-                    
-                # If they said something else, process it as a normal query
-                else:
-                    session["pending_action"] = None
-                    # Continue with normal processing - fall through
+                        # Clear pending action since they're clearly interested in something else
+                        session["pending_action"] = None
+                        # Continue with normal processing - fall through
 
         # 3️⃣ If a lesson is in progress, delegate straight to it
         if session["lesson"] is not None:
