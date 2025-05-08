@@ -93,10 +93,33 @@ class WocconAssistant:
                 )
         
         # 2️⃣ Handle pending actions (confirmations, choices, etc.)
-        # In the reply method, modify the section that handles pending actions
         if session["pending_action"]:
             action = session["pending_action"]
             context = session["context"]
+            
+            if action == "choose_lesson_type":
+                # Check if they specified a lesson type
+                vocab_patterns = ["vocab", "vocabulary", "words", "terms", "dictionary"]
+                grammar_patterns = ["grammar", "rules", "structure", "patterns"]
+                
+                if any(pattern in lower for pattern in vocab_patterns):
+                    # Start vocabulary lesson
+                    words = random.sample(self.dictionary["lexicon"], 3)
+                    session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+                    session["pending_action"] = None
+                    return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
+                elif any(pattern in lower for pattern in grammar_patterns):
+                    # Start grammar lesson
+                    items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
+                    session["lesson"] = GrammarLessonManager(items, parent=self)
+                    session["pending_action"] = None
+                    return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
+                else:
+                    # Default to vocab if they didn't specify clearly
+                    words = random.sample(self.dictionary["lexicon"], 3)
+                    session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+                    session["pending_action"] = None
+                    return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
             
             if action == "confirm_lesson_start":
                 lesson_type = context.get("lesson_type", "vocab")
@@ -194,7 +217,7 @@ class WocconAssistant:
             if done:
                 # Save lesson state before clearing if it wasn't completed
                 if hasattr(session["lesson"], "i") and hasattr(session["lesson"], "words") and \
-                   session["lesson"].i < len(session["lesson"].words):
+                session["lesson"].i < len(session["lesson"].words):
                     session["last_lesson_state"] = session["lesson"].get_progress()
                 session["lesson"] = None
             
@@ -231,7 +254,19 @@ class WocconAssistant:
                 
                 return f"📚 Starting a new grammar lesson!\n\n{lesson.prompt()}"
 
-        # 5️⃣ Process the query using RAG + LLM
+        # 5️⃣ Additional check for explicit lesson requests that might not have been caught
+        # This is the added code to handle direct requests like "I'd like a vocab lesson please!"
+        if re.search(r"\b(like|want|start|begin|do|give me|teach me)\b.+\b(vocab|vocabulary|lesson)\b", lower):
+            words = random.sample(self.dictionary["lexicon"], 3)
+            session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+            return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
+        
+        if re.search(r"\b(like|want|start|begin|do|give me|teach me)\b.+\b(grammar|rules|lesson)\b", lower):
+            items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
+            session["lesson"] = GrammarLessonManager(items, parent=self)
+            return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
+
+        # 6️⃣ Process the query using RAG + LLM
         # Get answer from LLM
         retrieved = self._retrieve(text)
         messages = self._build_prompt(text, retrieved, session["history"])
@@ -246,7 +281,7 @@ class WocconAssistant:
         session["history"].append({"role": "user", "content": text})
         session["history"].append({"role": "assistant", "content": answer})
         
-        # 6️⃣ Update topic tracking
+        # 7️⃣ Update topic tracking
         current_topic = self._determine_current_topic(lower, answer)
         if current_topic:
             # Add to topic sequence
@@ -255,7 +290,7 @@ class WocconAssistant:
             if len(session["topic_sequence"]) > 5:
                 session["topic_sequence"] = session["topic_sequence"][-5:]
                 
-        # 7️⃣ Determine if we should offer a lesson based on the context
+        # 8️⃣ Determine if we should offer a lesson based on the context
         should_offer_lesson = (
             not session["context"].get("suppress_lesson_offers", False) and
             session["question_count"] >= 2 and
@@ -320,7 +355,7 @@ class WocconAssistant:
     def _check_direct_lesson_request(self, text: str) -> Optional[Dict]:
         """
         Improved detection of direct lesson requests with clearer differentiation between
-        grammar and vocabulary lessons.
+        grammar and vocabulary lessons. Now captures more natural language patterns.
         """
         text = text.lower().strip()
         
@@ -364,6 +399,13 @@ class WocconAssistant:
             r"\bvocab(?:ulary) (?:help|practice|exercises|tutorial)\b",
             r"\b(?:i want to|let's|i'd like to) learn vocab(?:ulary)\b",
             r"\blearn (?:some |a few )?words\b",
+            # Added more natural language patterns
+            r"\bcould you (?:teach|help with|show me) (?:some )?vocab(?:ulary)?\b",
+            r"\bi'?d like (?:to learn|a|some) vocab(?:ulary)?\b",
+            r"\bi'?d like (?:a )?vocab(?:ulary)? lesson\b",
+            r"\bwant (?:to learn|a|some) vocab(?:ulary)?\b",
+            r"\b(?:can|could) (?:i|we) (?:have|do|get) (?:a )?vocab(?:ulary)?\b",
+            r"\b(?:please|pls) (?:teach|show) (?:me|us) (?:some )?vocab(?:ulary)?\b",
         ]
         
         if any(re.search(pattern, text) for pattern in vocab_medium_patterns):
@@ -372,11 +414,12 @@ class WocconAssistant:
         # Very general lesson requests
         if (re.search(r"\b(give|start|begin|teach) (?:a |me )?lesson\b", text) or 
             re.search(r"\bcan you (?:do|teach|give) (?:a )?lesson\b", text) or
-            re.search(r"^\s*lesson\s*\??$", text)):  # Just "lesson" or "lesson?"
+            re.search(r"^\s*lesson\s*\??$", text) or  # Just "lesson" or "lesson?"
+            re.search(r"\bi'?d like (?:a |to have a )?lesson\b", text)):  # "I'd like a lesson"
             return {"type": "unspecified", "confidence": "medium"}
                 
         return None
-    
+        
     def _is_about_vocabulary(self, query: str, answer: str) -> bool:
         """Determine if the conversation is focused on vocabulary."""
         vocab_indicators = [

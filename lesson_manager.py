@@ -21,6 +21,12 @@ class LessonManager:
         self.current_explanation = None  # Track current explanation if any
         self.exit_attempts = 0      # Track how many times user tried to exit
         self.off_topic_counter = 0  # Track off-topic responses
+        self.current_question_attempts = 0  # Track attempts on current question
+        self.last_question_index = -1  # Track last question index to detect repetition
+        self.repeated_explanation_requests = 0  # Track repeated explanation requests
+        
+        # Store alternative acceptable answers for common question types
+        self.alternative_answers = {}
         
         # Emoji mapping for semantic domains
         self.emoji_map = {
@@ -58,6 +64,14 @@ class LessonManager:
             
         w = self.words[self.i]
         
+        # Check if this is a new question
+        if self.last_question_index != self.i:
+            self.current_question_attempts = 0
+            self.last_question_index = self.i
+            
+            # Set up alternative answers for this specific question
+            self._setup_question_alternatives(w)
+        
         # Get emoji for the word if possible
         emoji = "📝"  # Default emoji
         if self.parent and hasattr(self.parent, 'woccon') and hasattr(self.parent.woccon, 'analyze_word_enhanced'):
@@ -88,7 +102,27 @@ class LessonManager:
             })
         
         # Show score and streak information
-        score_display = f"🏆 Score: {self.score} | 🔥 Streak: {self.streak}"
+        score_display = f"🏆 Score: {self.score}"
+        if self.streak >= 3:
+            score_display += f" | 🔥 Streak: {self.streak}"
+            
+        # Provide adaptive hints based on attempts
+        hint = ""
+        if self.current_question_attempts >= 2:
+            if self.mode == "eng_to_woc":
+                hint = f"\n💡 Hint: The word starts with '{w['woccon'][0]}' and has {len(w['woccon'])} letters."
+            else:
+                # For English hints, give the first letter and semantic domain if available
+                first_letter = w['english'][0]
+                domain = "unknown"
+                if self.parent and hasattr(self.parent, 'woccon') and hasattr(self.parent.woccon, 'analyze_word_enhanced'):
+                    try:
+                        analysis = self.parent.woccon.analyze_word_enhanced(w['woccon'])
+                        if analysis.get("t5_insights", {}).get("probable_semantic_domain") != "unknown":
+                            domain = analysis["t5_insights"]["probable_semantic_domain"]
+                    except Exception:
+                        pass
+                hint = f"\n💡 Hint: The English word starts with '{first_letter}' and relates to {domain}."
         
         if self.stage == "prompt":
             # Alternate between English->Woccon and Woccon->English (Quizlet style)
@@ -96,14 +130,14 @@ class LessonManager:
                 return (
                     f"{score_display}\n\n"
                     f"{emoji} Word {self.i + 1}/{len(self.words)}\n"
-                    f"❓ What's the Woccon word for **{w['english']}**?\n"
+                    f"❓ What's the Woccon word for **{w['english']}**?{hint}\n"
                     "(Type your answer, ask for an explanation, or let me know if you're not sure.)"
                 )
             else:  # woc_to_eng mode
                 return (
                     f"{score_display}\n\n"
                     f"{emoji} Word {self.i + 1}/{len(self.words)}\n"
-                    f"❓ What does the Woccon word **{w['woccon']}** mean in English?\n"
+                    f"❓ What does the Woccon word **{w['woccon']}** mean in English?{hint}\n"
                     "(Type your answer, ask for an explanation, or let me know if you're not sure.)"
                 )
         
@@ -123,109 +157,6 @@ class LessonManager:
         
         return "⚠️ Unexpected stage."
 
-    def is_dont_know_response(self, text: str) -> bool:
-        """Check if user response indicates they don't know the answer using natural language understanding."""
-        text = text.lower()
-        dont_know_patterns = [
-            r"\b(i don't know|idk|not sure|no idea|no clue|uncertain|don't remember|forgot|unsure)\b",
-            r"\b(can'?t remember|don'?t have a guess|skip|pass|next)\b",
-            r"\b(what is it|what'?s the answer|tell me|reveal|show me)\b",
-            r"\?(don'?t know|\?)",  # Question marks often indicate uncertainty
-            r"\b(um|uh|hmm|err)\b",  # Hesitation markers
-            r"\b(lol|haha)\b",  # Laughter often indicates uncertainty in this context
-            r"\b(whatever|dunno|who knows|doesn't matter|don't care)\b",  # Dismissive responses
-        ]
-        
-        return any(re.search(pattern, text) for pattern in dont_know_patterns)
-
-    def is_exit_request(self, text: str) -> bool:
-        """Check if user is trying to exit the lesson."""
-        text = text.lower()
-        exit_patterns = [
-            r"\b(exit|quit|stop|end|leave|cancel)\b",
-            r"\b(i'm done|that's enough|let's stop|finish|terminate)\b",
-            r"\b(get me out|out of here|enough of this|let me out)\b",
-            r"\b(nah |gimme out|gemme out|let's quit|want to quit)\b",
-            r"\b(go back|return|main menu|different topic)\b",
-            r"\b(not interested|don't want|no longer|anymore)\b",
-        ]
-        
-        return any(re.search(pattern, text) for pattern in exit_patterns)
-
-    def is_explanation_request(self, text: str) -> bool:
-        """Check if user is asking for an explanation about the current word/question."""
-        text = text.lower()
-        explain_patterns = [
-            r"\b(explain|explanation|more info|tell me more|elaborate|details|why)\b",
-            r"\b(how does|what does|can you explain|meaning of|what is|what are)\b",
-            r"\b(curious about|background|context|help me understand)\b",
-            r"\b(could you explain|would you explain|please explain)\b",
-            r"\b(tell me about|what's the reason|don't understand|confused)\b",
-        ]
-        
-        return any(re.search(pattern, text) for pattern in explain_patterns)
-    
-    def is_continue_request(self, text: str) -> bool:
-        """Check if user wants to continue with the lesson."""
-        text = text.lower()
-        continue_patterns = [
-            r"\b(continue|resume|go on|next|proceed|keep going)\b",
-            r"\b(let's continue|move on|move forward|next question)\b",
-            r"\b(back to lesson|back to questions|go ahead)\b",
-        ]
-        
-        return any(re.search(pattern, text) for pattern in continue_patterns)
-
-    def is_different_question_request(self, text: str) -> bool:
-        """Check if user wants to ask a different question entirely."""
-        text = text.lower()
-        different_q_patterns = [
-            r"\b(different question|another question|ask you something|something else)\b",
-            r"\b(i have a |can i ask|wondering about|curious about)\b",
-            r"\b(actually,|instead,|rather|unrelated)\b",
-        ]
-        
-        return any(re.search(pattern, text) for pattern in different_q_patterns)
-    
-    def is_previous_question_reference(self, text: str) -> bool:
-        """Check if user is referring to a previous question."""
-        text = text.lower()
-        prev_patterns = [
-            r"\b(previous|earlier|before|last|ago|that other|remember when|back to)\b",
-            r"\b(what was the|go back|can we revisit|word \d+)\b",
-        ]
-        
-        return any(re.search(pattern, text) for pattern in prev_patterns)
-    
-    def get_referenced_question(self, text: str) -> Optional[Dict]:
-        """Try to determine which previous question the user is referring to."""
-        text = text.lower()
-        
-        # Check for numeric references
-        number_match = re.search(r"word (\d+)", text)
-        if number_match:
-            q_num = int(number_match.group(1))
-            if 0 < q_num <= len(self.question_history):
-                return self.question_history[q_num - 1]
-        
-        # Check for "previous" or "last" references
-        if re.search(r"\b(previous|last|before)\b", text):
-            if len(self.question_history) > 1:
-                return self.question_history[-2]  # Return the question before the current one
-        
-        # Check for "X questions ago"
-        ago_match = re.search(r"(\d+) words? ago", text)
-        if ago_match:
-            steps_back = int(ago_match.group(1))
-            if steps_back < len(self.question_history):
-                return self.question_history[-(steps_back + 1)]
-                
-        # Default to the most recent question if we can't determine
-        if self.question_history:
-            return self.question_history[-1]
-            
-        return None
-        
     def handle(self, user_text: str) -> Tuple[str, bool]:
         """Handle user input with natural language understanding."""
         if self.i >= len(self.words):
@@ -237,11 +168,27 @@ class LessonManager:
         
         # Determine expected answer based on mode
         expected_answer = w['woccon'].lower() if self.mode == "eng_to_woc" else w['english'].lower()
+        
+        # Determine question format
+        current_question = ""
+        if self.mode == "eng_to_woc":
+            current_question = f"What's the Woccon word for '{w['english']}'?"
+        else:
+            current_question = f"What does the Woccon word '{w['woccon']}' mean in English?"
 
         # Store last response
         self.last_response = usr
         
-        # HANDLE EXIT REQUESTS - Enhanced with more patterns
+        # HANDLE REPEAT REQUESTS
+        if self.is_repeat_request(usr_lower):
+            return (f"Sure, the current question is: ❓ {current_question}\n\n(Type your answer, ask for an explanation, or let me know if you're not sure.)", False)
+            
+        # HANDLE HINT REQUESTS
+        if self.is_hint_request(usr_lower):
+            hint = self.generate_hint()
+            return (f"{hint}\n\nWould you like to try answering now, or do you need more help?", False)
+        
+        # HANDLE EXIT REQUESTS
         if self.is_exit_request(usr_lower):
             self.exit_attempts += 1
             self.paused = False  # Reset pause state
@@ -488,24 +435,44 @@ class LessonManager:
                     self.off_topic_counter = 0
                     return self._advance("Moving on to the next word!")
             
-            # More lenient matching for reinforcement stage
-            if self._is_close_answer(usr_lower, expected_answer, threshold=0.6):
-                # Toggle mode
-                self.mode = "woc_to_eng" if self.mode == "eng_to_woc" else "eng_to_woc"
-                self.off_topic_counter = 0
-                
-                return self._advance("✅ Great! On to the next one 👏")
-                
             # Check if they want to skip reinforcement
             if re.search(r"\b(skip|next|continue|move on)\b", usr_lower):
                 self.mode = "woc_to_eng" if self.mode == "eng_to_woc" else "eng_to_woc"
                 self.off_topic_counter = 0
                 return self._advance("Moving on to the next word!")
                 
+            # During reinforcement, we need to be careful not to interpret typing the answer as an exit request
+            # Check for exact match with expected answer first
+            expected_answer_lower = expected_answer.lower()
+            if usr_lower == expected_answer_lower or usr_lower == expected_answer_lower.replace(",", ""):
+                # They typed the exact answer - advance to next word
+                self.mode = "woc_to_eng" if self.mode == "eng_to_woc" else "eng_to_woc"
+                self.off_topic_counter = 0
+                return self._advance("✅ Great! On to the next one 👏")
+                
+            # More lenient matching for reinforcement stage
+            if self._is_close_answer(usr_lower, expected_answer, threshold=0.6):
+                # Toggle mode
+                self.mode = "woc_to_eng" if self.mode == "eng_to_woc" else "eng_to_woc"
+                self.off_topic_counter = 0
+                return self._advance("✅ Great! On to the next one 👏")
+            
+            # Only check for exit request if it's not similar to the expected answer
+            if self.is_exit_request(usr_lower) and self._string_similarity(usr_lower, expected_answer_lower) < 0.5:
+                self.exit_attempts += 1
+                
+                # If they've tried to exit multiple times, just let them out
+                if self.exit_attempts >= 2:
+                    return (f"👋 Vocabulary lesson exited. Final score: {self.score}. Type 'lesson' to start another.", True)
+                else:
+                    return (
+                        f"Would you like to exit the lesson? Your current score is {self.score}. "
+                        f"Type 'yes' to confirm exit, or 'continue' to keep going with the lesson.", 
+                        False
+                    )
+                
             return ("❌ Try typing it again, or say 'skip' to move on to the next word:", False)
-
-        return ("⚠️ Something went wrong.", True)
-    
+            
     def _is_correct_answer(self, user_answer: str, expected_answer: str) -> bool:
         """Check if the user's answer is correct with natural language flexibility."""
         # Exact match
@@ -519,7 +486,7 @@ class LessonManager:
             
         # Check for close match using character similarity
         return self._string_similarity(user_answer, expected_answer) > 0.8
-    
+
     def _is_close_answer(self, user_answer: str, expected_answer: str, threshold: float = 0.7) -> bool:
         """Check if the user's answer is close enough."""
         # For English answers (woc_to_eng mode), be very flexible
@@ -535,7 +502,297 @@ class LessonManager:
         
         # Check for string similarity
         return self._string_similarity(user_answer, expected_answer) > threshold
+
+
+    def _setup_question_alternatives(self, word_entry: Dict):
+        """Set up alternative acceptable answers for a specific question."""
+        self.alternative_answers = {}
+        
+        if self.mode == "eng_to_woc":
+            # For Woccon words, mainly handle typos and variations
+            woccon_word = word_entry.get('woccon', '')
+            
+            # Handle common typos or variations
+            if len(woccon_word) > 2:
+                # First letter wrong but rest correct
+                self.alternative_answers[woccon_word[1:]] = woccon_word
+                
+                # Last letter wrong but rest correct
+                self.alternative_answers[woccon_word[:-1]] = woccon_word
+                
+                # Missing a letter
+                for i in range(len(woccon_word)):
+                    self.alternative_answers[woccon_word[:i] + woccon_word[i+1:]] = woccon_word
+        else:
+            # For English translations, accept synonyms and related words
+            english_word = word_entry.get('english', '').lower()
+            
+            # Simple synonym patterns based on common words
+            if "water" in english_word:
+                self.alternative_answers.update({
+                    "liquid": english_word,
+                    "fluid": english_word,
+                    "aqua": english_word,
+                    "h2o": english_word
+                })
+            elif "path" in english_word:
+                self.alternative_answers.update({
+                    "trail": english_word,
+                    "route": english_word,
+                    "way": english_word,
+                    "road": english_word,
+                    "track": english_word
+                })
+            elif "container" in english_word:
+                self.alternative_answers.update({
+                    "vessel": english_word,
+                    "holder": english_word,
+                    "receptacle": english_word,
+                    "pot": english_word
+                })
+            elif "tool" in english_word:
+                self.alternative_answers.update({
+                    "implement": english_word,
+                    "utensil": english_word,
+                    "instrument": english_word,
+                    "device": english_word
+                })
+                
+            # Add plural/singular variations
+            if english_word.endswith("s") and len(english_word) > 2:
+                self.alternative_answers[english_word[:-1]] = english_word
+            else:
+                self.alternative_answers[english_word + "s"] = english_word
+                
+            # Add common variants with adjectives
+            self.alternative_answers["the " + english_word] = english_word
+            self.alternative_answers["a " + english_word] = english_word
+            self.alternative_answers["an " + english_word] = english_word
+            
+            # Add "to X" for verbs
+            self.alternative_answers["to " + english_word] = english_word
+
+    def is_dont_know_response(self, text: str) -> bool:
+        """Check if user response indicates they don't know using natural language understanding."""
+        text = text.lower().strip()
+        dont_know_patterns = [
+            r"\b(i don't know|idk|not sure|no idea|no clue|uncertain|don't remember|forgot|unsure)\b",
+            r"\b(can'?t remember|don'?t have a guess|skip|pass|next)\b",
+            r"\b(what is it|what'?s the answer|tell me|reveal|show me)\b",
+            r"\b(um|uh|hmm|err)\b",  # Hesitation markers
+            r"\b(lol|haha)\b",  # Laughter often indicates uncertainty in this context
+            r"\b(whatever|dunno|who knows|doesn't matter|don't care)\b",  # Dismissive responses
+            r"\b(no idea|haven'?t a clue|give up|stumped)\b",  # Additional expressions
+            r"\b(beats me|beyond me|drawing a blank|lost|clueless)\b",  # More expressions
+        ]
+        
+        # Check if text is just a negative response
+        if text in ["no", "nope", "not", "negative", "nah"]:
+            return True
+            
+        return any(re.search(pattern, text) for pattern in dont_know_patterns)
+
+    def is_exit_request(self, text: str) -> bool:
+        """Check if user is trying to exit the lesson."""
+        text = text.lower()
+        exit_patterns = [
+            r"\b(exit|quit|stop|end|leave|cancel)\b",
+            r"\b(i'm done|that's enough|let's stop|finish|terminate)\b",
+            r"\b(get me out|out of here|enough of this|let me out)\b",
+            r"\b(nah |gimme out|gemme out|let's quit|want to quit)\b",
+            r"\b(go back|return|main menu|different topic)\b",
+            r"\b(not interested|don't want|no longer|anymore)\b",
+            r"\b(tired of this|bored|change the topic|something else)\b",
+            r"\b(stop the lesson|done with vocabulary|i give up|too hard)\b",
+        ]
+        
+        return any(re.search(pattern, text) for pattern in exit_patterns)
+
+    def is_explanation_request(self, text: str) -> bool:
+        """Check if user is asking for an explanation."""
+        text = text.lower()
+        explain_patterns = [
+            r"\b(explain|explanation|more info|tell me more|elaborate|details|why)\b",
+            r"\b(how does|what does|can you explain|meaning of|what is|what are)\b",
+            r"\b(curious about|background|context|help me understand)\b",
+            r"\b(could you explain|would you explain|please explain)\b",
+            r"\b(tell me about|what's the reason|don't understand|confused)\b",
+            r"\b(need help|how come|how so|give me a hint|confused)\b",
+            r"\b(why is that|what's this about|enlighten me|educate me)\b",
+        ]
+        
+        return any(re.search(pattern, text) for pattern in explain_patterns)
     
+    def is_continue_request(self, text: str) -> bool:
+        """Check if user wants to continue with the lesson."""
+        text = text.lower()
+        continue_patterns = [
+            r"\b(continue|resume|go on|next|proceed|keep going)\b",
+            r"\b(let's continue|move on|move forward|next question)\b",
+            r"\b(back to lesson|back to questions|go ahead)\b",
+            r"\b(let's go|onward|forward|carry on|next one|another)\b",
+            r"\b(more questions|give me another|another one|next one please)\b",
+            r"\b(continue lesson|let's do more|ready for more)\b",
+            r"\b(sure|okay|ok|yeah|yes|yep|yup)\b" # Add affirmative responses
+        ]
+        
+        return any(re.search(pattern, text) for pattern in continue_patterns)
+
+    def is_different_question_request(self, text: str) -> bool:
+        """Check if user wants to ask a different question entirely."""
+        text = text.lower()
+        different_q_patterns = [
+            r"\b(different question|another question|ask you something|something else)\b",
+            r"\b(i have a |can i ask|wondering about|curious about)\b",
+            r"\b(actually,|instead,|rather|unrelated)\b",
+            r"\b(by the way|off topic|side note|random question)\b",
+            r"\b(quick question|just curious|while we're here)\b",
+        ]
+        
+        return any(re.search(pattern, text) for pattern in different_q_patterns)
+    
+    def is_previous_question_reference(self, text: str) -> bool:
+        """Check if user is referring to a previous question."""
+        text = text.lower()
+        prev_patterns = [
+            r"\b(previous|earlier|before|last|ago|that other|remember when|back to)\b",
+            r"\b(what was the|go back|can we revisit|word \d+)\b",
+            r"\b(earlier word|prior word|first word)\b",
+            r"\b(word (one|two|three|four|five|six|seven|eight|nine|ten))\b",
+        ]
+        
+        return any(re.search(pattern, text) for pattern in prev_patterns)
+    
+    def is_repeat_request(self, text: str) -> bool:
+        """Check if user is asking to repeat the question."""
+        text = text.lower()
+        repeat_patterns = [
+            r"\b(repeat|say again|once more|what was the question)\b",
+            r"\b(didn't catch that|didn't hear|what did you say|what was that)\b",
+            r"\b(remind me|tell me again|one more time|read it again)\b",
+        ]
+        
+        return any(re.search(pattern, text) for pattern in repeat_patterns)
+    
+    def is_hint_request(self, text: str) -> bool:
+        """Check if user is asking for a hint."""
+        text = text.lower()
+        hint_patterns = [
+            r"\b(hint|clue|tip|help me out)\b",
+            r"\b(give me a hint|need a clue|any hints|can you help)\b",
+            r"\b(stuck|struggling|help with this|how do i)\b",
+            r"\b(help|more help)\b"
+        ]
+        
+        return any(re.search(pattern, text) for pattern in hint_patterns)
+    
+    def is_answer_attempt(self, text: str) -> bool:
+        """Check if the text is likely a genuine attempt to answer the question."""
+        text_lower = text.lower()
+        
+        # Check for common patterns indicating this is NOT an answer attempt
+        non_answer_patterns = [
+            r"^\s*(idk|not sure|no idea|no clue|confused|don'?t know)\s*$",  # Just expressions of uncertainty
+            r"^\s*(help|hint|clue|explain|what is it|tell me)\s*$",  # Requests for help
+            r"^\s*(next|skip|pass|continue|go on)\s*$",  # Navigation requests
+            r"^\s*(exit|quit|stop|end)\s*$",  # Exit requests
+            r"^\s*(what|who|when|where|why|how)\s*\?",  # Just questions
+            r"^\s*([hm]+|[um]+|[er]+)\s*$",  # Just hesitation noises
+            r"^\s*(lol|lmao|wtf|omg)\s*$"  # Just reactions
+        ]
+        
+        # If it matches any non-answer pattern, it's not an answer attempt
+        if any(re.search(pattern, text_lower) for pattern in non_answer_patterns):
+            return False
+            
+        # If it contains answer-like phrases, it's likely an answer attempt
+        answer_indicators = [
+            r"it'?s\s",
+            r"that'?s\s",
+            r"they'?re\s",
+            r"i\s*think\s*it'?s\s",
+            r"maybe\s*it'?s\s",
+            r"probably\s",
+            r"\b(means|translates to|is|are|would be)\b",
+            r"the\s*answer\s*is\s",
+        ]
+        
+        # Extract the expected answer based on current mode
+        if self.i < len(self.words):
+            w = self.words[self.i]
+            expected_answer = w['woccon'].lower() if self.mode == "eng_to_woc" else w['english'].lower()
+            
+            # If the text contains any part of the correct answer, it's likely an answer attempt
+            for word in expected_answer.split():
+                if len(word) > 3 and word in text_lower:  # Only consider words longer than 3 chars
+                    return True
+                    
+        # If the text contains any answer indicator, it's likely an answer attempt
+        if any(re.search(pattern, text_lower) for pattern in answer_indicators):
+            return True
+            
+        # If text is very short (1-2 words), it's likely an answer attempt in this context
+        if len(text_lower.split()) <= 3 and len(text_lower) > 1:
+            return True
+            
+        return False
+
+    def is_repeat_request(self, text: str) -> bool:
+        """Check if user is asking to repeat the question."""
+        text = text.lower()
+        repeat_patterns = [
+            r"\b(repeat|say again|once more|what was the question)\b",
+            r"\b(didn't catch that|didn't hear|what did you say|what was that)\b",
+            r"\b(remind me|tell me again|one more time|read it again)\b",
+        ]
+        
+        return any(re.search(pattern, text) for pattern in repeat_patterns)
+
+    def is_hint_request(self, text: str) -> bool:
+        """Check if user is asking for a hint."""
+        text = text.lower()
+        hint_patterns = [
+            r"\b(hint|clue|tip|help me out)\b",
+            r"\b(give me a hint|need a clue|any hints|can you help)\b",
+            r"\b(stuck|struggling|help with this|how do i)\b",
+            r"\b(help|more help)\b"
+        ]
+        
+        return any(re.search(pattern, text) for pattern in hint_patterns)
+
+    def generate_hint(self) -> str:
+        """Generate a hint for the current question."""
+        if self.i >= len(self.words):
+            return "There are no more words to hint about."
+            
+        w = self.words[self.i]
+        
+        if self.mode == "eng_to_woc":
+            # Hint for Woccon word
+            woccon_word = w['woccon']
+            if len(woccon_word) > 3:
+                return f"💡 The Woccon word starts with '{woccon_word[:2]}' and has {len(woccon_word)} letters."
+            else:
+                return f"💡 The Woccon word has {len(woccon_word)} letters."
+        else:
+            # Hint for English meaning
+            english_word = w['english']
+            
+            # Try to get semantic domain if available
+            domain = "unknown"
+            if self.parent and hasattr(self.parent, 'woccon') and hasattr(self.parent.woccon, 'analyze_word_enhanced'):
+                try:
+                    analysis = self.parent.woccon.analyze_word_enhanced(w['woccon'])
+                    if analysis.get("t5_insights", {}).get("probable_semantic_domain") != "unknown":
+                        domain = analysis["t5_insights"]["probable_semantic_domain"]
+                except Exception:
+                    pass
+            
+            if domain != "unknown":
+                return f"💡 The English word relates to {domain} and starts with '{english_word[0]}'."
+            else:
+                return f"💡 The English word starts with '{english_word[0]}' and has {len(english_word)} letters."
+
     def _string_similarity(self, a: str, b: str) -> float:
         """Calculate string similarity ratio using Levenshtein distance."""
         # Simple implementation without requiring additional libraries
@@ -558,6 +815,8 @@ class LessonManager:
             return 1.0  # Both strings empty
         return 1 - (distances[-1] / max_len)
 
+
+
     def _advance(self, message: str) -> Tuple[str, bool]:
         """Advance to the next word in the lesson."""
         self.i += 1
@@ -579,57 +838,323 @@ class LessonManager:
         
         return (message + "\n\n" + self.prompt(), False)
 
-    def get_progress(self) -> Dict:
-        """Return the current lesson progress for serialization."""
-        return {
-            "type": self.lesson_type,
-            "index": self.i,
-            "score": self.score,
-            "streak": self.streak,
-            "stage": self.stage,
-            "mode": self.mode,
-            "total_words": len(self.words),
-            "words": self.words
+    def get_referenced_question(self, text: str) -> Optional[Dict]:
+        """Try to determine which previous question the user is referring to."""
+        text = text.lower()
+        
+        # Check for numeric references
+        number_match = re.search(r"word (\d+)", text)
+        if number_match:
+            q_num = int(number_match.group(1))
+            if 0 < q_num <= len(self.question_history):
+                return self.question_history[q_num - 1]
+        
+        # Check for "previous" or "last" references
+        if re.search(r"\b(previous|last|before)\b", text):
+            if len(self.question_history) > 1:
+                return self.question_history[-2]  # Return the question before the current one
+        
+        # Check for "X questions ago"
+        ago_match = re.search(r"(\d+) words? ago", text)
+        if ago_match:
+            steps_back = int(ago_match.group(1))
+            if steps_back < len(self.question_history):
+                return self.question_history[-(steps_back + 1)]
+        
+        # Check for spelled-out numbers
+        word_to_num = {
+            "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+            "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10
         }
+        for word, num in word_to_num.items():
+            if re.search(fr"word {word}", text):
+                if 0 < num <= len(self.question_history):
+                    return self.question_history[num - 1]
+                
+        # Default to the most recent question if we can't determine
+        if self.question_history:
+            return self.question_history[-1]
+            
+        return None
+
+    def extract_key_concepts(self, text: str) -> List[str]:
+        """Extract key concepts from an answer to compare against user input."""
+        text = text.lower()
+        
+        # Split the text into words and remove common stopwords
+        stopwords = ['the', 'a', 'an', 'is', 'are', 'that', 'this', 'to', 'in', 'of', 'for', 'with', 'on', 'at']
+        words = [word for word in re.findall(r'\b\w+\b', text) if word not in stopwords and len(word) > 2]
+        
+        # Extract quoted words
+        quoted = re.findall(r'"([^"]+)"|\*\*([^*]+)\*\*|\'([^\']+)\'', text)
+        quoted_words = []
+        for match in quoted:
+            # Combine all capturing groups and take non-empty ones
+            for group in match:
+                if group:
+                    quoted_words.append(group.lower())
+        
+        # Combine all key concepts and remove duplicates
+        return list(set(words + quoted_words))
+        
+    def compare_key_concepts(self, user_answer: str, correct_answer: str) -> Tuple[float, List[str], List[str]]:
+        """
+        Compare key concepts between user answer and correct answer.
+        Returns: (match_ratio, matched_concepts, missing_concepts)
+        """
+        # Quick check for non-answers
+        non_answer_markers = ['errr', 'umm', 'idk', 'wtf', 'lmao', 'lol', 'clue']
+        if any(marker in user_answer.lower() for marker in non_answer_markers) and len(user_answer.split()) <= 2:
+            # This is almost certainly not a real answer attempt
+            return 0.0, [], self.extract_key_concepts(correct_answer.lower())
+            
+        # Extract key concepts from both answers
+        user_concepts = self.extract_key_concepts(user_answer.lower())
+        correct_concepts = self.extract_key_concepts(correct_answer.lower())
+        
+        # Find matched and missing concepts
+        matched_concepts = [c for c in user_concepts if c in correct_concepts or any(self._string_similarity(c, cc) > 0.8 for cc in correct_concepts)]
+        missing_concepts = [c for c in correct_concepts if c not in user_concepts and not any(self._string_similarity(c, uc) > 0.8 for uc in user_concepts)]
+        
+        # Calculate match ratio
+        if not correct_concepts:
+            return 1.0, matched_concepts, missing_concepts  # Avoid division by zero
+            
+        match_ratio = len(matched_concepts) / len(correct_concepts)
+        
+        return match_ratio, matched_concepts, missing_concepts
+    
+    def generate_hint(self) -> str:
+        """Generate a hint for the current question."""
+        if self.i >= len(self.words):
+            return "There are no more words to hint about."
+            
+        w = self.words[self.i]
+        
+        if self.mode == "eng_to_woc":
+            # Hint for Woccon word
+            woccon_word = w['woccon']
+            if len(woccon_word) > 3:
+                return f"💡 The Woccon word starts with '{woccon_word[:2]}' and has {len(woccon_word)} letters."
+            else:
+                return f"💡 The Woccon word has {len(woccon_word)} letters."
+        else:
+            # Hint for English meaning
+            english_word = w['english']
+            
+            # Try to get semantic domain if available
+            domain = "unknown"
+            if self.parent and hasattr(self.parent, 'woccon') and hasattr(self.parent.woccon, 'analyze_word_enhanced'):
+                try:
+                    analysis = self.parent.woccon.analyze_word_enhanced(w['woccon'])
+                    if analysis.get("t5_insights", {}).get("probable_semantic_domain") != "unknown":
+                        domain = analysis["t5_insights"]["probable_semantic_domain"]
+                except Exception:
+                    pass
+            
+            if domain != "unknown":
+                return f"💡 The English word relates to {domain} and starts with '{english_word[0]}'."
+            else:
+                return f"💡 The English word starts with '{english_word[0]}' and has {len(english_word)} letters."
+            
+    def check_alternative_answers(self, user_answer: str) -> bool:
+        """Check if the user's answer matches any of the alternative acceptable answers."""
+        if not self.alternative_answers:
+            return False
+            
+        normalized_user_answer = self._normalize_answer(user_answer)
+        
+        # First check for exact match with any alternative
+        if normalized_user_answer in self.alternative_answers:
+            return True
+            
+        # Then check for partial matches (one alternative is fully contained in the user's answer)
+        for alt_key in self.alternative_answers.keys():
+            # Check if alternative is a substantial part of the user's answer
+            if len(alt_key) > 3 and alt_key in normalized_user_answer:
+                return True
+                
+            # Check if user's answer is a substantial part of the alternative
+            if len(normalized_user_answer) > 3 and normalized_user_answer in alt_key:
+                return True
+                
+        # Finally check string similarity
+        for alt_key in self.alternative_answers.keys():
+            if self._string_similarity(normalized_user_answer, alt_key) > 0.8:
+                return True
+                
+        return False
+        
+    def _normalize_answer(self, text: str) -> str:
+        """Normalize text for better comparison."""
+        # Convert to lowercase
+        text = text.lower()
+        
+        # Remove punctuation and extra spaces
+        text = re.sub(r'[^\w\s]', ' ', text)
+        text = re.sub(r'\s+', ' ', text).strip()
+        
+        # Remove common filler words for comparing answers
+        fillers = ['the', 'a', 'an', 'is', 'are', 'that', 'this', 'these', 'those', 'to']
+        for filler in fillers:
+            text = re.sub(fr'\b{filler}\b', '', text)
+        
+        return re.sub(r'\s+', ' ', text).strip()
     
 
-    def _add_linguistic_context(self, word_entry: Dict) -> str:
-        """Add linguistic context to a word based on morphological analysis"""
-        word = word_entry['woccon']
-        
-        # Get analysis if parent exists and has woccon attribute
-        analysis = {}
-        if self.parent and hasattr(self.parent, 'woccon'):
+
+    def check_answer_with_llm(self, user_answer: str, correct_answer: str, question: str) -> Tuple[bool, float, str, bool]:
+        """
+        Use the LLM to evaluate if the user's answer is correct or close
+        Returns: (is_correct, confidence_score, explanation, is_partial)
+        """
+        # Always check for alternative answers first
+        if self.check_alternative_answers(user_answer):
+            return True, 0.95, "Matches acceptable alternative answer", False
+            
+        try:
+            # Check if this is even an answer attempt
+            if not self.is_answer_attempt(user_answer):
+                return False, 0.9, "Not a genuine answer attempt", False
+                
+            # Next use key concept extraction
+            match_ratio, matched_concepts, missing_concepts = self.compare_key_concepts(user_answer, correct_answer)
+            
+            # Quick check for obvious wrong answers based on length and content
+            if len(user_answer.split()) > 3 and match_ratio < 0.1 and any(
+                nonsense_marker in user_answer.lower() 
+                for nonsense_marker in ['err', 'errrr', 'umm', 'hmm', 'lol', 'lmao', 'clue',
+                                      'uhh', 'ugh', 'wtf', 'idk', 'omg']
+            ):
+                # This is almost certainly not an attempt at answering
+                return False, 0.1, "Response contains expressions of uncertainty", False
+            
+            # If we have a very strong match based on key concepts, don't bother calling the LLM
+            if match_ratio > 0.9 and len(matched_concepts) >= 1:
+                return True, 0.95, "Answer contains all key concepts", False
+                
+            # For very short answers (likely Woccon words), use direct string similarity
+            if len(user_answer.split()) <= 2 and len(correct_answer.split()) <= 2:
+                similarity = self._string_similarity(user_answer.lower(), correct_answer.lower())
+                if similarity > 0.85:
+                    return True, similarity, "Close string match", False
+                elif similarity > 0.65:
+                    return False, similarity, "Partial string match", True
+                else:
+                    return False, similarity, "Low string similarity", False
+            
+            # Prepare a conversational evaluation prompt
+            prompt = f"""
+            Evaluate if this user's answer for a language learning exercise is correct.
+            
+            QUESTION: {question}
+            CORRECT ANSWER: {correct_answer}
+            USER'S ANSWER: {user_answer}
+            
+            Additional context: The user is learning vocabulary for a constructed language called Woccon.
+            This is an informal learning context, so be forgiving of partial answers if they show understanding.
+            
+            TASK: Determine if the user's answer is:
+            1. Correct - Contains the key concepts, even if expressed informally or with minor spelling errors
+            2. Partially correct - Has some correct elements but is missing important information
+            3. Incorrect - Wrong or completely off-topic
+            
+            Key considerations:
+            - Accept informal language and synonyms (e.g., "vessel" for "container")
+            - Be understanding of users trying to insist on their answer being correct
+            - Don't accept expressions like "idk", "not sure", random sounds "errr", etc.
+            - If the user is clearly attempting to provide an answer, be generous
+            
+            RESPONSE FORMAT:
+            {{
+                "evaluation": "correct", "partially_correct", or "incorrect",
+                "confidence": [0-1 scale, where 1 is highest confidence],
+                "explanation": "Brief explanation of your reasoning",
+                "key_concepts_present": [list of key concepts that were present in the user's answer],
+                "key_concepts_missing": [list of key concepts that were missing]
+            }}
+            
+            Return ONLY this JSON with no additional text.
+            """
+            
+            # Get evaluation from LLM
+            retrieved = self.parent._retrieve(prompt)
+            messages = self.parent._build_prompt(prompt, retrieved, deque())  # no convo history
+            response = ollama.chat(model=self.parent.model, messages=messages)["message"]["content"]
+            
+            # Parse the response
+            # The response should be a JSON string, extract it and parse
             try:
-                analysis = self.parent.woccon.analyze_word(word)
-            except Exception as e:
-                log.error(f"Error analyzing word {word}: {e}")
-        
-        context = []
-        
-        # Add root information
-        if analysis.get("roots"):
-            for root in analysis["roots"]:
-                if root.get("confidence") not in ["low"]:
-                    context.append(f"• Contains the root **{root['root']}** meaning '{root['meaning']}'")
-                    break
-        
-        # Add affix information
-        if analysis.get("affixes"):
-            for affix in analysis["affixes"]:
-                context.append(f"• Contains the {affix['type']} **{affix['form']}** ({affix['function']})")
-        
-        # Add reduplication information
-        reduplication = self.parent.woccon._detect_reduplication(word) if hasattr(self.parent.woccon, '_detect_reduplication') else None
-        if reduplication:
-            context.append(f"• Shows {reduplication['type']} pattern indicating {reduplication['pattern']}")
-        
-        # Add inflectional mode information if relevant
-        infl_mode = self.parent.woccon._identify_inflectional_mode(word) if hasattr(self.parent.woccon, '_identify_inflectional_mode') else None
-        if infl_mode and infl_mode['mode'] != 'unknown':
-            context.append(f"• Uses the {infl_mode['mode']} mode marked by {infl_mode['marker']}")
-        
-        if not context:
-            context.append("• No additional morphological information available")
-        
-        return "\n".join(context)
+                # Try to find JSON structure in the response
+                json_start = response.find("{")
+                json_end = response.rfind("}") + 1
+                if json_start >= 0 and json_end > json_start:
+                    json_str = response[json_start:json_end]
+                    result = json.loads(json_str)
+                else:
+                    # Fallback if no JSON structure found
+                    raise ValueError("No JSON structure found in LLM response")
+                
+                is_correct = result.get("evaluation") == "correct"
+                is_partial = result.get("evaluation") == "partially_correct"
+                confidence = float(result.get("confidence", 0.5))
+                explanation = result.get("explanation", "")
+                
+                # Double check with our heuristics
+                
+                # 1. Check for expressions of ignorance/uncertainty as a safeguard
+                uncertainty_markers = ['idk', 'not sure', 'no idea', 'no clue', 'umm', 'uhh', 'err', 
+                                      'lol', 'lmao', 'wtf', 'ugh', 'help', 'plz', 'pls', 'hmm',
+                                      'what', 'huh', 'eh', 'meh', 'dunno', 'help me']
+                                      
+                if any(marker in user_answer.lower() for marker in uncertainty_markers) and is_correct:
+                    # Don't mark answers containing uncertainty markers as correct
+                    log.warning(f"Overriding LLM evaluation: answer contains uncertainty markers but was marked correct")
+                    return False, 0.2, "Response contains expressions of uncertainty", False
+                
+                # Use the LLM result, but log disagreements for monitoring
+                if ((is_correct and match_ratio < 0.3) or 
+                    (not is_correct and not is_partial and match_ratio > 0.7)):
+                    log.warning(f"LLM and key concept evaluation disagree: LLM={is_correct}, concept_match={match_ratio}")
+                
+                return is_correct, confidence, explanation, is_partial
+            
+            except (json.JSONDecodeError, ValueError) as e:
+                log.error(f"Error parsing LLM response: {e} - Response: {response}")
+                # Fall back to alternatives and key concept matching if JSON parsing fails
+                
+                # Check for insistence that an answer is correct
+                insistence_indicators = ["i told you", "my answer", "already said", "said", "that's what I said"]
+                if any(indicator in user_answer.lower() for indicator in insistence_indicators) and matched_concepts:
+                    # If user is insisting and they had some matched concepts, be generous
+                    return matched_concepts and len(matched_concepts) >= 1, 0.6, "Accepted based on user insistence with partial match", True
+                
+                # Otherwise use key concept matching
+                if match_ratio > 0.85:
+                    return True, match_ratio, f"Contains key concepts: {', '.join(matched_concepts)}", False
+                elif match_ratio > 0.5:
+                    return False, match_ratio, f"Missing key concepts: {', '.join(missing_concepts)}", True
+                else:
+                    return False, match_ratio, "Answer lacks required key concepts", False
+                
+        except Exception as e:
+            log.error(f"Error in LLM answer check: {e}")
+            # Fall back to string similarity if LLM call fails completely
+            
+            # For very short answers (likely Woccon words), use string similarity
+            if len(user_answer.split()) <= 2 and len(correct_answer.split()) <= 2:
+                similarity = self._string_similarity(user_answer.lower(), correct_answer.lower())
+                if similarity > 0.85:
+                    return True, similarity, "Close string match", False
+                elif similarity > 0.65:
+                    return False, similarity, "Partial string match", True
+                else:
+                    return False, similarity, "Low string similarity", False
+            
+            # For longer answers, use key concept matching
+            if match_ratio > 0.85:
+                return True, match_ratio, f"Contains key concepts: {', '.join(matched_concepts)}", False
+            elif match_ratio > 0.5:
+                return False, match_ratio, f"Missing key concepts: {', '.join(missing_concepts)}", True
+            else:
+                return False, match_ratio, "Answer lacks required key concepts", False
