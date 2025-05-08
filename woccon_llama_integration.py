@@ -3,6 +3,8 @@ from collections import deque
 from typing import Dict, List, Tuple, Optional, Any
 import ollama  # your local Llama server client
 from main import WocconT5
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Import the improved lesson managers
 from lesson_manager import LessonManager
@@ -17,16 +19,45 @@ class WocconAssistant:
     """RAG-powered Woccon assistant with smarter context-aware lesson offers."""
 
     def __init__(self,
-                 dict_path="woccon_language/dictionary.json",
-                 rules_path="woccon_language/rules.json",
-                 model="llama3:8b",
-                 ctx_turns=6):
+                dict_path="woccon_language/dictionary.json",
+                rules_path="woccon_language/rules.json",
+                model="llama3:8b",
+                model_path=None,
+                ctx_turns=6):
         # Core data & model
         self.woccon = WocconT5()
         self.dictionary = self._load_json(dict_path)
         self.rules = self._load_json(rules_path)
-        self.model = model
+        self.model_name = model
+        self.model_path = model_path or os.environ.get('LLAMA_MODEL_PATH', '/workspace/models/llama3-8b')
         self.ctx_turns = ctx_turns
+        
+        # Try to use Ollama first, fall back to HuggingFace
+        self.use_ollama = False
+        self.tokenizer = None
+        self.model = None
+        
+        try:
+            # Check if Ollama is available
+            log.info("Trying to connect to Ollama...")
+            ollama.list()
+            self.use_ollama = True
+            log.info("Successfully connected to Ollama - will use Ollama for text generation")
+        except Exception as e:
+            log.info(f"Ollama not available: {e}")
+            log.info(f"Will use HuggingFace model from {self.model_path}")
+            try:
+                # Load model using HuggingFace
+                self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    self.model_path,
+                    torch_dtype=torch.float16,
+                    device_map="auto"
+                )
+                log.info("Successfully loaded HuggingFace model")
+            except Exception as e:
+                log.error(f"Error loading HuggingFace model: {e}")
+                raise
 
         # Prepare retrieval corpus
         self.documented_words = {
@@ -37,12 +68,29 @@ class WocconAssistant:
             for e in self.dictionary.get("lexicon", [])
         ]
         log.info("RAG ready: %d chunks (%d documented words)",
-                 len(self.chunks),
-                 len(self.documented_words))
+                len(self.chunks),
+                len(self.documented_words))
 
         # Session state per user
         self.sessions: Dict[str, Dict] = {}
     
+    def _format_messages_for_model(self, messages: List[Dict]) -> str:
+        """Convert message format to a text prompt for the model."""
+        prompt = ""
+        for msg in messages:
+            role = msg["role"]
+            content = msg["content"]
+            
+            if role == "system":
+                prompt += f"System: {content}\n\n"
+            elif role == "user":
+                prompt += f"User: {content}\n\n"
+            elif role == "assistant":
+                prompt += f"Assistant: {content}\n\n"
+        
+        prompt += "Assistant: "
+        return prompt
+
     def reply(self, user_id: str, text: str) -> str:
         """Enhanced reply method with smarter context-aware lesson offers."""
         # Initialize or get session
@@ -140,12 +188,25 @@ class WocconAssistant:
                 
                 try:
                     # Get evaluation from LLM
-                    evaluation_messages = [{"role": "user", "content": evaluation_prompt}]
-                    raw_evaluation = ollama.chat(
-                        model=self.model,
-                        messages=evaluation_messages,
-                        options={"temperature": 0.1}
-                    )["message"]["content"].strip().upper()
+                    if self.use_ollama:
+                        evaluation_messages = [{"role": "user", "content": evaluation_prompt}]
+                        raw_evaluation = ollama.chat(
+                            model=self.model_name,
+                            messages=evaluation_messages,
+                            options={"temperature": 0.1}
+                        )["message"]["content"].strip().upper()
+                    else:
+                        # Use HuggingFace model
+                        inputs = self.tokenizer(evaluation_prompt, return_tensors="pt").to(self.model.device)
+                        outputs = self.model.generate(
+                            inputs["input_ids"],
+                            max_new_tokens=20,
+                            temperature=0.1
+                        )
+                        raw_evaluation = self.tokenizer.decode(
+                            outputs[0][inputs["input_ids"].shape[1]:],
+                            skip_special_tokens=True
+                        ).strip().upper()
                     
                     if "YES" in raw_evaluation:
                         # Clear pending action and start lesson
@@ -270,16 +331,42 @@ class WocconAssistant:
         # Get answer from LLM
         retrieved = self._retrieve(text)
         messages = self._build_prompt(text, retrieved, session["history"])
-        raw = ollama.chat(
-            model=self.model,
-            messages=messages,
-            options={"temperature": 0.3}
-        )["message"]["content"]
+
+        # Use Ollama if available, otherwise use HuggingFace
+        if self.use_ollama:
+            try:
+                raw = ollama.chat(
+                    model=self.model_name,
+                    messages=messages,
+                    options={"temperature": 0.3}
+                )["message"]["content"]
+            except Exception as e:
+                log.error(f"Error using Ollama: {e}")
+                self.use_ollama = False
+                log.info("Falling back to HuggingFace model")
+                # Convert messages to a prompt format for HF model
+                prompt = self._format_messages_for_model(messages)
+                inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+                outputs = self.model.generate(
+                    inputs["input_ids"],
+                    max_new_tokens=512,
+                    temperature=0.3,
+                    top_p=0.9,
+                )
+                raw = self.tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+        else:
+            # Convert messages to a prompt format for HF model
+            prompt = self._format_messages_for_model(messages)
+            inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+            outputs = self.model.generate(
+                inputs["input_ids"],
+                max_new_tokens=512,
+                temperature=0.3,
+                top_p=0.9,
+            )
+            raw = self.tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+
         answer = self._minimal_verify(raw)
-        
-        # Update history
-        session["history"].append({"role": "user", "content": text})
-        session["history"].append({"role": "assistant", "content": answer})
         
         # 7️⃣ Update topic tracking
         current_topic = self._determine_current_topic(lower, answer)
@@ -564,16 +651,15 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="llama3:8b")
+    parser.add_argument("--model-path", default=os.environ.get('LLAMA_MODEL_PATH', '/workspace/models/llama3-8b'))
     args = parser.parse_args()
 
-    bot = WocconAssistant(model=args.model)
+    bot = WocconAssistant(model=args.model, model_path=args.model_path)
     print("\n🗣️  Woccon CLI — type 'control + C' to exit.\n")
 
     while True:
         try:
             msg = input("woccon> ").strip()
-            #if msg.lower() in ("quit", "exit"):
-            #    break
             print("\n" + bot.reply("cli_user", msg) + "\n")
         except KeyboardInterrupt:
             break
