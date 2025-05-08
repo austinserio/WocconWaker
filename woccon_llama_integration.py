@@ -47,13 +47,19 @@ class WocconAssistant:
             log.info(f"Ollama not available: {e}")
             log.info(f"Will use HuggingFace model from {self.model_path}")
             try:
-                # Load model using HuggingFace
+                # After successfully loading the HuggingFace model
                 self.tokenizer = AutoTokenizer.from_pretrained(self.model_path)
                 self.model = AutoModelForCausalLM.from_pretrained(
                     self.model_path,
                     torch_dtype=torch.float16,
                     device_map="auto"
                 )
+
+                # Add these lines to fix the tokenizer warnings:
+                if self.tokenizer.pad_token is None:
+                    self.tokenizer.pad_token = self.tokenizer.eos_token
+                    log.info("Set pad_token to eos_token")
+
                 log.info("Successfully loaded HuggingFace model")
             except Exception as e:
                 log.error(f"Error loading HuggingFace model: {e}")
@@ -345,24 +351,33 @@ class WocconAssistant:
                 self.use_ollama = False
                 log.info("Falling back to HuggingFace model")
                 # Convert messages to a prompt format for HF model
+                # Replace it with:
                 prompt = self._format_messages_for_model(messages)
-                inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+                inputs = self.tokenizer(prompt, return_tensors="pt", padding=True).to(self.model.device)
+                attention_mask = inputs.get('attention_mask', None)
+
                 outputs = self.model.generate(
                     inputs["input_ids"],
+                    attention_mask=attention_mask,
                     max_new_tokens=512,
                     temperature=0.3,
                     top_p=0.9,
+                    pad_token_id=self.tokenizer.pad_token_id
                 )
                 raw = self.tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
         else:
             # Convert messages to a prompt format for HF model
             prompt = self._format_messages_for_model(messages)
-            inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+            inputs = self.tokenizer(prompt, return_tensors="pt", padding=True).to(self.model.device)
+            attention_mask = inputs.get('attention_mask', None)
+
             outputs = self.model.generate(
                 inputs["input_ids"],
+                attention_mask=attention_mask,
                 max_new_tokens=512,
                 temperature=0.3,
                 top_p=0.9,
+                pad_token_id=self.tokenizer.pad_token_id
             )
             raw = self.tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
 
