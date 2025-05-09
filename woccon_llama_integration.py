@@ -345,8 +345,8 @@ class WocconAssistant:
                 prompt,
                 return_tensors="pt",
                 padding=True,
-                truncation=True,
-                max_length=self.tokenizer.model_max_length
+                truncation=True,      # ← this alone is enough
+                # max_length=4096     # ← optional clamp, but you can omit it
             ).to(self.model.device)
 
             outputs = self.model.generate(
@@ -396,8 +396,8 @@ class WocconAssistant:
                 prompt,
                 return_tensors="pt",
                 padding=True,
-                truncation=True,
-                max_length=self.tokenizer.model_max_length
+                truncation=True,      # ← this alone is enough
+                # max_length=4096     # ← optional clamp, but you can omit it
             ).to(self.model.device)
 
             outputs = self.model.generate(
