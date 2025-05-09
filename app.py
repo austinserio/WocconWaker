@@ -287,8 +287,8 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         print(f"Sending to assistant: {text}")
         response = assistant.reply(user_id, text)
         print(f"Assistant response: {response}")
-        result = messenger.send_message(user_id, response)
-        print(f"[app] messenger.send_message() returned: {result}")
+        #result = messenger.send_message(user_id, response)
+        #print(f"[app] messenger.send_message() returned: {result}")
         
         # CRITICAL FIX: If we get here, we MUST send some response to the user
         # Analyze the response to determine how to present it
