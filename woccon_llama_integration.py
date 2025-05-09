@@ -50,10 +50,6 @@ class WocconAssistant:
         log.info("First 5 chunks: %s", self.chunks[:5])
 
 
-        # then, after initialization, call it once:
-        assistant = WocconAssistant()
-        assistant.debug_retrieve("dog")   # or any English word you know is in the lexicon
-
         log.info("RAG ready: %d chunks (%d documented words)",
                  len(self.chunks),
                  len(self.documented_words))

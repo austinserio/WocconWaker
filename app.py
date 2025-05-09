@@ -28,6 +28,13 @@ assistant = None
 assistant_ready = threading.Event()
 user_states = {}
 
+# instantiate once
+assistant = WocconAssistant(
+    dict_path="woccon_language/dictionary.json",
+    rules_path="woccon_language/rules.json",
+    model="llama3:8b"
+)
+
 def create_enhanced_assistant():
     """
     Create a fully enhanced WocconAssistant with both linguistic analysis
