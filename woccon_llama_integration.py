@@ -25,7 +25,7 @@ class WocconAssistant:
         self.woccon = WocconT5()
         self.dictionary = self._load_json(dict_path)
         self.rules = self._load_json(rules_path)
-        self.model = model
+        self.model = model or os.getenv("OLLAMA_MODEL", "llama3:8b")
         self.ctx_turns = ctx_turns
 
         # Prepare retrieval corpus
@@ -565,6 +565,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="llama3:8b")
     args = parser.parse_args()
+
+    print(f"Starting Woccon Assistant with model: {args.model}")
 
     bot = WocconAssistant(model=args.model)
     print("\n🗣️  Woccon CLI — type 'control + C' to exit.\n")
