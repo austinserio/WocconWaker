@@ -334,54 +334,58 @@ class WocconAssistant:
             return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
 
         # 6️⃣ Process the query using RAG + LLM
-        # Get answer from LLM
+        # 6️⃣ Process the query using RAG + LLM with strict RAG grounding
         retrieved = self._retrieve(text)
-        messages = self._build_prompt(text, retrieved, session["history"])
+        if not retrieved:
+            return "Sorry, I don't have enough information on that topic."
 
-        # Use Ollama if available, otherwise use HuggingFace
+        # Build a hard system prompt that forbids hallucination
+        doc_text = "\n".join(retrieved)
+        system_prompt = (
+            "<|system|>\n"
+            "You are a Woccon assistant. Use ONLY the facts in DOCUMENTS below. "
+            "If the answer is not in DOCUMENTS, reply with “I don’t know.”\n\n"
+            f"DOCUMENTS:\n{doc_text}\n\n"
+        )
+        # Append the user question
+        prompt = f"{system_prompt}<|user|>\n{text}\n<|assistant|>\n"
+
+        # Generate a response
         if self.use_ollama:
-            try:
-                raw = ollama.chat(
-                    model=self.model_name,
-                    messages=messages,
-                    options={"temperature": 0.3}
-                )["message"]["content"]
-            except Exception as e:
-                log.error(f"Error using Ollama: {e}")
-                self.use_ollama = False
-                log.info("Falling back to HuggingFace model")
-                # Convert messages to a prompt format for HF model
-                # Replace it with:
-                prompt = self._format_messages_for_model(messages)
-                inputs = self.tokenizer(prompt, return_tensors="pt", padding=True).to(self.model.device)
-                attention_mask = inputs.get('attention_mask', None)
-
-                outputs = self.model.generate(
-                    inputs["input_ids"],
-                    attention_mask=attention_mask,
-                    max_new_tokens=512,
-                    temperature=0.3,
-                    top_p=0.9,
-                    pad_token_id=self.tokenizer.pad_token_id
-                )
-                raw = self.tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+            raw = ollama.chat(
+                model=self.model_name,
+                messages=[{"role": "user", "content": prompt}],
+                options={"temperature": 0.1}
+            )["message"]["content"]
         else:
-            # Convert messages to a prompt format for HF model
-            prompt = self._format_messages_for_model(messages)
-            inputs = self.tokenizer(prompt, return_tensors="pt", padding=True).to(self.model.device)
-            attention_mask = inputs.get('attention_mask', None)
-
+            inputs = self.tokenizer(
+                prompt,
+                return_tensors="pt",
+                padding=True,
+                truncation=True
+            ).to(self.model.device)
             outputs = self.model.generate(
                 inputs["input_ids"],
-                attention_mask=attention_mask,
-                max_new_tokens=512,
-                temperature=0.3,
-                top_p=0.9,
-                pad_token_id=self.tokenizer.pad_token_id
+                attention_mask=inputs["attention_mask"],   # fixes the warning
+                do_sample=True,
+                temperature=0.7,
+                top_p=0.8,
+                repetition_penalty=1.1,
+                max_new_tokens=256,
+                eos_token_id=self.tokenizer.eos_token_id,
+                pad_token_id=self.tokenizer.pad_token_id,
             )
-            raw = self.tokenizer.decode(outputs[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
+            raw = self.tokenizer.decode(
+                outputs[0][ inputs["input_ids"].shape[1] : ],
+                skip_special_tokens=True
+            )
 
-        answer = self._minimal_verify(raw)
+        # Enforce that the model actually referenced at least one retrieved fact
+        if not any(chunk.lower() in raw.lower() for chunk in retrieved):
+            return "Sorry, I don't have reliable information on that topic."
+
+        # Trim and return
+        answer = raw.strip()
         
         # 7️⃣ Update topic tracking
         current_topic = self._determine_current_topic(lower, answer)
