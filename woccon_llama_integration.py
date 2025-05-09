@@ -51,7 +51,7 @@ class WocconAssistant:
 
 
         # then, after initialization, call it once:
-        assistant = WocconAssistant(...)
+        assistant = WocconAssistant()
         assistant.debug_retrieve("dog")   # or any English word you know is in the lexicon
 
         log.info("RAG ready: %d chunks (%d documented words)",
@@ -61,11 +61,11 @@ class WocconAssistant:
         # Session state per user
         self.sessions: Dict[str, Dict] = {}
     
-        # also add this helper to test retrieval
-        def debug_retrieve(self, query):
-            results = self._retrieve(query, k=5)
-            log.info("Retrieve(%r) → %s", query, results)
-            return results
+    # also add this helper to test retrieval
+    def debug_retrieve(self, query):
+        results = self._retrieve(query, k=5)
+        log.info("Retrieve(%r) → %s", query, results)
+        return results
 
 
     def send_message(self, prompt: str):
