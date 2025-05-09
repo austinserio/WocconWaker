@@ -72,6 +72,7 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
     """Handle incoming messages from Facebook Messenger."""
     try:
         data = await request.json()
+        print(f"Raw output from Messenger API: {data}")
         messages = messenger.process_webhook(data)
         
         # Make sure assistant is initialized
