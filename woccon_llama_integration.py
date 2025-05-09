@@ -41,6 +41,15 @@ class WocconAssistant:
             f"Woccon: {e['woccon']} | English: {e['english']} | POS: {e['pos']}"
             for e in self.dictionary.get("lexicon", [])
         ]
+
+        # in __init__, right after you build self.chunks:
+        log.info("First 5 chunks: %s", self.chunks[:5])
+
+
+        # then, after initialization, call it once:
+        assistant = WocconAssistant(...)
+        assistant.debug_retrieve("dog")   # or any English word you know is in the lexicon
+
         log.info("RAG ready: %d chunks (%d documented words)",
                  len(self.chunks),
                  len(self.documented_words))
@@ -48,6 +57,12 @@ class WocconAssistant:
         # Session state per user
         self.sessions: Dict[str, Dict] = {}
     
+    # also add this helper to test retrieval
+    def debug_retrieve(self, query):
+        results = self._retrieve(query, k=5)
+        log.info("Retrieve(%r) → %s", query, results)
+        return results
+
 
     def send_message(self, prompt: str):
         """Send a message to the Ollama API."""
