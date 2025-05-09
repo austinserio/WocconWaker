@@ -8,6 +8,7 @@ from fastapi import FastAPI, Request, Response, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
 from messenger_integration import MessengerIntegration
 import os
+import subprocess
 import threading
 import time
 import uvicorn
@@ -177,9 +178,30 @@ def initialize_assistant():
     except Exception as e:
         print(f"Error initializing assistant: {e}")
 
+def start_ollama():
+    """Start the Ollama server if it's not already running."""
+    try:
+        # Check if Ollama is already running
+        result = subprocess.run(["pgrep", "-f", "ollama"], capture_output=True, text=True)
+        if result.returncode == 0:
+            print("Ollama server is already running.")
+            return
+        
+        # Start the Ollama server and redirect output to a log file
+        subprocess.Popen(
+            ["ollama", "serve"],
+            stdout=open("ollama.log", "a"),
+            stderr=subprocess.STDOUT,
+            close_fds=True
+        )
+        print("Ollama server started successfully.")
+    except Exception as e:
+        print(f"Error starting Ollama server: {e}")
+
 @app.on_event("startup")
 async def startup_event():
     """Run when the FastAPI server starts up."""
+    start_ollama()
     threading.Thread(target=initialize_assistant, daemon=True).start()
 
 if __name__ == "__main__":
