@@ -191,7 +191,8 @@ async def webhook_debug():
         "verify_token_configured": verify_token != 'unknown',
         "verify_token_preview": masked_verify,
         "page_token_configured": page_token != 'unknown',
-        "page_token_preview": masked_page,
+        "page_token_previ"
+        "ew": masked_page,
         "messenger_initialized": messenger is not None,
         "assistant_ready": assistant_ready.is_set() if 'assistant_ready' in globals() else False
     }
@@ -286,6 +287,8 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         print(f"Sending to assistant: {text}")
         response = assistant.reply(user_id, text)
         print(f"Assistant response: {response}")
+        result = messenger.send_message(user_id, response)
+        print(f"[app] messenger.send_message() returned: {result}")
         
         # CRITICAL FIX: If we get here, we MUST send some response to the user
         # Analyze the response to determine how to present it

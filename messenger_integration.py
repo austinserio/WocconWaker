@@ -120,34 +120,30 @@ class MessengerIntegration:
     def send_message(self, recipient_id: str, message_text: str) -> Dict[str, Any]:
         """
         Send a text message to a specific user.
-        
-        Args:
-            recipient_id: Facebook user ID to send message to
-            message_text: Text content to send
-            
-        Returns:
-            API response from Facebook
         """
-        params = {
-            "access_token": self.page_access_token
-        }
-        
+        if not self.page_access_token:
+            print("[MessengerIntegration] ERROR: PAGE_ACCESS_TOKEN is not set")
+            return {}
+
+        url = self.api_url
+        params = {"access_token": self.page_access_token}
+        headers = {"Content-Type": "application/json"}
         payload = {
-            "recipient": {
-                "id": recipient_id
-            },
-            "message": {
-                "text": message_text
-            }
+            "recipient": {"id": recipient_id},
+            "message": {"text": message_text}
         }
-        
-        response = requests.post(
-            self.api_url,
-            params=params,
-            json=payload
-        )
-        
-        return response.json()
+
+        try:
+            response = requests.post(url, params=params, headers=headers, json=payload, timeout=10)
+            if response.status_code != 200:
+                print(f"[MessengerIntegration] Failed to send message to {recipient_id}: "
+                      f"HTTP {response.status_code} – {response.text}")
+            else:
+                print(f"[MessengerIntegration] Sent message to {recipient_id}: {message_text}")
+            return response.json()
+        except Exception as e:
+            print(f"[MessengerIntegration] Exception sending message: {e}")
+            return {}
     
     def send_typing_indicator(self, recipient_id: str, typing_on: bool = True) -> Dict[str, Any]:
         """
