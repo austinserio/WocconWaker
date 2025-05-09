@@ -333,28 +333,62 @@ class WocconAssistant:
             session["lesson"] = GrammarLessonManager(items, parent=self)
             return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
 
-        # 6️⃣ Process the query using RAG + LLM
-        # 6️⃣ Process the query using RAG + LLM with strict RAG grounding
-        retrieved = self._retrieve(text)
-        if not retrieved:
+        # 6️⃣ Process the query using RAG + LLM with strict grounding
+
+        # A) Meta/help queries → regular chat fallback
+        if self._is_help_request(lower) or re.search(r'\b(what (?:do you know about|can you tell me about)|how (?:do|would) you)\b', lower):
+            # Build chat prompt
+            chat_msgs = session["history"] + [{"role":"user","content": text}]
+            prompt = self._format_messages_for_model(chat_msgs)
+
+            inputs = self.tokenizer(
+                prompt,
+                return_tensors="pt",
+                padding=True,
+                truncation=True,
+                max_length=self.tokenizer.model_max_length
+            ).to(self.model.device)
+
+            outputs = self.model.generate(
+                inputs["input_ids"],
+                attention_mask=inputs["attention_mask"],
+                do_sample=True,
+                temperature=0.7,
+                top_p=0.8,
+                repetition_penalty=1.1,
+                max_new_tokens=256,
+                eos_token_id=self.tokenizer.eos_token_id,
+                pad_token_id=self.tokenizer.pad_token_id,
+            )
+            return self.tokenizer.decode(
+                outputs[0][ inputs["input_ids"].shape[1] : ],
+                skip_special_tokens=True
+            ).strip()
+
+        # B) Grammar queries → pull from rules.json
+        if any(term in lower for term in ["grammar", "suffix", "prefix", "conjugation", "morphology", "syntax", "structure"]):
+            docs = [f"{r['title']}: {r['description']}" for r in self.rules.get("rules", [])]
+        else:
+            docs = self._retrieve(text)
+
+        if not docs:
             return "Sorry, I don't have enough information on that topic."
 
-        # Build a hard system prompt that forbids hallucination
-        doc_text = "\n".join(retrieved)
-        system_prompt = (
+        # C) Build a hard‐guard system prompt
+        doc_text = "\n".join(docs)
+        prompt = (
             "<|system|>\n"
             "You are a Woccon assistant. Use ONLY the facts in DOCUMENTS below. "
             "If the answer is not in DOCUMENTS, reply with “I don’t know.”\n\n"
             f"DOCUMENTS:\n{doc_text}\n\n"
+            f"<|user|>\n{text}\n<|assistant|>\n"
         )
-        # Append the user question
-        prompt = f"{system_prompt}<|user|>\n{text}\n<|assistant|>\n"
 
-        # Generate a response
+        # D) Generate via Ollama or HF model
         if self.use_ollama:
             raw = ollama.chat(
                 model=self.model_name,
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role":"user","content": prompt}],
                 options={"temperature": 0.1}
             )["message"]["content"]
         else:
@@ -362,11 +396,13 @@ class WocconAssistant:
                 prompt,
                 return_tensors="pt",
                 padding=True,
-                truncation=True
+                truncation=True,
+                max_length=self.tokenizer.model_max_length
             ).to(self.model.device)
+
             outputs = self.model.generate(
                 inputs["input_ids"],
-                attention_mask=inputs["attention_mask"],   # fixes the warning
+                attention_mask=inputs["attention_mask"],
                 do_sample=True,
                 temperature=0.7,
                 top_p=0.8,
@@ -380,11 +416,10 @@ class WocconAssistant:
                 skip_special_tokens=True
             )
 
-        # Enforce that the model actually referenced at least one retrieved fact
-        if not any(chunk.lower() in raw.lower() for chunk in retrieved):
+        # E) Verify grounding
+        if not any(chunk.lower() in raw.lower() for chunk in docs):
             return "Sorry, I don't have reliable information on that topic."
 
-        # Trim and return
         answer = raw.strip()
         
         # 7️⃣ Update topic tracking
