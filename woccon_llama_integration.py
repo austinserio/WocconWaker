@@ -26,6 +26,8 @@ class WocconAssistant:
         self.woccon = WocconT5()
         self.dictionary = self._load_json(dict_path)
         self.rules = self._load_json(rules_path)
+        log.info("Rules keys: %s", list(self.rules.keys()))
+        
         self.model = model or os.getenv("OLLAMA_MODEL", "llama3:8b")
         self.ctx_turns = ctx_turns
 
@@ -57,11 +59,11 @@ class WocconAssistant:
         # Session state per user
         self.sessions: Dict[str, Dict] = {}
     
-    # also add this helper to test retrieval
-    def debug_retrieve(self, query):
-        results = self._retrieve(query, k=5)
-        log.info("Retrieve(%r) → %s", query, results)
-        return results
+        # also add this helper to test retrieval
+        def debug_retrieve(self, query):
+            results = self._retrieve(query, k=5)
+            log.info("Retrieve(%r) → %s", query, results)
+            return results
 
 
     def send_message(self, prompt: str):
