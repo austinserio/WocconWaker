@@ -24,10 +24,12 @@ class WocconAssistant:
                  ctx_turns=6):
         # Core data & model
         self.woccon = WocconT5()
+        log.info("About to load JSON; dict_path=%r   rules_path=%r", dict_path, rules_path)
+
         self.dictionary = self._load_json(dict_path)
         self.rules = self._load_json(rules_path)
         log.info("Rules keys: %s", list(self.rules.keys()))
-        
+
         self.model = model or os.getenv("OLLAMA_MODEL", "llama3:8b")
         self.ctx_turns = ctx_turns
 
