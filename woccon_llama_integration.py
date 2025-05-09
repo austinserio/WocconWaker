@@ -338,7 +338,7 @@ class WocconAssistant:
         # A) Meta/help queries → regular chat fallback
         if self._is_help_request(lower) or re.search(r'\b(what (?:do you know about|can you tell me about)|how (?:do|would) you)\b', lower):
             # Build chat prompt
-            chat_msgs = session["history"] + [{"role":"user","content": text}]
+            chat_msgs = list(session["history"]) + [{"role": "user", "content": text}]
             prompt = self._format_messages_for_model(chat_msgs)
 
             inputs = self.tokenizer(
