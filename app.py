@@ -133,35 +133,45 @@ def setup_webhook_logging():
 webhook_logger = setup_webhook_logging()
 
 # Replace your current webhook verification endpoint with this one
-@app.get("/webhook")
-async def verify_webhook(request: Request):
-    """Enhanced webhook verification endpoint for Facebook with detailed logging."""
-    # Get query parameters
-    params = dict(request.query_params)
-    hub_mode = params.get("hub.mode")
-    hub_verify_token = params.get("hub.verify_token")
-    hub_challenge = params.get("hub.challenge")
-    
-    # Log the incoming request details
-    webhook_logger.info("Webhook verification request received")
-    webhook_logger.debug(f"Request parameters: {params}")
-    webhook_logger.debug(f"hub.mode: {hub_mode}")
-    webhook_logger.debug(f"hub.verify_token: {hub_verify_token}")
-    webhook_logger.debug(f"hub.challenge: {hub_challenge}")
-    webhook_logger.debug(f"Expected verify_token: {messenger.verify_token}")
-    
-    # Check if all required parameters are present
-    if not all([hub_mode, hub_verify_token, hub_challenge]):
-        webhook_logger.error("Missing required parameters")
-        raise HTTPException(status_code=400, detail="Missing required parameters")
-    
-    # Validate the token
-    if hub_mode == "subscribe" and hub_verify_token == messenger.verify_token:
-        webhook_logger.info("Webhook verification successful!")
-        return Response(content=hub_challenge)
-    else:
-        webhook_logger.error(f"Verification failed: hub.mode={hub_mode}, token match={hub_verify_token == messenger.verify_token}")
-        raise HTTPException(status_code=403, detail="Verification failed")
+@app.post("/webhook")
+async def webhook(request: Request, background_tasks: BackgroundTasks):
+    """Handle incoming messages from Facebook Messenger."""
+    try:
+        data = await request.json()
+        print(f"Received webhook data: {data}")  # Debug log
+        
+        messages = messenger.process_webhook(data)
+        print(f"Processed messages: {messages}")  # Debug log
+        
+        # Make sure assistant is initialized
+        if not assistant_ready.is_set():
+            # Send a temporary message to the user
+            for msg in messages:
+                messenger.send_message(
+                    msg['user_id'], 
+                    "I'm still waking up. Please wait a moment..."
+                )
+            return JSONResponse(content={"status": "initializing"})
+        
+        for msg in messages:
+            user_id = msg['user_id']
+            text = msg['text']
+            source = msg.get('source', 'text')  # Get the source (text, quick_reply, or postback)
+            
+            print(f"Processing message from {user_id}: {text} (source: {source})")
+            
+            # Use background task to handle message so we can return quickly
+            background_tasks.add_task(process_message, user_id, text, source)
+        
+        return JSONResponse(content={"status": "ok"})
+    except Exception as e:
+        print(f"Error processing webhook: {e}")
+        import traceback
+        traceback.print_exc()  # Print full stack trace
+        return JSONResponse(
+            content={"status": "error", "message": str(e)},
+            status_code=500
+        )
 
 # Add a diagnostic endpoint to help with debugging
 @app.get("/webhook-debug")
@@ -202,62 +212,109 @@ async def test_endpoint():
     """Simple test endpoint to confirm server is running."""
     return {"status": "ok", "message": "Server is running"}
 
-async def process_message(user_id: str, text: str):
-    """Process a message in the background with enhanced responses."""
-    global assistant
+async def process_message(user_id: str, text: str, source: str = 'text'):
+    """
+    Process a message and route it to the Woccon assistant.
+    
+    This function focuses on routing messages to the assistant and handling
+    special cases, but delegates all Messenger-specific formatting to 
+    the MessengerIntegration class.
+    
+    Args:
+        user_id: Facebook user ID
+        text: Message text or payload
+        source: Source of the message ('text', 'quick_reply', or 'postback')
+    """
+    global assistant, messenger
+    
+    print(f"Processing message: user={user_id}, text={text}, source={source}")
     
     # Show typing indicator while processing
     messenger.send_typing_indicator(user_id, True)
     
     try:
-        # Process the message with WocconAssistant
-        response = assistant.reply(user_id, text)
+        # Special handling for Get Started button
+        if text == "Hello! I'm interested in learning about Woccon." and source == 'postback':
+            print("Processing Get Started postback")
+            # Send welcome message
+            welcome_message = (
+                "👋 Welcome to the Woccon Language Assistant!\n\n"
+                "I'm here to help you learn about the Woccon language and culture."
+            )
+            messenger.send_message(user_id, welcome_message)
+            
+            # Send a carousel with learning options after a short delay
+            await asyncio.sleep(1)
+            messenger.send_welcome_carousel(user_id)
+            return
         
-        # Check if we should add quick replies based on content
-        if "vocabulary lesson" in response.lower() or "grammar lesson" in response.lower():
-            # Add lesson-related quick replies
+        # Check for special commands
+        if text.lower() in ["help", "menu", "commands"]:
+            help_message = (
+                "📚 **Woccon Assistant Commands**\n\n"
+                "• Type any question about the Woccon language\n"
+                "• Say 'vocabulary lesson' to start learning words\n"
+                "• Say 'grammar lesson' to learn grammar patterns\n"
+                "• Ask how to say specific phrases in Woccon\n"
+                "• Ask about the history and culture of the Woccon people"
+            )
+            
+            # Send help message with quick replies
             quick_replies = [
                 {
                     "content_type": "text",
-                    "title": "Start Vocab Lesson",
+                    "title": "Vocab Lesson",
                     "payload": "VOCAB_LESSON"
                 },
                 {
                     "content_type": "text",
-                    "title": "Start Grammar Lesson",
+                    "title": "Grammar Lesson",
                     "payload": "GRAMMAR_LESSON"
                 },
                 {
                     "content_type": "text",
-                    "title": "No Thanks",
-                    "payload": "NO_LESSON"
+                    "title": "About Woccon",
+                    "payload": "ABOUT_WOCCON"
                 }
             ]
-            messenger.send_quick_replies(user_id, response, quick_replies)
-        elif "yes to begin" in response.lower() or "say 'yes'" in response.lower():
-            # Add yes/no quick replies
-            quick_replies = [
-                {
-                    "content_type": "text",
-                    "title": "Yes",
-                    "payload": "YES"
-                },
-                {
-                    "content_type": "text",
-                    "title": "No",
-                    "payload": "NO"
-                }
-            ]
+            messenger.send_quick_replies(user_id, help_message, quick_replies)
+            return
+            
+        # Process the message with WocconAssistant
+        print(f"Sending to assistant: {text}")
+        response = assistant.reply(user_id, text)
+        print(f"Assistant response: {response}")
+        
+        # Analyze the response to determine how to present it
+        is_complete, lesson_type, score = messenger.detect_lesson_completion(response)
+        
+        if is_complete:
+            # Lesson has been completed, send the regular response first
+            messenger.send_message(user_id, response)
+            
+            # Then send a card celebrating completion
+            await asyncio.sleep(1)  # Small delay for better UX
+            messenger.send_lesson_complete_card(user_id, lesson_type, score)
+            return
+        
+        # Check if we should add quick replies
+        quick_replies, should_use_quick_replies = messenger.analyze_message_content(text, response)
+        
+        if should_use_quick_replies:
             messenger.send_quick_replies(user_id, response, quick_replies)
         else:
             # Send regular text message
             messenger.send_message(user_id, response)
-        
+            
     except Exception as e:
+        # Log the error
+        print(f"Error processing message: {e}")
+        import traceback
+        traceback.print_exc()
+        
         # Send error message to user
         error_msg = "Sorry, I encountered an error. Please try again later."
         messenger.send_message(user_id, error_msg)
-        print(f"Error processing message: {e}")
     finally:
         # Stop typing indicator
         messenger.send_typing_indicator(user_id, False)
