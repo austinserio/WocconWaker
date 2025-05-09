@@ -285,11 +285,25 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         response = assistant.reply(user_id, text)
         print(f"Assistant response: {response}")
         
+        # CRITICAL FIX: If we get here, we MUST send some response to the user
         # Analyze the response to determine how to present it
-        is_complete, lesson_type, score = messenger.detect_lesson_completion(response)
+        if not response:
+            # If the assistant didn't return anything, send a default message
+            messenger.send_message(user_id, "I'm sorry, I couldn't process that. Could you try again?")
+            return
+            
+        # Check for lesson completion
+        is_lesson_complete = "Lesson complete" in response or "lesson finished" in response
         
-        if is_complete:
-            # Lesson has been completed, send the regular response first
+        if is_lesson_complete:
+            # Parse the score from the response
+            score_match = re.search(r"score:?\s*(\d+)", response.lower())
+            score = int(score_match.group(1)) if score_match else 70
+            
+            # Determine lesson type
+            lesson_type = "vocab" if "vocabulary" in response.lower() else "grammar"
+            
+            # Send the regular response first
             messenger.send_message(user_id, response)
             
             # Then send a card celebrating completion
@@ -297,13 +311,45 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
             messenger.send_lesson_complete_card(user_id, lesson_type, score)
             return
         
-        # Check if we should add quick replies
-        quick_replies, should_use_quick_replies = messenger.analyze_message_content(text, response)
-        
-        if should_use_quick_replies:
+        # Check for scenarios where quick replies are appropriate
+        if any(phrase in response.lower() for phrase in ["vocabulary lesson", "grammar lesson", "start a lesson"]):
+            # Add lesson-related quick replies
+            quick_replies = [
+                {
+                    "content_type": "text",
+                    "title": "Start Vocab Lesson",
+                    "payload": "VOCAB_LESSON"
+                },
+                {
+                    "content_type": "text",
+                    "title": "Start Grammar Lesson",
+                    "payload": "GRAMMAR_LESSON"
+                },
+                {
+                    "content_type": "text",
+                    "title": "No Thanks",
+                    "payload": "NO_LESSON"
+                }
+            ]
+            messenger.send_quick_replies(user_id, response, quick_replies)
+        elif any(phrase in response.lower() for phrase in ["yes to begin", "say 'yes'", "say yes"]):
+            # Add yes/no quick replies
+            quick_replies = [
+                {
+                    "content_type": "text",
+                    "title": "Yes",
+                    "payload": "YES"
+                },
+                {
+                    "content_type": "text",
+                    "title": "No",
+                    "payload": "NO"
+                }
+            ]
             messenger.send_quick_replies(user_id, response, quick_replies)
         else:
-            # Send regular text message
+            # IMPORTANT: Default case - send a regular text message
+            # This ensures a response is always sent back to the user
             messenger.send_message(user_id, response)
             
     except Exception as e:
