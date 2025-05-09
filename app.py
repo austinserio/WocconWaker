@@ -369,6 +369,8 @@ def start_ollama():
 @app.on_event("startup")
 async def startup_event():
     """Run when the FastAPI server starts up."""
+    print("Starting Ollama 🦙")
+    start_ollama()
     # Initialize assistant
     threading.Thread(target=initialize_assistant, daemon=True).start()
     
