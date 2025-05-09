@@ -3,6 +3,7 @@ from collections import deque
 from typing import Dict, List, Tuple, Optional, Any
 import ollama  # your local Llama server client
 from main import WocconT5
+import requests
 
 # Import the improved lesson managers
 from lesson_manager import LessonManager
@@ -28,6 +29,10 @@ class WocconAssistant:
         self.model = model or os.getenv("OLLAMA_MODEL", "llama3:8b")
         self.ctx_turns = ctx_turns
 
+        # Set the Ollama API URL dynamically
+        self.url = os.getenv("OLLAMA_URL", "http://localhost:11434/v1/chat")
+        log.info(f"Using Ollama URL: {self.url}")
+
         # Prepare retrieval corpus
         self.documented_words = {
             e["woccon"].lower() for e in self.dictionary.get("lexicon", [])
@@ -43,6 +48,20 @@ class WocconAssistant:
         # Session state per user
         self.sessions: Dict[str, Dict] = {}
     
+
+    def send_message(self, prompt: str):
+        """Send a message to the Ollama API."""
+        try:
+            response = requests.post(
+                self.url,
+                json={"model": self.model, "prompt": prompt}
+            )
+            response.raise_for_status()
+            return response.json().get("message", {}).get("content", "No response")
+        except Exception as e:
+            log.error(f"Error connecting to Ollama: {e}")
+            return "Error: Unable to connect to the Ollama server."
+
     def reply(self, user_id: str, text: str) -> str:
         """Enhanced reply method with smarter context-aware lesson offers."""
         # Initialize or get session
@@ -569,6 +588,8 @@ if __name__ == "__main__":
     print(f"Starting Woccon Assistant with model: {args.model}")
 
     bot = WocconAssistant(model=args.model)
+    print(bot.send_message("Hello, how are you?"))
+
     print("\n🗣️  Woccon CLI — type 'control + C' to exit.\n")
 
     while True:
