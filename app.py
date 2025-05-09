@@ -203,12 +203,12 @@ def start_ollama():
 @app.on_event("startup")
 async def startup_event():
     """Run when the FastAPI server starts up."""
-    start_ollama()
     threading.Thread(target=initialize_assistant, daemon=True).start()
 
 if __name__ == "__main__":
     # Determine mode from environment variable
     mode = os.environ.get('WOCCON_MODE', 'cli').lower()
+    start_ollama()
     
     if mode == 'server':
         # Run in server mode
