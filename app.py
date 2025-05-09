@@ -8,7 +8,7 @@ from fastapi import FastAPI, Request, Response, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
 from messenger_integration import MessengerIntegration
 import os
-import subprocess
+import shutil, subprocess, time, socket
 import threading
 import time
 import uvicorn
@@ -179,26 +179,40 @@ def initialize_assistant():
         print(f"Error initializing assistant: {e}")
 
 def start_ollama():
-    """Start the Ollama server if it's not already running."""
+    """Start Ollama exactly as `ollama serve &> ollama.log &`, and wait for it."""
+    # 1️⃣ Verify the binary is on PATH
+    ollama_path = shutil.which("ollama")
+    if not ollama_path:
+        print("❌  Could not find 'ollama' in your $PATH")
+        return
+
+    # 2️⃣ Check if a process is already listening on 11434
     try:
-        # Check if Ollama is already running
-        result = subprocess.run(["pgrep", "-f", "ollama"], capture_output=True, text=True)
-        if result.returncode == 0:
-            print("Ollama server is already running.")
+        with socket.create_connection(("127.0.0.1", 11434), timeout=1):
+            print("✅  Ollama already up on port 11434")
             return
-        
-        # Start the Ollama server with shell=True and proper redirection
-        with open("ollama.log", "a") as log_file:
-            subprocess.Popen(
-                ["ollama", "serve"],
-                stdout=log_file,
-                stderr=log_file,
-                shell=True,  # Run the command through the shell
-                close_fds=True
-            )
-        print("Ollama server started successfully.")
-    except Exception as e:
-        print(f"Error starting Ollama server: {e}")
+    except OSError:
+        pass
+
+    # 3️⃣ Fire off the exact shell command you use manually
+    cmd = f"{ollama_path} serve &> ollama.log &"
+    subprocess.Popen(
+        cmd,
+        shell=True,
+        executable="/bin/bash",
+        close_fds=True
+    )
+    print("🚀  Launched: ollama serve &> ollama.log &")
+
+    # 4️⃣ Wait up to 20s for the socket to open
+    start = time.time()
+    while time.time() - start < 20:
+        try:
+            with socket.create_connection(("127.0.0.1", 11434), timeout=1):
+                print("🟢  Ollama is now listening on 11434")
+                return
+        except OSError:
+            time.sleep(0.5)
 
 @app.on_event("startup")
 async def startup_event():
@@ -209,7 +223,7 @@ if __name__ == "__main__":
     # Determine mode from environment variable
     mode = os.environ.get('WOCCON_MODE', 'cli').lower()
     start_ollama()
-    
+
     if mode == 'server':
         # Run in server mode
         print("Starting in server mode...")
