@@ -187,13 +187,15 @@ def start_ollama():
             print("Ollama server is already running.")
             return
         
-        # Start the Ollama server and redirect output to a log file
-        subprocess.Popen(
-            ["ollama", "serve"],
-            stdout=open("ollama.log", "a"),
-            stderr=subprocess.STDOUT,
-            close_fds=True
-        )
+        # Start the Ollama server with shell=True and proper redirection
+        with open("ollama.log", "a") as log_file:
+            subprocess.Popen(
+                ["ollama", "serve"],
+                stdout=log_file,
+                stderr=log_file,
+                shell=True,  # Run the command through the shell
+                close_fds=True
+            )
         print("Ollama server started successfully.")
     except Exception as e:
         print(f"Error starting Ollama server: {e}")
