@@ -164,13 +164,28 @@ class MessengerIntegration:
             "sender_action": "typing_on" if typing_on else "typing_off"
         }
         
-        response = requests.post(
-            self.api_url,
-            params=params,
-            json=payload
-        )
+        try:
+            response = requests.post(
+                self.api_url,
+                params=params,
+                json=payload,
+                timeout=5  # Set a timeout to avoid hanging
+            )
+            
+            # Log the API request details
+            log.debug(f"Typing indicator API request: URL={self.api_url}, Params={params}, Payload={payload}")
+            
+            # Check the response status code
+            if response.status_code == 200:
+                log.info(f"Typing indicator {'on' if typing_on else 'off'} sent successfully for recipient: {recipient_id}")
+            else:
+                log.error(f"Failed to send typing indicator. Status code: {response.status_code}, Response: {response.text}")
+            
+            return response.json()
         
-        return response.json()
+        except requests.exceptions.RequestException as e:
+            log.error(f"Error sending typing indicator: {e}")
+            return {"error": str(e)}
     
     def send_button_template(self, recipient_id: str, text: str, buttons: List[Dict[str, str]]) -> Dict[str, Any]:
         """
