@@ -1,0 +1,19 @@
+[Unit]
+Description=Woccon Language Assistant
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/workspace/wocconwaker/WocconWaker
+ExecStart=/bin/bash -c "/workspace/wocconwaker/WocconWaker/start_woccon.sh"
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/woccon.log
+StandardError=append:/var/log/woccon.error.log
+Environment=WOCCON_MODE=server
+Environment=PORT=8000
+# Add any other environment variables here
+
+[Install]
+WantedBy=multi-user.target
