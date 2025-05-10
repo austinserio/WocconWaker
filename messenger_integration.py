@@ -151,7 +151,7 @@ class MessengerIntegration:
 
     def send_typing_indicator(self, recipient_id: str, typing_on: bool = True) -> Dict[str, Any]:
         """
-        Send a typing indicator to show the bot is processing.
+        Send typing indicator to show the bot is processing.
 
         Args:
             recipient_id: Facebook user ID (PSID)
@@ -165,14 +165,26 @@ class MessengerIntegration:
             "sender_action": "typing_on" if typing_on else "typing_off"
         }
 
-        try:
-            response = requests.post(url, params=params, json=payload, timeout=5)
-            response.raise_for_status()
-            log.info(f"Typing indicator {'on' if typing_on else 'off'} sent to {recipient_id}")
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            log.error(f"Failed to send typing indicator: {e}")
-            return {"error": str(e)}
+        response = requests.post(url, params=params, json=payload, timeout=5)
+
+        # Don’t raise_for_status – we want to capture the response body
+        status = response.status_code
+        text = response.text
+
+        if status != 200:
+            log.error(
+                f"[TypingIndicator] HTTP {status} error for recipient={recipient_id}\n"
+                f"Request payload: {payload}\n"
+                f"Response body: {text}"
+            )
+            # return the raw body so your app can inspect .get('error') if JSON
+            try:
+                return response.json()
+            except ValueError:
+                return {"error": text}
+
+        log.info(f"[TypingIndicator] Sent {'on' if typing_on else 'off'} to {recipient_id}")
+        return response.json()
     
     def send_button_template(self, recipient_id: str, text: str, buttons: List[Dict[str, str]]) -> Dict[str, Any]:
         """
