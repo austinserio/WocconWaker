@@ -15,6 +15,7 @@ import uvicorn
 from typing import Dict, Any, Optional
 import asyncio
 import re
+from time import sleep
 
 llama_model_path = os.environ.get('LLAMA_MODEL_PATH', '/workspace/models/llama3-8b')
 t5_model_path = os.environ.get('T5_MODEL_PATH', '/workspace/models/t5-base')
@@ -234,6 +235,7 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
     
     # Show typing indicator while processing
     messenger.send_typing_indicator(user_id, True)
+    sleep(0.5)
     
     try:
         # Special handling for Get Started button
@@ -287,8 +289,6 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         print(f"Sending to assistant: {text}")
         response = assistant.reply(user_id, text)
         print(f"Assistant response: {response}")
-        #result = messenger.send_message(user_id, response)
-        #print(f"[app] messenger.send_message() returned: {result}")
         
         # CRITICAL FIX: If we get here, we MUST send some response to the user
         # Analyze the response to determine how to present it
