@@ -151,13 +151,13 @@ class MessengerIntegration:
 
     def send_typing_indicator(self, recipient_id: str, typing_on: bool = True) -> Dict[str, Any]:
         """
-        Send typing indicator to show the bot is processing.
+        Send a typing indicator to show the bot is processing.
 
         Args:
             recipient_id: Facebook user ID (PSID)
             typing_on: True to show typing, False to hide
         """
-        url = self.api_url
+        url = "https://graph.facebook.com/v18.0/me/messages"
         params = {"access_token": self.page_access_token}
         payload = {
             "messaging_type": "RESPONSE",
@@ -165,26 +165,23 @@ class MessengerIntegration:
             "sender_action": "typing_on" if typing_on else "typing_off"
         }
 
+        # Single POST, no raise_for_status() so we can log the error body
         response = requests.post(url, params=params, json=payload, timeout=5)
+        try:
+            body = response.json()
+        except ValueError:
+            body = {"error": response.text}
 
-        # Don’t raise_for_status – we want to capture the response body
-        status = response.status_code
-        text = response.text
-
-        if status != 200:
+        if response.status_code != 200:
             log.error(
-                f"[TypingIndicator] HTTP {status} error for recipient={recipient_id}\n"
-                f"Request payload: {payload}\n"
-                f"Response body: {text}"
+                f"[TypingIndicator] HTTP {response.status_code} for recipient={recipient_id}\n"
+                f"Payload={payload}\n"
+                f"Response={body}"
             )
-            # return the raw body so your app can inspect .get('error') if JSON
-            try:
-                return response.json()
-            except ValueError:
-                return {"error": text}
+        else:
+            log.info(f"[TypingIndicator] ok for recipient={recipient_id}")
 
-        log.info(f"[TypingIndicator] Sent {'on' if typing_on else 'off'} to {recipient_id}")
-        return response.json()
+        return body
     
     def send_button_template(self, recipient_id: str, text: str, buttons: List[Dict[str, str]]) -> Dict[str, Any]:
         """
