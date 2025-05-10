@@ -4,6 +4,10 @@ import requests
 import json
 import re
 from typing import Dict, Any, List, Optional, Tuple
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+log = logging.getLogger(__name__)
 
 class MessengerIntegration:
     def __init__(self, page_access_token: str, verify_token: str, app_secret: str = None):
