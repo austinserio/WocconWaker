@@ -162,11 +162,15 @@ class MessengerIntegration:
         }
         
         payload = {
+            "messaging_type": "RESPONSE",
             "recipient": {
-                "id": recipient_id
+                "id": recipient_id,
             },
             "sender_action": "typing_on" if typing_on else "typing_off"
         }
+
+        r = requests.post(self.api_url, params=params, json=payload, timeout=5)
+        r.raise_for_status()
         
         try:
             response = requests.post(
