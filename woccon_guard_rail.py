@@ -234,7 +234,7 @@ class WocconFactValidator:
             return {
                 "is_valid": True,
                 "add_disclaimer": True,
-                "disclaimer": "[Note: Our knowledge of Woccon is limited to John Lawson's 1709 word list containing 143 items. Any descriptions of pronunciation, grammar, or language structure beyond this documented evidence should be treated as scholarly reconstruction rather than established fact.]"
+                "disclaimer": ""
             }
         
         return {"is_valid": True}
