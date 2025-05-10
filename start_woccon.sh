@@ -30,7 +30,7 @@ export PORT=8000
 
 # Start the Woccon server with nohup
 echo "Starting Woccon server..."
-cd /path/to/your/woccon/app  # Update this with your actual path
+cd /workspace/wocconwaker/WocconWaker  # Update this with your actual path
 nohup python app.py > woccon.log 2>&1 &
 
 # Save PID to file for easier management later
