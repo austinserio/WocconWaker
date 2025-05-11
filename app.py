@@ -70,40 +70,6 @@ messenger = MessengerIntegration(
     verify_token=os.environ.get('VERIFY_TOKEN')
 )
 
-# Update the webhook function in app.py
-
-@app.post("/webhook")
-async def webhook(request: Request, background_tasks: BackgroundTasks):
-    """Handle incoming messages from Facebook Messenger."""
-    try:
-        data = await request.json()
-        print(f"Raw output from Messenger API: {data}")
-        messages = messenger.process_webhook(data)
-        
-        # Make sure assistant is initialized
-        if not assistant_ready.is_set():
-            # Send a temporary message to the user
-            for msg in messages:
-                messenger.send_message(
-                    msg['user_id'], 
-                    "I'm still waking up. Please wait a moment..."
-                )
-            return JSONResponse(content={"status": "initializing"})
-        
-        for msg in messages:
-            user_id = msg['user_id']
-            text = msg['text']
-            
-            # Use background task to handle message so we can return quickly
-            background_tasks.add_task(process_message, user_id, text)
-        
-        return JSONResponse(content={"status": "ok"})
-    except Exception as e:
-        print(f"Error processing webhook: {e}")
-        return JSONResponse(
-            content={"status": "error", "message": str(e)},
-            status_code=500
-        )
 
 # Add these utility functions to your app.py 
 
@@ -136,6 +102,25 @@ def setup_webhook_logging():
 
 # Initialize the logger
 webhook_logger = setup_webhook_logging()
+
+#Accept verification from facebook
+@app.get("/webhook")
+async def verify_webhook(request: Request):
+    """
+    Facebook webhook verification.
+    """
+    hub_mode  = request.query_params.get("hub.mode")
+    hub_token = request.query_params.get("hub.verify_token")
+    challenge = request.query_params.get("hub.challenge")
+
+    if messenger.verify_webhook(hub_mode, hub_token):
+        # Echo back the challenge code
+        return PlainTextResponse(challenge, status_code=200)
+
+    # Token mismatch
+    return PlainTextResponse("Verification failed", status_code=403)
+
+# Add a diagnostic endpoint to help with debugging
 
 # Replace your current webhook verification endpoint with this one
 @app.post("/webhook")
@@ -179,23 +164,7 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
         )
 
 
-@app.get("/webhook")
-async def verify_webhook(request: Request):
-    """
-    Facebook webhook verification.
-    """
-    hub_mode  = request.query_params.get("hub.mode")
-    hub_token = request.query_params.get("hub.verify_token")
-    challenge = request.query_params.get("hub.challenge")
 
-    if messenger.verify_webhook(hub_mode, hub_token):
-        # Echo back the challenge code
-        return PlainTextResponse(challenge, status_code=200)
-
-    # Token mismatch
-    return PlainTextResponse("Verification failed", status_code=403)
-
-# Add a diagnostic endpoint to help with debugging
 @app.get("/webhook-debug")
 async def webhook_debug():
     """Diagnostic endpoint to check webhook configuration."""
