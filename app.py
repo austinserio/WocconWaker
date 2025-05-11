@@ -16,6 +16,8 @@ from typing import Dict, Any, Optional
 import asyncio
 import re
 from time import sleep
+from fastapi.responses import PlainTextResponse
+
 
 llama_model_path = os.environ.get('LLAMA_MODEL_PATH', '/workspace/models/llama3-8b')
 t5_model_path = os.environ.get('T5_MODEL_PATH', '/workspace/models/t5-base')
@@ -175,6 +177,23 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
             content={"status": "error", "message": str(e)},
             status_code=500
         )
+
+
+@app.get("/webhook")
+async def verify_webhook(request: Request):
+    """
+    Facebook webhook verification.
+    """
+    hub_mode  = request.query_params.get("hub.mode")
+    hub_token = request.query_params.get("hub.verify_token")
+    challenge = request.query_params.get("hub.challenge")
+
+    if messenger.verify_webhook(hub_mode, hub_token):
+        # Echo back the challenge code
+        return PlainTextResponse(challenge, status_code=200)
+
+    # Token mismatch
+    return PlainTextResponse("Verification failed", status_code=403)
 
 # Add a diagnostic endpoint to help with debugging
 @app.get("/webhook-debug")
