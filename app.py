@@ -427,6 +427,20 @@ def initialize_assistant():
     except Exception as e:
         print(f"Error initializing assistant: {e}")
 
+def pull_llama_model():
+    """Ensure the LLaMA model is pulled before starting."""
+    model_name = "llama3:8b"
+    print(f"Checking if LLaMA model '{model_name}' is available...")
+    
+    # Command to pull the model
+    cmd = f"ollama pull {model_name}"
+    try:
+        result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
+        print(f"Model '{model_name}' pulled successfully.")
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print(f"Error pulling model '{model_name}': {e.stderr}")
+
 def start_ollama():
     """Start Ollama exactly as `ollama serve &> ollama.log &`, and wait for it."""
     # 1️⃣ Verify the binary is on PATH
@@ -467,6 +481,7 @@ def start_ollama():
 async def startup_event():
     """Run when the FastAPI server starts up."""
     print("Starting Ollama 🦙")
+    pull_llama_model()
     start_ollama()
     # Initialize assistant
     threading.Thread(target=initialize_assistant, daemon=True).start()
