@@ -21,7 +21,7 @@ class WocconT5:
         self.rules      = load_json(rules_path)
         # (model kept for future seq2seq fine‑tuning; not required here)
         self.tokenizer  = ByT5Tokenizer.from_pretrained(model_name)
-        self.model      = T5ForConditionalGeneration.from_pretrained(model_name)
+        self.model      = T5ForConditionalGeneration.from_pretrained(model_name, use_safetensors=True)
 
         # look‑ups
         self.eng_to_woc = {e["english"].lower(): e for e in self.dictionary["lexicon"]}
