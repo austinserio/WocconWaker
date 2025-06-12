@@ -222,7 +222,12 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
     print(f"Processing message: user={user_id}, text={text}, source={source}")
     
     # Show typing indicator while processing
-    messenger.send_typing_indicator(user_id, True)
+    typing_indicator_active = False
+    typing_response = messenger.send_typing_indicator(user_id, True)
+    if typing_response.get('error'):
+        print(f"Warning: Could not send typing indicator: {typing_response}")
+    else:
+        typing_indicator_active = True
     sleep(0.5)
     
     try:
@@ -334,8 +339,11 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         error_msg = "Sorry, I encountered an error. Please try again later."
         messenger.send_message(user_id, error_msg)
     finally:
-        # Stop typing indicator
-        messenger.send_typing_indicator(user_id, False)
+        # Stop typing indicator - only if we successfully started it
+        if typing_indicator_active:
+            stop_typing_response = messenger.send_typing_indicator(user_id, False)
+            if stop_typing_response.get('error'):
+                print(f"Warning: Could not stop typing indicator: {stop_typing_response}")
 
 @app.get("/health")
 async def health_check():

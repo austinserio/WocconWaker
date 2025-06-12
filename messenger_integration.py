@@ -157,31 +157,39 @@ class MessengerIntegration:
             recipient_id: Facebook user ID (PSID)
             typing_on: True to show typing, False to hide
         """
+        if not self.page_access_token:
+            log.warning("[TypingIndicator] PAGE_ACCESS_TOKEN is not set")
+            return {"error": "PAGE_ACCESS_TOKEN not configured"}
+            
         url = "https://graph.facebook.com/v18.0/me/messages"
         params = {"access_token": self.page_access_token}
         payload = {
-            "messaging_type": "RESPONSE",
             "recipient": {"id": recipient_id},
             "sender_action": "typing_on" if typing_on else "typing_off"
         }
 
-        # Single POST, no raise_for_status() so we can log the error body
-        response = requests.post(url, params=params, json=payload, timeout=5)
         try:
-            body = response.json()
-        except ValueError:
-            body = {"error": response.text}
+            # Single POST, no raise_for_status() so we can log the error body
+            response = requests.post(url, params=params, json=payload, timeout=5)
+            try:
+                body = response.json()
+            except ValueError:
+                body = {"error": response.text}
 
-        if response.status_code != 200:
-            log.error(
-                f"[TypingIndicator] HTTP {response.status_code} for recipient={recipient_id}\n"
-                f"Payload={payload}\n"
-                f"Response={body}"
-            )
-        else:
-            log.info(f"[TypingIndicator] ok for recipient={recipient_id}")
+            if response.status_code != 200:
+                log.error(
+                    f"[TypingIndicator] HTTP {response.status_code} for recipient={recipient_id}\n"
+                    f"Action={payload['sender_action']}\n"
+                    f"Payload={payload}\n"
+                    f"Response={body}"
+                )
+            else:
+                log.info(f"[TypingIndicator] {payload['sender_action']} ok for recipient={recipient_id}")
 
-        return body
+            return body
+        except Exception as e:
+            log.error(f"[TypingIndicator] Exception for recipient={recipient_id}: {e}")
+            return {"error": str(e)}
     
     def send_button_template(self, recipient_id: str, text: str, buttons: List[Dict[str, str]]) -> Dict[str, Any]:
         """
