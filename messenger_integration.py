@@ -161,8 +161,11 @@ class MessengerIntegration:
             log.warning("[TypingIndicator] PAGE_ACCESS_TOKEN is not set")
             return {"error": "PAGE_ACCESS_TOKEN not configured"}
             
-        url = "https://graph.facebook.com/v18.0/me/messages"
+        # Use the newer API version and try different approaches
+        url = "https://graph.facebook.com/v19.0/me/messages"
         params = {"access_token": self.page_access_token}
+        
+        # Try the simplest payload first
         payload = {
             "recipient": {"id": recipient_id},
             "sender_action": "typing_on" if typing_on else "typing_off"
@@ -177,12 +180,18 @@ class MessengerIntegration:
                 body = {"error": response.text}
 
             if response.status_code != 200:
-                log.error(
-                    f"[TypingIndicator] HTTP {response.status_code} for recipient={recipient_id}\n"
-                    f"Action={payload['sender_action']}\n"
-                    f"Payload={payload}\n"
-                    f"Response={body}"
-                )
+                # Check for specific error codes that indicate messaging window issues
+                error_subcode = body.get('error', {}).get('error_subcode')
+                if error_subcode == 2018048:
+                    log.warning(f"[TypingIndicator] Error 2018048 for recipient={recipient_id} - possible causes: 24h window expired, invalid recipient, or permission issue")
+                    return {"error": "messaging_policy_violation", "can_retry": False, "subcode": 2018048}
+                else:
+                    log.error(
+                        f"[TypingIndicator] HTTP {response.status_code} for recipient={recipient_id}\n"
+                        f"Action={payload['sender_action']}\n"
+                        f"Payload={payload}\n"
+                        f"Response={body}"
+                    )
             else:
                 log.info(f"[TypingIndicator] {payload['sender_action']} ok for recipient={recipient_id}")
 

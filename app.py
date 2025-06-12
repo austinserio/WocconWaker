@@ -221,19 +221,34 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
     
     print(f"Processing message: user={user_id}, text={text}, source={source}")
     
-    # Show typing indicator while processing
+    # Show typing indicator while processing (configurable)
     typing_indicator_active = False
-    typing_response = messenger.send_typing_indicator(user_id, True)
-    if typing_response.get('error'):
-        print(f"Warning: Could not send typing indicator: {typing_response}")
-    else:
-        typing_indicator_active = True
-    sleep(0.5)
+    use_typing_indicators = os.environ.get('ENABLE_TYPING_INDICATORS', 'true').lower() == 'true'
+    
+    if use_typing_indicators:
+        typing_response = messenger.send_typing_indicator(user_id, True)
+        if typing_response.get('error'):
+            error_type = typing_response.get('error')
+            if error_type == 'messaging_policy_violation':
+                print(f"Info: Typing indicator disabled for {user_id} - Facebook policy restriction")
+            else:
+                print(f"Warning: Could not send typing indicator: {typing_response}")
+        else:
+            typing_indicator_active = True
+            print(f"[DEBUG] Typing indicator ON sent successfully for {user_id}")
+    
+    # Add a small delay to simulate processing time
+    sleep(1.0)  # Increased delay to give typing indicator time to show
     
     try:
         # Special handling for Get Started button
         if text == "Hello! I'm interested in learning about Woccon." and source == 'postback':
             print("Processing Get Started postback")
+            # Turn off typing indicator before sending welcome message
+            if typing_indicator_active:
+                messenger.send_typing_indicator(user_id, False)
+                typing_indicator_active = False
+                
             # Send welcome message
             welcome_message = (
                 "👋 Welcome to the Woccon Language Assistant!\n\n"
@@ -245,6 +260,11 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         
         # Check for special commands
         if text.lower() in ["help", "menu", "commands"]:
+            # Turn off typing indicator before sending help message
+            if typing_indicator_active:
+                messenger.send_typing_indicator(user_id, False)
+                typing_indicator_active = False
+                
             help_message = (
                 "📚 **How I can help you**\n\n"
                 "• Ask questions about Woccon words and their meanings\n"
@@ -273,6 +293,11 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         is_lesson_complete = "Lesson complete" in response or "lesson finished" in response
         
         if is_lesson_complete:
+            # Turn off typing indicator before sending lesson completion
+            if typing_indicator_active:
+                messenger.send_typing_indicator(user_id, False)
+                typing_indicator_active = False
+                
             # Parse the score from the response
             score_match = re.search(r"score:?\s*(\d+)", response.lower())
             score = int(score_match.group(1)) if score_match else 70
@@ -290,6 +315,11 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         
         # Check for scenarios where quick replies are appropriate
         if any(phrase in response.lower() for phrase in ["vocabulary lesson", "grammar lesson", "start a lesson"]):
+            # Turn off typing indicator before sending quick replies
+            if typing_indicator_active:
+                messenger.send_typing_indicator(user_id, False)
+                typing_indicator_active = False
+                
             # Add lesson-related quick replies
             quick_replies = [
                 {
@@ -310,6 +340,11 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
             ]
             messenger.send_quick_replies(user_id, response, quick_replies)
         elif any(phrase in response.lower() for phrase in ["yes to begin", "say 'yes'", "say yes"]):
+            # Turn off typing indicator before sending quick replies
+            if typing_indicator_active:
+                messenger.send_typing_indicator(user_id, False)
+                typing_indicator_active = False
+                
             # Add yes/no quick replies
             quick_replies = [
                 {
@@ -325,6 +360,12 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
             ]
             messenger.send_quick_replies(user_id, response, quick_replies)
         else:
+            # Turn off typing indicator before sending message
+            if typing_indicator_active:
+                print(f"[DEBUG] Turning OFF typing indicator before sending message to {user_id}")
+                messenger.send_typing_indicator(user_id, False)
+                typing_indicator_active = False  # Mark as turned off
+            
             # IMPORTANT: Default case - send a regular text message
             # This ensures a response is always sent back to the user
             messenger.send_message(user_id, response)
@@ -339,11 +380,14 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         error_msg = "Sorry, I encountered an error. Please try again later."
         messenger.send_message(user_id, error_msg)
     finally:
-        # Stop typing indicator - only if we successfully started it
+        # Final cleanup - turn off typing indicator if it's still active
         if typing_indicator_active:
+            print(f"[DEBUG] Final cleanup: turning OFF typing indicator for {user_id}")
             stop_typing_response = messenger.send_typing_indicator(user_id, False)
             if stop_typing_response.get('error'):
-                print(f"Warning: Could not stop typing indicator: {stop_typing_response}")
+                print(f"Warning: Could not stop typing indicator in cleanup: {stop_typing_response}")
+            else:
+                print(f"[DEBUG] Final cleanup: typing indicator OFF sent successfully for {user_id}")
 
 @app.get("/health")
 async def health_check():

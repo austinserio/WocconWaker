@@ -96,6 +96,7 @@ WOCCON_MODE="server|cli|hybrid"
 PORT="8000"
 LLAMA_MODEL_PATH="/workspace/models/llama3-8b"
 T5_MODEL_PATH="/workspace/models/t5-base"
+ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indicators (default: false)
 ```
 
 ## API Endpoints
