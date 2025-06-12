@@ -45,6 +45,49 @@ class WocconAssistant:
             f"Woccon: {e['woccon']} | English: {e['english']} | POS: {e['pos']}"
             for e in self.dictionary.get("lexicon", [])
         ]
+        
+        # Add grammar rules and patterns to retrieval corpus from rules.json
+        if "morphology" in self.rules and "affixes" in self.rules["morphology"]:
+            # Add suffixes
+            for suffix in self.rules["morphology"]["affixes"].get("suffixes", []):
+                self.chunks.append(
+                    f"Grammar: Suffix {suffix['form']} | Function: {suffix['function']} | "
+                    f"Examples: {', '.join(suffix.get('examples', []))}"
+                )
+            # Add prefixes
+            for prefix in self.rules["morphology"]["affixes"].get("prefixes", []):
+                self.chunks.append(
+                    f"Grammar: Prefix {prefix['form']} | Function: {prefix['function']} | "
+                    f"Examples: {', '.join(prefix.get('examples', []))}"
+                )
+        
+        # Add roots information
+        if "morphology" in self.rules and "common_roots" in self.rules["morphology"]:
+            for root in self.rules["morphology"]["common_roots"]:
+                derivatives_text = ", ".join([f"{d['form']} ({d['gloss']})" for d in root.get("derivatives", [])])
+                self.chunks.append(
+                    f"Grammar: Root {root['root']} | Meaning: {root['meaning']} | "
+                    f"Derivatives: {derivatives_text}"
+                )
+        
+        # Add inflectional morphology
+        if "morphology" in self.rules and "inflectional_morphology" in self.rules["morphology"]:
+            modes = self.rules["morphology"]["inflectional_morphology"].get("modes", [])
+            for mode in modes:
+                examples_text = ", ".join([f"{ex['form']} ({ex['gloss']})" for ex in mode.get("examples", [])])
+                self.chunks.append(
+                    f"Grammar: Mode {mode['name']} | Marker: {mode['marker']} | "
+                    f"Description: {mode['description']} | Examples: {examples_text}"
+                )
+        
+        # Add phonological processes
+        if "phonology" in self.rules and "phonological_processes" in self.rules["phonology"]:
+            for process in self.rules["phonology"]["phonological_processes"]:
+                examples_text = ", ".join([f"Woccon: {ex['Woccon']}, Catawba: {ex['Catawba']} ({ex['gloss']})" for ex in process.get("examples", [])])
+                self.chunks.append(
+                    f"Grammar: Phonological process {process['process']} | "
+                    f"Description: {process['description']} | Examples: {examples_text}"
+                )
 
         # in __init__, right after you build self.chunks:
         log.info("First 5 chunks: %s", self.chunks[:5])
@@ -204,17 +247,28 @@ class WocconAssistant:
             session["lesson"] = GrammarLessonManager(items, parent=self)
             return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
 
-        # 6️⃣ Process the query using RAG + LLM
-        # Get answer from LLM
-        retrieved = self._retrieve(text)
-        log.info(f"[RAG] Query: '{text}' → Retrieved {len(retrieved)} documents")
-        messages = self._build_prompt(text, retrieved, session["history"])
-        raw = ollama.chat(
-            model=self.model,
-            messages=messages,
-            options={"temperature": 0.3}
-        )["message"]["content"]
-        answer = self._minimal_verify(raw)
+        # 6️⃣ Process the query using RAG-first approach
+        retrieved, has_strong_match = self._retrieve(text)
+        log.info(f"[RAG] Query: '{text}' → Retrieved {len(retrieved)} documents, strong_match: {has_strong_match}")
+        
+        # Check if this is a specific word/translation request
+        is_word_request = self._is_word_or_translation_request(text)
+        
+        if is_word_request and not has_strong_match:
+            # For specific word requests, be strict about RAG results
+            answer = self._generate_not_found_response(text)
+        elif not retrieved:
+            # No documents found at all
+            answer = self._generate_general_help_response(text)
+        else:
+            # We have some documents, proceed with LLM generation
+            messages = self._build_prompt(text, retrieved, session["history"])
+            raw = ollama.chat(
+                model=self.model,
+                messages=messages,
+                options={"temperature": 0.3}
+            )["message"]["content"]
+            answer = self._strict_verify(raw, has_strong_match, is_word_request)
         
         # Update history
         session["history"].append({"role": "user", "content": text})
@@ -305,6 +359,43 @@ class WocconAssistant:
         
         return any(re.search(pattern, text) for pattern in continue_patterns)
     
+    def _is_word_or_translation_request(self, text: str) -> bool:
+        """Check if user is asking for a specific word or translation."""
+        text = text.lower().strip()
+        
+        # Direct word/translation patterns
+        word_patterns = [
+            r"\bwhat.+(woccon|word|means?|translation)\b",
+            r"\bhow.+(say|translate|word)\b", 
+            r"\b(translate|word for|woccon for|english for)\b",
+            r"\bwhat.+(called|named)\b",
+            r"\bmeans?\s*['\"]?\w+['\"]?\s*\??\s*$",  # "what does X mean?"
+            r"\b['\"]?\w+['\"]?\s+(means?|translation|woccon|english)\b",
+            r"^(hello|hi|goodbye|yes|no|please|thank you|water|fire|food|house)[\?\s]*$",  # Common single words
+            r"\bis there.+(word|translation)\b",
+            r"\bdo you know.+(word|translation)\b"
+        ]
+        
+        return any(re.search(pattern, text) for pattern in word_patterns)
+    
+    def _generate_not_found_response(self, query: str) -> str:
+        """Generate response when specific word/translation not found in RAG data."""
+        return (
+            f"I don't have information about that specific word or translation in the documented Woccon vocabulary. "
+            f"The Woccon language documentation contains 143 attested words from John Lawson's 1709 word list. "
+            f"If you're looking for a specific word, I can help you explore what's available in the documented vocabulary, "
+            f"or you could ask about Woccon grammar patterns, language history, or cultural context instead."
+        )
+    
+    def _generate_general_help_response(self, query: str) -> str:
+        """Generate response when no relevant documents found for general queries."""
+        return (
+            f"I can help you learn about the documented Woccon language! "
+            f"I have access to 143 attested Woccon words, grammar patterns, and cultural information. "
+            f"You can ask me about specific Woccon words, language structure, history, or request vocabulary lessons. "
+            f"What would you like to learn about?"
+        )
+    
     def _is_help_request(self, text: str) -> bool:
         """Check if user is asking for help with commands."""
         help_patterns = [
@@ -319,37 +410,57 @@ class WocconAssistant:
         """Helper method to check if text matches any of the given patterns."""
         return any(re.search(pattern, text) for pattern in patterns)
 
-    def _retrieve(self, query: str, k: int = 12) -> List[str]:
+    def _retrieve(self, query: str, k: int = 12) -> Tuple[List[str], bool]:
         """
-        Retrieval function for RAG.
+        Retrieval function for RAG. Returns (documents, has_strong_match).
         """
         tokens = set(re.findall(r"[a-z]+", query.lower()))
         scored = [(sum(t in chunk.lower() for t in tokens), chunk)
                   for chunk in self.chunks]
         scored.sort(key=lambda x: x[0], reverse=True)
-        return [chunk for score, chunk in scored[:k] if score]
+        
+        # Get documents with any score > 0
+        relevant_docs = [chunk for score, chunk in scored[:k] if score > 0]
+        
+        # Check if we have a strong match (score >= 2 or exact word match)
+        has_strong_match = False
+        if scored and scored[0][0] >= 2:
+            has_strong_match = True
+        else:
+            # Check for exact word matches in the query
+            for token in tokens:
+                if any(token in doc_word.lower() for doc_word in self.documented_words):
+                    has_strong_match = True
+                    break
+        
+        return relevant_docs, has_strong_match
 
     def _build_prompt(self, query: str, docs: List[str], history: deque) -> List[Dict]:
         """
-        Build prompt for the LLM.
+        Build prompt for the LLM with strict instructions to only use documented information.
         """
         # system section with retrieved docs
         if docs:
             doc_text = "\n".join(docs)
             system = (
-                "You are a helpful, conversational assistant for the documented Woccon language.\n"
-                "Use the provided Woccon language documents to answer questions accurately.\n"
-                "Be friendly and educational when explaining linguistic concepts.\n"
-                "When asked about phonology or sound patterns, focus on syllable structure, vowel patterns, and consonant distributions.\n\n"
-                f"RELEVANT WOCCON DOCUMENTS:\n{doc_text}"
+                "You are a helpful assistant for the documented Woccon language. IMPORTANT RULES:\n"
+                "1. ONLY use information from the provided documents below\n"
+                "2. NEVER invent or guess Woccon words that aren't in the documents\n"
+                "3. If asked about words not in the documents, clearly state they aren't documented\n"
+                "4. When discussing grammar, only reference patterns visible in the documented examples\n"
+                "5. Be helpful and educational, but stay strictly within documented facts\n\n"
+                "DOCUMENTED WOCCON INFORMATION:\n"
+                f"{doc_text}\n\n"
+                "Answer based ONLY on the information above. If something isn't documented, say so clearly."
             )
         else:
             system = (
-                "You are a helpful, conversational assistant for the Woccon language.\n"
-                "You have access to 141 documented Woccon words and linguistic analysis.\n"
-                "For general conversation, be friendly and helpful.\n"
-                "When users ask about specific Woccon words, grammar, or language features, I can provide detailed information.\n"
-                "Encourage users to ask about Woccon vocabulary, grammar patterns, or language history."
+                "You are a helpful assistant for the Woccon language. IMPORTANT:\n"
+                "- You have access to 143 documented Woccon words from John Lawson's 1709 word list\n"
+                "- NEVER invent or guess words that aren't documented\n"
+                "- If users ask about undocumented words, clearly explain this limitation\n"
+                "- Focus on what IS documented: vocabulary patterns, cultural context, and language history\n"
+                "- Encourage exploration of the actual documented vocabulary and grammar patterns"
             )
 
         # tail of history + new user query
@@ -360,43 +471,83 @@ class WocconAssistant:
             + [{"role": "user", "content": query}]
         )
 
-    def _minimal_verify(self, text: str) -> str:
+    def _strict_verify(self, text: str, has_strong_match: bool, is_word_request: bool) -> str:
         """
-        More lenient verification that doesn't flag common words or partial matches.
+        Strict verification that prevents hallucination of Woccon words and language content.
         """
-        # Skip verification for certain response types
-        if any(marker in text for marker in [
-            "I don't know", 
+        # Skip verification for certain safe response types
+        if any(marker in text.lower() for marker in [
+            "i don't know", 
             "not in the dictionary",
             "not enough information",
-            "can't find"
+            "can't find",
+            "no information",
+            "not documented"
         ]):
             return text
             
-        # Look for statements that claim specific words are Woccon
-        patt = re.compile(r"(?:woccon (?:word|for|term)|in woccon,?).*?['\"]?([a-z\-]+)['\"]?", re.I)
-        
-        for m in patt.finditer(text):
-            candidate = m.group(1).lower()
+        # For word requests without strong matches, be extra strict
+        if is_word_request and not has_strong_match:
+            return self._generate_not_found_response("")
             
-            # Check if this is a common English word or a short word that might be part of examples
-            if len(candidate) <= 2 or candidate in ["the", "and", "for", "is", "of", "to", "in"]:
+        # Look for statements that claim specific words are Woccon
+        woccon_claims = re.finditer(
+            r"(?:woccon (?:word|for|term)|in woccon|the woccon).*?['\"]?([a-z\-]+)['\"]?", 
+            text, re.I
+        )
+        
+        for match in woccon_claims:
+            candidate = match.group(1).lower()
+            
+            # Skip very short words that might be particles or common words
+            if len(candidate) <= 2:
                 continue
                 
-            # Check for partial matches with documented words (might be a slight variation)
-            close_match = False
-            for word in self.documented_words:
-                # If it's a substring of a documented word or vice versa
-                if candidate in word or word in candidate:
-                    close_match = True
-                    break
-                    
-            # Only warn if it's neither documented nor a close match
-            if candidate not in self.documented_words and not close_match:
-                return (
-                    f"⚠️ Note: {candidate} isn't in the documented Woccon word list; "
-                    "this may be speculative or a reconstruction.\n\n" + text
+            # Skip common English words that aren't language-specific
+            common_english = {
+                "the", "and", "for", "is", "of", "to", "in", "a", "an", "this", "that",
+                "have", "has", "had", "with", "from", "they", "them", "their", "there",
+                "where", "when", "what", "how", "why", "who", "can", "could", "would",
+                "should", "will", "are", "was", "were", "been", "being", "do", "does", "did"
+            }
+            if candidate in common_english:
+                continue
+                
+            # Check if word is in documented vocabulary
+            if candidate not in self.documented_words:
+                # Check for very close matches (within 1-2 characters)
+                close_match = False
+                for documented_word in self.documented_words:
+                    # Allow for slight spelling variations
+                    if (abs(len(candidate) - len(documented_word)) <= 2 and 
+                        (candidate in documented_word or documented_word in candidate)):
+                        close_match = True
+                        break
+                        
+                if not close_match:
+                    return (
+                        f"I don't have information about the word '{candidate}' in the documented Woccon vocabulary. "
+                        f"The documented Woccon language contains 143 attested words from John Lawson's 1709 word list. "
+                        f"I can help you explore what words are actually documented, or provide information about "
+                        f"Woccon grammar patterns and cultural context instead."
+                    )
+        
+        # Check for claims about grammar rules or language features not in the rules
+        grammar_claims = re.finditer(
+            r"woccon (has|uses|follows|contains|includes).*?(suffix|prefix|rule|pattern|grammar)",
+            text, re.I
+        )
+        
+        for match in grammar_claims:
+            # For grammar claims, we should be cautious but less strict since morphological 
+            # analysis might legitimately identify patterns
+            if not has_strong_match:
+                warning = (
+                    "\n\n⚠️ Note: This analysis is based on limited documented material. "
+                    "Some grammatical patterns may be reconstructed or speculative."
                 )
+                if warning not in text:
+                    text += warning
         
         return text
     
