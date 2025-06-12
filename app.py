@@ -131,7 +131,10 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
         print(f"Received webhook data: {data}")  # Debug log
         
         messages = messenger.process_webhook(data)
-        print(f"Processed messages: {messages}")  # Debug log
+        print(f"[DEBUG] Processed {len(messages)} messages from webhook")
+        for i, msg in enumerate(messages):
+            print(f"[DEBUG] Message {i}: user_id={msg.get('user_id')}, text='{msg.get('text', '')[:50]}', source={msg.get('source')}")
+            print(f"[DEBUG] Message {i} raw_event keys: {list(msg.get('raw_event', {}).keys())}")
         
         # Make sure assistant is initialized
         if not assistant_ready.is_set():
@@ -324,6 +327,8 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
             user_id = original_user_id
             
         print(f"Assistant response: {response}")
+        print(f"[TRACE] Response length: {len(response) if response else 0}")
+        print(f"[TRACE] Response type: {type(response)}")
         
         # CRITICAL FIX: If we get here, we MUST send some response to the user
         # Analyze the response to determine how to present it
