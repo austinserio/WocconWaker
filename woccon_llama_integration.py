@@ -255,11 +255,11 @@ class WocconAssistant:
         is_word_request = self._is_word_or_translation_request(text)
         
         if is_word_request and not has_strong_match:
-            # For specific word requests, be strict about RAG results
-            answer = self._generate_not_found_response(text)
+            # For specific word requests without strong matches, generate contextual response
+            answer = self._generate_contextual_not_found_response(text, session["history"])
         elif not retrieved:
-            # No documents found at all
-            answer = self._generate_general_help_response(text)
+            # No documents found at all, but still generate contextual response
+            answer = self._generate_contextual_general_response(text, session["history"])
         else:
             # We have some documents, proceed with LLM generation
             messages = self._build_prompt(text, retrieved, session["history"])
@@ -373,10 +373,75 @@ class WocconAssistant:
             r"\b['\"]?\w+['\"]?\s+(means?|translation|woccon|english)\b",
             r"^(hello|hi|goodbye|yes|no|please|thank you|water|fire|food|house)[\?\s]*$",  # Common single words
             r"\bis there.+(word|translation)\b",
-            r"\bdo you know.+(word|translation)\b"
+            r"\bdo you know.+(word|translation)\b",
+            r"\b(what|how) about\s+\w+\??$",  # "what about X?" or "how about X?"
+            r"^\s*\w+\s*\??$"  # Single word queries like "fire?" or "grapes"
         ]
         
         return any(re.search(pattern, text) for pattern in word_patterns)
+    
+    def _generate_contextual_not_found_response(self, query: str, history: deque) -> str:
+        """Generate contextual response using LLM when specific word/translation not found."""
+        # Build a prompt that instructs the LLM to respond contextually about missing words
+        system_prompt = (
+            "You are a helpful assistant for the documented Woccon language. "
+            "The user asked about a word that is NOT in the documented vocabulary. "
+            "Respond conversationally and contextually to their specific request. "
+            "Acknowledge what they asked for specifically, explain that it's not in John Lawson's 1709 word list of 143 words, "
+            "and offer helpful alternatives like exploring related documented words or learning about Woccon patterns. "
+            "Be conversational and acknowledge the context of their question."
+        )
+        
+        # Include recent history for context
+        tail = list(history)[-self.ctx_turns * 2:]
+        messages = (
+            [{"role": "system", "content": system_prompt}]
+            + tail
+            + [{"role": "user", "content": query}]
+        )
+        
+        try:
+            raw = ollama.chat(
+                model=self.model,
+                messages=messages,
+                options={"temperature": 0.7}  # Slightly higher temperature for more natural responses
+            )["message"]["content"]
+            return raw
+        except Exception as e:
+            log.error(f"Error generating contextual response: {e}")
+            # Fallback to static response
+            return self._generate_not_found_response(query)
+    
+    def _generate_contextual_general_response(self, query: str, history: deque) -> str:
+        """Generate contextual response using LLM when no documents found for general queries."""
+        system_prompt = (
+            "You are a helpful assistant for the documented Woccon language. "
+            "The user asked a question that doesn't match any specific documented content. "
+            "Respond conversationally to their query, acknowledging what they asked about. "
+            "Explain that you have access to John Lawson's 1709 word list of 143 Woccon words and related linguistic information. "
+            "Offer specific ways you can help them learn about Woccon language and culture. "
+            "Be helpful and contextual in your response."
+        )
+        
+        # Include recent history for context
+        tail = list(history)[-self.ctx_turns * 2:]
+        messages = (
+            [{"role": "system", "content": system_prompt}]
+            + tail
+            + [{"role": "user", "content": query}]
+        )
+        
+        try:
+            raw = ollama.chat(
+                model=self.model,
+                messages=messages,
+                options={"temperature": 0.7}
+            )["message"]["content"]
+            return raw
+        except Exception as e:
+            log.error(f"Error generating contextual response: {e}")
+            # Fallback to static response
+            return self._generate_general_help_response(query)
     
     def _generate_not_found_response(self, query: str) -> str:
         """Generate response when specific word/translation not found in RAG data."""
@@ -426,11 +491,20 @@ class WocconAssistant:
         has_strong_match = False
         if scored and scored[0][0] >= 2:
             has_strong_match = True
-        else:
-            # Check for exact word matches in the query
+        
+        # If no strong match from scoring, check for exact English word matches
+        if not has_strong_match:
             for token in tokens:
+                # Check against documented Woccon words
                 if any(token in doc_word.lower() for doc_word in self.documented_words):
                     has_strong_match = True
+                    break
+                # Check against English meanings in the retrieved docs
+                for doc in relevant_docs:
+                    if f"english: {token}" in doc.lower():
+                        has_strong_match = True
+                        break
+                if has_strong_match:
                     break
         
         return relevant_docs, has_strong_match
@@ -482,22 +556,24 @@ class WocconAssistant:
             "not enough information",
             "can't find",
             "no information",
-            "not documented"
+            "not documented",
+            "unfortunately",
+            "isn't in",
+            "word list",
+            "lawson's"
         ]):
             return text
             
-        # For word requests without strong matches, be extra strict
-        if is_word_request and not has_strong_match:
-            return self._generate_not_found_response("")
-            
         # Look for statements that claim specific words are Woccon
+        # Be more specific to avoid false positives like "the word X"
         woccon_claims = re.finditer(
-            r"(?:woccon (?:word|for|term)|in woccon|the woccon).*?['\"]?([a-z\-]+)['\"]?", 
+            r"(?:woccon (?:word|term) (?:for .+ )?is ['\"]([a-z\-]+)['\"]|woccon is ['\"]([a-z\-]+)['\"]|in woccon,? ['\"]([a-z\-]+)['\"]|the woccon (?:word )?['\"]([a-z\-]+)['\"])", 
             text, re.I
         )
         
         for match in woccon_claims:
-            candidate = match.group(1).lower()
+            # Get the first non-None group
+            candidate = next((g for g in match.groups() if g is not None), "").lower()
             
             # Skip very short words that might be particles or common words
             if len(candidate) <= 2:
