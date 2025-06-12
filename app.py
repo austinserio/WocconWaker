@@ -133,9 +133,6 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
         
         messages = messenger.process_webhook(data)
         print(f"[DEBUG] Processed {len(messages)} messages from webhook")
-        for i, msg in enumerate(messages):
-            print(f"[DEBUG] Message {i}: user_id={msg.get('user_id')}, text='{msg.get('text', '')[:50]}', source={msg.get('source')}")
-            print(f"[DEBUG] Message {i} raw_event keys: {list(msg.get('raw_event', {}).keys())}")
         
         # Make sure assistant is initialized
         if not assistant_ready.is_set():

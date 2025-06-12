@@ -50,6 +50,11 @@ class MessengerIntegration:
                     if 'message' in event:
                         # Check if it's a quick reply
                         if 'quick_reply' in event['message'] and 'payload' in event['message']['quick_reply']:
+                            # Skip echo messages (bot's own messages echoed back)
+                            if event['message'].get('is_echo', False):
+                                log.info(f"[WebhookProcessing] Skipping echo quick reply from {user_id}")
+                                continue
+                                
                             payload = event['message']['quick_reply']['payload']
                             
                             # Convert quick reply payloads to text
@@ -74,6 +79,11 @@ class MessengerIntegration:
                             })
                         # Regular text message
                         elif 'text' in event['message']:
+                            # Skip echo messages (bot's own messages echoed back)
+                            if event['message'].get('is_echo', False):
+                                log.info(f"[WebhookProcessing] Skipping echo message from {user_id}")
+                                continue
+                                
                             message_text = event['message']['text']
                             
                             messages.append({
