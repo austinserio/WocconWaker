@@ -541,7 +541,10 @@ class WocconAssistant:
                 "- 'Can you quiz me?' / 'Test my knowledge' / 'Quiz me on grammar'\n"
                 "- 'I want to practice' / 'Let me practice' / 'Practice session'\n"
                 "- ANY phrase with 'start/begin' + 'lesson' or 'quiz/test' + grammar/vocab\n"
-                "- Phrases that imply wanting structured practice or assessment\n\n"
+                "- Phrases that imply wanting structured practice or assessment\n"
+                "CONTEXT-AWARE: If user previously asked about grammar and now says 'interactive lesson', use LESSON_START:grammar\n"
+                "CONTEXT-AWARE: If user previously asked about vocabulary and now says 'interactive lesson', use LESSON_START:vocab\n"
+                "CONTEXT-AWARE: If unclear from conversation, default to the topic most recently discussed\n\n"
                 
                 "**EXPLORATORY LEARNING MODE (offer choice between exploration and practice):**\n"
                 "Ambiguous learning requests:\n"
@@ -549,7 +552,7 @@ class WocconAssistant:
                 "- 'Help me learn grammar' / 'I want to learn about grammar'\n"
                 "- 'Show me grammar' / 'Grammar help' / 'Teach me'\n"
                 "- Any general request to 'learn' or 'teach' without specifying format\n"
-                "Response: 'I can help you learn grammar in two ways: Would you like to explore grammar concepts together (ask questions, discuss features), or would you prefer an interactive grammar lesson where you practice with questions and answers?'\n\n"
+                "Response format: 'Absolutely!! Was there a grammatical concept or question you wanted to explore together? Or did you want to practice what you already know?' (End with choice about practice vs exploration)\n\n"
                 
                 "**EDUCATIONAL CONTENT MODE (provide comprehensive information):**\n"
                 "Clear information requests:\n"
