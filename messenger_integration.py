@@ -137,6 +137,7 @@ class MessengerIntegration:
     def send_message(self, recipient_id: str, message_text: str) -> Dict[str, Any]:
         """
         Send a text message to a specific user.
+        Automatically splits messages longer than 2000 characters.
         """
         print(f"[DEBUG] send_message called with recipient_id={recipient_id}, message_text='{message_text[:50]}...'")
         
@@ -144,6 +145,14 @@ class MessengerIntegration:
             print("[MessengerIntegration] ERROR: PAGE_ACCESS_TOKEN is not set")
             return {}
 
+        # Check if message needs splitting
+        if len(message_text) <= 2000:
+            return self._send_single_message(recipient_id, message_text)
+        else:
+            return self._send_split_message(recipient_id, message_text)
+
+    def _send_single_message(self, recipient_id: str, message_text: str) -> Dict[str, Any]:
+        """Send a single message that fits within Facebook's limits."""
         url = self.api_url
         params = {"access_token": self.page_access_token}
         headers = {"Content-Type": "application/json"}
@@ -165,6 +174,86 @@ class MessengerIntegration:
         except Exception as e:
             print(f"[MessengerIntegration] Exception sending message: {e}")
             return {}
+
+    def _send_split_message(self, recipient_id: str, message_text: str) -> Dict[str, Any]:
+        """Split and send a long message across multiple Facebook messages."""
+        print(f"[DEBUG] Message too long ({len(message_text)} chars), splitting into parts...")
+        
+        # Split the message intelligently
+        parts = self._split_message_intelligently(message_text)
+        
+        print(f"[DEBUG] Split into {len(parts)} parts")
+        
+        # Send each part with a small delay
+        results = []
+        for i, part in enumerate(parts):
+            print(f"[DEBUG] Sending part {i+1}/{len(parts)} ({len(part)} chars)")
+            
+            # Add part indicators for multi-part messages
+            if len(parts) > 1:
+                if i == 0:
+                    part = part + f"\n\n📄 (Part {i+1}/{len(parts)})"
+                elif i == len(parts) - 1:
+                    part = f"📄 (Part {i+1}/{len(parts)})\n\n" + part
+                else:
+                    part = f"📄 (Part {i+1}/{len(parts)})\n\n" + part + f"\n\n📄 (continued...)"
+            
+            result = self._send_single_message(recipient_id, part)
+            results.append(result)
+            
+            # Small delay between parts to ensure proper order
+            if i < len(parts) - 1:
+                import time
+                time.sleep(0.5)
+        
+        # Return the result of the last part
+        return results[-1] if results else {}
+
+    def _split_message_intelligently(self, message_text: str, max_length: int = 1900) -> List[str]:
+        """
+        Split a message intelligently at good break points.
+        Uses max_length of 1900 to leave room for part indicators.
+        """
+        if len(message_text) <= max_length:
+            return [message_text]
+        
+        parts = []
+        remaining = message_text
+        
+        while len(remaining) > max_length:
+            # Find the best split point within the limit
+            split_point = max_length
+            
+            # Try to split at paragraph breaks first
+            paragraph_break = remaining.rfind('\n\n', 0, max_length)
+            if paragraph_break > max_length * 0.5:  # Don't split too early
+                split_point = paragraph_break + 2
+            else:
+                # Try to split at sentence breaks
+                sentence_break = remaining.rfind('. ', 0, max_length)
+                if sentence_break > max_length * 0.6:
+                    split_point = sentence_break + 2
+                else:
+                    # Try to split at line breaks
+                    line_break = remaining.rfind('\n', 0, max_length)
+                    if line_break > max_length * 0.7:
+                        split_point = line_break + 1
+                    else:
+                        # Last resort: split at word boundaries
+                        word_break = remaining.rfind(' ', 0, max_length)
+                        if word_break > max_length * 0.8:
+                            split_point = word_break + 1
+            
+            # Extract the part and continue with the rest
+            part = remaining[:split_point].rstrip()
+            parts.append(part)
+            remaining = remaining[split_point:].lstrip()
+        
+        # Add the final part
+        if remaining:
+            parts.append(remaining)
+        
+        return parts
 
     def send_typing_indicator(self, recipient_id: str, typing_on: bool = True) -> Dict[str, Any]:
         """
