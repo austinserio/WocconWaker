@@ -593,35 +593,94 @@ class LessonManager:
         return any(re.search(pattern, text) for pattern in dont_know_patterns)
 
     def is_exit_request(self, text: str) -> bool:
-        """Check if user is trying to exit the lesson."""
-        text = text.lower()
-        exit_patterns = [
-            r"\b(exit|quit|stop|end|leave|cancel)\b",
-            r"\b(i'm done|that's enough|let's stop|finish|terminate)\b",
-            r"\b(get me out|out of here|enough of this|let me out)\b",
-            r"\b(nah |gimme out|gemme out|let's quit|want to quit)\b",
-            r"\b(go back|return|main menu|different topic)\b",
-            r"\b(not interested|don't want|no longer|anymore)\b",
-            r"\b(tired of this|bored|change the topic|something else)\b",
-            r"\b(stop the lesson|done with vocabulary|i give up|too hard)\b",
-        ]
-        
-        return any(re.search(pattern, text) for pattern in exit_patterns)
+        """Check if user is trying to exit the lesson using LLM contextual understanding."""
+        # Quick keyword check for very obvious cases
+        obvious_exit_words = ['exit', 'quit', 'stop', 'end', 'leave', 'cancel']
+        if any(word in text.lower() for word in obvious_exit_words):
+            return True
+            
+        # For ambiguous cases, use LLM to understand intent
+        try:
+            prompt = f"""
+            Analyze this user message in the context of a vocabulary lesson to determine if they want to exit/leave the lesson.
+
+            USER MESSAGE: "{text}"
+            CONTEXT: The user is currently in the middle of a vocabulary learning lesson.
+
+            Determine if the user wants to:
+            - EXIT the lesson (stop doing the lesson entirely)
+            - CONTINUE with the lesson (stay in the lesson)
+
+            Consider expressions like:
+            - "I'm done" = EXIT
+            - "That's enough" = EXIT  
+            - "This is hard" = CONTINUE (they're expressing difficulty, not wanting to leave)
+            - "Uhhhhhhhhhhhhh got a suggestion?" = CONTINUE (asking for help, not leaving)
+            - "I give up" = EXIT
+            - "Can you help me?" = CONTINUE
+
+            Respond with only: EXIT or CONTINUE
+            """
+            
+            messages = [{"role": "user", "content": prompt}]
+            response = ollama.chat(
+                model=self.parent.model,
+                messages=messages,
+                options={"temperature": 0.1, "num_predict": 10}
+            )["message"]["content"].strip().upper()
+            
+            return "EXIT" in response
+            
+        except Exception as e:
+            log.error(f"Error in LLM exit detection: {e}")
+            # Fallback to conservative approach - only obvious exit words
+            return any(word in text.lower() for word in obvious_exit_words)
 
     def is_explanation_request(self, text: str) -> bool:
-        """Check if user is asking for an explanation."""
-        text = text.lower()
-        explain_patterns = [
-            r"\b(explain|explanation|more info|tell me more|elaborate|details|why)\b",
-            r"\b(how does|what does|can you explain|meaning of|what is|what are)\b",
-            r"\b(curious about|background|context|help me understand)\b",
-            r"\b(could you explain|would you explain|please explain)\b",
-            r"\b(tell me about|what's the reason|don't understand|confused)\b",
-            r"\b(need help|how come|how so|give me a hint|confused)\b",
-            r"\b(why is that|what's this about|enlighten me|educate me)\b",
-        ]
+        """Check if user is asking for an explanation using LLM contextual understanding."""
+        # Quick keyword check for very obvious cases
+        obvious_explain_words = ['explain', 'explanation', 'why', 'how', 'what', 'help', 'suggestion', 'hint']
+        if any(word in text.lower() for word in obvious_explain_words):
+            # Use LLM to distinguish between explanation requests and other types of questions
+            try:
+                prompt = f"""
+                Analyze this user message in the context of a vocabulary lesson to determine their intent.
+
+                USER MESSAGE: "{text}"
+                CONTEXT: The user is currently in a vocabulary learning lesson and just encountered a question.
+
+                Determine if the user wants:
+                - EXPLANATION (they want more information about the current word/concept)
+                - HELP (they want assistance with the current question)
+                - OTHER (they're asking something unrelated or just answering)
+
+                Examples:
+                - "explain this word" = EXPLANATION
+                - "Uhhhhhhhhhhhhh got a suggestion?" = HELP
+                - "help me" = HELP
+                - "what does this mean?" = EXPLANATION
+                - "I don't know what this is" = HELP
+                - "can you tell me more?" = EXPLANATION
+                - "yakau" = OTHER (just an answer)
+
+                Respond with only: EXPLANATION, HELP, or OTHER
+                """
+                
+                messages = [{"role": "user", "content": prompt}]
+                response = ollama.chat(
+                    model=self.parent.model,
+                    messages=messages,
+                    options={"temperature": 0.1, "num_predict": 15}
+                )["message"]["content"].strip().upper()
+                
+                return "EXPLANATION" in response or "HELP" in response
+                
+            except Exception as e:
+                log.error(f"Error in LLM explanation detection: {e}")
+                # Fallback to keyword check
+                return any(word in text.lower() for word in obvious_explain_words)
         
-        return any(re.search(pattern, text) for pattern in explain_patterns)
+        return False
     
     def is_continue_request(self, text: str) -> bool:
         """Check if user wants to continue with the lesson."""
@@ -675,16 +734,49 @@ class LessonManager:
         return any(re.search(pattern, text) for pattern in repeat_patterns)
     
     def is_hint_request(self, text: str) -> bool:
-        """Check if user is asking for a hint."""
-        text = text.lower()
-        hint_patterns = [
-            r"\b(hint|clue|tip|help me out)\b",
-            r"\b(give me a hint|need a clue|any hints|can you help)\b",
-            r"\b(stuck|struggling|help with this|how do i)\b",
-            r"\b(help|more help)\b"
-        ]
+        """Check if user is asking for a hint using LLM contextual understanding."""
+        # Check for obvious hint words
+        hint_words = ['hint', 'clue', 'tip', 'stuck', 'struggling', 'suggestion']
+        if any(word in text.lower() for word in hint_words):
+            return True
+            
+        # For less obvious cases, check if it's a request for help with the current question
+        help_indicators = ['help', 'how', 'what', 'uhh', 'umm', 'err']
+        if any(indicator in text.lower() for indicator in help_indicators):
+            try:
+                prompt = f"""
+                Analyze this user message in a vocabulary lesson context.
+
+                USER MESSAGE: "{text}"
+                CONTEXT: User is answering a vocabulary question and seems to need assistance.
+
+                Is this a request for a HINT/HELP with the current question?
+
+                Examples:
+                - "Uhhhhhhhhhhhhh got a suggestion?" = YES (asking for help)
+                - "help me" = YES
+                - "I'm stuck" = YES  
+                - "what should I do?" = YES
+                - "yakau" = NO (just an answer)
+                - "I don't know" = NO (giving up, not asking for hint)
+
+                Respond with only: YES or NO
+                """
+                
+                messages = [{"role": "user", "content": prompt}]
+                response = ollama.chat(
+                    model=self.parent.model,
+                    messages=messages,
+                    options={"temperature": 0.1, "num_predict": 5}
+                )["message"]["content"].strip().upper()
+                
+                return "YES" in response
+                
+            except Exception as e:
+                log.error(f"Error in LLM hint detection: {e}")
+                return any(word in text.lower() for word in hint_words)
         
-        return any(re.search(pattern, text) for pattern in hint_patterns)
+        return False
     
     def is_answer_attempt(self, text: str) -> bool:
         """Check if the text is likely a genuine attempt to answer the question."""
@@ -747,18 +839,6 @@ class LessonManager:
         ]
         
         return any(re.search(pattern, text) for pattern in repeat_patterns)
-
-    def is_hint_request(self, text: str) -> bool:
-        """Check if user is asking for a hint."""
-        text = text.lower()
-        hint_patterns = [
-            r"\b(hint|clue|tip|help me out)\b",
-            r"\b(give me a hint|need a clue|any hints|can you help)\b",
-            r"\b(stuck|struggling|help with this|how do i)\b",
-            r"\b(help|more help)\b"
-        ]
-        
-        return any(re.search(pattern, text) for pattern in hint_patterns)
 
     def generate_hint(self) -> str:
         """Generate a hint for the current question."""
