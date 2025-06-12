@@ -232,45 +232,24 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
             # Send welcome message
             welcome_message = (
                 "👋 Welcome to the Woccon Language Assistant!\n\n"
-                "I'm here to help you learn about the Woccon language and culture."
+                "I'm here to help you learn about the Woccon language and culture. "
+                "Feel free to ask me any questions about Woccon words, grammar, history, or culture!"
             )
             messenger.send_message(user_id, welcome_message)
-            
-            # Send a carousel with learning options after a short delay
-            await asyncio.sleep(1)
-            messenger.send_welcome_carousel(user_id)
             return
         
         # Check for special commands
         if text.lower() in ["help", "menu", "commands"]:
             help_message = (
-                "📚 **Woccon Assistant Commands**\n\n"
-                "• Type any question about the Woccon language\n"
-                "• Say 'vocabulary lesson' to start learning words\n"
-                "• Say 'grammar lesson' to learn grammar patterns\n"
-                "• Ask how to say specific phrases in Woccon\n"
-                "• Ask about the history and culture of the Woccon people"
+                "📚 **How I can help you**\n\n"
+                "• Ask questions about Woccon words and their meanings\n"
+                "• Learn about Woccon grammar and language structure\n"
+                "• Discover the history and culture of the Woccon people\n"
+                "• Get help with pronunciation and language patterns\n\n"
+                "If you'd like interactive practice, you can also ask for a 'vocabulary lesson' or 'grammar lesson'."
             )
             
-            # Send help message with quick replies
-            quick_replies = [
-                {
-                    "content_type": "text",
-                    "title": "Vocab Lesson",
-                    "payload": "VOCAB_LESSON"
-                },
-                {
-                    "content_type": "text",
-                    "title": "Grammar Lesson",
-                    "payload": "GRAMMAR_LESSON"
-                },
-                {
-                    "content_type": "text",
-                    "title": "About Woccon",
-                    "payload": "ABOUT_WOCCON"
-                }
-            ]
-            messenger.send_quick_replies(user_id, help_message, quick_replies)
+            messenger.send_message(user_id, help_message)
             return
             
         # Process the message with WocconAssistant

@@ -15,7 +15,7 @@ log = logging.getLogger("woccon_assistant")
 
 
 class WocconAssistant:
-    """RAG-powered Woccon assistant with smarter context-aware lesson offers."""
+    """RAG-powered Woccon assistant. Lessons start only when users explicitly request them."""
 
     def __init__(self,
                  dict_path="woccon_language/dictionary.json",
@@ -78,7 +78,7 @@ class WocconAssistant:
             return "Error: Unable to connect to the Ollama server."
 
     def reply(self, user_id: str, text: str) -> str:
-        """Enhanced reply method with smarter context-aware lesson offers."""
+        """Process user input and respond. Lessons only start when explicitly requested."""
         # Initialize or get session
         session = self.sessions.setdefault(user_id, {
             "history": deque(maxlen=self.ctx_turns * 2 + 2),
@@ -87,8 +87,6 @@ class WocconAssistant:
             "last_interaction": None,   # Store last user input
             "pending_action": None,     # Store a pending action choice if needed
             "context": {},              # Store context between interactions
-            "topic_sequence": [],       # Track recent topics discussed (sequence matters)
-            "question_count": 0,        # Track how many questions about a topic  
             "direct_lesson_request": False,  # Track if the current query is a direct lesson request
         })
 
@@ -96,8 +94,7 @@ class WocconAssistant:
         session["last_interaction"] = text
         lower = text.lower().strip()
         
-        # Update question count and reset direct lesson request flag
-        session["question_count"] += 1
+        # Reset direct lesson request flag
         session["direct_lesson_request"] = False
         
         # 1️⃣ Check for direct lesson requests first
@@ -126,123 +123,30 @@ class WocconAssistant:
                     "• Say 'grammar' to learn grammar rules and patterns"
                 )
         
-        # 2️⃣ Handle pending actions (confirmations, choices, etc.)
-        if session["pending_action"]:
-            action = session["pending_action"]
-            context = session["context"]
+        # 2️⃣ Handle pending actions (only for lesson type selection)
+        if session["pending_action"] == "choose_lesson_type":
+            # Check if they specified a lesson type
+            vocab_patterns = ["vocab", "vocabulary", "words", "terms", "dictionary"]
+            grammar_patterns = ["grammar", "rules", "structure", "patterns"]
             
-            if action == "choose_lesson_type":
-                # Check if they specified a lesson type
-                vocab_patterns = ["vocab", "vocabulary", "words", "terms", "dictionary"]
-                grammar_patterns = ["grammar", "rules", "structure", "patterns"]
-                
-                if any(pattern in lower for pattern in vocab_patterns):
-                    # Start vocabulary lesson
-                    words = random.sample(self.dictionary["lexicon"], 3)
-                    session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-                    session["pending_action"] = None
-                    return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-                elif any(pattern in lower for pattern in grammar_patterns):
-                    # Start grammar lesson
-                    items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
-                    session["lesson"] = GrammarLessonManager(items, parent=self)
-                    session["pending_action"] = None
-                    return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
-                else:
-                    # Default to vocab if they didn't specify clearly
-                    words = random.sample(self.dictionary["lexicon"], 3)
-                    session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-                    session["pending_action"] = None
-                    return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-            
-            if action == "confirm_lesson_start":
-                lesson_type = context.get("lesson_type", "vocab")
-                
-                # Use the LLM to evaluate the response
-                evaluation_prompt = f"""
-                Classify this user response to an offer about starting a language lesson:
-                
-                USER RESPONSE: "{text}"
-                
-                CLASSIFY AS:
-                1. YES - If they clearly want to start the lesson
-                2. NO - If they clearly decline the lesson
-                3. QUESTION - If they're asking a different question instead of responding to the offer
-                
-                Return ONLY "YES", "NO", or "QUESTION" with no other text.
-                """
-                
-                try:
-                    # Get evaluation from LLM
-                    evaluation_messages = [{"role": "user", "content": evaluation_prompt}]
-                    raw_evaluation = ollama.chat(
-                        model=self.model,
-                        messages=evaluation_messages,
-                        options={"temperature": 0.1}
-                    )["message"]["content"].strip().upper()
-                    
-                    if "YES" in raw_evaluation:
-                        # Clear pending action and start lesson
-                        session["pending_action"] = None
-                        
-                        if lesson_type == "vocab":
-                            words = random.sample(self.dictionary["lexicon"], 3)
-                            session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-                            return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-                        else:  # grammar lesson
-                            items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
-                            session["lesson"] = GrammarLessonManager(items, parent=self)
-                            return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
-                            
-                    elif "NO" in raw_evaluation:
-                        session["pending_action"] = None
-                        
-                        # If they declined lessons repeatedly, stop offering for a while
-                        if context.get("declined_count", 0) >= 2:
-                            session["context"]["suppress_lesson_offers"] = True
-                        else:
-                            session["context"]["declined_count"] = context.get("declined_count", 0) + 1
-                            
-                        return "No problem! What would you like to know about Woccon instead?"
-                    
-                    else:  # QUESTION or any other response
-                        # Clear pending action since they're asking something else
-                        session["pending_action"] = None
-                        # Continue with normal processing - fall through
-                        
-                except Exception as e:
-                    log.error(f"Error evaluating response with LLM: {e}")
-                    # Use regex fallback if LLM call fails
-                    if re.search(r"\b(yes|yeah|yep|sure|ok|okay|start|begin|do it|proceed)\b", lower):
-                        # Clear pending action and start lesson
-                        session["pending_action"] = None
-                        
-                        if lesson_type == "vocab":
-                            words = random.sample(self.dictionary["lexicon"], 3)
-                            session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-                            return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-                        else:  # grammar lesson
-                            items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
-                            session["lesson"] = GrammarLessonManager(items, parent=self)
-                            return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
-                            
-                    # Check if they declined
-                    elif re.search(r"\b(no|nope|nah|don'?t|not now|later|cancel)\b", lower):
-                        session["pending_action"] = None
-                        
-                        # If they declined lessons repeatedly, stop offering for a while
-                        if context.get("declined_count", 0) >= 2:
-                            session["context"]["suppress_lesson_offers"] = True
-                        else:
-                            session["context"]["declined_count"] = context.get("declined_count", 0) + 1
-                            
-                        return "No problem! What would you like to know about Woccon instead?"
-                    
-                    # If they didn't clearly answer yes or no, process as a regular query
-                    else:
-                        # Clear pending action since they're clearly interested in something else
-                        session["pending_action"] = None
-                        # Continue with normal processing - fall through
+            if any(pattern in lower for pattern in vocab_patterns):
+                # Start vocabulary lesson
+                words = random.sample(self.dictionary["lexicon"], 3)
+                session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+                session["pending_action"] = None
+                return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
+            elif any(pattern in lower for pattern in grammar_patterns):
+                # Start grammar lesson
+                items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
+                session["lesson"] = GrammarLessonManager(items, parent=self)
+                session["pending_action"] = None
+                return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
+            else:
+                # Default to vocab if they didn't specify clearly
+                words = random.sample(self.dictionary["lexicon"], 3)
+                session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+                session["pending_action"] = None
+                return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
 
         # 3️⃣ If a lesson is in progress, delegate straight to it
         if session["lesson"] is not None:
@@ -315,76 +219,10 @@ class WocconAssistant:
         session["history"].append({"role": "user", "content": text})
         session["history"].append({"role": "assistant", "content": answer})
         
-        # 7️⃣ Update topic tracking
-        current_topic = self._determine_current_topic(lower, answer)
-        if current_topic:
-            # Add to topic sequence
-            session["topic_sequence"].append(current_topic)
-            # Keep only the last 5 topics
-            if len(session["topic_sequence"]) > 5:
-                session["topic_sequence"] = session["topic_sequence"][-5:]
-                
-        # 8️⃣ Determine if we should offer a lesson based on the context
-        should_offer_lesson = (
-            not session["context"].get("suppress_lesson_offers", False) and
-            session["question_count"] >= 2 and
-            not self._is_help_request(lower) and
-            not session["direct_lesson_request"]  # Don't offer if they just explicitly declined
-        )
-        
-        # Check what kind of topic they're asking about to offer the right lesson
-        lesson_type = None
-        if should_offer_lesson:
-            # Look at recent topics for patterns
-            recent_topics = session["topic_sequence"][-3:] if len(session["topic_sequence"]) >= 3 else session["topic_sequence"]
-            
-            # If they're consistently asking about one topic, offer that lesson type
-            if recent_topics and recent_topics.count("vocab") >= 2:
-                lesson_type = "vocab"
-            elif recent_topics and recent_topics.count("grammar") >= 2:
-                lesson_type = "grammar"
-            elif "grammar" in lower or any(term in lower for term in ["suffix", "prefix", "conjugation", "declension", "morphology"]):
-                # Direct grammar topic in current question
-                lesson_type = "grammar"
-            elif self._is_about_grammar(lower, answer):
-                lesson_type = "grammar"
-            elif self._is_about_vocabulary(lower, answer):
-                lesson_type = "vocab"
-            else:
-                # If we can't determine which type is most relevant, we won't offer
-                should_offer_lesson = False
-        
-        # If we should offer a lesson, append the offer to our answer
-        if should_offer_lesson and lesson_type:
-            lesson_name = "vocabulary" if lesson_type == "vocab" else "grammar"
-            
-            # Set up pending action for next message
-            session["pending_action"] = "confirm_lesson_start"
-            session["context"]["lesson_type"] = lesson_type
-            
-            # Add the offer to our response
-            answer += f"\n\nWould you like to start a {lesson_name} lesson? This will be an interactive quiz to help you learn Woccon {lesson_name}.\n\nSay 'yes' to begin, or 'no' if you'd prefer to just ask questions about Woccon."
+        # 7️⃣ No automatic lesson offers - lessons only start when explicitly requested
         
         return answer
     
-    def _determine_current_topic(self, query: str, answer: str) -> Optional[str]:
-        """Analyze the query and answer to determine the current topic of conversation."""
-        combined_text = (query + " " + answer).lower()
-        
-        # Check for vocabulary focus
-        if any(term in combined_text for term in ["vocabulary", "dictionary", "word", "lexicon", "meaning", "translate"]):
-            return "vocab"
-            
-        # Check for grammar focus
-        if any(term in combined_text for term in ["grammar", "suffix", "prefix", "conjugate", "syntax", "structure"]):
-            return "grammar"
-            
-        # Check for phonology focus
-        if any(term in combined_text for term in ["phonology", "pronunciation", "sound", "syllable", "vowel", "consonant"]):
-            return "phonology"
-            
-        # Default to None if we can't determine
-        return None
     
     def _check_direct_lesson_request(self, text: str) -> Optional[Dict]:
         """
@@ -454,40 +292,6 @@ class WocconAssistant:
                 
         return None
         
-    def _is_about_vocabulary(self, query: str, answer: str) -> bool:
-        """Determine if the conversation is focused on vocabulary."""
-        vocab_indicators = [
-            r"\b(word|words|vocabulary|lexicon|lexeme|term|expression)\b",
-            r"\b(meaning|definition|translate|translation)\b",
-            r"\bhow (?:do|would|to) say\b",
-            r"\bwhat (?:does|do|is|are) .+ mean\b",
-        ]
-        
-        # Check both query and answer for indicators
-        combined_text = (query + " " + answer).lower()
-        return any(re.search(pattern, combined_text) for pattern in vocab_indicators)
-    
-    def _is_about_grammar(self, query: str, answer: str) -> bool:
-        """Determine if the conversation is focused on grammar, with enhanced patterns."""
-        grammar_indicators = [
-            # Original patterns
-            r"\b(grammar|syntax|structure|rule|pattern|form)\b",
-            r"\b(suffix|prefix|affix|infix|morpheme)\b",
-            r"\b(conjugate|conjugation|decline|declension)\b", 
-            r"\b(modify|modification|change|transform)\b",
-            r"\b(word order|case|tense|aspect|mood|voice)\b",
-            
-            # New patterns based on updated linguistic knowledge
-            r"\b(reduplication|intensity|frequentive)\b",
-            r"\b(participial|imperative|interrogative)\b",
-            r"\b(possession|possessive|inalienable|alienable)\b",
-            r"\b(pronominal|subject|object|marking)\b",
-            r"\b(independent mode|indicative mode)\b"
-        ]
-        
-        # Check both query and answer for indicators
-        combined_text = (query + " " + answer).lower()
-        return any(re.search(pattern, combined_text) for pattern in grammar_indicators)
     
     def _is_continue_request(self, text: str) -> bool:
         """Check if user wants to continue a previous lesson."""

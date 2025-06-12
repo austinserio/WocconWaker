@@ -472,23 +472,18 @@ class MessengerIntegration:
         quick_replies = []
         should_use_quick_replies = False
         
-        # Check if this is a lesson offer
-        if any(phrase in response.lower() for phrase in ["vocabulary lesson", "grammar lesson", "start a lesson"]):
+        # Check if this is an explicit lesson offer (only when user is asked directly)
+        if any(phrase in response.lower() for phrase in ["say 'yes' to begin", "would you like to start a", "start a lesson?"]):
             quick_replies = [
                 {
                     "content_type": "text",
-                    "title": "Start Vocab Lesson",
-                    "payload": "VOCAB_LESSON"
-                },
-                {
-                    "content_type": "text",
-                    "title": "Start Grammar Lesson",
-                    "payload": "GRAMMAR_LESSON"
+                    "title": "Yes",
+                    "payload": "YES"
                 },
                 {
                     "content_type": "text",
                     "title": "No Thanks",
-                    "payload": "NO_LESSON"
+                    "payload": "NO"
                 }
             ]
             should_use_quick_replies = True

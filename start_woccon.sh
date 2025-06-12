@@ -1,41 +1,49 @@
 #!/bin/bash
 
-# Exit on error
-set -e
+LOG_FILE="/workspace/wocconwaker/wocconwaker.log"
+REPO_DIR="/workspace/wocconwaker/WocconWaker"
+mkdir -p "$REPO_DIR"
+echo "$(date): Starting WocconWaker setup" >> "$LOG_FILE"
 
-# Start Ollama as a background service
-echo "Starting Ollama service..."
-nohup ollama serve > ollama.log 2>&1 &
+# Install necessary tools
+apt-get update && apt-get install -y tmux git curl >> "$LOG_FILE" 2>&1
 
-# Wait for Ollama to be ready
-echo "Waiting for Ollama to be available..."
-MAX_RETRIES=30
-count=0
-while ! curl -s http://localhost:11434/api/version &>/dev/null; do
-    sleep 2
-    count=$((count+1))
-    if [ $count -ge $MAX_RETRIES ]; then
-        echo "Ollama failed to start after $MAX_RETRIES retries"
-        exit 1
-    fi
-done
-echo "Ollama is ready!"
+# Clone or update the repo
+if [ ! -d "$REPO_DIR/.git" ]; then
+    echo "$(date): Cloning repository" >> "$LOG_FILE"
+    git clone -b ollama https://<REDACTED_GITHUB_PAT>@github.com/austinserio/WocconWaker.git "$REPO_DIR" >> "$LOG_FILE" 2>&1
+else
+    echo "$(date): Repository exists, pulling latest" >> "$LOG_FILE"
+    cd "$REPO_DIR"
+    git reset --hard HEAD >> "$LOG_FILE" 2>&1
+    git pull >> "$LOG_FILE" 2>&1
+fi
 
-# Set environment variables
-export WOCCON_MODE=server
-export PORT=8000
-# Add any other environment variables your app needs
-# export LLAMA_MODEL_PATH="/workspace/models/llama3-8b"
-# export T5_MODEL_PATH="/workspace/models/t5-base"
+# Install Ollama if not already installed
+if ! command -v ollama &> /dev/null; then
+    echo "$(date): Installing Ollama" >> "$LOG_FILE"
+    curl -fsSL https://ollama.com/install.sh | sh >> "$LOG_FILE" 2>&1
+fi
 
-# Start the Woccon server with nohup
-echo "Starting Woccon server..."
-cd /workspace/wocconwaker/WocconWaker  # Update this with your actual path
-nohup python app.py > woccon.log 2>&1 &
+# Install Python dependencies
+cd "$REPO_DIR"
+pip install --upgrade pip >> "$LOG_FILE" 2>&1
+pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121 >> "$LOG_FILE" 2>&1
 
-# Save PID to file for easier management later
-echo $! > woccon.pid
+# Kill existing tmux session
+if tmux has-session -t myapp 2>/dev/null; then
+    echo "$(date): Killing existing TMUX session" >> "$LOG_FILE"
+    tmux kill-session -t myapp
+fi
 
-echo "Services started successfully! Check logs at:"
-echo "- Ollama: $(pwd)/ollama.log"
-echo "- Woccon: $(pwd)/woccon.log"
+# Create a new tmux session and run everything
+echo "$(date): Starting new TMUX session" >> "$LOG_FILE"
+tmux new-session -d -s myapp "
+cd $REPO_DIR && \
+ollama serve & \
+sleep 2 && \
+ollama pull llama3:8b && \
+uvicorn app:app --host 0.0.0.0 --port 8000
+"
+
+echo "$(date): WocconWaker setup complete" >> "$LOG_FILE"
