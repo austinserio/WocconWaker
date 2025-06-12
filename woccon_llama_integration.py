@@ -226,58 +226,7 @@ class WocconAssistant:
         # Reset direct lesson request flag
         session["direct_lesson_request"] = False
         
-        # 1️⃣ Check for direct lesson requests first
-        direct_lesson_request = self._check_direct_lesson_request(lower)
-        if direct_lesson_request:
-            session["direct_lesson_request"] = True
-            lesson_type = direct_lesson_request.get("type", "unspecified")
-            
-            if lesson_type != "unspecified":
-                # Start the requested lesson type directly
-                if lesson_type == "vocab":
-                    words = random.sample(self.dictionary["lexicon"], 3)
-                    session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-                    return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-                else:  # grammar lesson
-                    items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
-                    session["lesson"] = GrammarLessonManager(items, parent=self)
-                    return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
-            else:
-                # Ask which type they want
-                session["pending_action"] = "choose_lesson_type"
-                
-                return (
-                    "📚 I'd be happy to start a lesson! What type would you like?\n\n"
-                    "• Say 'vocabulary' to learn Woccon words\n"
-                    "• Say 'grammar' to learn grammar rules and patterns"
-                )
-        
-        # 2️⃣ Handle pending actions (only for lesson type selection)
-        if session["pending_action"] == "choose_lesson_type":
-            # Check if they specified a lesson type
-            vocab_patterns = ["vocab", "vocabulary", "words", "terms", "dictionary"]
-            grammar_patterns = ["grammar", "rules", "structure", "patterns"]
-            
-            if any(pattern in lower for pattern in vocab_patterns):
-                # Start vocabulary lesson
-                words = random.sample(self.dictionary["lexicon"], 3)
-                session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-                session["pending_action"] = None
-                return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-            elif any(pattern in lower for pattern in grammar_patterns):
-                # Start grammar lesson
-                items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
-                session["lesson"] = GrammarLessonManager(items, parent=self)
-                session["pending_action"] = None
-                return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
-            else:
-                # Default to vocab if they didn't specify clearly
-                words = random.sample(self.dictionary["lexicon"], 3)
-                session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-                session["pending_action"] = None
-                return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-
-        # 3️⃣ If a lesson is in progress, delegate straight to it
+        # 1️⃣ If a lesson is in progress, delegate straight to it
         if session["lesson"] is not None:
             resp, done = session["lesson"].handle(text)
             
@@ -290,50 +239,7 @@ class WocconAssistant:
             
             return resp
 
-        # 4️⃣ Handle continuation of previous lessons
-        if session["last_lesson_state"] and self._is_continue_request(lower):
-            lesson_state = session["last_lesson_state"]
-            
-            if lesson_state.get("type") == "vocab":
-                # Resume vocabulary lesson
-                words = lesson_state.get("words", [])
-                if words:
-                    lesson = LessonManager(words, parent=self, mode="vocab")
-                    # Restore state
-                    lesson.i = lesson_state.get("index", 0)
-                    lesson.score = lesson_state.get("score", 0)
-                    lesson.streak = lesson_state.get("streak", 0)
-                    lesson.stage = lesson_state.get("stage", "prompt")
-                    lesson.mode = lesson_state.get("mode", "eng_to_woc")
-                    
-                    session["lesson"] = lesson
-                    session["last_lesson_state"] = None  # Clear the saved state
-                    
-                    return f"📚 Resuming your vocabulary lesson from where you left off!\n\n{lesson.prompt()}"
-            
-            elif lesson_state.get("type") == "grammar":
-                # Grammar lessons are harder to resume exactly, so we'll just start a new one
-                items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
-                lesson = GrammarLessonManager(items, parent=self)
-                
-                session["lesson"] = lesson
-                session["last_lesson_state"] = None  # Clear the saved state
-                
-                return f"📚 Starting a new grammar lesson!\n\n{lesson.prompt()}"
-
-        # 5️⃣ Additional check for explicit lesson requests that might not have been caught
-        # This is the added code to handle direct requests like "I'd like a vocab lesson please!"
-        if re.search(r"\b(like|want|start|begin|do|give me|teach me)\b.+\b(vocab|vocabulary|lesson)\b", lower):
-            words = random.sample(self.dictionary["lexicon"], 3)
-            session["lesson"] = LessonManager(words, parent=self, mode="vocab")
-            return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
-        
-        if re.search(r"\b(like|want|start|begin|do|give me|teach me)\b.+\b(grammar|rules|lesson)\b", lower):
-            items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
-            session["lesson"] = GrammarLessonManager(items, parent=self)
-            return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
-
-        # 6️⃣ Process the query using RAG-first approach
+        # 2️⃣ Process all queries with LLM-driven intent detection
         retrieved, has_strong_match = self._retrieve(text)
         log.info(f"[RAG] Query: '{text}' → Retrieved {len(retrieved)} documents, strong_match: {has_strong_match}")
         
@@ -350,6 +256,22 @@ class WocconAssistant:
             
             # Only verify for word hallucination if LLM response claims specific Woccon words
             answer = self._verify_word_claims_only(raw)
+            
+            # Check if LLM detected a lesson request
+            if answer.startswith("LESSON_START:"):
+                lesson_type = answer.split(":")[1].strip()
+                if lesson_type == "vocab":
+                    words = random.sample(self.dictionary["lexicon"], 3)
+                    session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+                    return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
+                elif lesson_type == "grammar":
+                    items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
+                    session["lesson"] = GrammarLessonManager(items, parent=self)
+                    return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
+                else:
+                    # Remove the lesson marker and continue with normal response
+                    answer = answer.replace("LESSON_START:" + lesson_type, "").strip()
+                    
         else:
             # No documents found, generate contextual response
             answer = self._generate_contextual_general_response(text, session["history"])
@@ -358,90 +280,9 @@ class WocconAssistant:
         session["history"].append({"role": "user", "content": text})
         session["history"].append({"role": "assistant", "content": answer})
         
-        # 7️⃣ No automatic lesson offers - lessons only start when explicitly requested
-        
         return answer
     
     
-    def _check_direct_lesson_request(self, text: str) -> Optional[Dict]:
-        """
-        Improved detection of direct lesson requests with clearer differentiation between
-        grammar and vocabulary lessons. Now captures more natural language patterns.
-        """
-        text = text.lower().strip()
-        
-        # Very explicit grammar lesson requests - high confidence
-        grammar_patterns = [
-            r"^\s*grammar lesson\s*\??$",  # Just "grammar lesson" or "grammar lesson?"
-            r"\b(start|begin|do|give me) (?:a )?grammar lesson\b",
-            r"\bcan you (?:do|teach|give) (?:a )?grammar lesson\b",
-            r"^\s*teach me grammar\s*$",  # Exact match for "teach me grammar"
-            r"^\s*grammar\s*\?$",  # Just "grammar?"
-        ]
-        
-        if any(re.search(pattern, text) for pattern in grammar_patterns):
-            return {"type": "grammar", "confidence": "high"}
-        
-        # Very explicit vocabulary lesson requests - high confidence
-        vocab_patterns = [
-            r"^\s*vocab(?:ulary)? lesson\s*\??$",  # Just "vocab lesson" or "vocabulary lesson?"
-            r"\b(start|begin|do|give me) (?:a )?vocab(?:ulary) lesson\b",
-            r"\bcan you (?:do|teach|give) (?:a )?vocab(?:ulary) lesson\b",
-            r"^\s*teach me vocab(?:ulary)\s*$",  # Exact match for "teach me vocabulary"
-            r"^\s*words\s*\?$",  # Just "words?"
-        ]
-        
-        if any(re.search(pattern, text) for pattern in vocab_patterns):
-            return {"type": "vocab", "confidence": "high"}
-        
-        # Less explicit but still pretty clear grammar requests
-        grammar_medium_patterns = [
-            r"\b(?:teach|show|learn) (?:me |us )?(?:about )?grammar\b",
-            r"\bgrammar (?:help|practice|exercises|tutorial)\b",
-            r"\b(?:i want to|let's|i'd like to) learn grammar\b",
-        ]
-        
-        if any(re.search(pattern, text) for pattern in grammar_medium_patterns):
-            return {"type": "grammar", "confidence": "medium"}
-        
-        # Less explicit but still pretty clear vocabulary requests
-        vocab_medium_patterns = [
-            r"\b(?:teach|show|learn) (?:me |us )?(?:about )?vocab(?:ulary)?\b",
-            r"\bvocab(?:ulary) (?:help|practice|exercises|tutorial)\b",
-            r"\b(?:i want to|let's|i'd like to) learn vocab(?:ulary)\b",
-            r"\blearn (?:some |a few )?words\b",
-            # Added more natural language patterns
-            r"\bcould you (?:teach|help with|show me) (?:some )?vocab(?:ulary)?\b",
-            r"\bi'?d like (?:to learn|a|some) vocab(?:ulary)?\b",
-            r"\bi'?d like (?:a )?vocab(?:ulary)? lesson\b",
-            r"\bwant (?:to learn|a|some) vocab(?:ulary)?\b",
-            r"\b(?:can|could) (?:i|we) (?:have|do|get) (?:a )?vocab(?:ulary)?\b",
-            r"\b(?:please|pls) (?:teach|show) (?:me|us) (?:some )?vocab(?:ulary)?\b",
-        ]
-        
-        if any(re.search(pattern, text) for pattern in vocab_medium_patterns):
-            return {"type": "vocab", "confidence": "medium"}
-        
-        # Very general lesson requests
-        if (re.search(r"\b(give|start|begin|teach) (?:a |me )?lesson\b", text) or 
-            re.search(r"\bcan you (?:do|teach|give) (?:a )?lesson\b", text) or
-            re.search(r"^\s*lesson\s*\??$", text) or  # Just "lesson" or "lesson?"
-            re.search(r"\bi'?d like (?:a |to have a )?lesson\b", text)):  # "I'd like a lesson"
-            return {"type": "unspecified", "confidence": "medium"}
-                
-        return None
-        
-    
-    def _is_continue_request(self, text: str) -> bool:
-        """Check if user wants to continue a previous lesson."""
-        continue_patterns = [
-            r"\b(continue|resume|go back to|pickup|pick up|get back to) (?:the |my |our )?(lesson|learning|studies|practice)\b",
-            r"\bwhere (?:was i|were we|did we leave off)\b",
-            r"\bcontinue where (?:i|we) left off\b",
-            r"\bpick up from where (?:i|we) (?:were|left off)\b",
-        ]
-        
-        return any(re.search(pattern, text) for pattern in continue_patterns)
     
     def _is_word_or_translation_request(self, text: str) -> bool:
         """Check if user is asking for a specific word or translation (not general language features)."""
@@ -672,9 +513,18 @@ class WocconAssistant:
                 "## RESPONSE GUIDELINES\n"
                 "- For educational queries (grammar, morphology, phonology): Provide comprehensive information from documents\n"
                 "- For specific word requests: Only provide words that exist in the documented vocabulary\n"
+                "- For lesson start requests: Begin response with 'LESSON_START:vocab' or 'LESSON_START:grammar' when user explicitly wants interactive practice\n"
+                "- For general knowledge questions: Provide educational information, don't start lessons automatically\n"
                 "- If users want 'comprehensive' or 'detailed' info: Give exhaustive responses using all relevant documented data\n"
                 "- If scope unclear: Provide moderate detail and offer to expand with 'Ask for a comprehensive explanation if you'd like more detail'\n"
-                "- Use clear structure with numbered points, categories, and examples from the documents\n\n"
+                "- Use clear structure with numbered points, categories, and examples from the documents\n"
+                "- Be conversational and responsive to the user's actual intent\n\n"
+                
+                "## LESSON DETECTION\n"
+                "Only start lessons when users explicitly request interactive practice/testing, such as:\n"
+                "- 'Start a lesson' / 'Give me a lesson' / 'Teach me through practice'\n"
+                "- 'Can you quiz me?' / 'Test my knowledge'\n"
+                "- NOT for: 'What do you know about grammar?' / 'Tell me about vocabulary' (these are educational questions)\n\n"
                 
                 "## WHAT TO INCLUDE IN EDUCATIONAL RESPONSES\n"
                 "- All relevant patterns, rules, and examples from the documents\n"
