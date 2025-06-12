@@ -44,7 +44,7 @@ class WocconAssistant:
             "top_p": 0.9,
             "repeat_penalty": 1.1,
             "seed": 42,
-            "num_predict": 200,
+            "num_predict": 1000,  # Increased for comprehensive responses
             "stop": ["User:", "Human:", "Q:", "Question:"],
             "frequency_penalty": 0.2,
             "presence_penalty": 0.1
@@ -128,15 +128,15 @@ class WocconAssistant:
             base_params.update({
                 "temperature": 0.5,
                 "top_p": 0.8,
-                "num_predict": 120,
+                "num_predict": 400,  # Increased for better explanations
                 "stop": ["User:", "Human:", "However,", "But ", "It's possible", "Maybe", "Perhaps"]
             })
         elif response_type == "documented":
-            # For documented word responses - very conservative
+            # For documented content responses - allow comprehensive answers
             base_params.update({
                 "temperature": 0.2,
                 "top_p": 0.85,
-                "num_predict": 100,
+                "num_predict": 1200,  # Increased for comprehensive educational content
                 "repeat_penalty": 1.0  # Less penalty for factual repetition
             })
         elif response_type == "general":
@@ -144,7 +144,7 @@ class WocconAssistant:
             base_params.update({
                 "temperature": 0.6,
                 "top_p": 0.9,
-                "num_predict": 150
+                "num_predict": 800  # Increased for educational responses
             })
             
         return base_params
@@ -158,7 +158,7 @@ class WocconAssistant:
         return {
             "model_config": {
                 "num_ctx": 4096,  # Context window
-                "num_predict": 250,  # Max prediction tokens
+                "num_predict": 1200,  # Increased max prediction tokens for comprehensive responses
                 "temperature": 0.3,  # Conservative for factual responses
                 "top_p": 0.9,
                 "top_k": 40,
