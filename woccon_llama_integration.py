@@ -386,10 +386,14 @@ class WocconAssistant:
         system_prompt = (
             "You are a helpful assistant for the documented Woccon language. "
             "The user asked about a word that is NOT in the documented vocabulary. "
-            "Respond conversationally and contextually to their specific request. "
-            "Acknowledge what they asked for specifically, explain that it's not in John Lawson's 1709 word list of 143 words, "
-            "and offer helpful alternatives like exploring related documented words or learning about Woccon patterns. "
-            "Be conversational and acknowledge the context of their question."
+            "CRITICAL RULES - NEVER use these words or phrases:\n"
+            "- might, could, possibly, likely, probably, perhaps, maybe\n"
+            "- it's possible, may be, would be, could be\n"
+            "- native to, region where, geographic, cultural reasons\n"
+            "- suggests, indicates, implies, connection, related\n\n"
+            "ONLY say: The word is not in John Lawson's 1709 word list. Offer to help with documented words.\n"
+            "Example good response: 'Unfortunately, [word] is not in John Lawson's 1709 word list of 143 Woccon words. I can help you explore what IS documented instead.'\n"
+            "Be helpful but stick to this simple fact-based approach."
         )
         
         # Include recent history for context
@@ -406,7 +410,9 @@ class WocconAssistant:
                 messages=messages,
                 options={"temperature": 0.7}  # Slightly higher temperature for more natural responses
             )["message"]["content"]
-            return raw
+            # Apply strict verification to catch any speculation
+            verified = self._strict_verify(raw, False, True)
+            return verified
         except Exception as e:
             log.error(f"Error generating contextual response: {e}")
             # Fallback to static response
@@ -417,10 +423,11 @@ class WocconAssistant:
         system_prompt = (
             "You are a helpful assistant for the documented Woccon language. "
             "The user asked a question that doesn't match any specific documented content. "
+            "CRITICAL: Do NOT speculate, guess, or make up information. Stick to documented facts only. "
             "Respond conversationally to their query, acknowledging what they asked about. "
             "Explain that you have access to John Lawson's 1709 word list of 143 Woccon words and related linguistic information. "
-            "Offer specific ways you can help them learn about Woccon language and culture. "
-            "Be helpful and contextual in your response."
+            "Offer specific ways you can help them learn about what IS actually documented in the Woccon language. "
+            "Be helpful and contextual but never speculative."
         )
         
         # Include recent history for context
@@ -437,7 +444,9 @@ class WocconAssistant:
                 messages=messages,
                 options={"temperature": 0.7}
             )["message"]["content"]
-            return raw
+            # Apply strict verification to catch any speculation
+            verified = self._strict_verify(raw, False, False)
+            return verified
         except Exception as e:
             log.error(f"Error generating contextual response: {e}")
             # Fallback to static response
@@ -519,22 +528,27 @@ class WocconAssistant:
             system = (
                 "You are a helpful assistant for the documented Woccon language. IMPORTANT RULES:\n"
                 "1. ONLY use information from the provided documents below\n"
-                "2. NEVER invent or guess Woccon words that aren't in the documents\n"
-                "3. If asked about words not in the documents, clearly state they aren't documented\n"
-                "4. When discussing grammar, only reference patterns visible in the documented examples\n"
-                "5. Be helpful and educational, but stay strictly within documented facts\n\n"
+                "2. NEVER invent, guess, or speculate about Woccon words that aren't in the documents\n"
+                "3. NEVER make connections between words unless explicitly shown in the documents\n"
+                "4. NEVER speculate about geographic, cultural, or linguistic reasons for missing words\n"
+                "5. If asked about words not in the documents, simply state they aren't documented\n"
+                "6. When discussing grammar, only reference patterns explicitly visible in the documented examples\n"
+                "7. Do NOT use words like 'might', 'could be', 'possibly', 'likely', 'probably' when discussing Woccon\n"
+                "8. Be helpful and educational, but stay strictly within documented facts\n\n"
                 "DOCUMENTED WOCCON INFORMATION:\n"
                 f"{doc_text}\n\n"
-                "Answer based ONLY on the information above. If something isn't documented, say so clearly."
+                "Answer based ONLY on the information above. If something isn't documented, say so clearly without speculation."
             )
         else:
             system = (
                 "You are a helpful assistant for the Woccon language. IMPORTANT:\n"
                 "- You have access to 143 documented Woccon words from John Lawson's 1709 word list\n"
-                "- NEVER invent or guess words that aren't documented\n"
-                "- If users ask about undocumented words, clearly explain this limitation\n"
-                "- Focus on what IS documented: vocabulary patterns, cultural context, and language history\n"
-                "- Encourage exploration of the actual documented vocabulary and grammar patterns"
+                "- NEVER invent, guess, or speculate about words that aren't documented\n"
+                "- NEVER make up connections between words or linguistic explanations\n"
+                "- Do NOT use words like 'might', 'could be', 'possibly', 'likely', 'probably'\n"
+                "- If users ask about undocumented words, simply explain they aren't in the documented list\n"
+                "- Focus on what IS actually documented: vocabulary, cultural context, and language history\n"
+                "- Encourage exploration of the actual documented vocabulary without speculation"
             )
 
         # tail of history + new user query
@@ -607,6 +621,29 @@ class WocconAssistant:
                         f"I can help you explore what words are actually documented, or provide information about "
                         f"Woccon grammar patterns and cultural context instead."
                     )
+        
+        # Check for speculation words and phrases
+        speculation_patterns = [
+            r"\b(might|could|possibly|likely|probably|perhaps|maybe|it's possible|may have|would have)\b",
+            r"\b(if we were to|if they had|it's unlikely|it's likely)\b",
+            r"\b(this suggests|this indicates|this implies)\b",
+            r"\b(native to|not native to|region where.*lived)\b",
+            r"\b(phonological process|nasalization.*corresponds)\b"
+        ]
+        
+        speculation_found = False
+        for pattern in speculation_patterns:
+            if re.search(pattern, text, re.I):
+                speculation_found = True
+                break
+        
+        if speculation_found:
+            return (
+                f"I don't have documented information about that specific word in John Lawson's 1709 Woccon word list. "
+                f"The documented vocabulary contains 143 attested words. "
+                f"I can help you explore what words are actually documented, or provide information about "
+                f"documented Woccon grammar patterns and cultural context instead."
+            )
         
         # Check for claims about grammar rules or language features not in the rules
         grammar_claims = re.finditer(
