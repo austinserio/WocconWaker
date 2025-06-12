@@ -257,10 +257,20 @@ class WocconAssistant:
             # Only verify for word hallucination if LLM response claims specific Woccon words
             answer = self._verify_word_claims_only(raw)
             
-            # Check if LLM detected a lesson request
-            if answer.startswith("LESSON_START:"):
-                original_lesson_type = answer.split(":")[1].strip()  # Keep original case for replacement
+            # Check if LLM detected a lesson request - handle markdown formatting
+            # Remove any markdown formatting from the beginning of the response
+            cleaned_answer = answer.lstrip("*").strip()
+            
+            if cleaned_answer.startswith("LESSON_START:"):
+                log.info(f"[LESSON_DETECTION] Found lesson marker in response: {cleaned_answer[:50]}...")
+                
+                # Extract lesson type, handling potential markdown formatting
+                lesson_part = cleaned_answer.split(":")[1].split("**")[0].strip()  # Handle **LESSON_START:GRAMMAR**
+                original_lesson_type = lesson_part  # Keep original case for replacement
                 lesson_type = original_lesson_type.lower()  # Convert to lowercase for case-insensitive matching
+                
+                log.info(f"[LESSON_DETECTION] Extracted lesson type: '{lesson_type}'")
+                
                 if lesson_type == "vocab":
                     words = random.sample(self.dictionary["lexicon"], 3)
                     session["lesson"] = LessonManager(words, parent=self, mode="vocab")
@@ -270,6 +280,7 @@ class WocconAssistant:
                     session["lesson"] = GrammarLessonManager(items, parent=self)
                     return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
                 else:
+                    log.warning(f"[LESSON_DETECTION] Unknown lesson type: '{lesson_type}', falling back to normal response")
                     # Remove the lesson marker and continue with normal response
                     answer = answer.replace("LESSON_START:" + original_lesson_type, "").strip()
                     
