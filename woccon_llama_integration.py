@@ -65,6 +65,15 @@ class WocconAssistant:
             for e in self.dictionary.get("lexicon", [])
         ]
         
+        # Add critical classification information to retrieval corpus
+        classification_info = (
+            "Classification: Woccon language family is Eastern Siouan (Coastal Catawban branch) | "
+            "Closest related language: Catawba | Historical location: North Carolina coastal plain (lower Neuse River) | "
+            "NOT Algonquian, NOT Iroquoian, NOT part of Tuscarora Confederacy | "
+            "Documentation: John Lawson's 1709 word list with 143 attested words"
+        )
+        self.chunks.insert(0, classification_info)  # Insert at beginning for high priority
+        
         # Add grammar rules and patterns to retrieval corpus from rules.json
         if "morphology" in self.rules and "affixes" in self.rules["morphology"]:
             # Add suffixes
@@ -513,6 +522,19 @@ class WocconAssistant:
                 "## YOUR EXPERTISE\n"
                 "You have access to John Lawson's complete 1709 documentation of the Woccon language - the only historical record of this Eastern Siouan language.\n\n"
                 
+                "## CRITICAL CLASSIFICATION INFORMATION\n"
+                "WOCCON LANGUAGE CLASSIFICATION (this is documented fact, not speculation):\n"
+                "- Language Family: Eastern Siouan (Coastal Catawban branch)\n"
+                "- Closest Related Language: Catawba (part of same Coastal Catawban group)\n"
+                "- NOT Algonquian, NOT Iroquoian, NOT part of Tuscarora Confederacy\n"
+                "- Historical Location: North Carolina coastal plain (lower Neuse River)\n"
+                "- Documentation: John Lawson's 1709 word list (143 words)\n\n"
+                
+                "NEVER classify Woccon as:\n"
+                "- Eastern Algonquian (incorrect)\n"
+                "- Part of Tuscarora Confederacy (incorrect)\n"
+                "- Any family other than Eastern Siouan\n\n"
+                
                 "## CORE PRINCIPLES\n"
                 "- EDUCATIONAL PRIORITY: Your primary mission is teaching about Woccon language structure, patterns, and features\n"
                 "- COMPREHENSIVE RESPONSES: When users ask for overviews, summaries, or comprehensive explanations, provide detailed information\n"
@@ -584,6 +606,19 @@ class WocconAssistant:
                 "- Cultural and historical context of the Woccon people\n"
                 "- Grammar rules, morphology, and phonological information from scholarly analysis\n\n"
                 
+                "## CRITICAL CLASSIFICATION INFORMATION\n"
+                "WOCCON LANGUAGE CLASSIFICATION (this is documented fact, not speculation):\n"
+                "- Language Family: Eastern Siouan (Coastal Catawban branch)\n"
+                "- Closest Related Language: Catawba (part of same Coastal Catawban group)\n"
+                "- NOT Algonquian, NOT Iroquoian, NOT part of Tuscarora Confederacy\n"
+                "- Historical Location: North Carolina coastal plain (lower Neuse River)\n"
+                "- Documentation: John Lawson's 1709 word list (143 words)\n\n"
+                
+                "NEVER classify Woccon as:\n"
+                "- Eastern Algonquian (incorrect)\n"
+                "- Part of Tuscarora Confederacy (incorrect)\n"
+                "- Any family other than Eastern Siouan\n\n"
+                
                 "## EDUCATIONAL MISSION\n"
                 "- Provide comprehensive educational responses about documented language features\n"
                 "- Determine appropriate scope based on user request (short/detailed/comprehensive)\n"
@@ -612,7 +647,12 @@ class WocconAssistant:
         """
         Verify only that the response doesn't hallucinate specific Woccon words.
         Allow all educational content about documented language features.
+        Also verify correct language classification.
         """
+        # First check for classification hallucinations
+        text = self._verify_classification(text)
+        
+        # Then check for word hallucinations
         # Skip verification for safe response types
         if any(marker in text.lower() for marker in [
             "i don't know", 
@@ -673,10 +713,42 @@ class WocconAssistant:
         
         return text
 
+    def _verify_classification(self, text: str) -> str:
+        """
+        Verify that the response doesn't contain classification hallucinations.
+        """
+        # Check for incorrect classification patterns
+        incorrect_classifications = [
+            (r'\b(?:woccon|the woccon language).{0,50}?\b(?:eastern\s+)?algonquian\b', 
+             "Woccon is Eastern Siouan, not Algonquian"),
+            (r'\b(?:woccon|the woccon language).{0,50}?\btuscarora\s+confederacy\b', 
+             "Woccon was not part of the Tuscarora Confederacy"),
+            (r'\bwoccon.{0,50}?\biroquoian\b', 
+             "Woccon is Eastern Siouan, not Iroquoian"),
+            (r'\bwoccon.{0,50}?\bmuskogean\b', 
+             "Woccon is Eastern Siouan, not Muskogean"),
+            (r'\bwoccon.{0,50}?\balgic\b', 
+             "Woccon is Eastern Siouan, not Algic"),
+        ]
+        
+        for pattern, correction in incorrect_classifications:
+            if re.search(pattern, text, re.I):
+                return (
+                    f"I need to correct that classification. {correction}. "
+                    f"Woccon belongs to the Eastern Siouan language family and is most closely related to Catawba "
+                    f"as part of the Coastal Catawban branch. This is documented in John Lawson's 1709 records "
+                    f"from the North Carolina coastal plain."
+                )
+        
+        return text
+    
     def _strict_verify(self, text: str, has_strong_match: bool, is_word_request: bool) -> str:
         """
         Strict verification that prevents hallucination of Woccon words and language content.
+        Also verifies correct classification.
         """
+        # First check for classification hallucinations
+        text = self._verify_classification(text)
         # Skip verification for certain safe response types
         if any(marker in text.lower() for marker in [
             "i don't know", 
