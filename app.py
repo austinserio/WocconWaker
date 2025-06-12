@@ -223,7 +223,7 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
     
     # Show typing indicator while processing (configurable)
     typing_indicator_active = False
-    use_typing_indicators = os.environ.get('ENABLE_TYPING_INDICATORS', 'true').lower() == 'true'
+    use_typing_indicators = os.environ.get('ENABLE_TYPING_INDICATORS', 'false').lower() == 'true'
     
     if use_typing_indicators:
         typing_response = messenger.send_typing_indicator(user_id, True)
@@ -231,6 +231,9 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
             error_type = typing_response.get('error')
             if error_type == 'messaging_policy_violation':
                 print(f"Info: Typing indicator disabled for {user_id} - Facebook policy restriction")
+            elif error_type == 'typing_indicators_disabled_for_user':
+                # Silent skip - we already know this user can't receive typing indicators
+                pass
             else:
                 print(f"Warning: Could not send typing indicator: {typing_response}")
         else:
@@ -271,10 +274,20 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
                 "• Learn about Woccon grammar and language structure\n"
                 "• Discover the history and culture of the Woccon people\n"
                 "• Get help with pronunciation and language patterns\n\n"
-                "If you'd like interactive practice, you can also ask for a 'vocabulary lesson' or 'grammar lesson'."
+                "If you'd like interactive practice, you can also ask for a 'vocabulary lesson' or 'grammar lesson'.\n\n"
+                "**Admin commands:** 'reset typing' to re-enable typing indicators"
             )
             
             messenger.send_message(user_id, help_message)
+            return
+            
+        # Admin command to reset typing indicator cache
+        if text.lower() == "reset typing":
+            if user_id in messenger.typing_indicator_failed_users:
+                messenger.typing_indicator_failed_users.remove(user_id)
+                messenger.send_message(user_id, "✅ Typing indicators reset for your account. They will be retried on next message.")
+            else:
+                messenger.send_message(user_id, "ℹ️ Typing indicators were not disabled for your account.")
             return
             
         # Process the message with WocconAssistant

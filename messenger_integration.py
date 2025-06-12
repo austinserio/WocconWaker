@@ -25,6 +25,9 @@ class MessengerIntegration:
         self.api_url = "https://graph.facebook.com/v18.0/me/messages"
         self.profile_url = "https://graph.facebook.com/v18.0/me/messenger_profile"
         
+        # Cache for failed typing indicator recipients to avoid spamming
+        self.typing_indicator_failed_users = set()
+        
     def verify_webhook(self, mode: str, token: str) -> bool:
         """Verify the webhook subscription."""
         return mode == 'subscribe' and token == self.verify_token
@@ -161,6 +164,10 @@ class MessengerIntegration:
             log.warning("[TypingIndicator] PAGE_ACCESS_TOKEN is not set")
             return {"error": "PAGE_ACCESS_TOKEN not configured"}
             
+        # Skip if this user has already failed typing indicators
+        if recipient_id in self.typing_indicator_failed_users:
+            return {"error": "typing_indicators_disabled_for_user", "can_retry": False}
+            
         # Use the newer API version and try different approaches
         url = "https://graph.facebook.com/v19.0/me/messages"
         params = {"access_token": self.page_access_token}
@@ -183,7 +190,9 @@ class MessengerIntegration:
                 # Check for specific error codes that indicate messaging window issues
                 error_subcode = body.get('error', {}).get('error_subcode')
                 if error_subcode == 2018048:
-                    log.warning(f"[TypingIndicator] Error 2018048 for recipient={recipient_id} - possible causes: 24h window expired, invalid recipient, or permission issue")
+                    log.warning(f"[TypingIndicator] Error 2018048 for recipient={recipient_id} - disabling typing indicators for this user")
+                    # Add user to failed list to avoid future attempts
+                    self.typing_indicator_failed_users.add(recipient_id)
                     return {"error": "messaging_policy_violation", "can_retry": False, "subcode": 2018048}
                 else:
                     log.error(
