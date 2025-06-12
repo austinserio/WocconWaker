@@ -21,7 +21,8 @@ class WocconAssistant:
                  dict_path="woccon_language/dictionary.json",
                  rules_path="woccon_language/rules.json",
                  model="llama3:8b",
-                 ctx_turns=6):
+                 ctx_turns=6,
+                 custom_model_params=None):
         # Core data & model
         self.woccon = WocconT5()
         log.info("About to load JSON; dict_path=%r   rules_path=%r", dict_path, rules_path)
@@ -36,6 +37,24 @@ class WocconAssistant:
         # Set the Ollama API URL dynamically
         self.url = os.getenv("OLLAMA_URL", "http://localhost:11434/v1/chat")
         log.info(f"Using Ollama URL: {self.url}")
+        
+        # Enhanced model parameters for better Llama guidance
+        self.default_model_params = {
+            "temperature": 0.3,
+            "top_p": 0.9,
+            "repeat_penalty": 1.1,
+            "seed": 42,
+            "num_predict": 200,
+            "stop": ["User:", "Human:", "Q:", "Question:"],
+            "frequency_penalty": 0.2,
+            "presence_penalty": 0.1
+        }
+        
+        # Allow custom overrides
+        if custom_model_params:
+            self.default_model_params.update(custom_model_params)
+            
+        log.info(f"Model parameters: {self.default_model_params}")
 
         # Prepare retrieval corpus
         self.documented_words = {
@@ -99,6 +118,73 @@ class WocconAssistant:
 
         # Session state per user
         self.sessions: Dict[str, Dict] = {}
+    
+    def _get_contextual_params(self, response_type: str = "standard") -> Dict:
+        """Get optimized parameters for different response types."""
+        base_params = self.default_model_params.copy()
+        
+        if response_type == "not_found":
+            # For missing word responses - more conservative, less creative
+            base_params.update({
+                "temperature": 0.5,
+                "top_p": 0.8,
+                "num_predict": 120,
+                "stop": ["User:", "Human:", "However,", "But ", "It's possible", "Maybe", "Perhaps"]
+            })
+        elif response_type == "documented":
+            # For documented word responses - very conservative
+            base_params.update({
+                "temperature": 0.2,
+                "top_p": 0.85,
+                "num_predict": 100,
+                "repeat_penalty": 1.0  # Less penalty for factual repetition
+            })
+        elif response_type == "general":
+            # For general conversation - slightly more flexible
+            base_params.update({
+                "temperature": 0.6,
+                "top_p": 0.9,
+                "num_predict": 150
+            })
+            
+        return base_params
+    
+    @staticmethod
+    def configure_llama_model_system(model_name: str = "llama3:8b") -> Dict:
+        """
+        Configure system-level optimizations for Llama models.
+        This returns configuration that can be used with model deployment.
+        """
+        return {
+            "model_config": {
+                "num_ctx": 4096,  # Context window
+                "num_predict": 250,  # Max prediction tokens
+                "temperature": 0.3,  # Conservative for factual responses
+                "top_p": 0.9,
+                "top_k": 40,
+                "repeat_penalty": 1.1,
+                "tfs_z": 1.0,
+                "typical_p": 1.0,
+                "mirostat": 0,  # Disable mirostat for consistent behavior
+                "mirostat_tau": 5.0,
+                "mirostat_eta": 0.1
+            },
+            "system_message": (
+                "You are a precise, factual assistant specializing in documented historical languages. "
+                "Your responses are based strictly on verifiable historical records. "
+                "You never speculate, guess, or create information not explicitly documented. "
+                "When information is unavailable, you state this clearly and redirect to available facts."
+            ),
+            "stop_sequences": [
+                "User:", "Human:", "Q:", "Question:", 
+                "However,", "But ", "It's possible", "Maybe", "Perhaps",
+                "I think", "I believe", "In my opinion"
+            ],
+            "anti_speculation_keywords": [
+                "might", "could", "possibly", "likely", "probably", 
+                "perhaps", "maybe", "suggests", "indicates", "implies"
+            ]
+        }
     
     # also add this helper to test retrieval
     def debug_retrieve(self, query):
@@ -263,10 +349,12 @@ class WocconAssistant:
         else:
             # We have some documents, proceed with LLM generation
             messages = self._build_prompt(text, retrieved, session["history"])
+            # Use optimized parameters based on whether we have strong matches
+            response_type = "documented" if has_strong_match else "general"
             raw = ollama.chat(
                 model=self.model,
                 messages=messages,
-                options={"temperature": 0.3}
+                options=self._get_contextual_params(response_type)
             )["message"]["content"]
             answer = self._strict_verify(raw, has_strong_match, is_word_request)
         
@@ -408,7 +496,7 @@ class WocconAssistant:
             raw = ollama.chat(
                 model=self.model,
                 messages=messages,
-                options={"temperature": 0.7}  # Slightly higher temperature for more natural responses
+                options=self._get_contextual_params("not_found")
             )["message"]["content"]
             # Apply strict verification to catch any speculation
             verified = self._strict_verify(raw, False, True)
@@ -442,7 +530,7 @@ class WocconAssistant:
             raw = ollama.chat(
                 model=self.model,
                 messages=messages,
-                options={"temperature": 0.7}
+                options=self._get_contextual_params("general")
             )["message"]["content"]
             # Apply strict verification to catch any speculation
             verified = self._strict_verify(raw, False, False)
@@ -526,29 +614,53 @@ class WocconAssistant:
         if docs:
             doc_text = "\n".join(docs)
             system = (
-                "You are a helpful assistant for the documented Woccon language. IMPORTANT RULES:\n"
-                "1. ONLY use information from the provided documents below\n"
-                "2. NEVER invent, guess, or speculate about Woccon words that aren't in the documents\n"
-                "3. NEVER make connections between words unless explicitly shown in the documents\n"
-                "4. NEVER speculate about geographic, cultural, or linguistic reasons for missing words\n"
-                "5. If asked about words not in the documents, simply state they aren't documented\n"
-                "6. When discussing grammar, only reference patterns explicitly visible in the documented examples\n"
-                "7. Do NOT use words like 'might', 'could be', 'possibly', 'likely', 'probably' when discussing Woccon\n"
-                "8. Be helpful and educational, but stay strictly within documented facts\n\n"
-                "DOCUMENTED WOCCON INFORMATION:\n"
+                "You are a Woccon language expert assistant. Your role is to provide accurate, factual information about the documented Woccon language.\n\n"
+                
+                "## YOUR EXPERTISE\n"
+                "You have access to John Lawson's complete 1709 documentation of the Woccon language - the only historical record of this Eastern Siouan language.\n\n"
+                
+                "## CORE PRINCIPLES\n"
+                "- ACCURACY FIRST: Only reference information that exists in the provided documents\n"
+                "- NO SPECULATION: Never guess, assume, or create connections not explicitly stated\n"
+                "- CLEAR BOUNDARIES: If information isn't documented, state this directly\n"
+                "- EDUCATIONAL FOCUS: Help users understand what IS known about Woccon\n\n"
+                
+                "## FORBIDDEN LANGUAGE\n"
+                "NEVER use: might, could, possibly, likely, probably, perhaps, maybe, it's possible, suggests, indicates, implies\n\n"
+                
+                "## RESPONSE STYLE\n"
+                "- Be direct and confident about documented facts\n"
+                "- Use phrases like 'According to the documentation' or 'The records show'\n"
+                "- When information is missing, say 'This is not documented in Lawson's word list'\n"
+                "- Keep responses concise and focused\n"
+                "- Start responses with definitive statements when information is available\n"
+                "- Use present tense for documented facts: 'The word is' not 'The word was'\n\n"
+                
+                "## DOCUMENTED WOCCON DATA\n"
                 f"{doc_text}\n\n"
-                "Answer based ONLY on the information above. If something isn't documented, say so clearly without speculation."
+                
+                "Respond based ONLY on the data above. Be helpful but never speculate beyond what's documented."
             )
         else:
             system = (
-                "You are a helpful assistant for the Woccon language. IMPORTANT:\n"
-                "- You have access to 143 documented Woccon words from John Lawson's 1709 word list\n"
-                "- NEVER invent, guess, or speculate about words that aren't documented\n"
-                "- NEVER make up connections between words or linguistic explanations\n"
-                "- Do NOT use words like 'might', 'could be', 'possibly', 'likely', 'probably'\n"
-                "- If users ask about undocumented words, simply explain they aren't in the documented list\n"
-                "- Focus on what IS actually documented: vocabulary, cultural context, and language history\n"
-                "- Encourage exploration of the actual documented vocabulary without speculation"
+                "You are a Woccon language specialist with expertise in John Lawson's 1709 documentation.\n\n"
+                
+                "## YOUR KNOWLEDGE BASE\n"
+                "- 143 documented Woccon words from the only historical record\n"
+                "- Linguistic patterns visible in the documented vocabulary\n"
+                "- Cultural and historical context of the Woccon people\n\n"
+                
+                "## EXPERT GUIDELINES\n"
+                "- Speak with authority about documented facts\n"
+                "- Be direct: 'This word is not in the historical record'\n"
+                "- Guide users to explore documented vocabulary\n"
+                "- Never speculate or create connections not in the data\n\n"
+                
+                "## FORBIDDEN TERMS\n"
+                "Avoid: might, could, possibly, likely, probably, perhaps, maybe, suggests, indicates\n\n"
+                
+                "## YOUR MISSION\n"
+                "Help users discover the fascinating documented aspects of Woccon language while maintaining strict historical accuracy."
             )
 
         # tail of history + new user query
