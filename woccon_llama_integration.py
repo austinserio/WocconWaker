@@ -337,26 +337,22 @@ class WocconAssistant:
         retrieved, has_strong_match = self._retrieve(text)
         log.info(f"[RAG] Query: '{text}' → Retrieved {len(retrieved)} documents, strong_match: {has_strong_match}")
         
-        # Check if this is a specific word/translation request
-        is_word_request = self._is_word_or_translation_request(text)
-        
-        if is_word_request and not has_strong_match:
-            # For specific word requests without strong matches, generate contextual response
-            answer = self._generate_contextual_not_found_response(text, session["history"])
-        elif not retrieved:
-            # No documents found at all, but still generate contextual response
-            answer = self._generate_contextual_general_response(text, session["history"])
-        else:
-            # We have some documents, proceed with LLM generation
+        # Always generate response using LLM - let it determine intent and scope
+        if retrieved:
+            # We have documents, proceed with LLM generation
             messages = self._build_prompt(text, retrieved, session["history"])
-            # Use optimized parameters based on whether we have strong matches
             response_type = "documented" if has_strong_match else "general"
             raw = ollama.chat(
                 model=self.model,
                 messages=messages,
                 options=self._get_contextual_params(response_type)
             )["message"]["content"]
-            answer = self._strict_verify(raw, has_strong_match, is_word_request)
+            
+            # Only verify for word hallucination if LLM response claims specific Woccon words
+            answer = self._verify_word_claims_only(raw)
+        else:
+            # No documents found, generate contextual response
+            answer = self._generate_contextual_general_response(text, session["history"])
         
         # Update history
         session["history"].append({"role": "user", "content": text})
@@ -544,16 +540,25 @@ class WocconAssistant:
     def _generate_contextual_general_response(self, query: str, history: deque) -> str:
         """Generate contextual response using LLM when no documents found for general queries."""
         system_prompt = (
-            "You are a helpful assistant for the documented Woccon language. "
-            "The user asked a question that doesn't match any specific documented content. "
-            "IMPORTANT: If they're asking about language features (grammar, morphology, phonology, structure), "
-            "you should provide educational information based on what IS documented. "
-            "Only avoid speculation when discussing specific words that aren't documented. "
-            "CRITICAL: Do NOT speculate, guess, or make up information about undocumented words. "
-            "Respond conversationally to their query, acknowledging what they asked about. "
-            "Explain that you have access to John Lawson's 1709 word list of 143 Woccon words and related linguistic information. "
-            "Offer specific ways you can help them learn about what IS actually documented in the Woccon language. "
-            "Be helpful and educational but never speculative about specific words."
+            "You are a comprehensive Woccon language educator with access to John Lawson's 1709 documentation. "
+            "The user asked a question but no specific documents were retrieved. However, you should still provide "
+            "educational content about the Woccon language based on your knowledge of the documented materials. "
+            
+            "EDUCATIONAL APPROACH: "
+            "- If asking about language structure/features: Provide comprehensive educational information "
+            "- If asking about specific words: Clearly state if words aren't in the 143-word documented list "
+            "- Determine scope from user request (short/detailed/comprehensive) "
+            "- Focus on teaching about documented grammar, morphology, phonology, and patterns "
+            
+            "AVAILABLE KNOWLEDGE: "
+            "- 143 documented Woccon words from Lawson's word list "
+            "- Morphological patterns including roots, affixes, and word formation "
+            "- Phonological system with vowels, consonants, and sound correspondences "
+            "- Grammatical structures including inflectional morphology "
+            "- Historical and cultural context of the Woccon people "
+            
+            "Be comprehensive and educational when discussing documented language features. "
+            "Only be restrictive about claiming undocumented words exist."
         )
         
         # Include recent history for context
@@ -652,34 +657,37 @@ class WocconAssistant:
         if docs:
             doc_text = "\n".join(docs)
             system = (
-                "You are a Woccon language expert assistant. Your role is to provide accurate, factual information about the documented Woccon language.\n\n"
+                "You are a Woccon language expert assistant. Your role is to provide accurate, comprehensive educational information about the documented Woccon language.\n\n"
                 
                 "## YOUR EXPERTISE\n"
                 "You have access to John Lawson's complete 1709 documentation of the Woccon language - the only historical record of this Eastern Siouan language.\n\n"
                 
                 "## CORE PRINCIPLES\n"
-                "- ACCURACY FIRST: Only reference information that exists in the provided documents\n"
-                "- EDUCATIONAL MISSION: Help users learn about Woccon language structure, patterns, and features\n"
-                "- ANALYTICAL APPROACH: Analyze documented patterns to explain grammar, morphology, and phonology\n"
-                "- CLEAR BOUNDARIES: If specific words aren't documented, state this directly\n"
-                "- INTERACTIVE LEARNING: Encourage exploration of documented linguistic features\n"
-                "- EDUCATIONAL FREEDOM: Always answer questions about language structure, grammar, morphology, phonology, and documented patterns\n\n"
+                "- EDUCATIONAL PRIORITY: Your primary mission is teaching about Woccon language structure, patterns, and features\n"
+                "- COMPREHENSIVE RESPONSES: When users ask for overviews, summaries, or comprehensive explanations, provide detailed information\n"
+                "- INTELLIGENT SCOPE: Determine appropriate response length based on user request (short/comprehensive/exhaustive)\n"
+                "- DOCUMENTED FACTS ONLY: Base all educational content on provided documents\n"
+                "- WORD ACCURACY: Only claim specific Woccon words exist if they're in the documented vocabulary\n\n"
                 
-                "## FORBIDDEN LANGUAGE\n"
-                "NEVER use: might, could, possibly, likely, probably, perhaps, maybe, it's possible, suggests, indicates, implies\n\n"
+                "## RESPONSE GUIDELINES\n"
+                "- For educational queries (grammar, morphology, phonology): Provide comprehensive information from documents\n"
+                "- For specific word requests: Only provide words that exist in the documented vocabulary\n"
+                "- If users want 'comprehensive' or 'detailed' info: Give exhaustive responses using all relevant documented data\n"
+                "- If scope unclear: Provide moderate detail and offer to expand with 'Ask for a comprehensive explanation if you'd like more detail'\n"
+                "- Use clear structure with numbered points, categories, and examples from the documents\n\n"
                 
-                "## RESPONSE STYLE\n"
-                "- Be direct and confident about documented facts\n"
-                "- Use phrases like 'According to the documentation' or 'The records show'\n"
-                "- When information is missing, say 'This is not documented in Lawson's word list'\n"
-                "- Keep responses concise and focused\n"
-                "- Start responses with definitive statements when information is available\n"
-                "- Use present tense for documented facts: 'The word is' not 'The word was'\n\n"
+                "## WHAT TO INCLUDE IN EDUCATIONAL RESPONSES\n"
+                "- All relevant patterns, rules, and examples from the documents\n"
+                "- Morphological analysis with documented affixes, roots, and word formation\n"
+                "- Phonological information including sound systems and correspondences\n"
+                "- Grammatical structures and inflectional patterns\n"
+                "- Historical and cultural context when relevant\n"
+                "- Comparative information with related languages when documented\n\n"
                 
                 "## DOCUMENTED WOCCON DATA\n"
                 f"{doc_text}\n\n"
                 
-                "Respond based ONLY on the data above. Be helpful but never speculate beyond what's documented."
+                "Provide educational responses based on this documented data. Be comprehensive when teaching about language features."
             )
         else:
             system = (
@@ -688,20 +696,23 @@ class WocconAssistant:
                 "## YOUR KNOWLEDGE BASE\n"
                 "- 143 documented Woccon words from the only historical record\n"
                 "- Linguistic patterns visible in the documented vocabulary\n"
-                "- Cultural and historical context of the Woccon people\n\n"
+                "- Cultural and historical context of the Woccon people\n"
+                "- Grammar rules, morphology, and phonological information from scholarly analysis\n\n"
                 
-                "## EXPERT GUIDELINES\n"
-                "- Speak with authority about documented facts\n"
-                "- Be direct: 'This word is not in the historical record'\n"
-                "- Guide users to explore documented vocabulary\n"
-                "- Never speculate or create connections not in the data\n"
-                "- Always provide educational information about documented language features when asked\n\n"
+                "## EDUCATIONAL MISSION\n"
+                "- Provide comprehensive educational responses about documented language features\n"
+                "- Determine appropriate scope based on user request (short/detailed/comprehensive)\n"
+                "- Focus on teaching rather than just lookup\n"
+                "- Guide users to explore all aspects of documented Woccon language\n\n"
                 
-                "## FORBIDDEN TERMS\n"
-                "Avoid: might, could, possibly, likely, probably, perhaps, maybe, suggests, indicates\n\n"
+                "## RESPONSE APPROACH\n"
+                "- For language structure questions: Provide detailed educational content\n"
+                "- For word requests: State clearly if words aren't documented\n"
+                "- Default to moderate detail, offer comprehensive explanations when relevant\n"
+                "- Use structured responses with clear categories and examples\n\n"
                 
                 "## YOUR MISSION\n"
-                "Help users discover the fascinating documented aspects of Woccon language while maintaining strict historical accuracy."
+                "Help users learn comprehensively about the documented Woccon language structure, patterns, and features."
             )
 
         # tail of history + new user query
@@ -711,6 +722,71 @@ class WocconAssistant:
             + tail
             + [{"role": "user", "content": query}]
         )
+
+    def _verify_word_claims_only(self, text: str) -> str:
+        """
+        Verify only that the response doesn't hallucinate specific Woccon words.
+        Allow all educational content about documented language features.
+        """
+        # Skip verification for safe response types
+        if any(marker in text.lower() for marker in [
+            "i don't know", 
+            "not in the dictionary",
+            "not enough information",
+            "can't find",
+            "no information",
+            "not documented",
+            "unfortunately",
+            "isn't in",
+            "word list",
+            "lawson's"
+        ]):
+            return text
+            
+        # Look for statements that claim specific words are Woccon
+        woccon_claims = re.finditer(
+            r"(?:woccon (?:word|term) (?:for .+ )?is ['\"]([a-z\-]+)['\"]|woccon is ['\"]([a-z\-]+)['\"]|in woccon,? ['\"]([a-z\-]+)['\"]|the woccon (?:word )?['\"]([a-z\-]+)['\"])", 
+            text, re.I
+        )
+        
+        for match in woccon_claims:
+            # Get the first non-None group
+            candidate = next((g for g in match.groups() if g is not None), "").lower()
+            
+            # Skip very short words that might be particles or common words
+            if len(candidate) <= 2:
+                continue
+                
+            # Skip common English words that aren't language-specific
+            common_english = {
+                "the", "and", "for", "is", "of", "to", "in", "a", "an", "this", "that",
+                "have", "has", "had", "with", "from", "they", "them", "their", "there",
+                "where", "when", "what", "how", "why", "who", "can", "could", "would",
+                "should", "will", "are", "was", "were", "been", "being", "do", "does", "did"
+            }
+            if candidate in common_english:
+                continue
+                
+            # Check if word is in documented vocabulary
+            if candidate not in self.documented_words:
+                # Check for very close matches (within 1-2 characters)
+                close_match = False
+                for documented_word in self.documented_words:
+                    # Allow for slight spelling variations
+                    if (abs(len(candidate) - len(documented_word)) <= 2 and 
+                        (candidate in documented_word or documented_word in candidate)):
+                        close_match = True
+                        break
+                        
+                if not close_match:
+                    return (
+                        f"I don't have information about the word '{candidate}' in the documented Woccon vocabulary. "
+                        f"The documented Woccon language contains 143 attested words from John Lawson's 1709 word list. "
+                        f"I can help you explore what words are actually documented, or provide information about "
+                        f"Woccon grammar patterns and cultural context instead."
+                    )
+        
+        return text
 
     def _strict_verify(self, text: str, has_strong_match: bool, is_word_request: bool) -> str:
         """
