@@ -313,6 +313,9 @@ class GrammarLessonManager:
             r"\b(um|uh|hmm|err)\b",  # Hesitation markers
             r"\b(lol|haha)\b",  # Laughter often indicates uncertainty in this context
             r"\b(whatever|dunno|who knows|doesn't matter|don't care)\b",  # Dismissive responses
+            r"\b(not positive|not confident|not certain|not really sure)\b",  # More natural uncertainty
+            r"\b(i'm not|im not).*(sure|positive|certain|confident)\b",  # "I'm not sure/positive"
+            r"\b(kind of|kinda|maybe|probably|possibly).*(unsure|uncertain)\b",  # Hedging language
             r"\b(no idea|haven'?t a clue|give up|stumped)\b",  # Additional expressions
             r"\b(beats me|beyond me|drawing a blank|lost|clueless)\b",  # More expressions
         ]
