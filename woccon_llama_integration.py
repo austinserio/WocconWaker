@@ -248,7 +248,18 @@ class WocconAssistant:
             
             return resp
 
-        # 2️⃣ Process all queries with LLM-driven intent detection
+        # 2️⃣ Direct lesson triggers from postbacks/menu (bypass LLM)
+        if text.lower().strip() == "i'd like to start a vocabulary lesson":
+            words = random.sample(self.dictionary["lexicon"], 3)
+            session["lesson"] = LessonManager(words, parent=self, mode="vocab")
+            return "📚 Starting a vocabulary lesson!\n\n" + session["lesson"].prompt()
+        
+        if text.lower().strip() == "i'd like to start a grammar lesson":
+            items = GrammarLessonManager.build_items(self.rules, self.dictionary["lexicon"])
+            session["lesson"] = GrammarLessonManager(items, parent=self)
+            return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
+
+        # 3️⃣ Process all other queries with LLM-driven intent detection
         retrieved, has_strong_match = self._retrieve(text)
         log.info(f"[RAG] Query: '{text}' → Retrieved {len(retrieved)} documents, strong_match: {has_strong_match}")
         

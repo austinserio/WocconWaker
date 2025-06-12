@@ -418,17 +418,17 @@ class MessengerIntegration:
                     "call_to_actions": [
                         {
                             "type": "postback",
-                            "title": "Start Vocabulary Lesson",
+                            "title": "Start Vocabulary Lesson 📇",
                             "payload": "VOCAB_LESSON"
                         },
                         {
                             "type": "postback",
-                            "title": "Start Grammar Lesson",
+                            "title": "Start Grammar Lesson 📝",
                             "payload": "GRAMMAR_LESSON"
                         },
                         {
                             "type": "postback",
-                            "title": "Help",
+                            "title": "Help 🤔",
                             "payload": "HELP"
                         }
                     ]
