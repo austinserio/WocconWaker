@@ -448,10 +448,45 @@ class WocconAssistant:
         return any(re.search(pattern, text) for pattern in continue_patterns)
     
     def _is_word_or_translation_request(self, text: str) -> bool:
-        """Check if user is asking for a specific word or translation."""
+        """Check if user is asking for a specific word or translation (not general language features)."""
         text = text.lower().strip()
         
-        # Direct word/translation patterns
+        # Check for linguistic/educational queries first (these should NOT be treated as word requests)
+        educational_patterns = [
+            r"\b(morphology|phonology|grammar|syntax|linguistic|structure|pattern)s?\b",
+            r"\b(tell me about|explain|describe|overview|review|summary)\b.*(woccon|language)",
+            r"\b(how does|what is).*(grammar|structure|morphology|phonology)\b",
+            r"\b(give me|show me).*(summary|overview)\b.*(morpheme|phonology|grammar|structure)",
+            r"\bmorphemes?\b.*\b(in woccon|woccon|summary)\b",
+            r"\bphonemes?\b.*\b(in woccon|woccon|summary)\b",
+            r"\baffixes?\b.*\b(in woccon|woccon|summary)\b",
+            r"\bsuffixes?\b.*\b(in woccon|woccon|summary)\b",
+            r"\bprefixes?\b.*\b(in woccon|woccon|summary)\b",
+            r"\broots?\b.*\b(in woccon|woccon|summary)\b",
+            r"\bsyllable\b.*\b(structure|pattern)\b",
+            r"\bconsonants?\b.*\b(system|inventory)\b",
+            r"\bvowels?\b.*\b(system|inventory)\b",
+            r"\bnumber system\b",
+            r"\bword formation\b",
+            r"\blanguage features?\b",
+            r"\bgrammatical\b.*(feature|structure|pattern)",
+            r"\blinguistic\b.*(feature|analysis|pattern)",
+            r"\bphonological\b.*(process|system|rule)",
+            r"\bmorphological\b.*(analysis|system|pattern)",
+            r"\bsyntactic\b.*(structure|pattern|rule)",
+            r"\bsound\b.*(correspondence|pattern|change)",
+            r"\binflectional\b.*(morphology|system)",
+            r"\bderivational\b.*(morphology|process)",
+            r"\bcompounding\b.*(process|pattern)",
+            r"\breduplication\b.*(pattern|process)",
+            r"^\s*(morphology|phonology|grammar|syntax|structure|patterns?)\s*\??$"  # Just asking for these topics
+        ]
+        
+        # If it's an educational query, it's NOT a word request
+        if any(re.search(pattern, text) for pattern in educational_patterns):
+            return False
+        
+        # Direct word/translation patterns (for specific words only)
         word_patterns = [
             r"\bwhat.+(woccon|word|means?|translation)\b",
             r"\bhow.+(say|translate|word)\b", 
@@ -511,11 +546,14 @@ class WocconAssistant:
         system_prompt = (
             "You are a helpful assistant for the documented Woccon language. "
             "The user asked a question that doesn't match any specific documented content. "
-            "CRITICAL: Do NOT speculate, guess, or make up information. Stick to documented facts only. "
+            "IMPORTANT: If they're asking about language features (grammar, morphology, phonology, structure), "
+            "you should provide educational information based on what IS documented. "
+            "Only avoid speculation when discussing specific words that aren't documented. "
+            "CRITICAL: Do NOT speculate, guess, or make up information about undocumented words. "
             "Respond conversationally to their query, acknowledging what they asked about. "
             "Explain that you have access to John Lawson's 1709 word list of 143 Woccon words and related linguistic information. "
             "Offer specific ways you can help them learn about what IS actually documented in the Woccon language. "
-            "Be helpful and contextual but never speculative."
+            "Be helpful and educational but never speculative about specific words."
         )
         
         # Include recent history for context
@@ -621,9 +659,11 @@ class WocconAssistant:
                 
                 "## CORE PRINCIPLES\n"
                 "- ACCURACY FIRST: Only reference information that exists in the provided documents\n"
-                "- NO SPECULATION: Never guess, assume, or create connections not explicitly stated\n"
-                "- CLEAR BOUNDARIES: If information isn't documented, state this directly\n"
-                "- EDUCATIONAL FOCUS: Help users understand what IS known about Woccon\n\n"
+                "- EDUCATIONAL MISSION: Help users learn about Woccon language structure, patterns, and features\n"
+                "- ANALYTICAL APPROACH: Analyze documented patterns to explain grammar, morphology, and phonology\n"
+                "- CLEAR BOUNDARIES: If specific words aren't documented, state this directly\n"
+                "- INTERACTIVE LEARNING: Encourage exploration of documented linguistic features\n"
+                "- EDUCATIONAL FREEDOM: Always answer questions about language structure, grammar, morphology, phonology, and documented patterns\n\n"
                 
                 "## FORBIDDEN LANGUAGE\n"
                 "NEVER use: might, could, possibly, likely, probably, perhaps, maybe, it's possible, suggests, indicates, implies\n\n"
@@ -654,7 +694,8 @@ class WocconAssistant:
                 "- Speak with authority about documented facts\n"
                 "- Be direct: 'This word is not in the historical record'\n"
                 "- Guide users to explore documented vocabulary\n"
-                "- Never speculate or create connections not in the data\n\n"
+                "- Never speculate or create connections not in the data\n"
+                "- Always provide educational information about documented language features when asked\n\n"
                 
                 "## FORBIDDEN TERMS\n"
                 "Avoid: might, could, possibly, likely, probably, perhaps, maybe, suggests, indicates\n\n"
