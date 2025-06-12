@@ -221,7 +221,13 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
     """
     global assistant, messenger
     
-    print(f"Processing message: user={user_id}, text={text}, source={source}")
+    print(f"[TRACE] process_message ENTRY: user_id={user_id}, text={text}, source={source}")
+    print(f"[TRACE] user_id type: {type(user_id)}, length: {len(user_id)}")
+    print(f"[TRACE] messenger object: {type(messenger)}")
+    
+    # CRITICAL: Store original user_id to detect if it gets corrupted
+    original_user_id = str(user_id)
+    print(f"[TRACE] Stored original_user_id: {original_user_id}")
     
     # Show typing indicator while processing (configurable)
     typing_indicator_active = False
@@ -255,6 +261,13 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
                 typing_indicator_active = False
                 
             # Send welcome message
+            print(f"[TRACE] Before welcome message: user_id={user_id}")
+            
+            # CRITICAL: Check if user_id was corrupted  
+            if user_id != original_user_id:
+                print(f"🚨 [BUG DETECTED] user_id CHANGED in welcome! original={original_user_id}, current={user_id}")
+                user_id = original_user_id
+                
             welcome_message = (
                 "👋 Welcome to the Woccon Language Assistant!\n\n"
                 "I'm here to help you learn about the Woccon language and culture. "
@@ -280,6 +293,7 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
                 "**Admin commands:** 'reset typing' to re-enable typing indicators"
             )
             
+            print(f"[TRACE] Before help message: user_id={user_id}")
             messenger.send_message(user_id, help_message)
             return
             
@@ -293,8 +307,22 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
             return
             
         # Process the message with WocconAssistant
+        print(f"[TRACE] Before assistant.reply: user_id={user_id}")
+        
+        # CRITICAL: Check if user_id was corrupted before assistant call
+        if user_id != original_user_id:
+            print(f"🚨 [BUG DETECTED] user_id CHANGED before assistant! original={original_user_id}, current={user_id}")
+            user_id = original_user_id
+        
         print(f"Sending to assistant: {text}")
         response = assistant.reply(user_id, text)
+        print(f"[TRACE] After assistant.reply: user_id={user_id}")
+        
+        # CRITICAL: Check if user_id was corrupted by assistant call
+        if user_id != original_user_id:
+            print(f"🚨 [BUG DETECTED] user_id CHANGED by assistant! original={original_user_id}, current={user_id}")
+            user_id = original_user_id
+            
         print(f"Assistant response: {response}")
         
         # CRITICAL FIX: If we get here, we MUST send some response to the user
@@ -381,6 +409,14 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
                 messenger.send_typing_indicator(user_id, False)
                 typing_indicator_active = False  # Mark as turned off
             
+            print(f"[TRACE] Before final message send: user_id={user_id}")
+            
+            # CRITICAL: Check if user_id was corrupted
+            if user_id != original_user_id:
+                print(f"🚨 [BUG DETECTED] user_id CHANGED! original={original_user_id}, current={user_id}")
+                print(f"🚨 [BUG DETECTED] Using original_user_id for message send")
+                user_id = original_user_id
+            
             # IMPORTANT: Default case - send a regular text message
             # This ensures a response is always sent back to the user
             messenger.send_message(user_id, response)
@@ -391,6 +427,11 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         import traceback
         traceback.print_exc()
         
+        # CRITICAL: Check if user_id was corrupted before error message
+        if user_id != original_user_id:
+            print(f"🚨 [BUG DETECTED] user_id CHANGED in exception handler! original={original_user_id}, current={user_id}")
+            user_id = original_user_id
+            
         # Send error message to user
         error_msg = "Sorry, I encountered an error. Please try again later."
         messenger.send_message(user_id, error_msg)
