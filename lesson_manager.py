@@ -1081,6 +1081,23 @@ class LessonManager:
         
         return re.sub(r'\s+', ' ', text).strip()
     
+    def get_progress(self) -> Dict:
+        """Return the current lesson progress for serialization."""
+        current_word = None
+        if self.i < len(self.words):
+            current_word = self.words[self.i]
+            
+        return {
+            "type": "vocab",
+            "index": self.i,
+            "score": self.score,
+            "streak": self.streak,
+            "total_words": len(self.words),
+            "mode": self.mode,
+            "current_word": current_word,
+            "stage": self.stage
+        }
+
 
 
     def check_answer_with_llm(self, user_answer: str, correct_answer: str, question: str) -> Tuple[bool, float, str, bool]:
