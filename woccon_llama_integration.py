@@ -257,17 +257,15 @@ class WocconAssistant:
             # Only verify for word hallucination if LLM response claims specific Woccon words
             answer = self._verify_word_claims_only(raw)
             
-            # Check if LLM detected a lesson request - handle markdown formatting
-            # Remove any markdown formatting from the beginning of the response
-            cleaned_answer = answer.lstrip("*").strip()
+            # Check if LLM detected a lesson request anywhere in the response
+            import re
+            lesson_match = re.search(r'\*?\*?LESSON_START:([a-zA-Z]+)\*?\*?', answer)
             
-            if cleaned_answer.startswith("LESSON_START:"):
-                log.info(f"[LESSON_DETECTION] Found lesson marker in response: {cleaned_answer[:50]}...")
+            if lesson_match:
+                log.info(f"[LESSON_DETECTION] Found lesson marker in response: {lesson_match.group(0)}")
                 
-                # Extract lesson type, handling potential markdown formatting
-                lesson_part = cleaned_answer.split(":")[1].split("**")[0].strip()  # Handle **LESSON_START:GRAMMAR**
-                original_lesson_type = lesson_part  # Keep original case for replacement
-                lesson_type = original_lesson_type.lower()  # Convert to lowercase for case-insensitive matching
+                original_lesson_type = lesson_match.group(1)  # Keep original case
+                lesson_type = original_lesson_type.lower()  # Convert to lowercase for matching
                 
                 log.info(f"[LESSON_DETECTION] Extracted lesson type: '{lesson_type}'")
                 
@@ -282,7 +280,7 @@ class WocconAssistant:
                 else:
                     log.warning(f"[LESSON_DETECTION] Unknown lesson type: '{lesson_type}', falling back to normal response")
                     # Remove the lesson marker and continue with normal response
-                    answer = answer.replace("LESSON_START:" + original_lesson_type, "").strip()
+                    answer = re.sub(r'\*?\*?LESSON_START:[a-zA-Z]+\*?\*?', '', answer).strip()
                     
         else:
             # No documents found, generate contextual response
