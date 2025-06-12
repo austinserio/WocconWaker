@@ -148,7 +148,9 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
             text = msg['text']
             source = msg.get('source', 'text')  # Get the source (text, quick_reply, or postback)
             
-            print(f"Processing message from {user_id}: {text} (source: {source})")
+            print(f"[DEBUG] Raw webhook event: {msg.get('raw_event', {})}")
+            print(f"[DEBUG] Extracted user_id: {user_id}")
+            print(f"[DEBUG] Processing message from {user_id}: {text} (source: {source})")
             
             # Use background task to handle message so we can return quickly
             background_tasks.add_task(process_message, user_id, text, source)

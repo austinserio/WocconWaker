@@ -128,6 +128,8 @@ class MessengerIntegration:
         """
         Send a text message to a specific user.
         """
+        print(f"[DEBUG] send_message called with recipient_id={recipient_id}, message_text='{message_text[:50]}...'")
+        
         if not self.page_access_token:
             print("[MessengerIntegration] ERROR: PAGE_ACCESS_TOKEN is not set")
             return {}
@@ -139,6 +141,8 @@ class MessengerIntegration:
             "recipient": {"id": recipient_id},
             "message": {"text": message_text}
         }
+        
+        print(f"[DEBUG] Sending to Facebook API: {payload}")
 
         try:
             response = requests.post(url, params=params, headers=headers, json=payload, timeout=10)
