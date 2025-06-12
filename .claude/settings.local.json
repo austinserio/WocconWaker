@@ -4,7 +4,8 @@
       "Bash(find:*)",
       "Bash(python:*)",
       "WebFetch(domain:developers.facebook.com)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }

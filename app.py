@@ -8,6 +8,7 @@ from fastapi import FastAPI, Request, Response, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
 from messenger_integration import MessengerIntegration
 import os
+import sys
 import shutil, subprocess, time, socket
 import threading
 import time
@@ -496,6 +497,12 @@ async def send_message(message: Dict[str, Any]):
 def run_cli():
     """Run the CLI interface in a separate thread"""
     global assistant
+    
+    # Check if we're in an interactive environment
+    if not sys.stdin.isatty():
+        print("⚠️  CLI mode disabled - not running in interactive terminal")
+        return
+        
     print("\n🗣️  Woccon CLI — type 'control + C' to exit.\n")
     
     while True:
@@ -506,8 +513,12 @@ def run_cli():
             print("\n" + assistant.reply("cli_user", msg) + "\n")
         except KeyboardInterrupt:
             break
+        except EOFError:
+            print("\n⚠️  EOF detected - exiting CLI mode")
+            break
         except Exception as e:
             print(f"Error: {e}")
+            break
 
 def initialize_assistant():
     """Initialize the assistant and set the ready flag"""

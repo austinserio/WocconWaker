@@ -51,6 +51,7 @@ fi
 # Set environment variables
 export ENABLE_TYPING_INDICATORS=true
 export PYTHONUNBUFFERED=1
+export WOCCON_MODE=server
 
 echo "$(date): Starting Python app" | tee -a "$LOG_FILE"
 
