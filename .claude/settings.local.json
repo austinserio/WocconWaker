@@ -3,7 +3,8 @@
     "allow": [
       "Bash(find:*)",
       "Bash(python:*)",
-      "WebFetch(domain:developers.facebook.com)"
+      "WebFetch(domain:developers.facebook.com)",
+      "Bash(chmod:*)"
     ],
     "deny": []
   }
