@@ -107,13 +107,16 @@ class OrthographicAccuracyEnhancer:
         assistant.reply = enhanced_reply
         log.info("Enhanced WocconAssistant's reply method with fact checking")
         
-        # Enhance the _minimal_verify method to be more strict
-        original_verify = assistant._minimal_verify
+        # Enhance the _strict_verify method to be more strict
+        original_verify = getattr(assistant, '_strict_verify', getattr(assistant, '_minimal_verify', None))
         
-        def enhanced_verify(text: str) -> str:
+        def enhanced_verify(text: str, has_strong_match: bool = True, is_word_request: bool = False) -> str:
             """Enhanced verification that also checks for diacritical marks."""
             # First run the original verification
-            verified_text = original_verify(text)
+            if hasattr(assistant, '_strict_verify'):
+                verified_text = original_verify(text, has_strong_match, is_word_request)
+            else:
+                verified_text = original_verify(text)
             
             # Then check for diacritical marks in Woccon words
             diacritical_regex = r"[çćĉċčřŕŗřśŝşšșẋỳŷỹȳāăąēĕėęěīĭįőōĩĕẽã]"
@@ -136,8 +139,11 @@ class OrthographicAccuracyEnhancer:
             
             return verified_text
         
-        # Replace the _minimal_verify method
-        assistant._minimal_verify = enhanced_verify
+        # Replace the verification method
+        if hasattr(assistant, '_strict_verify'):
+            assistant._strict_verify = enhanced_verify
+        else:
+            assistant._minimal_verify = enhanced_verify
         log.info("Enhanced WocconAssistant's verification method")
         
         return assistant
