@@ -207,6 +207,7 @@ class WocconAssistant:
         # 6️⃣ Process the query using RAG + LLM
         # Get answer from LLM
         retrieved = self._retrieve(text)
+        log.info(f"[RAG] Query: '{text}' → Retrieved {len(retrieved)} documents")
         messages = self._build_prompt(text, retrieved, session["history"])
         raw = ollama.chat(
             model=self.model,
@@ -333,14 +334,23 @@ class WocconAssistant:
         Build prompt for the LLM.
         """
         # system section with retrieved docs
-        doc_text = "\n".join(docs) if docs else "NO MATCHES IN CORPUS."
-        system = (
-            "You are a helpful, conversational assistant for the documented Woccon language.\n"
-            "Use ONLY facts from the provided documents. If you don't know, say so.\n"
-            "Be friendly and educational when explaining linguistic concepts.\n"
-            "When asked about phonology or sound patterns, focus on syllable structure, vowel patterns, and consonant distributions.\n\n"
-            f"DOCUMENTS:\n{doc_text}"
-        )
+        if docs:
+            doc_text = "\n".join(docs)
+            system = (
+                "You are a helpful, conversational assistant for the documented Woccon language.\n"
+                "Use the provided Woccon language documents to answer questions accurately.\n"
+                "Be friendly and educational when explaining linguistic concepts.\n"
+                "When asked about phonology or sound patterns, focus on syllable structure, vowel patterns, and consonant distributions.\n\n"
+                f"RELEVANT WOCCON DOCUMENTS:\n{doc_text}"
+            )
+        else:
+            system = (
+                "You are a helpful, conversational assistant for the Woccon language.\n"
+                "You have access to 141 documented Woccon words and linguistic analysis.\n"
+                "For general conversation, be friendly and helpful.\n"
+                "When users ask about specific Woccon words, grammar, or language features, I can provide detailed information.\n"
+                "Encourage users to ask about Woccon vocabulary, grammar patterns, or language history."
+            )
 
         # tail of history + new user query
         tail = list(history)[-self.ctx_turns * 2:]

@@ -205,6 +205,8 @@ class MessengerIntegration:
                 error_subcode = body.get('error', {}).get('error_subcode')
                 if error_subcode == 2018048:
                     log.warning(f"[TypingIndicator] Error 2018048 for recipient={recipient_id} - disabling typing indicators for this user")
+                    print(f"❌ Typing indicator FAILED for user {recipient_id} - Facebook policy restriction (error 2018048)")
+                    print(f"   This usually means: 24h messaging window expired, invalid recipient, or missing permissions")
                     # Add user to failed list to avoid future attempts
                     self.typing_indicator_failed_users.add(recipient_id)
                     return {"error": "messaging_policy_violation", "can_retry": False, "subcode": 2018048}
@@ -217,6 +219,7 @@ class MessengerIntegration:
                     )
             else:
                 log.info(f"[TypingIndicator] {payload['sender_action']} ok for recipient={recipient_id}")
+                print(f"✅ Typing indicator {payload['sender_action']} sent successfully to {recipient_id}")
 
             return body
         except Exception as e:

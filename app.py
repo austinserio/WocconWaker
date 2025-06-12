@@ -235,19 +235,19 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
     use_typing_indicators = os.environ.get('ENABLE_TYPING_INDICATORS', 'false').lower() == 'true'
     
     if use_typing_indicators:
+        print(f"🔄 Attempting to send typing indicator to user {user_id}")
         typing_response = messenger.send_typing_indicator(user_id, True)
         if typing_response.get('error'):
             error_type = typing_response.get('error')
             if error_type == 'messaging_policy_violation':
                 print(f"Info: Typing indicator disabled for {user_id} - Facebook policy restriction")
             elif error_type == 'typing_indicators_disabled_for_user':
-                # Silent skip - we already know this user can't receive typing indicators
-                pass
+                print(f"Info: Typing indicator skipped for {user_id} - previously failed")
             else:
                 print(f"Warning: Could not send typing indicator: {typing_response}")
         else:
             typing_indicator_active = True
-            print(f"[DEBUG] Typing indicator ON sent successfully for {user_id}")
+            print(f"✅ Typing indicator ON active for {user_id}")
     
     # Add a small delay to simulate processing time
     sleep(1.0)  # Increased delay to give typing indicator time to show
