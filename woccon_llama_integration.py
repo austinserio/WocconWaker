@@ -259,7 +259,8 @@ class WocconAssistant:
             
             # Check if LLM detected a lesson request
             if answer.startswith("LESSON_START:"):
-                lesson_type = answer.split(":")[1].strip()
+                original_lesson_type = answer.split(":")[1].strip()  # Keep original case for replacement
+                lesson_type = original_lesson_type.lower()  # Convert to lowercase for case-insensitive matching
                 if lesson_type == "vocab":
                     words = random.sample(self.dictionary["lexicon"], 3)
                     session["lesson"] = LessonManager(words, parent=self, mode="vocab")
@@ -270,7 +271,7 @@ class WocconAssistant:
                     return "📚 Starting a grammar lesson!\n\n" + session["lesson"].prompt()
                 else:
                     # Remove the lesson marker and continue with normal response
-                    answer = answer.replace("LESSON_START:" + lesson_type, "").strip()
+                    answer = answer.replace("LESSON_START:" + original_lesson_type, "").strip()
                     
         else:
             # No documents found, generate contextual response
