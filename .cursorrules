@@ -1,0 +1,23 @@
+# Cursor Rules for WocconWaker Project
+
+## Azure Account Configuration
+For this project, always use the Azure account: **austin.c.serio@gmail.com**
+
+When working with Azure CLI commands or Azure resources for this project:
+- Use subscription ID: `58587a07-da50-4691-aa9c-f23859d66df3`
+- Switch to this subscription before running any Azure commands: `az account set --subscription "58587a07-da50-4691-aa9c-f23859d66df3"`
+- This is the personal account with $200 free credit
+
+## Project Context
+This is the WocconWaker project - a language learning/analysis system for the Woccon language.
+
+
+
+
+
+
+
+
+
+
+

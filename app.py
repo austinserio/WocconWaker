@@ -39,7 +39,7 @@ user_states = {}
 assistant = WocconAssistant(
     dict_path="woccon_language/dictionary.json",
     rules_path="woccon_language/rules.json",
-    model="llama3:8b"
+    model=os.getenv("OLLAMA_MODEL", "llama3:8b-instruct-q4_0")
 )
 
 def create_enhanced_assistant():
@@ -65,11 +65,19 @@ def create_enhanced_assistant():
     # Return the fully enhanced assistant
     return enhanced_assistant
 
-# Initialize the Messenger integration
+# Initialize the Messenger integration (global instance for backward compatibility)
 messenger = MessengerIntegration(
     page_access_token=os.environ.get('PAGE_ACCESS_TOKEN'),
     verify_token=os.environ.get('VERIFY_TOKEN')
 )
+
+# Lazy initialization function to read env vars at runtime
+def get_messenger():
+    """Get MessengerIntegration instance with current environment variables."""
+    return MessengerIntegration(
+        page_access_token=os.environ.get('PAGE_ACCESS_TOKEN'),
+        verify_token=os.environ.get('VERIFY_TOKEN')
+    )
 
 
 # Add these utility functions to your app.py 
@@ -114,6 +122,9 @@ async def verify_webhook(request: Request):
     hub_token = request.query_params.get("hub.verify_token")
     challenge = request.query_params.get("hub.challenge")
 
+    # Get messenger instance (reads env vars at runtime)
+    messenger = get_messenger()
+    
     if messenger.verify_webhook(hub_mode, hub_token):
         # Echo back the challenge code
         return PlainTextResponse(challenge, status_code=200)
@@ -131,6 +142,8 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
         data = await request.json()
         print(f"Received webhook data: {data}")  # Debug log
         
+        # Get messenger instance (reads env vars at runtime)
+        messenger = get_messenger()
         messages = messenger.process_webhook(data)
         print(f"[DEBUG] Processed {len(messages)} messages from webhook")
         
@@ -220,7 +233,10 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
         text: Message text or payload
         source: Source of the message ('text', 'quick_reply', or 'postback')
     """
-    global assistant, messenger
+    global assistant
+    
+    # Get messenger instance (reads env vars at runtime)
+    messenger = get_messenger()
     
     print(f"[TRACE] process_message ENTRY: user_id={user_id}, text={text}, source={source}")
     print(f"[TRACE] user_id type: {type(user_id)}, length: {len(user_id)}")
@@ -425,19 +441,29 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
             messenger.send_message(user_id, response)
             
     except Exception as e:
-        # Log the error
-        print(f"Error processing message: {e}")
+        # Log the error with full details
+        error_type = type(e).__name__
+        error_message = str(e)
+        print(f"❌ ERROR processing message: {error_type}: {error_message}")
         import traceback
-        traceback.print_exc()
+        error_traceback = traceback.format_exc()
+        print(f"❌ FULL TRACEBACK:\n{error_traceback}")
+        # Also log to stderr so it shows up in Azure logs
+        import sys
+        print(f"❌ ERROR processing message: {error_type}: {error_message}", file=sys.stderr)
+        print(f"❌ FULL TRACEBACK:\n{error_traceback}", file=sys.stderr)
         
         # CRITICAL: Check if user_id was corrupted before error message
         if user_id != original_user_id:
             print(f"🚨 [BUG DETECTED] user_id CHANGED in exception handler! original={original_user_id}, current={user_id}")
             user_id = original_user_id
             
-        # Send error message to user
-        error_msg = "Sorry, I encountered an error. Please try again later."
-        messenger.send_message(user_id, error_msg)
+        # Send error message to user with more context
+        try:
+            error_msg = f"Sorry, I encountered an error ({error_type}). Please try again later."
+            messenger.send_message(user_id, error_msg)
+        except Exception as send_error:
+            print(f"❌ Failed to send error message to user: {send_error}")
     finally:
         # Final cleanup - turn off typing indicator if it's still active
         if typing_indicator_active:
@@ -528,18 +554,57 @@ def initialize_assistant():
         print(f"Error initializing assistant: {e}")
 
 def pull_llama_model():
-    """Ensure the LLaMA model is pulled before starting."""
-    model_name = "llama3:8b"
+    """Ensure the LLaMA model is pulled before starting. Non-blocking with timeout."""
+    # Wait for Ollama to be ready first
+    print("Waiting for Ollama to be ready before pulling model...")
+    max_wait = 120  # Wait up to 2 minutes for Ollama
+    start = time.time()
+    while time.time() - start < max_wait:
+        if check_ollama_health():
+            print("✅ Ollama is ready, proceeding with model pull...")
+            break
+        time.sleep(2)
+    else:
+        print("⚠️  Ollama not ready after 2 minutes, skipping model pull (will pull on first use)")
+        return
+    
+    # Use faster quantized model for CPU inference
+    model_name = os.getenv("OLLAMA_MODEL", "llama3:8b-instruct-q4_0")
     print(f"Checking if LLaMA model '{model_name}' is available...")
     
-    # Command to pull the model
+    # Command to pull the model - run with timeout to prevent hanging
     cmd = f"ollama pull {model_name}"
     try:
-        result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
-        print(f"Model '{model_name}' pulled successfully.")
+        # Use timeout to prevent hanging (10 minutes max for model pull on Azure CPU)
+        result = subprocess.run(
+            cmd, 
+            shell=True, 
+            check=True, 
+            capture_output=True, 
+            text=True,
+            timeout=600  # 10 minute timeout for Azure CPU
+        )
+        print(f"✅ Model '{model_name}' pulled successfully.")
         print(result.stdout)
+        # Give Ollama a moment to fully load the model
+        time.sleep(5)
+    except subprocess.TimeoutExpired:
+        print(f"⚠️  Model pull timed out after 10 minutes. Continuing anyway - model may be pulled later.")
     except subprocess.CalledProcessError as e:
-        print(f"Error pulling model '{model_name}': {e.stderr}")
+        print(f"⚠️  Error pulling model '{model_name}': {e.stderr}")
+        print(f"Continuing anyway - model may already exist or will be pulled on first use.")
+
+def check_ollama_health():
+    """Check if Ollama is running and responding to requests."""
+    try:
+        import requests
+        ollama_base = os.getenv("OLLAMA_URL", "http://localhost:11434")
+        health_url = f"{ollama_base.rstrip('/')}/api/tags"
+        response = requests.get(health_url, timeout=5)
+        return response.status_code == 200
+    except Exception as e:
+        print(f"⚠️  Ollama health check failed: {e}")
+        return False
 
 def start_ollama():
     """Start Ollama exactly as `ollama serve &> ollama.log &`, and wait for it."""
@@ -547,42 +612,86 @@ def start_ollama():
     ollama_path = shutil.which("ollama")
     if not ollama_path:
         print("❌  Could not find 'ollama' in your $PATH")
-        return
+        return False
 
-    # 2️⃣ Check if a process is already listening on 11434
+    # 2️⃣ Check if Ollama is already running and healthy
+    if check_ollama_health():
+        print("✅  Ollama already up and healthy on port 11434")
+        return True
+    
+    # 3️⃣ Check if port is open (but not responding to API)
     try:
         with socket.create_connection(("127.0.0.1", 11434), timeout=1):
-            print("✅  Ollama already up on port 11434")
-            return
+            print("⚠️  Port 11434 is open but Ollama API not responding, restarting...")
+            # Try to kill existing process
+            try:
+                subprocess.run(["pkill", "-f", "ollama serve"], timeout=5)
+                time.sleep(2)
+            except:
+                pass
     except OSError:
         pass
 
-    # 3️⃣ Fire off the exact shell command you use manually
-    cmd = f"{ollama_path} serve &> ollama.log &"
-    subprocess.Popen(
+    # 4️⃣ Fire off Ollama with CPU optimizations
+    # Set environment variables for better CPU performance
+    env = os.environ.copy()
+    env['OLLAMA_NUM_PARALLEL'] = '1'  # Process one request at a time
+    env['OLLAMA_MAX_LOADED_MODELS'] = '1'  # Only keep one model loaded
+    env['OLLAMA_NUM_THREAD'] = '4'  # Use all 4 CPU cores
+    
+    # Use nohup to ensure it stays running even if parent dies
+    cmd = f"nohup {ollama_path} serve > ollama.log 2>&1 &"
+    result = subprocess.run(
         cmd,
         shell=True,
         executable="/bin/bash",
-        close_fds=True
+        env=env,
+        check=False
     )
-    print("🚀  Launched: ollama serve &> ollama.log &")
+    print("🚀  Launched: ollama serve (background) with CPU optimizations")
 
-    # 4️⃣ Wait up to 20s for the socket to open
+    # 5️⃣ Wait up to 60s for Ollama to be healthy (longer timeout for Azure CPU)
     start = time.time()
-    while time.time() - start < 20:
-        try:
-            with socket.create_connection(("127.0.0.1", 11434), timeout=1):
-                print("🟢  Ollama is now listening on 11434")
-                return
-        except OSError:
-            time.sleep(0.5)
+    max_wait = 60
+    while time.time() - start < max_wait:
+        if check_ollama_health():
+            print("🟢  Ollama is now healthy and responding on port 11434")
+            return True
+        time.sleep(1)
+    
+    print(f"⚠️  Ollama did not become healthy within {max_wait} seconds")
+    return False
+
+def ensure_ollama_running():
+    """Ensure Ollama is running, restart if needed."""
+    max_retries = 3
+    for attempt in range(max_retries):
+        if check_ollama_health():
+            return True
+        print(f"⚠️  Ollama not healthy, attempt {attempt + 1}/{max_retries} to start...")
+        if start_ollama():
+            return True
+        time.sleep(5)
+    print("❌  Failed to start Ollama after multiple attempts")
+    return False
 
 @app.on_event("startup")
 async def startup_event():
     """Run when the FastAPI server starts up."""
     print("Starting Ollama 🦙")
-    start_ollama()
-    pull_llama_model()
+    # Start Ollama in background thread so it doesn't block FastAPI startup
+    def start_ollama_thread():
+        ensure_ollama_running()
+        # Keep checking and restarting Ollama if it dies
+        while True:
+            time.sleep(30)  # Check every 30 seconds
+            if not check_ollama_health():
+                print("⚠️  Ollama health check failed, attempting restart...")
+                ensure_ollama_running()
+    
+    threading.Thread(target=start_ollama_thread, daemon=True).start()
+    # Pull model in background thread so it doesn't block startup
+    threading.Thread(target=pull_llama_model, daemon=True).start()
     # Initialize assistant
     threading.Thread(target=initialize_assistant, daemon=True).start()
     
@@ -599,7 +708,10 @@ async def startup_event():
 if __name__ == "__main__":
     # Determine mode from environment variable
     mode = os.environ.get('WOCCON_MODE', 'cli').lower()
-    start_ollama()
+    # Don't start Ollama here - it's handled in startup_event() for server mode
+    # This prevents blocking uvicorn startup
+    if mode != 'server':
+        start_ollama()  # Only start here for CLI/hybrid modes
 
     if mode == 'server':
         # Run in server mode

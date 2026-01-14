@@ -5,7 +5,16 @@
       "Bash(python:*)",
       "WebFetch(domain:developers.facebook.com)",
       "Bash(chmod:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(az containerapp list:*)",
+      "Bash(az containerapp show:*)",
+      "Bash(az containerapp update:*)",
+      "Bash(az containerapp revision list:*)",
+      "Bash(az containerapp exec:*)",
+      "Bash(az containerapp delete:*)",
+      "Bash(az deployment group create:*)",
+      "Bash(curl:*)",
+      "Bash(az acr login:*)"
     ],
     "deny": []
   }

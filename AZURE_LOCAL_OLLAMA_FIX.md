@@ -136,3 +136,6 @@ When the container starts, you should see in the logs:
 - Each replica has its own Ollama instance and model cache
 - Quantized models (llama3:8b) are optimized for CPU inference
 
+
+
+

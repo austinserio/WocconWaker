@@ -1,0 +1,247 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.38.5.1644",
+      "templateHash": "15412923507149925071"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "eastus",
+      "metadata": {
+        "description": "The Azure region for all resources"
+      }
+    },
+    "containerAppEnvName": {
+      "type": "string",
+      "defaultValue": "wocconwaker-env",
+      "metadata": {
+        "description": "The name of the Container Apps environment"
+      }
+    },
+    "containerAppName": {
+      "type": "string",
+      "defaultValue": "wocconwaker-app",
+      "metadata": {
+        "description": "The name of the Container App"
+      }
+    },
+    "containerRegistryName": {
+      "type": "string",
+      "defaultValue": "[format('wocconwaker{0}', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "The name of the Container Registry (must be globally unique)"
+      }
+    },
+    "dockerImage": {
+      "type": "string",
+      "defaultValue": "wocconwaker:latest",
+      "metadata": {
+        "description": "The Docker image to deploy"
+      }
+    },
+    "ollamaCloudEndpoint": {
+      "type": "string",
+      "defaultValue": "https://api.ollama.com",
+      "metadata": {
+        "description": "Ollama Cloud endpoint (default: https://api.ollama.com)"
+      }
+    },
+    "ollamaCloudApiKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Ollama Cloud API key (stored as secret)"
+      }
+    },
+    "ollamaModel": {
+      "type": "string",
+      "defaultValue": "llama3:8b",
+      "metadata": {
+        "description": "Ollama model name"
+      }
+    },
+    "pageAccessToken": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Facebook Messenger Page Access Token (optional)"
+      }
+    },
+    "verifyToken": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Facebook Messenger Verify Token (optional)"
+      }
+    },
+    "containerCpu": {
+      "type": "string",
+      "defaultValue": "0.5",
+      "metadata": {
+        "description": "Container CPU (0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)"
+      }
+    },
+    "containerMemory": {
+      "type": "string",
+      "defaultValue": "1.0",
+      "metadata": {
+        "description": "Container memory in GiB (0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0)"
+      }
+    },
+    "minReplicas": {
+      "type": "int",
+      "defaultValue": 0,
+      "metadata": {
+        "description": "Minimum number of container instances"
+      }
+    },
+    "maxReplicas": {
+      "type": "int",
+      "defaultValue": 10,
+      "metadata": {
+        "description": "Maximum number of container instances"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2023-01-01-preview",
+      "name": "[parameters('containerRegistryName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Basic"
+      },
+      "properties": {
+        "adminUserEnabled": true
+      }
+    },
+    {
+      "type": "Microsoft.App/managedEnvironments",
+      "apiVersion": "2024-03-01",
+      "name": "[parameters('containerAppEnvName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "workloadProfiles": []
+      }
+    },
+    {
+      "type": "Microsoft.App/containerApps",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('containerAppName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "managedEnvironmentId": "[resourceId('Microsoft.App/managedEnvironments', parameters('containerAppEnvName'))]",
+        "configuration": {
+          "ingress": {
+            "external": true,
+            "targetPort": 8000,
+            "allowInsecure": false,
+            "transport": "auto"
+          },
+          "registries": [
+            {
+              "server": "[reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('containerRegistryName')), '2023-01-01-preview').loginServer]",
+              "identity": "system"
+            }
+          ],
+          "secrets": [
+            {
+              "name": "ollama-cloud-api-key",
+              "value": "[parameters('ollamaCloudApiKey')]"
+            },
+            {
+              "name": "page-access-token",
+              "value": "[parameters('pageAccessToken')]"
+            }
+          ]
+        },
+        "template": {
+          "containers": [
+            {
+              "name": "[parameters('containerAppName')]",
+              "image": "[parameters('dockerImage')]",
+              "resources": {
+                "cpu": "[parameters('containerCpu')]",
+                "memory": "[format('{0}Gi', parameters('containerMemory'))]"
+              },
+              "env": [
+                {
+                  "name": "WOCCON_MODE",
+                  "value": "server"
+                },
+                {
+                  "name": "OLLAMA_CLOUD_ENDPOINT",
+                  "value": "[parameters('ollamaCloudEndpoint')]"
+                },
+                {
+                  "name": "OLLAMA_CLOUD_API_KEY",
+                  "secretRef": "ollama-cloud-api-key"
+                },
+                {
+                  "name": "OLLAMA_MODEL",
+                  "value": "[parameters('ollamaModel')]"
+                },
+                {
+                  "name": "PORT",
+                  "value": "8000"
+                },
+                {
+                  "name": "PAGE_ACCESS_TOKEN",
+                  "secretRef": "page-access-token"
+                },
+                {
+                  "name": "VERIFY_TOKEN",
+                  "value": "[parameters('verifyToken')]"
+                }
+              ]
+            }
+          ],
+          "scale": {
+            "minReplicas": "[parameters('minReplicas')]",
+            "maxReplicas": "[parameters('maxReplicas')]",
+            "rules": [
+              {
+                "name": "http-scale",
+                "http": {
+                  "metadata": {
+                    "concurrentRequests": "10"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.App/managedEnvironments', parameters('containerAppEnvName'))]",
+        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('containerRegistryName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "containerAppUrl": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.App/containerApps', parameters('containerAppName')), '2023-05-01').configuration.ingress.fqdn]"
+    },
+    "containerAppName": {
+      "type": "string",
+      "value": "[parameters('containerAppName')]"
+    },
+    "containerRegistryName": {
+      "type": "string",
+      "value": "[parameters('containerRegistryName')]"
+    },
+    "containerRegistryLoginServer": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('containerRegistryName')), '2023-01-01-preview').loginServer]"
+    }
+  }
+}

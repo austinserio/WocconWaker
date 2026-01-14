@@ -4,6 +4,8 @@ from typing import Dict, List, Tuple, Optional, Any
 import ollama  # your local Llama server client
 from main import WocconT5
 import requests
+import signal
+from contextlib import contextmanager
 
 # Import the improved lesson managers
 from lesson_manager import LessonManager
@@ -20,7 +22,7 @@ class WocconAssistant:
     def __init__(self,
                  dict_path="woccon_language/dictionary.json",
                  rules_path="woccon_language/rules.json",
-                 model="llama3:8b",
+                 model=None,
                  ctx_turns=6,
                  custom_model_params=None):
         # Core data & model
@@ -31,23 +33,26 @@ class WocconAssistant:
         self.rules = self._load_json(rules_path)
         log.info("Rules keys: %s", list(self.rules.keys()))
 
-        self.model = model or os.getenv("OLLAMA_MODEL", "llama3:8b")
+        # Default to faster quantized model for CPU inference
+        self.model = model or os.getenv("OLLAMA_MODEL", "llama3:8b-instruct-q4_0")
         self.ctx_turns = ctx_turns
 
         # Set the Ollama API URL dynamically
         self.url = os.getenv("OLLAMA_URL", "http://localhost:11434/v1/chat")
         log.info(f"Using Ollama URL: {self.url}")
         
-        # Enhanced model parameters for better Llama guidance
+        # Aggressively optimized for CPU inference speed
         self.default_model_params = {
             "temperature": 0.3,
             "top_p": 0.9,
             "repeat_penalty": 1.1,
             "seed": 42,
-            "num_predict": 1000,  # Increased for comprehensive responses
-            "stop": ["User:", "Human:", "Q:", "Question:"],
+            "num_predict": 200,  # Aggressively reduced for CPU speed (was 400)
+            "stop": ["User:", "Human:", "Q:", "Question:", "\n\n"],  # Stop on double newline for shorter responses
             "frequency_penalty": 0.2,
-            "presence_penalty": 0.1
+            "presence_penalty": 0.1,
+            "num_thread": 4,  # Use all 4 CPU cores
+            "numa": False  # Disable NUMA for better performance in containers
         }
         
         # Allow custom overrides
@@ -133,37 +138,63 @@ class WocconAssistant:
         base_params = self.default_model_params.copy()
         
         if response_type == "not_found":
-            # For missing word responses - more conservative, less creative
+            # For missing word responses - keep it short and fast
             base_params.update({
                 "temperature": 0.5,
                 "top_p": 0.8,
-                "num_predict": 400,  # Increased for better explanations
-                "stop": ["User:", "Human:", "However,", "But ", "It's possible", "Maybe", "Perhaps"]
+                "num_predict": 150,  # Aggressively reduced for CPU speed
+                "stop": ["User:", "Human:", "However,", "But ", "It's possible", "Maybe", "Perhaps", "\n\n"]
             })
         elif response_type == "documented":
-            # For documented content responses - allow comprehensive answers
+            # For documented content responses - balance quality and speed
             base_params.update({
                 "temperature": 0.2,
                 "top_p": 0.85,
-                "num_predict": 1200,  # Increased for comprehensive educational content
+                "num_predict": 250,  # Aggressively reduced for CPU speed (was 500)
                 "repeat_penalty": 1.0  # Less penalty for factual repetition
             })
         elif response_type == "general":
-            # For general conversation - slightly more flexible
+            # For general conversation - keep it brief
             base_params.update({
                 "temperature": 0.6,
                 "top_p": 0.9,
-                "num_predict": 800  # Increased for educational responses
+                "num_predict": 150  # Aggressively reduced for CPU speed (was 300)
             })
             
         return base_params
     
+    def _check_ollama_health(self) -> bool:
+        """Check if Ollama is running and responding to requests."""
+        try:
+            ollama_base = os.getenv("OLLAMA_URL", "http://localhost:11434")
+            health_url = f"{ollama_base.rstrip('/')}/api/tags"
+            response = requests.get(health_url, timeout=5)
+            if response.status_code == 200:
+                # Also verify our model is available
+                try:
+                    data = response.json()
+                    models = [m.get('name', '') for m in data.get('models', [])]
+                    if self.model in models:
+                        return True
+                    else:
+                        log.debug(f"Model {self.model} not in available models: {models}")
+                        return False
+                except:
+                    return True  # If we can't parse, assume healthy
+            return False
+        except Exception as e:
+            log.debug(f"Ollama health check failed: {e}")
+            return False
+    
     @staticmethod
-    def configure_llama_model_system(model_name: str = "llama3:8b") -> Dict:
+    def configure_llama_model_system(model_name: str = None) -> Dict:
         """
         Configure system-level optimizations for Llama models.
         This returns configuration that can be used with model deployment.
         """
+        # Use OLLAMA_MODEL env var if not provided, default to quantized model
+        if model_name is None:
+            model_name = os.getenv("OLLAMA_MODEL", "llama3:8b-instruct-q4_0")
         return {
             "model_config": {
                 "num_ctx": 4096,  # Context window
@@ -268,11 +299,164 @@ class WocconAssistant:
             # We have documents, proceed with LLM generation
             messages = self._build_prompt(text, retrieved, session["history"])
             response_type = "documented" if has_strong_match else "general"
-            raw = ollama.chat(
-                model=self.model,
-                messages=messages,
-                options=self._get_contextual_params(response_type)
-            )["message"]["content"]
+            # Use requests directly with timeout for local Ollama (more reliable)
+            ollama_base = os.getenv("OLLAMA_URL", "http://localhost:11434")
+            # Ollama API endpoint - use /api/chat (native Ollama endpoint)
+            # If OLLAMA_URL has /v1/chat, convert to /api/chat
+            if "/v1/chat" in ollama_base:
+                ollama_url = ollama_base.replace("/v1/chat", "/api/chat")
+            elif "/api/chat" in ollama_base:
+                ollama_url = ollama_base
+            else:
+                # Default: use /api/chat
+                ollama_url = f"{ollama_base.rstrip('/')}/api/chat"
+            payload = {
+                "model": self.model,
+                "messages": messages,
+                "options": self._get_contextual_params(response_type)
+            }
+            # Check if Ollama is healthy before making request, with retries
+            max_health_retries = 3
+            health_retry_delay = 2
+            ollama_healthy = False
+            for health_attempt in range(max_health_retries):
+                if self._check_ollama_health():
+                    ollama_healthy = True
+                    break
+                if health_attempt < max_health_retries - 1:
+                    log.warning(f"Ollama not healthy (attempt {health_attempt + 1}/{max_health_retries}), waiting {health_retry_delay}s...")
+                    import time
+                    time.sleep(health_retry_delay)
+                    health_retry_delay *= 2  # Exponential backoff
+            
+            if not ollama_healthy:
+                raise Exception("Ollama server is not responding after multiple health checks. Please ensure Ollama is running.")
+            
+            # Use requests directly with timeout to prevent hanging
+            # ollama.chat() doesn't support timeout and can hang indefinitely
+            ollama_base = os.getenv("OLLAMA_URL", "http://localhost:11434")
+            chat_url = f"{ollama_base.rstrip('/')}/api/chat"
+            chat_payload = {
+                "model": self.model,
+                "messages": messages,
+                "options": self._get_contextual_params(response_type),
+                "stream": False  # CRITICAL: Disable streaming to get single JSON response
+            }
+            log.info(f"Calling Ollama API {chat_url} with timeout=180 for model {self.model} (stream=false)")
+            try:
+                # Increased timeout but optimized params should make it faster
+                response = requests.post(chat_url, json=chat_payload, timeout=180)
+                response.raise_for_status()
+                
+                # Handle potential streaming response (multiple JSON lines)
+                response_text = response.text.strip()
+                if '\n' in response_text:
+                    # If multiple lines, take the last complete JSON object
+                    lines = response_text.split('\n')
+                    for line in reversed(lines):
+                        line = line.strip()
+                        if line:
+                            try:
+                                result = json.loads(line)
+                                break
+                            except json.JSONDecodeError:
+                                continue
+                    else:
+                        # If all lines failed, try parsing the whole thing
+                        result = response.json()
+                else:
+                    result = response.json()
+                
+                raw = result.get("message", {}).get("content", "")
+                if not raw:
+                    # Try alternative response format
+                    raw = result.get("response", "")
+            except Exception as e:
+                # If model not found, try to pull it
+                if "not found" in str(e).lower() or "404" in str(e):
+                    log.warning(f"Model {self.model} not found, attempting to pull it...")
+                    try:
+                        import subprocess
+                        pull_result = subprocess.run(
+                            ["ollama", "pull", self.model],
+                            capture_output=True,
+                            text=True,
+                            timeout=300
+                        )
+                        if pull_result.returncode == 0:
+                            log.info(f"Model {self.model} pulled successfully, waiting 15 seconds for model to fully load and index...")
+                            # Wait longer for model to be fully loaded and indexed into memory (especially on CPU)
+                            import time
+                            time.sleep(15)
+                            # Verify Ollama is still healthy after model pull
+                            if not self._check_ollama_health():
+                                log.error("Ollama became unhealthy after model pull, restarting...")
+                                raise Exception("Ollama crashed after model pull")
+                            log.info(f"Retrying ollama.chat() with model {self.model}...")
+                            # Retry with timeout wrapper - use requests directly with timeout
+                            try:
+                                # Use requests directly with timeout instead of ollama.chat() to avoid hanging
+                                ollama_base = os.getenv("OLLAMA_URL", "http://localhost:11434")
+                                chat_url = f"{ollama_base.rstrip('/')}/api/chat"
+                                chat_payload = {
+                                    "model": self.model,
+                                    "messages": messages,
+                                    "options": self._get_contextual_params(response_type)
+                                }
+                                log.info(f"Calling {chat_url} with timeout=120")
+                                response = requests.post(chat_url, json=chat_payload, timeout=120)
+                                if response.status_code == 500:
+                                    # 500 error - Ollama internal error, wait and retry once
+                                    log.warning(f"Ollama returned 500 error, waiting 5 seconds and retrying...")
+                                    time.sleep(5)
+                                    response = requests.post(chat_url, json=chat_payload, timeout=120)
+                                response.raise_for_status()
+                                result_data = response.json()
+                                raw = result_data.get("message", {}).get("content", "")
+                                if not raw:
+                                    raise Exception("No content in response")
+                            except Exception as retry_error:
+                                log.error(f"Retry chat failed after pull: {retry_error}")
+                                raise retry_error
+                        else:
+                            raise Exception(f"Failed to pull model: {pull_result.stderr}")
+                    except Exception as pull_error:
+                        log.error(f"Failed to pull model {self.model}: {pull_error}")
+                        # Fallback to direct API call
+                        log.warning(f"ollama.chat() failed: {e}, trying direct API call to /api/generate")
+                else:
+                    # Fallback to direct API call if ollama.chat() fails for other reasons
+                    log.warning(f"ollama.chat() failed: {e}, trying direct API call to /api/generate")
+                ollama_base = os.getenv("OLLAMA_URL", "http://localhost:11434")
+                generate_url = f"{ollama_base.rstrip('/')}/api/generate"
+                # Convert messages to prompt format for /api/generate
+                prompt_parts = []
+                for msg in messages:
+                    role = msg.get("role", "user")
+                    content = msg.get("content", "")
+                    if role == "system":
+                        prompt_parts.append(f"System: {content}")
+                    elif role == "user":
+                        prompt_parts.append(f"User: {content}")
+                    elif role == "assistant":
+                        prompt_parts.append(f"Assistant: {content}")
+                prompt = "\n".join(prompt_parts)
+                generate_payload = {
+                    "model": self.model,
+                    "prompt": prompt,
+                    "options": self._get_contextual_params(response_type)
+                }
+                log.info(f"Calling {generate_url} with timeout=120 (fallback)")
+                response = requests.post(generate_url, json=generate_payload, timeout=120)
+                if response.status_code == 500:
+                    # 500 error - Ollama internal error, wait and retry once
+                    log.warning(f"Ollama returned 500 error on /api/generate, waiting 5 seconds and retrying...")
+                    import time
+                    time.sleep(5)
+                    response = requests.post(generate_url, json=generate_payload, timeout=120)
+                response.raise_for_status()
+                gen_data = response.json()
+                raw = gen_data.get("response", "")
             
             # Only verify for word hallucination if LLM response claims specific Woccon words
             answer = self._verify_word_claims_only(raw)
@@ -395,11 +579,25 @@ class WocconAssistant:
         )
         
         try:
-            raw = ollama.chat(
-                model=self.model,
-                messages=messages,
-                options=self._get_contextual_params("not_found")
-            )["message"]["content"]
+            # Use requests directly with timeout for local Ollama
+            ollama_base = os.getenv("OLLAMA_URL", "http://localhost:11434")
+            # Ollama API endpoint - use /api/chat (native Ollama endpoint)
+            # If OLLAMA_URL has /v1/chat, convert to /api/chat
+            if "/v1/chat" in ollama_base:
+                ollama_url = ollama_base.replace("/v1/chat", "/api/chat")
+            elif "/api/chat" in ollama_base:
+                ollama_url = ollama_base
+            else:
+                # Default: use /api/chat
+                ollama_url = f"{ollama_base.rstrip('/')}/api/chat"
+            payload = {
+                "model": self.model,
+                "messages": messages,
+                "options": self._get_contextual_params("not_found")
+            }
+            response = requests.post(ollama_url, json=payload, timeout=120)
+            response.raise_for_status()
+            raw = response.json()["message"]["content"]
             # Apply strict verification to catch any speculation
             verified = self._strict_verify(raw, False, True)
             return verified
@@ -441,11 +639,26 @@ class WocconAssistant:
         )
         
         try:
-            raw = ollama.chat(
-                model=self.model,
-                messages=messages,
-                options=self._get_contextual_params("general")
-            )["message"]["content"]
+            # Use requests directly with timeout for local Ollama
+            ollama_base = os.getenv("OLLAMA_URL", "http://localhost:11434")
+            # Ollama API endpoint - use /api/chat (native Ollama endpoint)
+            # If OLLAMA_URL has /v1/chat, convert to /api/chat
+            if "/v1/chat" in ollama_base:
+                ollama_url = ollama_base.replace("/v1/chat", "/api/chat")
+            elif "/api/chat" in ollama_base:
+                ollama_url = ollama_base
+            else:
+                # Default: use /api/chat
+                ollama_url = f"{ollama_base.rstrip('/')}/api/chat"
+            payload = {
+                "model": self.model,
+                "messages": messages,
+                "options": self._get_contextual_params("general")
+            }
+            log.info(f"Calling Ollama for general response with timeout=120")
+            response = requests.post(ollama_url, json=payload, timeout=120)
+            response.raise_for_status()
+            raw = response.json()["message"]["content"]
             # Apply strict verification to catch any speculation
             verified = self._strict_verify(raw, False, False)
             return verified

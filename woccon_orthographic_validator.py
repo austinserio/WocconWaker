@@ -108,43 +108,40 @@ class OrthographicAccuracyEnhancer:
         log.info("Enhanced WocconAssistant's reply method with fact checking")
         
         # Enhance the _strict_verify method to be more strict
-        original_verify = getattr(assistant, '_strict_verify', getattr(assistant, '_minimal_verify', None))
+        original_verify = getattr(assistant, '_strict_verify', None)
         
-        def enhanced_verify(text: str, has_strong_match: bool = True, is_word_request: bool = False) -> str:
-            """Enhanced verification that also checks for diacritical marks."""
-            # First run the original verification
-            if hasattr(assistant, '_strict_verify'):
-                verified_text = original_verify(text, has_strong_match, is_word_request)
-            else:
-                verified_text = original_verify(text)
-            
-            # Then check for diacritical marks in Woccon words
-            diacritical_regex = r"[çćĉċčřŕŗřśŝşšșẋỳŷỹȳāăąēĕėęěīĭįőōĩĕẽã]"
-            
-            # Look for claims of Woccon words with diacritical marks
-            woccon_claim_patterns = [
-                r"Woccon word (?:for|is) ['\"]([a-zA-Z\-" + diacritical_regex + r"]+)['\"]",
-                r"in Woccon, ['\"]([a-zA-Z\-" + diacritical_regex + r"]+)['\"]",
-                r"Woccon term ['\"]([a-zA-Z\-" + diacritical_regex + r"]+)['\"]"
-            ]
-            
-            for pattern in woccon_claim_patterns:
-                if re.search(pattern, text, re.IGNORECASE):
-                    return (
-                        "⚠️ Note: The original Woccon transcription by John Lawson (1709) "
-                        "does not use diacritical marks. Modern linguistic notation may use "
-                        "special symbols, but these were not part of the original documentation.\n\n" 
-                        + verified_text
-                    )
-            
-            return verified_text
-        
-        # Replace the verification method
-        if hasattr(assistant, '_strict_verify'):
-            assistant._strict_verify = enhanced_verify
+        if original_verify is None:
+            log.warning("WocconAssistant doesn't have _strict_verify method, skipping verification enhancement")
         else:
-            assistant._minimal_verify = enhanced_verify
-        log.info("Enhanced WocconAssistant's verification method")
+            def enhanced_verify(text: str, has_strong_match: bool = True, is_word_request: bool = False) -> str:
+                """Enhanced verification that also checks for diacritical marks."""
+                # First run the original verification
+                verified_text = original_verify(text, has_strong_match, is_word_request)
+                
+                # Then check for diacritical marks in Woccon words
+                diacritical_regex = r"[çćĉċčřŕŗřśŝşšșẋỳŷỹȳāăąēĕėęěīĭįőōĩĕẽã]"
+                
+                # Look for claims of Woccon words with diacritical marks
+                woccon_claim_patterns = [
+                    r"Woccon word (?:for|is) ['\"]([a-zA-Z\-" + diacritical_regex + r"]+)['\"]",
+                    r"in Woccon, ['\"]([a-zA-Z\-" + diacritical_regex + r"]+)['\"]",
+                    r"Woccon term ['\"]([a-zA-Z\-" + diacritical_regex + r"]+)['\"]"
+                ]
+                
+                for pattern in woccon_claim_patterns:
+                    if re.search(pattern, text, re.IGNORECASE):
+                        return (
+                            "⚠️ Note: The original Woccon transcription by John Lawson (1709) "
+                            "does not use diacritical marks. Modern linguistic notation may use "
+                            "special symbols, but these were not part of the original documentation.\n\n" 
+                            + verified_text
+                        )
+                
+                return verified_text
+            
+            # Replace the verification method
+            assistant._strict_verify = enhanced_verify
+            log.info("Enhanced WocconAssistant's verification method")
         
         return assistant
 
