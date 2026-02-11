@@ -130,13 +130,16 @@ async def verify_webhook(request: Request):
     """
     Facebook webhook verification. Reads VERIFY_TOKEN at request time (for Azure env updates).
     """
-    hub_mode = request.query_params.get("hub.mode")
-    hub_token = request.query_params.get("hub.verify_token")
-    challenge = request.query_params.get("hub.challenge")
-    expected_token = os.environ.get("VERIFY_TOKEN")
-    if hub_mode == "subscribe" and expected_token is not None and hub_token == expected_token:
-        return PlainTextResponse(challenge or "", status_code=200)
-    return PlainTextResponse("Verification failed", status_code=403)
+    try:
+        hub_mode = request.query_params.get("hub.mode")
+        hub_token = request.query_params.get("hub.verify_token")
+        challenge = request.query_params.get("hub.challenge")
+        expected_token = os.environ.get("VERIFY_TOKEN")
+        if hub_mode == "subscribe" and expected_token is not None and hub_token == expected_token:
+            return PlainTextResponse(challenge or "", status_code=200)
+        return PlainTextResponse("Verification failed", status_code=403)
+    except Exception as e:
+        return PlainTextResponse(f"Error: {e}", status_code=500)
 
 # Add a diagnostic endpoint to help with debugging
 

@@ -1,0 +1,61 @@
+# GPU-enabled Dockerfile for Azure Container Apps with Serverless GPUs
+# Supports CUDA-enabled PyTorch and Ollama with GPU acceleration
+# Falls back to CPU if GPU unavailable
+
+FROM nvidia/cuda:12.1.0-runtime-ubuntu22.04
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies including curl for Ollama installation
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    curl \
+    python3.11 \
+    python3.11-dev \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create symlink for python
+RUN ln -sf /usr/bin/python3.11 /usr/bin/python3 && \
+    ln -sf /usr/bin/python3 /usr/bin/python
+
+# Install Ollama
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# Ensure Ollama is in PATH
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Set CUDA environment variables
+ENV CUDA_VISIBLE_DEVICES=0
+ENV NVIDIA_VISIBLE_DEVICES=all
+ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install CUDA-enabled PyTorch (for GPU support)
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# Install remaining dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Expose the port
+EXPOSE 8000
+
+# Set environment variables for server mode and GPU
+ENV WOCCON_MODE=server
+ENV OLLAMA_NUM_GPU=1
+ENV OLLAMA_HOST=0.0.0.0:11434
+
+# Add healthcheck
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD python -c "import requests; requests.get('http://localhost:8000/health', timeout=5)" || exit 1
+
+# Run the server
+CMD ["python", "app.py"]
+
