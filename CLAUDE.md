@@ -99,6 +99,16 @@ T5_MODEL_PATH="/workspace/models/t5-base"
 ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indicators (default: false)
 ```
 
+### LLM mode: local vs Microsoft Foundry
+- **LOCAL_LLM**: When `true`, `1`, or `yes` (case-insensitive), the app uses **local Ollama** (e.g. RunPod/CUDA or CPU). When unset or false, the app uses **Microsoft Foundry** (Llama/equivalent via Azure API). No OpenAI models are used; Foundry serves Llama (or HF-equivalent) via an OpenAI-compatible API.
+- **Local (OLLAMA_URL, OLLAMA_MODEL)**: Used only when `LOCAL_LLM` is true.
+- **Foundry (when LOCAL_LLM is false)**:
+  - `FOUNDRY_ENDPOINT` or `AZURE_AI_ENDPOINT`: Foundry/Azure OpenAI base URL (e.g. `https://<resource>.openai.azure.com`).
+  - `FOUNDRY_API_KEY` or `AZURE_INFERENCE_CREDENTIAL`: API key from the Foundry resource.
+  - `FOUNDRY_DEPLOYMENT`: Deployment name (e.g. `Llama-3-8B-Instruct`). Defaults to `OLLAMA_MODEL` if unset.
+  - `FOUNDRY_API_VERSION`: Optional; default `2024-10-21`.
+  - Use `./setup-foundry-azure-cli.sh` to create the resource and print these values.
+
 ## API Endpoints
 
 - `GET /webhook` - Facebook webhook verification

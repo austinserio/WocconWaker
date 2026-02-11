@@ -1,10 +1,10 @@
 import os, json, re, logging, random
 from collections import deque
 from typing import Dict, List, Tuple, Optional, Any
-import ollama  # your local Llama server client
 from main import WocconT5
 import requests
 
+from llm_client import llm_chat
 # Import the improved lesson managers
 from lesson_manager import LessonManager
 from grammar_lesson_manager import GrammarLessonManager
@@ -203,17 +203,17 @@ class WocconAssistant:
 
 
     def send_message(self, prompt: str):
-        """Send a message to the Ollama API."""
+        """Send a message via the configured LLM (local Ollama or Foundry)."""
         try:
-            response = requests.post(
-                self.url,
-                json={"model": self.model, "prompt": prompt}
+            out = llm_chat(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}],
+                options=self.default_model_params,
             )
-            response.raise_for_status()
-            return response.json().get("message", {}).get("content", "No response")
+            return out.get("message", {}).get("content", "No response")
         except Exception as e:
-            log.error(f"Error connecting to Ollama: {e}")
-            return "Error: Unable to connect to the Ollama server."
+            log.error(f"Error calling LLM: {e}")
+            return "Error: Unable to connect to the LLM server."
 
     def reply(self, user_id: str, text: str) -> str:
         """Process user input and respond. Lessons only start when explicitly requested."""
@@ -268,7 +268,7 @@ class WocconAssistant:
             # We have documents, proceed with LLM generation
             messages = self._build_prompt(text, retrieved, session["history"])
             response_type = "documented" if has_strong_match else "general"
-            raw = ollama.chat(
+            raw = llm_chat(
                 model=self.model,
                 messages=messages,
                 options=self._get_contextual_params(response_type)
@@ -395,7 +395,7 @@ class WocconAssistant:
         )
         
         try:
-            raw = ollama.chat(
+            raw = llm_chat(
                 model=self.model,
                 messages=messages,
                 options=self._get_contextual_params("not_found")
@@ -441,7 +441,7 @@ class WocconAssistant:
         )
         
         try:
-            raw = ollama.chat(
+            raw = llm_chat(
                 model=self.model,
                 messages=messages,
                 options=self._get_contextual_params("general")

@@ -1,5 +1,11 @@
 # woccon_app.py - Main application entry point
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 from woccon_llama_integration import WocconAssistant
 from woccon_enhancer import WocconEnhancer
 from woccon_orthographic_validator import FactualGuardRailIntegration
@@ -22,6 +28,12 @@ from fastapi.responses import PlainTextResponse
 
 llama_model_path = os.environ.get('LLAMA_MODEL_PATH', '/workspace/models/llama3-8b')
 t5_model_path = os.environ.get('T5_MODEL_PATH', '/workspace/models/t5-base')
+
+
+def _use_local_llm() -> bool:
+    """True = use local Ollama (CUDA/RunPod); False = use Microsoft Foundry."""
+    v = os.environ.get("LOCAL_LLM", "").strip().lower()
+    return v in ("true", "1", "yes")
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -580,9 +592,12 @@ def start_ollama():
 @app.on_event("startup")
 async def startup_event():
     """Run when the FastAPI server starts up."""
-    print("Starting Ollama 🦙")
-    start_ollama()
-    pull_llama_model()
+    if _use_local_llm():
+        print("LOCAL_LLM=true: Starting Ollama 🦙")
+        start_ollama()
+        pull_llama_model()
+    else:
+        print("LOCAL_LLM=false: Using Microsoft Foundry (no local Ollama).")
     # Initialize assistant
     threading.Thread(target=initialize_assistant, daemon=True).start()
     
@@ -599,7 +614,8 @@ async def startup_event():
 if __name__ == "__main__":
     # Determine mode from environment variable
     mode = os.environ.get('WOCCON_MODE', 'cli').lower()
-    start_ollama()
+    if _use_local_llm():
+        start_ollama()
 
     if mode == 'server':
         # Run in server mode

@@ -2,7 +2,7 @@ import random
 from typing import List, Dict, Tuple, Optional, Any
 from collections import deque
 import re
-import ollama
+from llm_client import llm_chat
 import logging
 import json
 
@@ -120,7 +120,7 @@ class GrammarLessonManager:
         try:
             retrieved = self.parent._retrieve(query)
             messages = self.parent._build_prompt(query, retrieved, deque())  # no convo history
-            resp = ollama.chat(model=self.parent.model, messages=messages)["message"]["content"]
+            resp = llm_chat(model=self.parent.model, messages=messages)["message"]["content"]
             return resp
         except Exception as e:
             # Fallback explanation if LLM call fails
@@ -357,7 +357,7 @@ class GrammarLessonManager:
             """
             
             messages = [{"role": "user", "content": prompt}]
-            response = ollama.chat(
+            response = llm_chat(
                 model=self.parent.model,
                 messages=messages,
                 options={"temperature": 0.1, "num_predict": 10}
@@ -401,7 +401,7 @@ class GrammarLessonManager:
                 """
                 
                 messages = [{"role": "user", "content": prompt}]
-                response = ollama.chat(
+                response = llm_chat(
                     model=self.parent.model,
                     messages=messages,
                     options={"temperature": 0.1, "num_predict": 15}
@@ -498,7 +498,7 @@ class GrammarLessonManager:
                 """
                 
                 messages = [{"role": "user", "content": prompt}]
-                response = ollama.chat(
+                response = llm_chat(
                     model=self.parent.model,
                     messages=messages,
                     options={"temperature": 0.1, "num_predict": 5}
@@ -793,7 +793,7 @@ class GrammarLessonManager:
             # Get evaluation from LLM
             retrieved = self.parent._retrieve(prompt)
             messages = self.parent._build_prompt(prompt, retrieved, deque())  # no convo history
-            response = ollama.chat(model=self.parent.model, messages=messages)["message"]["content"]
+            response = llm_chat(model=self.parent.model, messages=messages)["message"]["content"]
             
             # Parse the response
             # The response should be a JSON string, extract it and parse

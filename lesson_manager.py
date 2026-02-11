@@ -1,7 +1,7 @@
 import os, json, re, logging, random
 from collections import deque
 from typing import Dict, List, Tuple, Optional, Any
-import ollama  # Assuming this is available
+from llm_client import llm_chat
 
 log = logging.getLogger("woccon_assistant")
 
@@ -249,7 +249,7 @@ class LessonManager:
                         query = f"Question about Woccon word '{w['woccon']}' meaning '{w['english']}': {usr}"
                         retrieved = self.parent._retrieve(query)
                         messages = self.parent._build_prompt(query, retrieved, deque())
-                        explanation = ollama.chat(model=self.parent.model, messages=messages)["message"]["content"]
+                        explanation = llm_chat(model=self.parent.model, messages=messages)["message"]["content"]
                         
                         self.current_explanation = (
                             f"📚 {explanation}\n\n"
@@ -311,7 +311,7 @@ class LessonManager:
                         query = f"Explain the Woccon word '{w['woccon']}' meaning '{w['english']}' with cultural and linguistic context."
                         retrieved = self.parent._retrieve(query)
                         messages = self.parent._build_prompt(query, retrieved, deque())
-                        explanation = ollama.chat(model=self.parent.model, messages=messages)["message"]["content"]
+                        explanation = llm_chat(model=self.parent.model, messages=messages)["message"]["content"]
                         
                         word_info += f"{explanation}\n\n"
                     except Exception as e:
@@ -623,7 +623,7 @@ class LessonManager:
             """
             
             messages = [{"role": "user", "content": prompt}]
-            response = ollama.chat(
+            response = llm_chat(
                 model=self.parent.model,
                 messages=messages,
                 options={"temperature": 0.1, "num_predict": 10}
@@ -667,7 +667,7 @@ class LessonManager:
                 """
                 
                 messages = [{"role": "user", "content": prompt}]
-                response = ollama.chat(
+                response = llm_chat(
                     model=self.parent.model,
                     messages=messages,
                     options={"temperature": 0.1, "num_predict": 15}
@@ -764,7 +764,7 @@ class LessonManager:
                 """
                 
                 messages = [{"role": "user", "content": prompt}]
-                response = ollama.chat(
+                response = llm_chat(
                     model=self.parent.model,
                     messages=messages,
                     options={"temperature": 0.1, "num_predict": 5}
@@ -1177,7 +1177,7 @@ class LessonManager:
             # Get evaluation from LLM
             retrieved = self.parent._retrieve(prompt)
             messages = self.parent._build_prompt(prompt, retrieved, deque())  # no convo history
-            response = ollama.chat(model=self.parent.model, messages=messages)["message"]["content"]
+            response = llm_chat(model=self.parent.model, messages=messages)["message"]["content"]
             
             # Parse the response
             # The response should be a JSON string, extract it and parse
