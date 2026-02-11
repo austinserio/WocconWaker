@@ -125,8 +125,9 @@ async def verify_webhook(request: Request):
     hub_mode  = request.query_params.get("hub.mode")
     hub_token = request.query_params.get("hub.verify_token")
     challenge = request.query_params.get("hub.challenge")
-
-    if messenger.verify_webhook(hub_mode, hub_token):
+    # Use get_messenger() so VERIFY_TOKEN is read at request time (e.g. after env update in Azure)
+    messenger_instance = get_messenger()
+    if messenger_instance.verify_webhook(hub_mode, hub_token):
         # Echo back the challenge code
         return PlainTextResponse(challenge, status_code=200)
 
