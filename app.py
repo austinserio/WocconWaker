@@ -84,6 +84,14 @@ messenger = MessengerIntegration(
 )
 
 
+def get_messenger():
+    """Get MessengerIntegration with current env vars (e.g. after VERIFY_TOKEN update in Azure)."""
+    return MessengerIntegration(
+        page_access_token=os.environ.get('PAGE_ACCESS_TOKEN'),
+        verify_token=os.environ.get('VERIFY_TOKEN')
+    )
+
+
 # Add these utility functions to your app.py 
 
 def setup_webhook_logging():
@@ -128,8 +136,8 @@ async def verify_webhook(request: Request):
     # Use get_messenger() so VERIFY_TOKEN is read at request time (e.g. after env update in Azure)
     messenger_instance = get_messenger()
     if messenger_instance.verify_webhook(hub_mode, hub_token):
-        # Echo back the challenge code
-        return PlainTextResponse(challenge, status_code=200)
+        # Echo back the challenge code (Facebook requires this)
+        return PlainTextResponse(challenge or "", status_code=200)
 
     # Token mismatch
     return PlainTextResponse("Verification failed", status_code=403)
