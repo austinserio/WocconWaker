@@ -128,18 +128,14 @@ webhook_logger = setup_webhook_logging()
 @app.get("/webhook")
 async def verify_webhook(request: Request):
     """
-    Facebook webhook verification.
+    Facebook webhook verification. Reads VERIFY_TOKEN at request time (for Azure env updates).
     """
-    hub_mode  = request.query_params.get("hub.mode")
+    hub_mode = request.query_params.get("hub.mode")
     hub_token = request.query_params.get("hub.verify_token")
     challenge = request.query_params.get("hub.challenge")
-    # Use get_messenger() so VERIFY_TOKEN is read at request time (e.g. after env update in Azure)
-    messenger_instance = get_messenger()
-    if messenger_instance.verify_webhook(hub_mode, hub_token):
-        # Echo back the challenge code (Facebook requires this)
+    expected_token = os.environ.get("VERIFY_TOKEN")
+    if hub_mode == "subscribe" and expected_token is not None and hub_token == expected_token:
         return PlainTextResponse(challenge or "", status_code=200)
-
-    # Token mismatch
     return PlainTextResponse("Verification failed", status_code=403)
 
 # Add a diagnostic endpoint to help with debugging
