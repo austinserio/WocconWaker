@@ -129,19 +129,22 @@ webhook_logger = setup_webhook_logging()
 async def verify_webhook(request: Request):
     """
     Facebook webhook verification. Reads VERIFY_TOKEN at request time (for Azure env updates).
+    Defensive: no exceptions to avoid 500; return 403 on any failure.
     """
     try:
-        hub_mode = request.query_params.get("hub.mode")
-        hub_token = request.query_params.get("hub.verify_token")
-        challenge = request.query_params.get("hub.challenge")
-        expected_token = os.environ.get("VERIFY_TOKEN")
-        if hub_mode == "subscribe" and expected_token is not None and hub_token == expected_token:
-            return PlainTextResponse(challenge or "", status_code=200)
+        # Avoid any attribute that might not exist; use request.url.query and parse if needed
+        q = getattr(request, "query_params", None)
+        hub_mode = (q.get("hub.mode") if q else None) or ""
+        hub_token = (q.get("hub.verify_token") if q else None) or ""
+        raw_challenge = q.get("hub.challenge") if q else None
+        challenge = "" if raw_challenge is None else str(raw_challenge)
+        expected_token = (os.environ.get("VERIFY_TOKEN") or "").strip()
+        if (hub_mode.strip() == "subscribe" and expected_token
+                and hub_token.strip() == expected_token):
+            return PlainTextResponse(challenge, status_code=200)
         return PlainTextResponse("Verification failed", status_code=403)
-    except Exception as e:
-        return PlainTextResponse(f"Error: {e}", status_code=500)
-
-# Add a diagnostic endpoint to help with debugging
+    except Exception:
+        return PlainTextResponse("Verification failed", status_code=403)
 
 # Replace your current webhook verification endpoint with this one
 @app.post("/webhook")
@@ -149,33 +152,38 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
     """Handle incoming messages from Facebook Messenger."""
     try:
         data = await request.json()
-        print(f"Received webhook data: {data}")  # Debug log
-        
+        # Facebook may send non-message events (delivery, read, etc.) - always return 200
+        if not data.get("object") == "page":
+            return JSONResponse(content={"status": "ignored"})
+
         messages = messenger.process_webhook(data)
         print(f"[DEBUG] Processed {len(messages)} messages from webhook")
-        
+
+        if not messages:
+            return JSONResponse(content={"status": "ok", "message": "no messages to process"})
+
         # Make sure assistant is initialized
         if not assistant_ready.is_set():
-            # Send a temporary message to the user
             for msg in messages:
                 messenger.send_message(
-                    msg['user_id'], 
+                    msg['user_id'],
                     "I'm still waking up. Please wait a moment..."
                 )
             return JSONResponse(content={"status": "initializing"})
-        
+
         for msg in messages:
             user_id = msg['user_id']
             text = msg['text']
-            source = msg.get('source', 'text')  # Get the source (text, quick_reply, or postback)
-            
-            print(f"[DEBUG] Raw webhook event: {msg.get('raw_event', {})}")
-            print(f"[DEBUG] Extracted user_id: {user_id}")
-            print(f"[DEBUG] Processing message from {user_id}: {text} (source: {source})")
-            
-            # Use background task to handle message so we can return quickly
+            source = msg.get('source', 'text')
+
+            # Send immediate ack so user sees we received (and verify PAGE_ACCESS_TOKEN works)
+            try:
+                messenger.send_message(user_id, "Got it! One moment...")
+            except Exception as send_err:
+                print(f"[DEBUG] Immediate ack send failed: {send_err}")
+
             background_tasks.add_task(process_message, user_id, text, source)
-        
+
         return JSONResponse(content={"status": "ok"})
     except Exception as e:
         print(f"Error processing webhook: {e}")

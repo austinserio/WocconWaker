@@ -72,21 +72,45 @@ def _foundry_chat(
     messages: List[Dict[str, str]],
     options: Dict[str, Any],
 ) -> Dict[str, Any]:
-    """Use Microsoft Foundry OpenAI-compatible endpoint (Llama or HF model)."""
+    """Use Microsoft Foundry: Azure AI inference (.services.ai.azure.com) or Azure OpenAI (.openai.azure.com)."""
+    import requests
+    endpoint = (os.getenv("FOUNDRY_ENDPOINT") or os.getenv("AZURE_AI_ENDPOINT") or "").rstrip("/")
+    api_key = os.getenv("FOUNDRY_API_KEY") or os.getenv("AZURE_INFERENCE_CREDENTIAL")
+    deployment = (os.getenv("FOUNDRY_DEPLOYMENT") or "Meta-Llama-3.1-8B-Instruct").strip() or "Meta-Llama-3.1-8B-Instruct"
+    model_for_api = (os.getenv("FOUNDRY_MODEL_ID") or "").strip() or deployment
+    if not endpoint or not api_key:
+        log.error("FOUNDRY_ENDPOINT and FOUNDRY_API_KEY (or AZURE_AI_ENDPOINT / AZURE_INFERENCE_CREDENTIAL) required")
+        return {"message": {"content": "Error: Foundry endpoint and API key not configured."}}
+
+    # Azure AI Model Inference endpoint: POST .../models/chat/completions?api-version=...
+    if "services.ai.azure.com" in endpoint:
+        api_version = os.getenv("FOUNDRY_API_VERSION", "2024-05-01-preview")
+        url = f"{endpoint}/models/chat/completions?api-version={api_version}"
+        headers = {"Content-Type": "application/json", "api-key": api_key}
+        payload = {
+            "model": model_for_api,
+            "messages": messages,
+            "max_tokens": options.get("num_predict", 1000),
+            "temperature": options.get("temperature", 0.3),
+        }
+        if options.get("stop"):
+            payload["stop"] = options["stop"]
+        try:
+            r = requests.post(url, headers=headers, json=payload, timeout=120)
+            r.raise_for_status()
+            data = r.json()
+            content = (data.get("choices", [{}])[0].get("message", {}).get("content") or "").strip()
+            return {"message": {"role": "assistant", "content": content}}
+        except Exception as e:
+            log.error(f"Foundry inference request failed: {e}")
+            return {"message": {"content": f"Error: Foundry request failed. {e}"}}
+
+    # Azure OpenAI endpoint (.openai.azure.com): use SDK
     try:
         from openai import AzureOpenAI
     except ImportError:
         log.error("openai package required for Foundry. pip install openai")
         return {"message": {"content": "Error: openai package not installed for Foundry mode."}}
-    endpoint = os.getenv("FOUNDRY_ENDPOINT") or os.getenv("AZURE_AI_ENDPOINT")
-    api_key = os.getenv("FOUNDRY_API_KEY") or os.getenv("AZURE_INFERENCE_CREDENTIAL")
-    deployment = os.getenv("FOUNDRY_DEPLOYMENT") or model
-    if not endpoint or not api_key:
-        log.error("FOUNDRY_ENDPOINT and FOUNDRY_API_KEY (or AZURE_AI_ENDPOINT / AZURE_INFERENCE_CREDENTIAL) required")
-        return {"message": {"content": "Error: Foundry endpoint and API key not configured."}}
-    endpoint = endpoint.rstrip("/")
-    # Azure OpenAI SDK expects base URL, e.g. https://<resource>.openai.azure.com or
-    # https://<resource>.services.ai.azure.com (no /openai/v1 path needed for SDK).
     api_version = os.getenv("FOUNDRY_API_VERSION", "2024-10-21")
     try:
         client = AzureOpenAI(
@@ -96,7 +120,7 @@ def _foundry_chat(
         )
         max_tokens = options.get("num_predict", 1000)
         resp = client.chat.completions.create(
-            model=deployment,
+            model=model_for_api,
             messages=messages,
             temperature=options.get("temperature", 0.3),
             max_tokens=max_tokens,
