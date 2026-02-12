@@ -78,15 +78,18 @@ PAGE_ACCESS_TOKEN=your_page_access_token
 WOCCON_MODE=server
 PORT=8000
 
-# LLM: local Ollama (faster iteration) or Foundry (same as prod)
-LOCAL_LLM=true
-# If LOCAL_LLM=false, add FOUNDRY_* vars (see FOUNDRY_SETUP.md)
+# Use Azure Foundry for chat (same as production) — no Ollama needed
+LOCAL_LLM=false
+FOUNDRY_ENDPOINT=https://woccon-foundry.services.ai.azure.com
+FOUNDRY_API_KEY=your_foundry_api_key
+FOUNDRY_DEPLOYMENT=Meta-Llama-3.1-8B-Instruct
+FOUNDRY_API_VERSION=2024-05-01-preview
 
 # Optional
 ENABLE_TYPING_INDICATORS=true
 ```
 
-Use the same `VERIFY_TOKEN` you’ll enter in Facebook. Use the Page Access Token for whichever Page is receiving messages (production WocconWaker page or Shocktalk dev page, depending on which app you use for the webhook).
+Copy the Foundry vars from your Azure Container App. Use the same VERIFY_TOKEN in Facebook and the right Page Access Token for the Page you're testing with.
 
 ---
 
@@ -135,6 +138,44 @@ When you’re done developing and you had pointed the **production** WocconWaker
 1. **Webhooks** → **Edit**.
 2. **Callback URL**: `https://wocconwaker-app.icyglacier-d3593e65.eastus2.azurecontainerapps.io/webhook`
 3. **Verify and Save**.
+
+---
+
+## Webhook URL not resolving?
+
+`https://local-woccon.urbanindigenouscollective.org` only works after this **one-time setup** (UIC Cloudflare):
+
+1. **Log in** (browser opens):
+   ```bash
+   cloudflared tunnel login
+   ```
+   Use the UIC Cloudflare account that owns `urbanindigenouscollective.org`.
+
+2. **Create the tunnel** and note the tunnel ID (e.g. `a1b2c3d4-e5f6-...`):
+   ```bash
+   cloudflared tunnel create local-woccon
+   ```
+
+3. **Add DNS** in Cloudflare (Dashboard → urbanindigenouscollective.org → DNS):
+   - Type: **CNAME**
+   - Name: **local-woccon**
+   - Target: **`<TUNNEL_ID>.cfargotunnel.com`** (e.g. `a1b2c3d4-e5f6-....cfargotunnel.com`)
+   - Save.
+
+   Or add it via cloudflared (must be logged in as the **UIC** account that owns urbanindigenouscollective.org):
+   ```bash
+   cloudflared tunnel login   # sign in with UIC if you have multiple accounts
+   ./setup-tunnel-dns.sh     # adds CNAME local-woccon.urbanindigenouscollective.org
+   ```
+   If you're logged into a different account (e.g. Shocktalk), the record would be created in that zone instead. Use the UIC account so the record is in urbanindigenouscollective.org.
+
+4. **Create `cloudflared.yml`** in the project (copy from `cloudflared-example.yml`):
+   - Set `tunnel:` to your tunnel ID.
+   - Set `credentials-file:` to the path of the JSON file created in step 2 (usually `~/.cloudflared/<TUNNEL_ID>.json`).
+
+5. Restart `./run-local-messenger.sh`. The script will use `cloudflared.yml` and the hostname should resolve in a minute or two.
+
+To confirm: open `https://local-woccon.urbanindigenouscollective.org/health` in a browser (or curl). If you get JSON, the tunnel and app are good; then use `https://local-woccon.urbanindigenouscollective.org/webhook` in Facebook.
 
 ---
 
