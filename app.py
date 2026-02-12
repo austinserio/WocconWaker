@@ -176,11 +176,11 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
             text = msg['text']
             source = msg.get('source', 'text')
 
-            # Send immediate ack so user sees we received (and verify PAGE_ACCESS_TOKEN works)
+            # Show typing indicator immediately (no extra permission needed; uses same Send API)
             try:
-                messenger.send_message(user_id, "Got it! One moment...")
+                messenger.send_typing_indicator(user_id, True)
             except Exception as send_err:
-                print(f"[DEBUG] Immediate ack send failed: {send_err}")
+                print(f"[DEBUG] Typing indicator send failed: {send_err}")
 
             background_tasks.add_task(process_message, user_id, text, source)
 

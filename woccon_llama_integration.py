@@ -546,6 +546,8 @@ class WocconAssistant:
                 "- Part of Tuscarora Confederacy (incorrect)\n"
                 "- Any family other than Eastern Siouan\n\n"
                 
+                "When stating the language family, use this exact phrasing: 'Woccon is Eastern Siouan (Coastal Catawban branch), most closely related to Catawba.' Avoid mentioning other families (e.g. Algonquian) unless clearly contrasting (e.g. 'unlike Algonquian languages').\n\n"
+                
                 "## CORE PRINCIPLES\n"
                 "- EDUCATIONAL PRIORITY: Your primary mission is teaching about Woccon language structure, patterns, and features\n"
                 "- COMPREHENSIVE RESPONSES: When users ask for overviews, summaries, or comprehensive explanations, provide detailed information\n"
@@ -629,6 +631,8 @@ class WocconAssistant:
                 "- Eastern Algonquian (incorrect)\n"
                 "- Part of Tuscarora Confederacy (incorrect)\n"
                 "- Any family other than Eastern Siouan\n\n"
+                
+                "When stating the language family, use this exact phrasing: 'Woccon is Eastern Siouan (Coastal Catawban branch), most closely related to Catawba.' Avoid mentioning other families unless clearly contrasting.\n\n"
                 
                 "## EDUCATIONAL MISSION\n"
                 "- Provide comprehensive educational responses about documented language features\n"
@@ -758,30 +762,47 @@ class WocconAssistant:
     def _verify_classification(self, text: str) -> str:
         """
         Verify that the response doesn't contain classification hallucinations.
+        Only triggers when the model incorrectly *classifies* Woccon as another family;
+        ignores correct contrastive phrasing like "not Algonquian" or "unlike Iroquoian".
         """
-        # Check for incorrect classification patterns
+        # Phrases that indicate the model is correctly contrasting (not misclassifying)
+        correct_contrast = re.compile(
+            r'\b(not|never|unlike|rather\s+than|distinct\s+from|instead\s+of|'
+            r'as\s+opposed\s+to|contrary\s+to|no\s+|none\s+of|different\s+from)\s+',
+            re.I
+        )
+        # Patterns: (regex, correction, family_name for contrast check)
         incorrect_classifications = [
-            (r'\b(?:woccon|the woccon language).{0,50}?\b(?:eastern\s+)?algonquian\b', 
+            (r'\b(?:woccon|the woccon language)(.{0,50}?)\b(?:eastern\s+)?algonquian\b',
              "Woccon is Eastern Siouan, not Algonquian"),
-            (r'\b(?:woccon|the woccon language).{0,50}?\btuscarora\s+confederacy\b', 
+            (r'\b(?:woccon|the woccon language)(.{0,50}?)\btuscarora\s+confederacy\b',
              "Woccon was not part of the Tuscarora Confederacy"),
-            (r'\bwoccon.{0,50}?\biroquoian\b', 
+            (r'\bwoccon(.{0,50}?)\biroquoian\b',
              "Woccon is Eastern Siouan, not Iroquoian"),
-            (r'\bwoccon.{0,50}?\bmuskogean\b', 
+            (r'\bwoccon(.{0,50}?)\bmuskogean\b',
              "Woccon is Eastern Siouan, not Muskogean"),
-            (r'\bwoccon.{0,50}?\balgic\b', 
+            (r'\bwoccon(.{0,50}?)\balgic\b',
              "Woccon is Eastern Siouan, not Algic"),
         ]
-        
+        standard_correction = (
+            "Woccon belongs to the Eastern Siouan language family and is most closely related to Catawba "
+            "as part of the Coastal Catawban branch. This is documented in John Lawson's 1709 records "
+            "from the North Carolina coastal plain."
+        )
+
         for pattern, correction in incorrect_classifications:
-            if re.search(pattern, text, re.I):
-                return (
-                    f"I need to correct that classification. {correction}. "
-                    f"Woccon belongs to the Eastern Siouan language family and is most closely related to Catawba "
-                    f"as part of the Coastal Catawban branch. This is documented in John Lawson's 1709 records "
-                    f"from the North Carolina coastal plain."
-                )
-        
+            match = re.search(pattern, text, re.I)
+            if not match:
+                continue
+            # Check the span between "Woccon" and the family name for correct contrast
+            between = match.group(1) if match.lastindex and match.lastindex >= 1 else ""
+            if correct_contrast.search(between):
+                continue  # Model said "not Algonquian" etc. — no correction needed
+            # Actual misclassification: return correction only (model's reply is based on wrong premise)
+            return (
+                f"I need to correct that classification. {correction}. {standard_correction}"
+            )
+
         return text
     
     def _strict_verify(self, text: str, has_strong_match: bool, is_word_request: bool) -> str:

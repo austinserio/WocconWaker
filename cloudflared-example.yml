@@ -1,0 +1,14 @@
+# UIC Cloudflare tunnel for local Woccon dev.
+# 1. Run: cloudflared tunnel login   (use UIC Cloudflare)
+# 2. Run: cloudflared tunnel create local-woccon
+# 3. Copy this file to cloudflared.yml and set tunnel: to your tunnel ID
+# 4. Add DNS: local-woccon.urbanindigenouscollective.org CNAME <TUNNEL_ID>.cfargotunnel.com
+# 5. Run: cloudflared tunnel --config cloudflared.yml run local-woccon
+
+tunnel: REPLACE_WITH_TUNNEL_ID
+credentials-file: /REPLACE/WITH/PATH/TO/.cloudflared/REPLACE_WITH_TUNNEL_ID.json
+
+ingress:
+  - hostname: local-woccon.urbanindigenouscollective.org
+    service: http://localhost:8000
+  - service: http_status:404
