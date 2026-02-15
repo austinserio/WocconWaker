@@ -88,6 +88,11 @@ The system supports three operational modes via WOCCON_MODE environment variable
 
 ## Environment Variables
 
+**Phase 4 – language reload and unified data:**
+- `WOCCON_DICTIONARY_PATH`: Path to dictionary JSON (default `woccon_language/dictionary.json`). Set to `woccon_language/dictionary_unified.json` to use merged community + Lawson lexicon.
+- `WOCCON_RULES_PATH`: Path to rules JSON (default `woccon_language/rules.json`). Set to `woccon_language/rules_unified.json` to use merged rules.
+- After running `merge_staging.py`, call `POST /admin/reload-language` (same auth as ingest: `X-Ingest-Secret` or `?secret=`) to reload and rebuild RAG without restart.
+
 Required for full functionality:
 ```bash
 VERIFY_TOKEN="facebook_webhook_verify_token"
@@ -130,6 +135,7 @@ python drive_ingest.py
 - `GET /info` - Assistant information
 - `POST /admin/ingest-drive` - Run Drive ingest on demand (optional: X-Ingest-Secret or ?secret=)
 - `GET /admin/ingest-drive/status` - Last ingest result
+- `POST /admin/reload-language` - Reload dictionary/rules and rebuild RAG (same auth as ingest; optional body: `dict_path`, `rules_path`)
 
 ## Notes
 

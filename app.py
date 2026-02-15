@@ -535,6 +535,29 @@ async def ingest_drive_status(request: Request):
         return {"status": "no run yet", "last_result": None}
     return {"status": "last run", "last_result": _last_ingest_result}
 
+
+@app.post("/admin/reload-language")
+async def reload_language(request: Request):
+    """
+    Reload dictionary and rules from disk and rebuild RAG corpus (Phase 4).
+    Use after merge_staging.py or when switching to unified files. Same auth as ingest (INGEST_DRIVE_SECRET).
+    Optional body: {"dict_path": "...", "rules_path": "..."} to override paths for this reload only.
+    """
+    _require_ingest_secret(request)
+    body = {}
+    try:
+        body = await request.json() if request.headers.get("content-type", "").startswith("application/json") else {}
+    except Exception:
+        pass
+    dict_path = body.get("dict_path")
+    rules_path = body.get("rules_path")
+    try:
+        result = assistant.reload_language_data(dict_path=dict_path, rules_path=rules_path)
+        return {"status": "ok", **result}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
 # API endpoint to send a direct message to the assistant
 @app.post("/message")
 async def send_message(message: Dict[str, Any]):

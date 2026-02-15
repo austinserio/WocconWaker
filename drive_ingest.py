@@ -22,8 +22,12 @@ SYNC_STATE_FILENAME = "sync_state.json"
 
 
 def _staging_dir() -> str:
-    """Staging directory for Drive extraction (must match drive_extract.DEFAULT_STAGING_DIR)."""
-    return os.environ.get("DRIVE_STAGING_DIR") or "woccon_language/drive_staging"
+    """Staging directory for Drive extraction. Haiku uses drive_staging_haiku so Sonnet output is not overwritten."""
+    if os.environ.get("DRIVE_STAGING_DIR"):
+        return os.environ.get("DRIVE_STAGING_DIR", "woccon_language/drive_staging")
+    if "haiku" in (os.environ.get("ANTHROPIC_MODEL") or "").lower():
+        return "woccon_language/drive_staging_haiku"
+    return "woccon_language/drive_staging"
 
 
 def load_sync_state() -> Dict[str, Any]:
@@ -231,7 +235,10 @@ def ingest_folder(
         file_list = [f for f in file_list if name_filter.lower() in (f.get("path") or f.get("name") or "").lower()]
         log.info("Filtering to %d files matching %r", len(file_list), name_filter)
 
-    sync_state = load_sync_state()
+    force_full = (os.environ.get("DRIVE_INGEST_FORCE_FULL") or "").strip().lower() in ("1", "true", "yes")
+    sync_state = {} if force_full else load_sync_state()
+    if force_full:
+        log.info("DRIVE_INGEST_FORCE_FULL=1: re-fetching and re-extracting all files (ignoring sync_state)")
     results = []
     content_count = 0
     skipped_sync = 0

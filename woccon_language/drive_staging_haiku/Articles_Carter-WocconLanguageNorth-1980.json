@@ -1,0 +1,668 @@
+{
+  "source_path": "Articles/Carter-WocconLanguageNorth-1980",
+  "source_url": "https://drive.google.com/file/d/10Sg53_D1mTjwBt-ZLkL9wb3mgbIShcVUmtfqdlvsjTA/view",
+  "lexicon_entries": [
+    {
+      "woccon": "Tsaure",
+      "english": "Cockles",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wawawa",
+      "english": "snow",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tauntsee",
+      "english": "dog",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Num-perre",
+      "english": "two",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Nam-mee",
+      "english": "three",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Punnum-punne",
+      "english": "four",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Soone noponne",
+      "english": "ten",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Toc-koor",
+      "english": "Scissors and Tobacco-Tongues",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yossoo",
+      "english": "A Mortar",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wittau",
+      "english": "A Rat",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Monwittetau",
+      "english": "Alligator",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yauh",
+      "english": "A Path",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Cose",
+      "english": "Corn",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Rooesoo",
+      "english": "Stockings",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Reheshiwau",
+      "english": "Afraid",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Aucummato",
+      "english": "I remember it",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Auhaun",
+      "english": "Goose",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yau-hauk",
+      "english": "Snake",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yacunne",
+      "english": "Fish",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yopoonitsa",
+      "english": "Box",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Tauh-he",
+      "english": "Dog",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Coosauk",
+      "english": "Pease",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Tooseawau",
+      "english": "Kettle",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wattapi",
+      "english": "Star",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yau",
+      "english": "Fire",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yup-se rum",
+      "english": "gourd",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wutepi",
+      "english": "bottle",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yauh-he",
+      "english": "Indians",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ya",
+      "english": "water",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yicau",
+      "english": "old woman",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yicauau",
+      "english": "wife",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yonne",
+      "english": "wood",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Intom",
+      "english": "pipe",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yuncor",
+      "english": "wind",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wee-kau",
+      "english": "belt",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Roo-iune",
+      "english": "blankets",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "aukitte",
+      "english": "breeches",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rooesoo possoo",
+      "english": "stockings",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "too-she",
+      "english": "smoke",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weekwonne",
+      "english": "reed",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waurepa",
+      "english": "I am sick",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "roamore",
+      "english": "king",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "caure",
+      "english": "dead",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yendare",
+      "english": "fat",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wonsh-shee",
+      "english": "awl or needle",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yah-testea",
+      "english": "black or blue",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Roosomme",
+      "english": "Acorns",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Tau-unta winnik",
+      "english": "Ax",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ekoocromon",
+      "english": "Bag",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Rookeppa",
+      "english": "Basket",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Watt",
+      "english": "Boat",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ikettau",
+      "english": "Bread",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Waukhaway",
+      "english": "Day",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Soppe",
+      "english": "Feathers",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Webtau",
+      "english": "Five",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Tumme",
+      "english": "Hair",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Poppe",
+      "english": "Head",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wee",
+      "english": "Knife",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wee-kessoo",
+      "english": "Moccasins",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yantoha",
+      "english": "Night",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yauta",
+      "english": "Red",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Is-sto",
+      "english": "Six",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Cotsau",
+      "english": "Spoon",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wittapare",
+      "english": "Sun",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Uu-coone",
+      "english": "Tobacco",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Numperre",
+      "english": "Two",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ya-",
+      "english": "Water",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Noccoo Eraute",
+      "english": "Have you got anything to eat",
+      "pos": "phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Hooheh",
+      "english": "Pine tree",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Hannatocko",
+      "english": "Fox-skin",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Tonne",
+      "english": "one",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Tonne hauk pea",
+      "english": "eleven",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Soone nomme",
+      "english": "twelve",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hauk",
+      "english": "plus",
+      "pos": "particle",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Soone",
+      "english": "more than",
+      "pos": "particle",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "picano",
+      "english": "ten",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pea",
+      "english": "ten",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Winnop",
+      "english": "twenty",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wattapi untakeer",
+      "english": "star",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yau-huk",
+      "english": "snake",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ouke",
+      "english": "house",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ourka",
+      "english": "bear",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    "Potential suffix [-we] marks potential states",
+    "Locative suffix [-mu] appears with other roots",
+    "Possible genetic relationship with Catawba language",
+    "Core vocabulary shows consistent linguistic similarities",
+    "First-person active agreement marker can be infixed (example: [chewathi] 'I built a fire')",
+    "Numbers seven and eight are derived from roots for two and three, with an apparent reversal",
+    "Exhibits lexical conservatism compared to other Siouan languages",
+    "Numbers eleven and twelve constructed as 'ten plus one' and 'ten plus two'",
+    "Number for ten can be optionally deleted in number constructions",
+    "Numerals can be compound words",
+    "Some number roots appear to be cognate across Siouan languages"
+  ],
+  "pronunciation_notes": [
+    "Lawson's orthography uses 'y' extensively, 'j' appears only twice",
+    "Woccon [r] corresponds with Catawba [n] in some forms",
+    "Woccon [k] can correspond with Catawba [m]"
+  ],
+  "cultural_notes": [
+    "Woccon were located in two villages on the lower Neuse River, in southern Greene and northern Lenoir Counties",
+    "Estimated population was 120 fighting men, making them the second most populous tribe of the North Carolina coastal plain",
+    "Located between the Tuscarora and European settlements of Bath and New Bern",
+    "Would have been particularly vulnerable during the Tuscarora War",
+    "Close allies and near neighbors of the Tuscarora",
+    "Woccon was a Native American language documented by John Lawson in his 1709 book A New Voyage to Carolina",
+    "Lawson recorded a vocabulary of 143 Woccon language items",
+    "Woccon was spoken by a small coastal plain tribe in North Carolina",
+    "After 1711-1713 Tuscarora War, the Woccon were likely absorbed by the more populous Tuscarora",
+    "Lawson noted significant linguistic differences between Woccon, Tuscarora, and Pamlico languages",
+    "When comparing Woccon and Catawba vocabularies, only one word (Tsaure) was similar out of 51 words",
+    "Woccon is a Siouan language related to Catawba",
+    "Early linguistic studies by Adelung, Vater, and Gallatin attempted to classify Woccon's language family",
+    "Woccon was historically compared with Tuscarora (Iroquoian), Pamlico (Algonquian), and Catawba (Siouan) languages",
+    "Schoolcraft reproduced Woccon vocabularies in 1855, though with transcription errors",
+    "Woccon is a Siouan language",
+    "Woccon and Catawba were genetically related languages",
+    "Albert S. Gatschet collected comparative Woccon-Catawba vocabulary in an unpublished manuscript",
+    "Gatschet's manuscript contains 86 comparative vocabulary items",
+    "Linguistic comparisons of Woccon were made by scholars like Gallatin, Schoolcraft, and Gatschet",
+    "Relationship to Catawba language has been studied by William C. Sturtevant",
+    "Lawson's word list is a primary source of Woccon vocabulary",
+    "Lexical data from early 18th century sources may have transcription errors",
+    "Woccon language is related to Catawba language",
+    "Data sourced from comparative linguistic analysis",
+    "Some words show cognate relationships between Woccon and Catawba languages",
+    "Woccon is likely related to Catawba language",
+    "34 of 143 Woccon vocabulary items have plausible Catawba cognates",
+    "Suggests historical linguistic relationship between Woccon and Catawba languages",
+    "Woccon was a Native American language",
+    "Historically located in North Carolina coastal plain",
+    "Linguistic data primarily from Lawson's recordings",
+    "Likely Siouan language family connection with Catawba",
+    "Woccon was spoken in close proximity to Tuscarora",
+    "Tuscarora was linguistically dominant on the coastal plain",
+    "Woccon exhibits lexical conservatism with old Siouan roots",
+    "Lawson noted significant linguistic differences between Woccon and Tuscarora",
+    "Woccon showed minimal linguistic borrowing despite close contact with other groups",
+    "Woccon people were located near the Catawba River",
+    "Comparative linguistics suggests Woccon is related to other Siouan languages like Ofo, Biloxi, Tutelo, Lakhota, and Crow",
+    "Woccon appears to be more divergent from other Siouan languages than Dakota and Crow",
+    "Limited lexical samples may affect understanding of language diversity",
+    "Documentation sources include works by James O. Dorsey, John R. Swanton, Horatio Hale, Robert H. Lowie",
+    "Spoken in southeastern United States",
+    "Most southeastern Native languages had quinary or partial quinary number systems",
+    "Tutelo was the only other Siouan language in the coastal region",
+    "Tutelo were located in northwestern North Carolina and southeastern region",
+    "Geographically close to Catawba",
+    "Documented by Lawson",
+    "Comparative linguistic analysis with Lakhota and other Siouan languages",
+    "Woccon is a Siouan language spoken in North Carolina",
+    "Catawba and Tutelo are other eastern Siouan languages",
+    "Eastern Siouan languages were not necessarily more closely related to each other than to western Siouan languages",
+    "Woccon is linguistically closer to Catawba than to other Siouan languages",
+    "Woccon shares 35 probable cognates with Catawba, compared to 19 with other Siouan languages",
+    "Woccon and Catawba share common linguistic innovations in lexicon and morphology",
+    "Woccon is an Eastern Siouan language",
+    "Woccon is considered extremely divergent from other Siouan languages",
+    "Woccon shares some unique lexical items with Tutelo, including words for four, goose, dog, corn, wind, smoke, and dead",
+    "Woccon is classified in its own subfamily with Catawba, separate from Western Siouan languages",
+    "Linguists suggest Woccon has preserved some older Macro-Siouan linguistic roots",
+    "Woccon is part of the Southeastern Siouan language group",
+    "Siouan language family includes multiple subgroups like Eastern Siouan, Missouri River Siouan, and Southeastern Siouan",
+    "Linguistic classification based on work by scholars like Voegelin, Mary Haas, and Wallace L. Chafe",
+    "Part of broader Macro-Siouan linguistic hypothesis",
+    "Comparative linguistic analysis suggests relationships with other Siouan languages like Catawba, Biloxi, and Lakhota",
+    "Some linguistic evidence points to potential connections with Caddoan language families",
+    "Comparative linguistic analysis suggests connections between Woccon and other Siouan languages like Catawba, Ponca, and Seneca"
+  ]
+}

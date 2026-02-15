@@ -12,15 +12,33 @@ log = logging.getLogger("drive_extract")
 
 # Per-file staging directory; one JSON per source file for review-before-merge
 DEFAULT_STAGING_DIR = "woccon_language/drive_staging"
+# When using Haiku model, write here so Sonnet output in drive_staging is not overwritten (compare accuracy).
+STAGING_DIR_HAIKU = "woccon_language/drive_staging_haiku"
 DRIVE_FILE_URL_TEMPLATE = "https://drive.google.com/file/d/{file_id}/view"
+
+
+def _staging_dir_for_model(model: Optional[str]) -> str:
+    """Use separate staging dir for Haiku so Sonnet files are not overwritten; DRIVE_STAGING_DIR overrides."""
+    if os.environ.get("DRIVE_STAGING_DIR"):
+        return os.environ.get("DRIVE_STAGING_DIR", DEFAULT_STAGING_DIR)
+    resolved = (model or os.getenv("ANTHROPIC_MODEL") or "").strip().lower()
+    if resolved and "haiku" in resolved:
+        return STAGING_DIR_HAIKU
+    return DEFAULT_STAGING_DIR
 # Legacy single-file path (used only if write_per_file_staging is False)
 DEFAULT_STAGING_PATH = "woccon_language/drive_lexicon_staging.json"
 MAX_CHUNK_CHARS = 2400
 # When a file is under this size, send the whole file in one LLM call (no input chunking).
-# Anthropic SDK requires streaming for requests that may take >10 min, so we keep default 14k to avoid that:
-# English-Woccon (~18k chars) is then chunked and completes reliably. Set to 60000 if you add streaming later.
-MAX_WHOLE_FILE_CHARS = int(os.environ.get("DRIVE_EXTRACT_WHOLE_FILE_MAX_CHARS", "14000"))
+# Anthropic requires streaming for long requests, so when using Anthropic we always chunk (effective 0).
+MAX_WHOLE_FILE_CHARS_DEFAULT = int(os.environ.get("DRIVE_EXTRACT_WHOLE_FILE_MAX_CHARS", "14000"))
 EXTRACTION_SOURCE = "community_drive"
+
+
+def _max_whole_file_chars() -> int:
+    """Use 0 when Anthropic is in use so we always chunk and avoid 'Streaming is required' errors."""
+    if (os.environ.get("ANTHROPIC_API_KEY") or "").strip():
+        return 0
+    return MAX_WHOLE_FILE_CHARS_DEFAULT
 
 
 def _source_url(file_id: str) -> str:
@@ -245,7 +263,8 @@ def extract_one_file(
         file_cultural.extend(extracted.get("cultural_notes") or [])
 
     # Whole-file path: beam the entire file in one call when it fits (no input chunking).
-    if len(text) <= MAX_WHOLE_FILE_CHARS:
+    max_whole = _max_whole_file_chars()
+    if max_whole and len(text) <= max_whole:
         log.info(
             "Document %d/%d (%s) | whole file (%d chars, no chunking)",
             file_index, total_files, path, len(text),
@@ -254,7 +273,7 @@ def extract_one_file(
             text,
             path,
             model=model,
-            max_text_chars=MAX_WHOLE_FILE_CHARS,
+            max_text_chars=max_whole,
             num_predict=32768,
         )
         merge_extraction(extracted)
@@ -317,7 +336,9 @@ def extract_per_file(
     If result has use_existing_staging and staging_file, reuses existing staging JSON (no LLM). Otherwise extracts.
     Logs progress as: Document N/M | chunk ... | overall chunk X/Y (Z%).
     """
-    staging_dir = os.environ.get("DRIVE_STAGING_DIR") or DEFAULT_STAGING_DIR
+    staging_dir = _staging_dir_for_model(model)
+    os.makedirs(staging_dir, exist_ok=True)
+    log.info("Staging dir: %s", staging_dir)
     files_to_extract = [
         {"path": r.get("path") or r.get("name") or "unknown", "text": (r.get("text") or "").strip(), "file_id": r.get("file_id"), "modified_time": r.get("modified_time"), "result": r}
         for r in results
@@ -331,7 +352,6 @@ def extract_per_file(
     out: List[Dict[str, Any]] = []
     chunk_so_far = 0
     extract_index = 0
-    os.makedirs(staging_dir, exist_ok=True)
     for r in results:
         if r.get("use_existing_staging") and r.get("staging_file"):
             path = r.get("path") or r.get("name") or "unknown"
@@ -418,7 +438,7 @@ def write_per_file_staging(
     Write one JSON per file into staging_dir; add manifest.json listing all files.
     Returns (staging_dir, manifest_path). Use extract_per_file (writes incrementally) for resumable runs.
     """
-    staging_dir = staging_dir or os.environ.get("DRIVE_STAGING_DIR") or DEFAULT_STAGING_DIR
+    staging_dir = staging_dir or _staging_dir_for_model(None)
     os.makedirs(staging_dir, exist_ok=True)
     for data in per_file_data:
         _write_one_file_staging(data, staging_dir)

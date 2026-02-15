@@ -1,0 +1,55 @@
+{
+  "source_path": "Work In Progress- Woccon Grammar/Pronunciation Guide",
+  "source_url": "https://drive.google.com/file/d/12ayErZai_QDICFJcR80H5mGtkVQbr0uww76vUj5k7WY/view",
+  "lexicon_entries": [
+    {
+      "woccon": "yup",
+      "english": "wood",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "seunne",
+      "english": "river",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yupyupseunne",
+      "english": "heavily wooded river",
+      "pos": "noun",
+      "pronunciation": "(yup=wood, seunne=river)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wawawa",
+      "english": "snow",
+      "pos": "noun",
+      "pronunciation": "heavily",
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    "Subject-Object-Verb order",
+    "Reduplication signals emphasis on being heavy or more of something",
+    "2nd person singular possessive prefix: ya-/yi-",
+    "3rd person possessive prefix: wa",
+    "Questioning/interrogative mode marker: -ne",
+    "Independent modal suffix: -re"
+  ],
+  "pronunciation_notes": [
+    "a = ah as in Father",
+    "e = ay as in way",
+    "i = ee as in weep",
+    "o = oh as in Row",
+    "oo = elongated oh",
+    "u = oo as in choose",
+    "r & n are nasalized and trilled",
+    "č = ch",
+    "J = ch",
+    "Glottal stop = pause between uh and oh"
+  ],
+  "cultural_notes": []
+}

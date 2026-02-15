@@ -1,0 +1,38 @@
+{
+  "source_path": "Meeting Notes/Language Meeting 8/17",
+  "source_url": "https://drive.google.com/file/d/1ijdZUu28whU5w-IzaPUTCyx2hA1dBmnaLqRiJWsTGUY/view",
+  "lexicon_entries": [
+    {
+      "woccon": "he",
+      "english": "he",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yecauau",
+      "english": "wife",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yicau",
+      "english": "old woman",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    "Reduplication indicates emphasis or plurality",
+    "Gendered language based on speaker, not noun",
+    "Verb shows gender of speaking person"
+  ],
+  "pronunciation_notes": [],
+  "cultural_notes": [
+    "Woccon is a Siouan language",
+    "Possible dialect or idiolectual variations exist",
+    "Multiple spellings of tribal name exist (Waccamaw/Wachesaw)"
+  ]
+}

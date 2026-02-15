@@ -1,0 +1,208 @@
+{
+  "source_path": "Articles/New Life for a Lost Language.pdf",
+  "source_url": "https://drive.google.com/file/d/1FWw-_t_04oF4yIXibefcxDtG-zo8WkKv/view",
+  "lexicon_entries": [
+    {
+      "woccon": "ana",
+      "english": "mother",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "apa",
+      "english": "father",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "iswin",
+      "english": "son",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tarakta",
+      "english": "sky",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ummun",
+      "english": "hummingbird",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ieiexem",
+      "english": "pelican",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "siirx",
+      "english": "golden eagle",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kallen",
+      "english": "ocean",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ka rukk",
+      "english": "my house",
+      "pos": "noun phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ka wattin",
+      "english": "I go/I am going",
+      "pos": "verb phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rechum",
+      "english": "rabbit-skin cape",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ilup",
+      "english": "a handkerchief made of fine grass, longer than broad, and worn in the hot sun",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "lupak",
+      "english": "white face paint",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hotoi",
+      "english": "tobacco bag",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "mahsh",
+      "english": "nettle thread",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "oxhanun",
+      "english": "seed paddle for gathering oats",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "teperin",
+      "english": "small mush or soup-bowl basket",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "soyosos",
+      "english": "huckleberries",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ann-root kakk siiy",
+      "english": "Where's the whiskey?",
+      "pos": "phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Kuuwe rottey",
+      "english": "There isn't any",
+      "pos": "phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "siiy",
+      "english": "water",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kakk",
+      "english": "bitter",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Uttitha",
+      "english": "that is all",
+      "pos": "phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    "Pronominal elements exist only in composition",
+    "Verb is conjugated subjectively and objectively by affixing pronominal elements",
+    "Noun possession expressed by affixing pronominal elements",
+    "Pronominal affixes are a key structural element of the language",
+    "Simple sentence structure demonstrated: Subject-Verb-Object",
+    "Tense complexity is challenging to document",
+    "Limited historical documentation makes grammatical analysis difficult"
+  ],
+  "pronunciation_notes": [
+    "Pronunciation can be challenging due to different orthographies used by linguists and collectors",
+    "Accent placement is not always clear"
+  ],
+  "cultural_notes": [
+    "The text is about language loss among Native California peoples, specifically the Rumsien Ohlone",
+    "Mission systems and colonization led to language and cultural disruption",
+    "Native peoples were marginalized and forced to assimilate",
+    "Languages and traditions went 'underground' to survive",
+    "Anthropologists incorrectly declared some Native groups 'extinct'",
+    "The text is a personal narrative about researching Native American heritage, specifically related to the Waccamaw people",
+    "The author is searching for cultural and linguistic information about her ancestors",
+    "John P. Harrington was an important anthropological researcher who documented indigenous languages and cultures",
+    "John Peabody Harrington was a linguist working for the American Bureau of Ethnology",
+    "Harrington spent several years in the 1930s working with older Rumsien people in the Monterey area",
+    "He worked primarily with Isabel Meadows, documenting her language, history, stories, and songs",
+    "Multiple vocabularies were collected from Rumsien speakers in late 19th and early 20th centuries by researchers like Pinart, Henshaw, Kroeber, Taylor, and Merriam",
+    "Language restoration work being done in workshops like Berkeley summer 1997",
+    "Alfred Kroeber documented language in 1904",
+    "Language restoration involves careful linguistic analysis and translation",
+    "Language documentation relies heavily on field notes",
+    "Harrington's field notes are a primary source of linguistic information",
+    "Language preservation efforts involve extracting vocabulary and grammatical structures",
+    "Kroeber provided early grammatical analysis with limited language samples",
+    "Alfred Kroeber published some grammatical information about the Woccon language",
+    "Language documentation is part of preserving cultural knowledge",
+    "Text appears to reference Rumsien language and cultural preservation",
+    "Language documentation involves personal storytelling and preservation efforts",
+    "Language preservation efforts by community members like Amado Mendez",
+    "Language documentation involves creating new words for modern concepts",
+    "Historical context of language loss and preservation"
+  ]
+}

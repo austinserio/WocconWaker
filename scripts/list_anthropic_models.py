@@ -20,7 +20,13 @@ try:
     # List models via the API (if available) or use a minimal chat to verify the key
     # Anthropic doesn't have a public list endpoint in the same way; we'll try a minimal message
     # to see which model works. Common ids:
-    for model_id in ["claude-3-5-sonnet-latest", "claude-3-5-sonnet-20241022", "claude-3-sonnet-20240229", "claude-sonnet-4-20250514"]:
+    for model_id in [
+        "claude-sonnet-4-20250514",
+        "claude-3-5-haiku-20241022",
+        "claude-3-5-sonnet-latest",
+        "claude-3-5-sonnet-20241022",
+        "claude-3-sonnet-20240229",
+    ]:
         try:
             r = client.messages.create(
                 model=model_id,

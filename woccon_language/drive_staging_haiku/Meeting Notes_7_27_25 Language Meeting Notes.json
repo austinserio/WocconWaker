@@ -1,0 +1,26 @@
+{
+  "source_path": "Meeting Notes/7/27/25 Language Meeting Notes",
+  "source_url": "https://drive.google.com/file/d/1MFDw5ICjPmpN1qU_hh4rWcA1fstoaSlOnEmQYibbGDw/view",
+  "lexicon_entries": [
+    {
+      "woccon": "tauh-he",
+      "english": "dog",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    "-he could be a marker for animacy/sentient",
+    "Most Siouan languages do not have feminine or masculine grammatical gender"
+  ],
+  "pronunciation_notes": [
+    "? represents a glottal stop",
+    "Nasality tends to diminish over time in language evolution"
+  ],
+  "cultural_notes": [
+    "Woccon is a Siouan language",
+    "Comparative linguistic research involves studying proto-Siouan and proto-Catawba languages",
+    "Glottochronology is used to estimate language divergence timelines"
+  ]
+}

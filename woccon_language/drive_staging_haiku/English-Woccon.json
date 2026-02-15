@@ -1,0 +1,1424 @@
+{
+  "source_path": "English-Woccon",
+  "source_url": "https://drive.google.com/file/d/18zrEOG7RktcHny5agvUm2WTwIOXBAg3asTOOBtCQd90/view",
+  "lexicon_entries": [
+    {
+      "woccon": "roosome",
+      "english": "Acorns",
+      "pos": "noun",
+      "pronunciation": "rue-sa-may",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "reheshiwau",
+      "english": "Afraid",
+      "pos": "adjective",
+      "pronunciation": "ray-hay-she-wa-oo",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yauka",
+      "english": "A little while ago",
+      "pos": "adverb",
+      "pronunciation": "ya-oo-ka",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "cuttaune",
+      "english": "All/That's all",
+      "pos": "adverb",
+      "pronunciation": "choo-ta-oo-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "monwittetau",
+      "english": "Alligator",
+      "pos": "noun",
+      "pronunciation": "mahn-we-tay-ta-oo",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sauhau",
+      "english": "Alone/Leave it alone",
+      "pos": "verb",
+      "pronunciation": "sa-oo-ha-oo",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "roocheha",
+      "english": "Angry",
+      "pos": "adjective",
+      "pronunciation": "RUE-chay-ha",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Morene",
+      "english": "Are you good?",
+      "pos": "phrase",
+      "pronunciation": "ma-ray-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wą'se",
+      "english": "Arrow",
+      "pos": "noun",
+      "pronunciation": "WAWN-she",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tau unta winnik",
+      "english": "Axe",
+      "pos": "noun",
+      "pronunciation": "ta-oo oon-ta we-neek",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ekoocromon",
+      "english": "Bag",
+      "pos": "noun",
+      "pronunciation": "(ay-COOCH-ro-moan)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wap-ka-hare",
+      "english": "Ball Knock (game)",
+      "pos": "noun",
+      "pronunciation": "(whop-ka-ha-ray)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rookeppa",
+      "english": "Basket",
+      "pos": "noun",
+      "pronunciation": "(RUE-kay-pa)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nomme",
+      "english": "Bear",
+      "pos": "noun",
+      "pronunciation": "(no-may)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ounka",
+      "english": "Bear skin",
+      "pos": "noun",
+      "pronunciation": "(oh-oon-ka)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rummaen",
+      "english": "Bead",
+      "pos": "noun",
+      "pronunciation": "(roo-ma-yen)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wee kau",
+      "english": "Belt",
+      "pos": "noun",
+      "pronunciation": "(WAY-ka-oo)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "itte",
+      "english": "Big",
+      "pos": "adjective",
+      "pronunciation": "(ee-tay)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "se",
+      "english": "Bitter",
+      "pos": "adjective",
+      "pronunciation": "(say)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yah-testea",
+      "english": "Black/Blue",
+      "pos": "adjective",
+      "pronunciation": "(ya-TAY-stay-ah)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "cuttau",
+      "english": "Bye",
+      "pos": "interjection",
+      "pronunciation": "(coo-TA-oo)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "watt",
+      "english": "Canoe",
+      "pos": "noun",
+      "pronunciation": "(watt)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wonsh-shee",
+      "english": "Chert",
+      "pos": "noun",
+      "pronunciation": "(woan-SHAY)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "raute",
+      "english": "Chew",
+      "pos": "verb",
+      "pronunciation": "(ra-OO-tay)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tsaure",
+      "english": "Clam",
+      "pos": "noun",
+      "pronunciation": "(tsa-OO-ray)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rummissau",
+      "english": "Coat",
+      "pos": "noun",
+      "pronunciation": "(roo-me-sa-oo)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sacketoome posswa",
+      "english": "Comb",
+      "pos": "noun",
+      "pronunciation": "(sock-kay-TOH-may pos-swa)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "quaute",
+      "english": "Come along",
+      "pos": "verb",
+      "pronunciation": "(kwa-OO-tay)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wee-kau",
+      "english": "Cord",
+      "pos": "noun",
+      "pronunciation": "(way-KA-oo)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "cose",
+      "english": "Corn",
+      "pos": "noun",
+      "pronunciation": "(cho-SAY)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nappinjure",
+      "english": "Cow",
+      "pos": "noun",
+      "pronunciation": "(na-PEEN-choo-ray)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wunneau",
+      "english": "Crab",
+      "pos": "noun",
+      "pronunciation": "(woo-nay-ah-oo)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ishewounaup",
+      "english": "Cubit",
+      "pos": "noun",
+      "pronunciation": "(eesh-ay-wo-oon-ah-oop)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waukhaway",
+      "english": "Day",
+      "pos": "noun",
+      "pronunciation": "(wa-ook-ha-way)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "caure",
+      "english": "Dead",
+      "pos": "adjective",
+      "pronunciation": "(cha-oo-ray)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "taus-se",
+      "english": "Dog",
+      "pos": "noun",
+      "pronunciation": "(ta-oos-say)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rhiieyau",
+      "english": "Dress",
+      "pos": "noun",
+      "pronunciation": "(RHEE-ay-ja-oo)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nonnupper",
+      "english": "Drunk",
+      "pos": "adjective",
+      "pronunciation": "(no-noop-payr)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "welka",
+      "english": "Duck",
+      "pos": "noun",
+      "pronunciation": "(whale-ka)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eraute",
+      "english": "Eat",
+      "pos": "verb",
+      "pronunciation": "(aira-oo-tay)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nupsau",
+      "english": "Eight",
+      "pos": "numeral",
+      "pronunciation": "(noop-sa-oo)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tonne hauk sea",
+      "english": "Eleven",
+      "pos": "numeral",
+      "pronunciation": "(toe-nay ha-ook say-ah)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wintsohore",
+      "english": "Englishman",
+      "pos": "noun",
+      "pronunciation": "(weent-so-ho-ray)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "more",
+      "english": "Excel at",
+      "pos": "verb",
+      "pronunciation": "(mo-ray)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "neetooh",
+      "english": "Eye",
+      "pos": "noun",
+      "pronunciation": "(NAY-TOE)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pautyau",
+      "english": "Fart",
+      "pos": "noun",
+      "pronunciation": "pahwt-yahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yendare",
+      "english": "Fat",
+      "pos": "noun",
+      "pronunciation": "yayn-dah-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "witso",
+      "english": "Fawn skin",
+      "pos": "noun",
+      "pronunciation": "wee-stoh",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "soppe",
+      "english": "Feathers",
+      "pos": "noun",
+      "pronunciation": "sohp-pay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waurepa",
+      "english": "Fever",
+      "pos": "noun",
+      "pronunciation": "wahw-ray-pah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "somme",
+      "english": "Finely formed",
+      "pos": "adjective",
+      "pronunciation": "so-may",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yau",
+      "english": "Fire",
+      "pos": "noun",
+      "pronunciation": "yahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yacunne",
+      "english": "Fish",
+      "pos": "noun",
+      "pronunciation": "yah-choo-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weetipsa",
+      "english": "Fishgig",
+      "pos": "noun",
+      "pronunciation": "wee-teep-sah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wonne",
+      "english": "Fist",
+      "pos": "noun",
+      "pronunciation": "wo-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "webtau",
+      "english": "Five",
+      "pos": "number",
+      "pronunciation": "wayb-tahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "matt-teer",
+      "english": "Flints",
+      "pos": "noun",
+      "pronunciation": "maht-tayr",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "epu",
+      "english": "Foot",
+      "pos": "noun",
+      "pronunciation": "ay-poo",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "woccocon",
+      "english": "Fort",
+      "pos": "noun",
+      "pronunciation": "wo-co-chone",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "punnum-punne",
+      "english": "Four",
+      "pos": "number",
+      "pronunciation": "poon-noom-poon-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hannatockore",
+      "english": "Fox-skin",
+      "pos": "noun",
+      "pronunciation": "hahn-nah-toh-chkoh-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "mothei",
+      "english": "Give it to me",
+      "pos": "phrase",
+      "pronunciation": "moh-thay-ee",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "mei",
+      "english": "Go",
+      "pos": "verb",
+      "pronunciation": "may-e",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yuppa mei",
+      "english": "Go you",
+      "pos": "phrase",
+      "pronunciation": "yoo-pah may-ee",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rumminshau",
+      "english": "Goat",
+      "pos": "noun",
+      "pronunciation": "room-meen-shahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "mo",
+      "english": "Good",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "auhaun",
+      "english": "Goose",
+      "pos": "noun",
+      "pronunciation": "ahw-hahwn",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wattape",
+      "english": "Gourd",
+      "pos": "noun",
+      "pronunciation": "waht-tah-pay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yicau",
+      "english": "Grandmother",
+      "pos": "noun",
+      "pronunciation": "ye-cha-oo",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hauk",
+      "english": "Grass",
+      "pos": "noun",
+      "pronunciation": "ha-ook",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "too-she",
+      "english": "Gray",
+      "pos": "adjective",
+      "pronunciation": "TOO-shay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "itto",
+      "english": "Green (moss)",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "homine",
+      "english": "Grits",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wittape",
+      "english": "Gun",
+      "pos": "noun",
+      "pronunciation": "wee-tah-pay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "noonkosso",
+      "english": "Gunlock",
+      "pos": "noun",
+      "pronunciation": "NOON-koh-soh",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rooeyaw",
+      "english": "Gunpowder",
+      "pos": "noun",
+      "pronunciation": "RUE-ay-yahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tumme",
+      "english": "Hair",
+      "pos": "noun",
+      "pronunciation": "too-mmay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "itte-teraugh",
+      "english": "Hard",
+      "pos": "adjective",
+      "pronunciation": "ee-ttay-tay-rahwgh",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "intome-posswa",
+      "english": "Hat",
+      "pos": "noun",
+      "pronunciation": "een-toh-may-pohs-swah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-re",
+      "english": "He is",
+      "pos": "verb",
+      "pronunciation": "ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hore",
+      "english": "He is a",
+      "pos": "verb",
+      "pronunciation": "ho-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "poppe",
+      "english": "Head",
+      "pos": "noun",
+      "pronunciation": "pohp-pay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tanake",
+      "english": "Hello",
+      "pos": "interjection",
+      "pronunciation": "te-na-k",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wa",
+      "english": "Hers/His/Its",
+      "pos": "pronoun",
+      "pronunciation": "wa",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nimmia",
+      "english": "Hickory nuts",
+      "pos": "noun",
+      "pronunciation": "neem-mee-ah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "aucummato",
+      "english": "History",
+      "pos": "noun",
+      "pronunciation": "a-oo-coo-ma-toh",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rope-pau",
+      "english": "Hoe",
+      "pos": "noun",
+      "pronunciation": "roh-pay-pahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "roocauwa",
+      "english": "Hominy",
+      "pos": "noun",
+      "pronunciation": "RUE-chahw-wah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yenwetoa",
+      "english": "Horse",
+      "pos": "noun",
+      "pronunciation": "yayn-way-toh-ah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "suuke",
+      "english": "House",
+      "pos": "noun",
+      "pronunciation": "soo kay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tontarinte",
+      "english": "How many",
+      "pos": "phrase",
+      "pronunciation": "tohn-tah-reen-tay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pa",
+      "english": "In the",
+      "pos": "preposition",
+      "pronunciation": "pa",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yauh-he",
+      "english": "Indians",
+      "pos": "noun",
+      "pronunciation": "yahw-hay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tooseawau",
+      "english": "Kettle",
+      "pos": "noun",
+      "pronunciation": "TOO-say-ah-wa-oo",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "roamore",
+      "english": "King",
+      "pos": "noun",
+      "pronunciation": "roh-ah-moh-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wee",
+      "english": "Knife",
+      "pos": "noun",
+      "pronunciation": "wee",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tontaunete",
+      "english": "Lazy",
+      "pos": "adjective",
+      "pronunciation": "tohn-tahwn-ay-tay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yau-huk",
+      "english": "Leg",
+      "pos": "noun",
+      "pronunciation": "ya-oo hoo-k",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sek",
+      "english": "Lightwood",
+      "pos": "noun",
+      "pronunciation": "sayk",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "to",
+      "english": "Little",
+      "pos": "adjective",
+      "pronunciation": "toe",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yupwaure",
+      "english": "Loblolly (Spear Tree)",
+      "pos": "noun",
+      "pronunciation": "youp-wa-oo-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eppesyau",
+      "english": "Louse",
+      "pos": "noun",
+      "pronunciation": "ayp-pays-yahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rockcumne",
+      "english": "Mad",
+      "pos": "adjective",
+      "pronunciation": "roh-chk-choom-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "he",
+      "english": "Man",
+      "pos": "noun",
+      "pronunciation": "hay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ru-/roo-",
+      "english": "Manufactured items",
+      "pos": "prefix",
+      "pronunciation": "roo/ROH",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "soppepepor",
+      "english": "Mat",
+      "pos": "noun",
+      "pronunciation": "sohp-pay-pay-pohr",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "soccon",
+      "english": "Mink",
+      "pos": "noun",
+      "pronunciation": "soh-chohn",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wittapare",
+      "english": "Moon",
+      "pos": "noun",
+      "pronunciation": "weet-tah-pah-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "soone",
+      "english": "More than",
+      "pos": "adverb",
+      "pronunciation": "SUE-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wossoo",
+      "english": "Mortar",
+      "pos": "noun",
+      "pronunciation": "wah-SUE",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wottiyau",
+      "english": "Mouth Harp",
+      "pos": "noun",
+      "pronunciation": "woht-tee-yahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yantoha",
+      "english": "Night",
+      "pos": "noun",
+      "pronunciation": "yahn-toh-ha",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wechere",
+      "english": "Nine",
+      "pos": "number",
+      "pronunciation": "way-chay-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sacke",
+      "english": "On top of",
+      "pos": "preposition",
+      "pronunciation": "sa-kay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tonne",
+      "english": "One",
+      "pos": "number",
+      "pronunciation": "tohn-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wetkes",
+      "english": "Otter",
+      "pos": "noun",
+      "pronunciation": "wayt-kays",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "whooyeonne",
+      "english": "Paint",
+      "pos": "noun",
+      "pronunciation": "WHO-yay-ohn-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "watta",
+      "english": "Panther",
+      "pos": "noun",
+      "pronunciation": "wa-ta",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wattau",
+      "english": "Panther skin",
+      "pos": "noun",
+      "pronunciation": "waht-tahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yauh",
+      "english": "Path",
+      "pos": "noun",
+      "pronunciation": "yahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yonne",
+      "english": "Peaches",
+      "pos": "noun",
+      "pronunciation": "yohn-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ettoco",
+      "english": "Peak/Wampum",
+      "pos": "noun",
+      "pronunciation": "ayt-toh-cho",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "coosauk",
+      "english": "Peas",
+      "pos": "noun",
+      "pronunciation": "CHOO-sa-ook",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ya-",
+      "english": "Person-genuine",
+      "pos": "prefix",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "miyau",
+      "english": "Pestle",
+      "pos": "noun",
+      "pronunciation": "mee-yahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nommewarraupau",
+      "english": "Pig",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hooheh",
+      "english": "Pine tree",
+      "pos": "noun",
+      "pronunciation": "WHO-hay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "mau",
+      "english": "Place/Place of",
+      "pos": "noun",
+      "pronunciation": "mahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "toos",
+      "english": "Pot",
+      "pos": "noun",
+      "pronunciation": "TOES",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wauti",
+      "english": "Potatoes",
+      "pos": "noun",
+      "pronunciation": "wa-oo-ti",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wacca",
+      "english": "Powerful",
+      "pos": "adjective",
+      "pronunciation": "wa-ca",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yicauau roamore",
+      "english": "Queen",
+      "pos": "noun",
+      "pronunciation": "yay-chahw-ahw-ahw roh-ah-moh-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "auher",
+      "english": "Raccoon",
+      "pos": "noun",
+      "pronunciation": "(ahw-hayr)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yawowa",
+      "english": "Rain",
+      "pos": "noun",
+      "pronunciation": "(yah-woh-wah)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wittau",
+      "english": "Rat",
+      "pos": "noun",
+      "pronunciation": "(weet-tahw)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Teep",
+      "english": "Raw undressed skins",
+      "pos": "noun",
+      "pronunciation": "(TAY-p)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yauta",
+      "english": "Red",
+      "pos": "adjective",
+      "pronunciation": "(yahw-tah)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weekwonne",
+      "english": "Reed",
+      "pos": "noun",
+      "pronunciation": "(week-wohn-nay)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "seunne",
+      "english": "River",
+      "pos": "noun",
+      "pronunciation": "(say-oo-nay)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ranbee",
+      "english": "Riverbank",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "trauhe",
+      "english": "Rope",
+      "pos": "noun",
+      "pronunciation": "(trahw-hay)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yup se",
+      "english": "Rum",
+      "pos": "noun",
+      "pronunciation": "(yoop-say)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yupyupseunne",
+      "english": "Runlet (tree lined river)",
+      "pos": "noun",
+      "pronunciation": "(yu-py-oop-say-oo-nay)",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "woccocock",
+      "english": "Sacred",
+      "pos": "noun",
+      "pronunciation": "woc-coh-cohk",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "toc koor",
+      "english": "Scissors",
+      "pos": "noun",
+      "pronunciation": "tahk KOOR",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nomis sau",
+      "english": "Seven",
+      "pos": "noun",
+      "pronunciation": "noh-mees-sahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rum-yup",
+      "english": "She",
+      "pos": "pronoun",
+      "pronunciation": "room-yoop",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tacca pitteneer",
+      "english": "Shirt",
+      "pos": "noun",
+      "pronunciation": "tahk-chah- peet-tay-neer",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wee kessoo",
+      "english": "Shoes",
+      "pos": "noun",
+      "pronunciation": "WAY kay-SUE",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "week",
+      "english": "Shot",
+      "pos": "noun",
+      "pronunciation": "way ayk",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "is-sto",
+      "english": "Six",
+      "pos": "noun",
+      "pronunciation": "ees-stoh",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rauhau",
+      "english": "Skins (dressed)",
+      "pos": "noun",
+      "pronunciation": "rahw-hahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "witta",
+      "english": "Sky",
+      "pos": "noun",
+      "pronunciation": "wee-ta",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yau-hauk",
+      "english": "Snake",
+      "pos": "noun",
+      "pronunciation": "yahw-hahwk",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wawawa",
+      "english": "Snow",
+      "pos": "noun",
+      "pronunciation": "wah-wah-wah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "roosomme",
+      "english": "Soft",
+      "pos": "adjective",
+      "pronunciation": "RUE-so-may",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waure",
+      "english": "Spear",
+      "pos": "noun",
+      "pronunciation": "wa-oo-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "cotsau",
+      "english": "Spoon",
+      "pos": "noun",
+      "pronunciation": "choht-sahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yehau",
+      "english": "Squirrel",
+      "pos": "noun",
+      "pronunciation": "yay-hahw",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wattapi untakeer",
+      "english": "Star",
+      "pos": "noun",
+      "pronunciation": "waht-tah-pee- oon-tah-keer",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pe",
+      "english": "Step",
+      "pos": "noun",
+      "pronunciation": "pay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "rooesoo possoo",
+      "english": "Stockings",
+      "pos": "noun",
+      "pronunciation": "RUE-ay-SUE po-SUE",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "atter",
+      "english": "Swan",
+      "pos": "noun",
+      "pronunciation": "aht-tayr",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "soone noponne",
+      "english": "Ten",
+      "pos": "numeral",
+      "pronunciation": "SUE-nay no-po-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-wa",
+      "english": "Theirs",
+      "pos": "pronoun",
+      "pronunciation": "wa",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nam mee",
+      "english": "Three",
+      "pos": "numeral",
+      "pronunciation": "nahm may-ay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "un-poone",
+      "english": "Tobacco",
+      "pos": "noun",
+      "pronunciation": "un-POO-nay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "intom",
+      "english": "Tobacco pipe",
+      "pos": "noun",
+      "pronunciation": "een-tohm",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "toc-koor",
+      "english": "Tobacco tongs",
+      "pos": "noun",
+      "pronunciation": "tok-COOR",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kittape",
+      "english": "Tomorrow",
+      "pos": "adverb",
+      "pronunciation": "keet-tah-pay",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pulawa",
+      "english": "Turd",
+      "pos": "noun",
+      "pronunciation": "poo-lah-wah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "soone nomme",
+      "english": "Twelve",
+      "pos": "numeral",
+      "pronunciation": "SUE-nay no-may",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "winnop",
+      "english": "Twenty",
+      "pos": "numeral",
+      "pronunciation": "ween-nohp",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "num-perre",
+      "english": "Two",
+      "pos": "numeral",
+      "pronunciation": "noom-pay-ray",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ejau",
+      "english": "Water",
+      "pos": "noun",
+      "pronunciation": "ay-jah-oo",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "auk",
+      "english": "Weed",
+      "pos": "noun",
+      "pronunciation": "ah-ook",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waurraupa",
+      "english": "White",
+      "pos": "adjective",
+      "pronunciation": "wahw-rahw-pah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yicauau",
+      "english": "Wife",
+      "pos": "noun",
+      "pronunciation": "yee-cahww",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yuh",
+      "english": "Wind",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yuh-hor",
+      "english": "Wind blowing",
+      "pos": "verb",
+      "pronunciation": "yoo-hor",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tire kiro",
+      "english": "Wolf",
+      "pos": "noun",
+      "pronunciation": "tee-ray-kee-roh",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yi",
+      "english": "Woman",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yup",
+      "english": "Wood",
+      "pos": "noun",
+      "pronunciation": "yoop",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yottoha",
+      "english": "Yesterday",
+      "pos": "adverb",
+      "pronunciation": "yoht-toh-hah",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yuh-hor roocheha",
+      "english": "tornado/hurricane",
+      "pos": "noun",
+      "pronunciation": "wind blowing angry",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waukhaway caurewa",
+      "english": "Halloween",
+      "pos": "noun",
+      "pronunciation": "the dead, their day",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yonne roosomme",
+      "english": "oak",
+      "pos": "noun",
+      "pronunciation": "acorn tree",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "suuke woccocock",
+      "english": "church",
+      "pos": "noun",
+      "pronunciation": "sacred house",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wattape ejau",
+      "english": "water bottle",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pulawa nappinjure",
+      "english": "bullshit",
+      "pos": "noun",
+      "pronunciation": "cow turd",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "he-to",
+      "english": "boy",
+      "pos": "noun",
+      "pronunciation": "little man",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yi-to",
+      "english": "girl",
+      "pos": "noun",
+      "pronunciation": "little woman",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yupyupseunnemau",
+      "english": "swamp",
+      "pos": "noun",
+      "pronunciation": "tree lined river place",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ejause",
+      "english": "coffee",
+      "pos": "noun",
+      "pronunciation": "bitter water?",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wap",
+      "english": "ball",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pepere",
+      "english": "stairs",
+      "pos": "noun",
+      "pronunciation": "there are steps",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "seunne-to",
+      "english": "creek/stream",
+      "pos": "noun",
+      "pronunciation": "little river",
+      "source": "community_drive"
+    },
+    {
+      "woccon": "roa",
+      "english": "leader",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ra",
+      "english": "mouth",
+      "pos": "noun",
+      "pronunciation": "instrumental",
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    "Questioning mode marked by suffix -ne",
+    "Woccon shows long oral vowels",
+    "Possible consonant inventory: P, t, k, ?, č, s, h, m, n, r, w, y",
+    "-ne appears to be a questioning mode marker",
+    "Possible verb conjugational affixes like 'e' exist"
+  ],
+  "pronunciation_notes": [
+    "Capital letters in pronunciation might indicate longer/emphasized syllables"
+  ],
+  "cultural_notes": [
+    "Data sourced from Rudes(2000) linguistic documentation",
+    "Source references include Koontz, Rudes(2000), Adelung & Vater",
+    "Data sourced from Rudes (2000) and Rountree/Taukchiray (2021) linguistic publications",
+    "Data sourced from Rudes (2000) linguistic documentation",
+    "Woccon is a Siouan language",
+    "Waccamaw people are Siouan language speakers",
+    "Documentation sources include Rudes (2000), Carter, Adelung and Vater",
+    "Comparative linguistic references used for verification",
+    "Source references include Rudes(2000) publication",
+    "Woccon village located at Wheat Field near the juncture of the Neuse River and Contentnea Creek west of the Pamlico Sound",
+    "Documented in Berkeley linguistic research",
+    "Related to Crow, Tutelo, and Catawba languages",
+    "Cognates exist in proto-Siouan language"
+  ]
+}

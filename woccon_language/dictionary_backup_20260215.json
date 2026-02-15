@@ -1,0 +1,813 @@
+{
+  "language": "Woccon",
+  "family": "Eastern Siouan",
+  "historical_location": "North Carolina coastal plain (lower Neuse River)",
+  "source": "John Lawson's word list (1709)",
+  "lexicon": [
+    {
+      "woccon": "acummato",
+      "english": "I remember it",
+      "pos": "verb phrase"
+    },
+    {
+      "woccon": "after",
+      "english": "swan",
+      "pos": "noun"
+    },
+    {
+      "woccon": "auhaun",
+      "english": "goose",
+      "pos": "noun"
+    },
+    {
+      "woccon": "author",
+      "english": "raccoon skin",
+      "pos": "noun"
+    },
+    {
+      "woccon": "caure",
+      "english": "dead",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "coosauk",
+      "english": "peas",
+      "pos": "noun"
+    },
+    {
+      "woccon": "cose",
+      "english": "corn",
+      "pos": "noun"
+    },
+    {
+      "woccon": "cotsau",
+      "english": "spoon",
+      "pos": "noun"
+    },
+    {
+      "woccon": "cotsoo",
+      "english": "bowl",
+      "pos": "noun"
+    },
+    {
+      "woccon": "cuttaune",
+      "english": "all, that's all",
+      "pos": "determiner"
+    },
+    {
+      "woccon": "ejau",
+      "english": "water",
+      "pos": "noun"
+    },
+    {
+      "woccon": "ekoocromon",
+      "english": "bag",
+      "pos": "noun"
+    },
+    {
+      "woccon": "eppesyau",
+      "english": "louse",
+      "pos": "noun"
+    },
+    {
+      "woccon": "erroco",
+      "english": "peak, wampum",
+      "pos": "noun"
+    },
+    {
+      "woccon": "eureka",
+      "english": "bear skin",
+      "pos": "noun"
+    },
+    {
+      "woccon": "hannatockore",
+      "english": "fox-skin",
+      "pos": "noun"
+    },
+    {
+      "woccon": "hooheh",
+      "english": "pine tree",
+      "pos": "noun"
+    },
+    {
+      "woccon": "ikettau",
+      "english": "bread",
+      "pos": "noun"
+    },
+    {
+      "woccon": "intom",
+      "english": "tobacco pipe",
+      "pos": "noun"
+    },
+    {
+      "woccon": "intome-posswa",
+      "english": "hat",
+      "pos": "noun"
+    },
+    {
+      "woccon": "is-sto",
+      "english": "six",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "ishewounaup",
+      "english": "cubit (18ish inches)",
+      "pos": "noun"
+    },
+    {
+      "woccon": "itte teraugh",
+      "english": "hard, heavy",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "itto",
+      "english": "moss",
+      "pos": "noun"
+    },
+    {
+      "woccon": "kittape",
+      "english": "tomorrow",
+      "pos": "adverb"
+    },
+    {
+      "woccon": "matt-teer",
+      "english": "flints",
+      "pos": "noun"
+    },
+    {
+      "woccon": "miyau",
+      "english": "pestle",
+      "pos": "noun"
+    },
+    {
+      "woccon": "monwittetau",
+      "english": "alligator",
+      "pos": "noun"
+    },
+    {
+      "woccon": "mothei",
+      "english": "give it to me",
+      "pos": "verb phrase"
+    },
+    {
+      "woccon": "nam mee",
+      "english": "three",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "nappinjure",
+      "english": "cow",
+      "pos": "noun"
+    },
+    {
+      "woccon": "nau hou hoore-ene",
+      "english": "I will sell you stuff cheap",
+      "pos": "sentence"
+    },
+    {
+      "woccon": "nimmia",
+      "english": "hickory nuts",
+      "pos": "noun"
+    },
+    {
+      "woccon": "noccoo eraute",
+      "english": "got anything to eat?",
+      "pos": "sentence"
+    },
+    {
+      "woccon": "nomis sau",
+      "english": "seven",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "nommewarraupau",
+      "english": "swine",
+      "pos": "noun"
+    },
+    {
+      "woccon": "nonnupper",
+      "english": "all are drunk",
+      "pos": "sentence"
+    },
+    {
+      "woccon": "noonkosso",
+      "english": "gunlock",
+      "pos": "noun"
+    },
+    {
+      "woccon": "num-perre",
+      "english": "two",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "nupsau",
+      "english": "eight",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "ouke",
+      "english": "house",
+      "pos": "noun"
+    },
+    {
+      "woccon": "pautyau",
+      "english": "fart",
+      "pos": "noun"
+    },
+    {
+      "woccon": "poppe",
+      "english": "head",
+      "pos": "noun"
+    },
+    {
+      "woccon": "pulawa",
+      "english": "turd",
+      "pos": "noun"
+    },
+    {
+      "woccon": "punnum-punne",
+      "english": "four",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "quake",
+      "english": "will you go along with me?",
+      "pos": "sentence"
+    },
+    {
+      "woccon": "rauhau",
+      "english": "skins (dressed)",
+      "pos": "noun"
+    },
+    {
+      "woccon": "reheshiwau",
+      "english": "afraid",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "rhoeyau",
+      "english": "flap",
+      "pos": "noun"
+    },
+    {
+      "woccon": "roamore",
+      "english": "king",
+      "pos": "noun"
+    },
+    {
+      "woccon": "roccheha",
+      "english": "angry",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "rockcumne",
+      "english": "mad",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "roo-iune",
+      "english": "blankets",
+      "pos": "noun"
+    },
+    {
+      "woccon": "roocauwa",
+      "english": "hominy",
+      "pos": "noun"
+    },
+    {
+      "woccon": "rooesoo possoo",
+      "english": "stockings",
+      "pos": "noun"
+    },
+    {
+      "woccon": "rookau",
+      "english": "buckskin",
+      "pos": "noun"
+    },
+    {
+      "woccon": "rookeppa",
+      "english": "basket",
+      "pos": "noun"
+    },
+    {
+      "woccon": "rooeyam",
+      "english": "gunpowder",
+      "pos": "noun"
+    },
+    {
+      "woccon": "rooyaukitte",
+      "english": "breeches",
+      "pos": "noun"
+    },
+    {
+      "woccon": "rope-pau",
+      "english": "hoe",
+      "pos": "noun"
+    },
+    {
+      "woccon": "roosomme",
+      "english": "acorns, soft",
+      "pos": "noun"
+    },
+    {
+      "woccon": "rummaer",
+      "english": "roanok, wampum",
+      "pos": "noun"
+    },
+    {
+      "woccon": "rummissau",
+      "english": "coat",
+      "pos": "noun"
+    },
+    {
+      "woccon": "rummissauwoune",
+      "english": "button",
+      "pos": "noun"
+    },
+    {
+      "woccon": "sacketoome posswa",
+      "english": "comb",
+      "pos": "noun"
+    },
+    {
+      "woccon": "sauhau",
+      "english": "alone, leave it alone",
+      "pos": "adverb"
+    },
+    {
+      "woccon": "sek",
+      "english": "lightwood",
+      "pos": "noun"
+    },
+    {
+      "woccon": "soccon",
+      "english": "mink",
+      "pos": "noun"
+    },
+    {
+      "woccon": "soone nomme",
+      "english": "twelve",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "soone noponne",
+      "english": "ten",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "soppe",
+      "english": "feathers",
+      "pos": "noun"
+    },
+    {
+      "woccon": "soppepepor",
+      "english": "mat",
+      "pos": "noun"
+    },
+    {
+      "woccon": "tacca pitteneer",
+      "english": "shirt",
+      "pos": "noun"
+    },
+    {
+      "woccon": "tau unta winnik",
+      "english": "axe",
+      "pos": "noun"
+    },
+    {
+      "woccon": "tauh he",
+      "english": "dog",
+      "pos": "noun"
+    },
+    {
+      "woccon": "teep",
+      "english": "skins, skin",
+      "pos": "noun"
+    },
+    {
+      "woccon": "tire kiro",
+      "english": "wolf",
+      "pos": "noun"
+    },
+    {
+      "woccon": "toc koor",
+      "english": "scissors, tobacco tongues",
+      "pos": "noun"
+    },
+    {
+      "woccon": "tonne",
+      "english": "one",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "tonne hauk pea",
+      "english": "eleven",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "tontarinte",
+      "english": "how many",
+      "pos": "question"
+    },
+    {
+      "woccon": "tontaunete",
+      "english": "lazy",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "too-she",
+      "english": "smoke",
+      "pos": "noun"
+    },
+    {
+      "woccon": "tooseawau",
+      "english": "kettle",
+      "pos": "noun"
+    },
+    {
+      "woccon": "trauhe",
+      "english": "rope",
+      "pos": "noun"
+    },
+    {
+      "woccon": "tsaure",
+      "english": "cockles",
+      "pos": "noun"
+    },
+    {
+      "woccon": "tumme",
+      "english": "hair",
+      "pos": "noun"
+    },
+    {
+      "woccon": "uu-coone",
+      "english": "tobacco",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wauk",
+      "english": "potatoes",
+      "pos": "noun"
+    },
+    {
+      "woccon": "waukhaway",
+      "english": "day",
+      "pos": "noun"
+    },
+    {
+      "woccon": "waurepa",
+      "english": "sick, I am sick",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "waurraupa",
+      "english": "white",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "watt",
+      "english": "canoe, boat",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wattape",
+      "english": "gourd, bottle",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wattapi untakeer",
+      "english": "star",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wattau",
+      "english": "panther skin",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wawawa",
+      "english": "snow",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wee",
+      "english": "knife",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wee-kau",
+      "english": "belt",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wee-kessoo",
+      "english": "shoes",
+      "pos": "noun"
+    },
+    {
+      "woccon": "week",
+      "english": "shot",
+      "pos": "noun"
+    },
+    {
+      "woccon": "weekwonne",
+      "english": "reed",
+      "pos": "noun"
+    },
+    {
+      "woccon": "webtau",
+      "english": "five",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "weihere",
+      "english": "nine",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "welka",
+      "english": "duck",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wetkes",
+      "english": "otter",
+      "pos": "noun"
+    },
+    {
+      "woccon": "whooyeonne",
+      "english": "paint",
+      "pos": "noun"
+    },
+    {
+      "woccon": "winnop",
+      "english": "twenty",
+      "pos": "numeral"
+    },
+    {
+      "woccon": "wintsohore",
+      "english": "Englishman",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wisto",
+      "english": "fawn skin",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wittape",
+      "english": "gun",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wittapare",
+      "english": "sun, moon",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wittau",
+      "english": "rat",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wonsh-shee",
+      "english": "awl, needle",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wottiyau",
+      "english": "mouth harp",
+      "pos": "noun"
+    },
+    {
+      "woccon": "wunneau",
+      "english": "crab",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yahoo",
+      "english": "squirrel skin",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yah-testea",
+      "english": "black, blue",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "yauh",
+      "english": "path",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yauh-he",
+      "english": "Indians",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yau-hauk",
+      "english": "snake",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yau",
+      "english": "fire",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yauka",
+      "english": "a little while ago",
+      "pos": "adverb"
+    },
+    {
+      "woccon": "yauta",
+      "english": "red, turkey",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "yawowa",
+      "english": "rain",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yacunne",
+      "english": "fish",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yecauau",
+      "english": "wife",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yendare",
+      "english": "fat",
+      "pos": "adjective"
+    },
+    {
+      "woccon": "yenrauhe",
+      "english": "brother",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yenwetoa",
+      "english": "horse",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yicau",
+      "english": "woman (old)",
+      "pos": "noun"
+    },
+    {
+      "woccon": "ynpyupseunne",
+      "english": "runlet",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yonne",
+      "english": "wood, peaches",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yopoonitsa",
+      "english": "box",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yossoo",
+      "english": "mortar",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yottoha",
+      "english": "yesterday",
+      "pos": "adverb"
+    },
+    {
+      "woccon": "yuncor",
+      "english": "wind",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yup se",
+      "english": "rum",
+      "pos": "noun"
+    },
+    {
+      "woccon": "yuppa mei",
+      "english": "bye, go you",
+      "pos": "phrase"
+    },
+    {
+      "woccon": "yantoha",
+      "english": "night",
+      "pos": "noun"
+    },
+    {
+      "woccon": "weetipsa",
+      "english": "fishgig",
+      "pos": "noun"
+    }
+  ],
+  "phrases": [
+    {
+      "woccon": "nau hou hoore-ene",
+      "english": "I will sell you stuff cheap",
+      "structure": "sentence"
+    },
+    {
+      "woccon": "nonnupper",
+      "english": "all are drunk",
+      "structure": "sentence"
+    },
+    {
+      "woccon": "noccoo eraute",
+      "english": "got anything to eat?",
+      "structure": "question"
+    },
+    {
+      "woccon": "quake",
+      "english": "will you go along with me?",
+      "structure": "question"
+    }
+  ],
+  "place_names": [
+    {
+      "woccon": "Yupwauremau",
+      "english": "Woccon village between Neuse and Tar Rivers",
+      "note": "May contain root 'yup' (wood)"
+    },
+    {
+      "woccon": "Tooptatmeer",
+      "english": "Woccon village between Neuse and Tar Rivers",
+      "note": "May contain root 'mira' (chief, king)"
+    }
+  ],
+  "number_system": {
+    "pattern": "partial quinary",
+    "numbers": [
+      {"value": 1, "form": "tonne"},
+      {"value": 2, "form": "num-perre"},
+      {"value": 3, "form": "nam-mee"},
+      {"value": 4, "form": "punnum-punne"},
+      {"value": 5, "form": "webtau"},
+      {"value": 6, "form": "is-sto"},
+      {"value": 7, "form": "nomis-sau"},
+      {"value": 8, "form": "nupsau"},
+      {"value": 9, "form": "weihere"},
+      {"value": 10, "form": "soone noponne"},
+      {"value": 11, "form": "tonne hauk pea"},
+      {"value": 12, "form": "soone nomme"},
+      {"value": 20, "form": "winnop"}
+    ],
+    "structure_notes": [
+      "Possible subtractive formations for 7 and 8 ('ten minus three', 'ten minus two')",
+      "Compound formation for 20 (possibly '[pi/wi]-nop' where 'pi/wi' is ten and 'nop' related to 'two')",
+      "Use of 'hauk' as connective meaning 'plus' in compounds"
+    ]
+  },
+  "common_roots": [
+    {
+      "root": "ya-",
+      "meaning": "water",
+      "derivatives": ["yawowa (rain)", "yacunne (fish)"]
+    },
+    {
+      "root": "roo-",
+      "meaning": "cloth, hide",
+      "derivatives": ["roo-iune (blankets)", "rookau (buckskin)", "rooyaukitte (breeches)"]
+    },
+    {
+      "root": "yau-",
+      "meaning": "path, way",
+      "derivatives": ["yauh (path)", "yauh-he (Indians)"] 
+    },
+    {
+      "root": "watta-",
+      "meaning": "container",
+      "derivatives": ["wattape (gourd, bottle)"]
+    },
+    {
+      "root": "yon-",
+      "meaning": "wood, tree",
+      "derivatives": ["yonne (wood)", "yopoonitsa (box)"]
+    }
+  ],
+  "sound_correspondences": {
+    "woccon_to_catawba": [
+      {"woccon": "p", "catawba": "p"},
+      {"woccon": "t", "catawba": "t"},
+      {"woccon": "k", "catawba": "k"},
+      {"woccon": "s", "catawba": "s"},
+      {"woccon": "h", "catawba": "s", "examples": ["tauh-he/tasi (dog)"]},
+      {"woccon": "m", "catawba": "m"},
+      {"woccon": "n", "catawba": "n"},
+      {"woccon": "n", "catawba": "r", "examples": ["punnum-punne/parpore (four)"]},
+      {"woccon": "r", "catawba": "n", "examples": ["reheshiwau/nasia (afraid)"]},
+      {"woccon": "r", "catawba": "r"},
+      {"woccon": "w", "catawba": "w"},
+      {"woccon": "y", "catawba": "y"}
+    ]
+  }
+}

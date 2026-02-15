@@ -23,12 +23,15 @@ class WocconAssistant:
                  model="llama3:8b",
                  ctx_turns=6,
                  custom_model_params=None):
+        # Paths: allow env override for unified data (e.g. dictionary_unified.json)
+        self._dict_path = os.getenv("WOCCON_DICTIONARY_PATH", dict_path)
+        self._rules_path = os.getenv("WOCCON_RULES_PATH", rules_path)
         # Core data & model
         self.woccon = WocconT5()
-        log.info("About to load JSON; dict_path=%r   rules_path=%r", dict_path, rules_path)
+        log.info("About to load JSON; dict_path=%r   rules_path=%r", self._dict_path, self._rules_path)
 
-        self.dictionary = self._load_json(dict_path)
-        self.rules = self._load_json(rules_path)
+        self.dictionary = self._load_json(self._dict_path)
+        self.rules = self._load_json(self._rules_path)
         log.info("Rules keys: %s", list(self.rules.keys()))
 
         self.model = model or os.getenv("OLLAMA_MODEL", "llama3:8b")
@@ -56,70 +59,8 @@ class WocconAssistant:
             
         log.info(f"Model parameters: {self.default_model_params}")
 
-        # Prepare retrieval corpus
-        self.documented_words = {
-            e["woccon"].lower() for e in self.dictionary.get("lexicon", [])
-        }
-        self.chunks = [
-            f"Woccon: {e['woccon']} | English: {e['english']} | POS: {e['pos']}"
-            for e in self.dictionary.get("lexicon", [])
-        ]
-        
-        # Add critical classification information to retrieval corpus
-        classification_info = (
-            "Classification: Woccon language family is Eastern Siouan (Coastal Catawban branch) | "
-            "Closest related language: Catawba | Historical location: North Carolina coastal plain (lower Neuse River) | "
-            "NOT Algonquian, NOT Iroquoian, NOT part of Tuscarora Confederacy | "
-            "Documentation: John Lawson's 1709 word list with 143 attested words"
-        )
-        self.chunks.insert(0, classification_info)  # Insert at beginning for high priority
-        
-        # Add grammar rules and patterns to retrieval corpus from rules.json
-        if "morphology" in self.rules and "affixes" in self.rules["morphology"]:
-            # Add suffixes
-            for suffix in self.rules["morphology"]["affixes"].get("suffixes", []):
-                self.chunks.append(
-                    f"Grammar: Suffix {suffix['form']} | Function: {suffix['function']} | "
-                    f"Examples: {', '.join(suffix.get('examples', []))}"
-                )
-            # Add prefixes
-            for prefix in self.rules["morphology"]["affixes"].get("prefixes", []):
-                self.chunks.append(
-                    f"Grammar: Prefix {prefix['form']} | Function: {prefix['function']} | "
-                    f"Examples: {', '.join(prefix.get('examples', []))}"
-                )
-        
-        # Add roots information
-        if "morphology" in self.rules and "common_roots" in self.rules["morphology"]:
-            for root in self.rules["morphology"]["common_roots"]:
-                derivatives_text = ", ".join([f"{d['form']} ({d['gloss']})" for d in root.get("derivatives", [])])
-                self.chunks.append(
-                    f"Grammar: Root {root['root']} | Meaning: {root['meaning']} | "
-                    f"Derivatives: {derivatives_text}"
-                )
-        
-        # Add inflectional morphology
-        if "morphology" in self.rules and "inflectional_morphology" in self.rules["morphology"]:
-            modes = self.rules["morphology"]["inflectional_morphology"].get("modes", [])
-            for mode in modes:
-                examples_text = ", ".join([f"{ex['form']} ({ex['gloss']})" for ex in mode.get("examples", [])])
-                self.chunks.append(
-                    f"Grammar: Mode {mode['name']} | Marker: {mode['marker']} | "
-                    f"Description: {mode['description']} | Examples: {examples_text}"
-                )
-        
-        # Add phonological processes
-        if "phonology" in self.rules and "phonological_processes" in self.rules["phonology"]:
-            for process in self.rules["phonology"]["phonological_processes"]:
-                examples_text = ", ".join([f"Woccon: {ex['Woccon']}, Catawba: {ex['Catawba']} ({ex['gloss']})" for ex in process.get("examples", [])])
-                self.chunks.append(
-                    f"Grammar: Phonological process {process['process']} | "
-                    f"Description: {process['description']} | Examples: {examples_text}"
-                )
-
-        # in __init__, right after you build self.chunks:
-        log.info("First 5 chunks: %s", self.chunks[:5])
-
+        # Build RAG corpus (lexicon + rules); community-sourced entries tagged and ranked higher
+        self.documented_words, self.chunks = self._build_rag_corpus()
 
         log.info("RAG ready: %d chunks (%d documented words)",
                  len(self.chunks),
@@ -127,6 +68,87 @@ class WocconAssistant:
 
         # Session state per user
         self.sessions: Dict[str, Dict] = {}
+
+    def _build_rag_corpus(self) -> Tuple[set, List[str]]:
+        """Build documented_words set and chunks list from dictionary + rules. Community entries get [Community] tag and higher precedence."""
+        documented_words = {
+            e["woccon"].lower() for e in self.dictionary.get("lexicon", [])
+        }
+        # Lexicon chunks: tag community-sourced (source_url or source == community_drive) for higher precedence in retrieval
+        community_chunks: List[str] = []
+        lawson_chunks: List[str] = []
+        for e in self.dictionary.get("lexicon", []):
+            line = f"Woccon: {e['woccon']} | English: {e['english']} | POS: {e['pos']}"
+            if e.get("source_url") or (e.get("source") or "").strip().lower() == "community_drive":
+                community_chunks.append("[Community] " + line)
+            else:
+                lawson_chunks.append(line)
+        chunks: List[str] = []
+        # Classification first (highest priority)
+        classification_info = (
+            "Classification: Woccon language family is Eastern Siouan (Coastal Catawban branch) | "
+            "Closest related language: Catawba | Historical location: North Carolina coastal plain (lower Neuse River) | "
+            "NOT Algonquian, NOT Iroquoian, NOT part of Tuscarora Confederacy | "
+            "Documentation: John Lawson's 1709 word list with 143 attested words"
+        )
+        chunks.append(classification_info)
+        chunks.extend(community_chunks)
+        chunks.extend(lawson_chunks)
+        # Grammar/rules from rules.json
+        if "morphology" in self.rules and "affixes" in self.rules["morphology"]:
+            for suffix in self.rules["morphology"]["affixes"].get("suffixes", []):
+                chunks.append(
+                    f"Grammar: Suffix {suffix['form']} | Function: {suffix['function']} | "
+                    f"Examples: {', '.join(suffix.get('examples', []))}"
+                )
+            for prefix in self.rules["morphology"]["affixes"].get("prefixes", []):
+                chunks.append(
+                    f"Grammar: Prefix {prefix['form']} | Function: {prefix['function']} | "
+                    f"Examples: {', '.join(prefix.get('examples', []))}"
+                )
+        if "morphology" in self.rules and "common_roots" in self.rules["morphology"]:
+            for root in self.rules["morphology"]["common_roots"]:
+                derivatives_text = ", ".join([f"{d['form']} ({d['gloss']})" for d in root.get("derivatives", [])])
+                chunks.append(
+                    f"Grammar: Root {root['root']} | Meaning: {root['meaning']} | "
+                    f"Derivatives: {derivatives_text}"
+                )
+        if "morphology" in self.rules and "inflectional_morphology" in self.rules["morphology"]:
+            modes = self.rules["morphology"]["inflectional_morphology"].get("modes", [])
+            for mode in modes:
+                examples_text = ", ".join([f"{ex['form']} ({ex['gloss']})" for ex in mode.get("examples", [])])
+                chunks.append(
+                    f"Grammar: Mode {mode['name']} | Marker: {mode['marker']} | "
+                    f"Description: {mode['description']} | Examples: {examples_text}"
+                )
+        if "phonology" in self.rules and "phonological_processes" in self.rules["phonology"]:
+            for process in self.rules["phonology"]["phonological_processes"]:
+                examples_text = ", ".join([f"Woccon: {ex['Woccon']}, Catawba: {ex['Catawba']} ({ex['gloss']})" for ex in process.get("examples", [])])
+                chunks.append(
+                    f"Grammar: Phonological process {process['process']} | "
+                    f"Description: {process['description']} | Examples: {examples_text}"
+                )
+        return documented_words, chunks
+
+    def reload_language_data(self, dict_path: Optional[str] = None, rules_path: Optional[str] = None) -> Dict[str, Any]:
+        """
+        Reload dictionary and rules from disk and rebuild RAG corpus. Use after merge or when switching to unified files.
+        Returns summary (lexicon_count, chunks_count).
+        """
+        if dict_path is not None:
+            self._dict_path = dict_path
+        if rules_path is not None:
+            self._rules_path = rules_path
+        self.dictionary = self._load_json(self._dict_path)
+        self.rules = self._load_json(self._rules_path)
+        self.documented_words, self.chunks = self._build_rag_corpus()
+        log.info("Reloaded language data: %d lexicon entries, %d RAG chunks", len(self.dictionary.get("lexicon", [])), len(self.chunks))
+        return {
+            "lexicon_count": len(self.dictionary.get("lexicon", [])),
+            "chunks_count": len(self.chunks),
+            "dict_path": self._dict_path,
+            "rules_path": self._rules_path,
+        }
     
     def _get_contextual_params(self, response_type: str = "standard") -> Dict:
         """Get optimized parameters for different response types."""
@@ -489,10 +511,14 @@ class WocconAssistant:
     def _retrieve(self, query: str, k: int = 12) -> Tuple[List[str], bool]:
         """
         Retrieval function for RAG. Returns (documents, has_strong_match).
+        Chunks tagged [Community] get a score boost so they rank higher when overlap is similar.
         """
         tokens = set(re.findall(r"[a-z]+", query.lower()))
-        scored = [(sum(t in chunk.lower() for t in tokens), chunk)
-                  for chunk in self.chunks]
+        community_boost = 5  # Prefer community-sourced when token scores are close
+        scored = [
+            (sum(t in chunk.lower() for t in tokens) + (community_boost if "[Community]" in chunk else 0), chunk)
+            for chunk in self.chunks
+        ]
         scored.sort(key=lambda x: x[0], reverse=True)
         
         # Get documents with any score > 0
