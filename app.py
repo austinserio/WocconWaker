@@ -495,6 +495,46 @@ async def get_info():
         "description": "Language assistant with linguistic analysis capabilities"
     }
 
+# Drive ingest: on-demand trigger (Phase 2). Use cron for every-12h; see DRIVE_INGEST.md.
+_last_ingest_result: Optional[Dict[str, Any]] = None
+
+def _require_ingest_secret(request: Request) -> None:
+    """If INGEST_DRIVE_SECRET is set, require it in header X-Ingest-Secret or query param secret."""
+    secret = os.environ.get("INGEST_DRIVE_SECRET")
+    if not secret:
+        return
+    header = request.headers.get("X-Ingest-Secret")
+    query = request.query_params.get("secret")
+    if header != secret and query != secret:
+        raise HTTPException(status_code=401, detail="Missing or invalid ingest secret")
+
+@app.post("/admin/ingest-drive")
+async def trigger_ingest_drive(request: Request):
+    """
+    Run Google Drive folder ingest (list + fetch Docs/PDFs). Returns summary.
+    Optional: set INGEST_DRIVE_SECRET in env and pass it in header X-Ingest-Secret or ?secret=...
+    """
+    _require_ingest_secret(request)
+    try:
+        import drive_ingest
+        summary = drive_ingest.run_phase1_verify()
+        global _last_ingest_result
+        _last_ingest_result = summary
+        return summary
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={"error": str(e), "errors": [str(e)]},
+        )
+
+@app.get("/admin/ingest-drive/status")
+async def ingest_drive_status(request: Request):
+    """Return the result of the last ingest run (if any)."""
+    _require_ingest_secret(request)
+    if _last_ingest_result is None:
+        return {"status": "no run yet", "last_result": None}
+    return {"status": "last run", "last_result": _last_ingest_result}
+
 # API endpoint to send a direct message to the assistant
 @app.post("/message")
 async def send_message(message: Dict[str, Any]):

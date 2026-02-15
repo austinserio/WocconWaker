@@ -100,7 +100,8 @@ ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indica
 ```
 
 ### LLM mode: local vs Microsoft Foundry
-- **LOCAL_LLM**: When `true`, `1`, or `yes` (case-insensitive), the app uses **local Ollama** (e.g. RunPod/CUDA or CPU). When unset or false, the app uses **Microsoft Foundry** (Llama/equivalent via Azure API). No OpenAI models are used; Foundry serves Llama (or HF-equivalent) via an OpenAI-compatible API.
+- **Anthropic (optional)**: If `ANTHROPIC_API_KEY` is set, all LLM calls (including Drive extraction) use **Claude** via the Anthropic API. Set `ANTHROPIC_MODEL` (e.g. `claude-3-5-sonnet-20241022`) or the code defaults to Sonnet. Useful when Azure quota isn’t available or for better extraction accuracy.
+- **LOCAL_LLM**: When `true`, `1`, or `yes` (case-insensitive), the app uses **local Ollama** (e.g. RunPod/CUDA or CPU). When unset or false and no Anthropic key, the app uses **Microsoft Foundry** (Llama/equivalent via Azure API). No OpenAI models are used; Foundry serves Llama (or HF-equivalent) via an OpenAI-compatible API.
 - **Local (OLLAMA_URL, OLLAMA_MODEL)**: Used only when `LOCAL_LLM` is true.
 - **Foundry (when LOCAL_LLM is false)**:
   - `FOUNDRY_ENDPOINT` or `AZURE_AI_ENDPOINT`: Foundry/Azure OpenAI base URL (e.g. `https://<resource>.openai.azure.com`).
@@ -109,6 +110,17 @@ ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indica
   - `FOUNDRY_API_VERSION`: Optional; default `2024-10-21`.
   - Use `./setup-foundry-azure-cli.sh` to create the resource and print these values.
 
+### Drive ingest (Phase 1+)
+- **GOOGLE_APPLICATION_CREDENTIALS**: Path to service account JSON key file. Required for listing/reading a shared Drive folder (share the folder with the service account email). Do not commit the JSON.
+- **DRIVE_FOLDER_ID**: Optional. Defaults to the Woccon community folder ID.
+- **INGEST_DRIVE_SECRET**: Optional. If set, `POST /admin/ingest-drive` and `GET /admin/ingest-drive/status` require this value in header `X-Ingest-Secret` or query `secret=`.
+
+```bash
+# Phase 1 verify: list folder and fetch text from Docs/PDFs
+python drive_ingest.py
+# Phase 2: schedule with cron (every 12h). See DRIVE_INGEST.md.
+```
+
 ## API Endpoints
 
 - `GET /webhook` - Facebook webhook verification
@@ -116,6 +128,8 @@ ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indica
 - `POST /message` - Direct API message endpoint
 - `GET /health` - Health check
 - `GET /info` - Assistant information
+- `POST /admin/ingest-drive` - Run Drive ingest on demand (optional: X-Ingest-Secret or ?secret=)
+- `GET /admin/ingest-drive/status` - Last ingest result
 
 ## Notes
 

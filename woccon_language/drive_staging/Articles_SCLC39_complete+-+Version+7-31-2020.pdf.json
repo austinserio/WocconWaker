@@ -1,0 +1,4126 @@
+{
+  "source_path": "Articles/SCLC39_complete+-+Version+7-31-2020.pdf",
+  "source_url": "https://drive.google.com/file/d/1zShEwu86RoWUgdZh0kdUi60DATXHlLEw/view",
+  "lexicon_entries": [
+    {
+      "woccon": "Wéwihnaⁿeyáo",
+      "english": "thank you",
+      "pos": "interjection",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kóya",
+      "english": "friend/term of address",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "gitlung",
+      "english": "hair",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eesauh",
+      "english": "river",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eswoa",
+      "english": "river",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "iswą",
+      "english": "river",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "i-swang",
+      "english": "river",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yabrecha",
+      "english": "man",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yįįbaritca",
+      "english": "man",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ye'mi'-h-ra-re",
+      "english": "chief, commander",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yakezuh",
+      "english": "husband and wife",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yaa kiča",
+      "english": "wife",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yį kiča",
+      "english": "husband",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "įti",
+      "english": "rock, stone",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "iti",
+      "english": "rock, stone",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "chaupee",
+      "english": "beaver",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "čapi",
+      "english": "beaver",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ne-purre",
+      "english": "two",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nipare",
+      "english": "two",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dípkuraa",
+      "english": "six",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "lubbosa",
+      "english": "eight",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nipisa",
+      "english": "eight",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dawosa",
+      "english": "eight",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pat-chaw",
+      "english": "nine",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "paca",
+      "english": "nine",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wąča",
+      "english": "nine",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "lubosa",
+      "english": "eight",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "welka",
+      "english": "duck",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "palawa",
+      "english": "a turd",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "saukchuh",
+      "english": "white",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "takči",
+      "english": "white",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pot-tateerawah",
+      "english": "axe, hatchet",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yayeh",
+      "english": "Indian",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wa",
+      "english": "town",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahho",
+      "english": "wind",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yauh-he",
+      "english": "Indian",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yuh-hor",
+      "english": "wind",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pičineharei-ksana-mu-aʔ",
+      "english": "1000",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ni(n)yaa",
+      "english": "my daughter",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yaa",
+      "english": "woman",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ehopwe",
+      "english": "God",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "haap",
+      "english": "on top",
+      "pos": "locative",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yaa-naa",
+      "english": "sister",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "himuu",
+      "english": "[his] face",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-piya",
+      "english": "hands and toes suffix",
+      "pos": "suffix",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "i-ksa-pis",
+      "english": "fingernail",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "haa",
+      "english": "heart",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wįsiwide'yu",
+      "english": "warrior",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ya-atehune-ee",
+      "english": "friend",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Kaupeyaweeracha",
+      "english": "kettle",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "heakuh",
+      "english": "light",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yaphasohę",
+      "english": "autumn",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "woyeorwaye",
+      "english": "autumn",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "háake",
+      "english": "lake",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yay",
+      "english": "oak",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "siʔkąči",
+      "english": "red",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yąwi-h-aʔ",
+      "english": "blue",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eʔ­h­čuwį­h­ree",
+      "english": "ugly",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wupchahaora",
+      "english": "we",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kera­arrera",
+      "english": "they",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nutátie",
+      "english": "blanket",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nurupi",
+      "english": "iron",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "duruubi",
+      "english": "iron",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nų'ʔmąʔ",
+      "english": "bead",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "híika",
+      "english": "light",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "aráta",
+      "english": "leader",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nųti wíčaawa",
+      "english": "moon",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wíčaawanųti",
+      "english": "moon",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "haču",
+      "english": "sister",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "inuwaa",
+      "english": "daughter",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ne-po-ya",
+      "english": "one",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dupunna",
+      "english": "one",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nau-pa-re",
+      "english": "two",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "naperra",
+      "english": "two",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "no-mon-da",
+      "english": "three",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "namunda",
+      "english": "three",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "purree-purree",
+      "english": "four",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "purrepurra",
+      "english": "four",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "puc-tree",
+      "english": "five",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pukte-arra",
+      "english": "five",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ne-purree",
+      "english": "six",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dip-kurra",
+      "english": "six",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wassinee",
+      "english": "seven",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wassineu",
+      "english": "seven",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nepissaw",
+      "english": "eight",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nupsau",
+      "english": "eight",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "naposah",
+      "english": "eight",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "patchaw",
+      "english": "nine",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wunchah",
+      "english": "nine",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pitchinnee",
+      "english": "ten",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pechuna",
+      "english": "ten",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pechunadupahoksu",
+      "english": "eleven",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pechunanapurrahoksu",
+      "english": "twelve",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pechunanapurra",
+      "english": "twenty",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pechunanamunda",
+      "english": "thirty",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pechuhahruh",
+      "english": "one hundred",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pečuhruheeksuhnamohah",
+      "english": "one thousand",
+      "pos": "numeral",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "non-yaw",
+      "english": "my daughter",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "cow-re-dha-har-ree",
+      "english": "my son",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "cow-sin-nee-wi-ra",
+      "english": "resembles my son / a fine boy",
+      "pos": "phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yaawikąnee",
+      "english": "a beautiful girl",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kuri-na",
+      "english": "my son",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ne-mosa-ree",
+      "english": "I love you",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yaani-kičaa",
+      "english": "my wife",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "bara-hę-daa",
+      "english": "my brother",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kurii-h-reeyaa-ee",
+      "english": "the girl that I love",
+      "pos": "noun phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ehopweh",
+      "english": "God",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wariwe",
+      "english": "God (man not dying)",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "widee",
+      "english": "deer calf",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahwerejeh",
+      "english": "wicked spirit",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eeyauh",
+      "english": "woman",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eechahuh",
+      "english": "boy",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahwachahuh",
+      "english": "girl",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yeenturawa",
+      "english": "child, infant",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahmosa",
+      "english": "father",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nenedau",
+      "english": "my father",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yaxu",
+      "english": "mother",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "checheendau",
+      "english": "my mother",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "koorewa",
+      "english": "son",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "enewah",
+      "english": "daughter",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "murraundau",
+      "english": "brother",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yadah",
+      "english": "sister",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "iska",
+      "english": "head",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "iskonsa",
+      "english": "hair",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "heemoh",
+      "english": "face",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eetaup",
+      "english": "forehead",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "netaup",
+      "english": "my forehead",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "doxu",
+      "english": "ear",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nocksoo",
+      "english": "my ear",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "heetooh",
+      "english": "his eye",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "neetooh",
+      "english": "my eye",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eepeesooh",
+      "english": "nose",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "esomo",
+      "english": "mouth",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "heesoomoseh",
+      "english": "tongue",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "neesoomoseh",
+      "english": "my tongue",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "heeaup",
+      "english": "his tooth",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "neeaup",
+      "english": "tooth",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "esomoesa",
+      "english": "beard",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "edut",
+      "english": "neck",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eeksuh",
+      "english": "arm",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ecksapeeah",
+      "english": "hand",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eekseaah",
+      "english": "fingers",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eeksapis",
+      "english": "nails",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eehageo",
+      "english": "body",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eepah",
+      "english": "belly",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hepapeeah",
+      "english": "feet",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nepapee'ah",
+      "english": "my foot",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "epuhyetah",
+      "english": "toes",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "heposaup",
+      "english": "his shin bone",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nosaup",
+      "english": "my bone",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "deehauh",
+      "english": "heart",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eet",
+      "english": "blood",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahmeraee",
+      "english": "chief",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weeseeweedheu",
+      "english": "warrior",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wįsi",
+      "english": "fierce monster",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ate-koo-ni-wah",
+      "english": "enemy",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sook",
+      "english": "house, hut",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wah",
+      "english": "arrow",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eecheka",
+      "english": "bow",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "seepah",
+      "english": "knife",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dupomorya",
+      "english": "canoe, boat",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weeda",
+      "english": "Indian shoes",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "koostauh",
+      "english": "bread",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wahmezu",
+      "english": "pipe, calumet",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "opah",
+      "english": "tobacco",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wahpeeh",
+      "english": "sky, heaven",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nootéeh",
+      "english": "sun",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weechawanooteeh",
+      "english": "moon",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wahpeeknu",
+      "english": "star",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahbra",
+      "english": "day",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weechawa",
+      "english": "night",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weechaupku",
+      "english": "darkness",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahwup",
+      "english": "morning",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weechawarare",
+      "english": "evening",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahrunkquechuh",
+      "english": "spring",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahruh",
+      "english": "summer",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yup-hasohuh",
+      "english": "autumn",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "woye",
+      "english": "autumn",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waye",
+      "english": "autumn",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weeyah",
+      "english": "winter",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hiunk-hiunk-huh",
+      "english": "lightning",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hayak",
+      "english": "to lighten",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tere-re-hera",
+      "english": "thunder",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ookso'reh'",
+      "english": "rain",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wauh",
+      "english": "snow",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wauhsah",
+      "english": "hail",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "epee",
+      "english": "fire",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eyau",
+      "english": "water",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "moha",
+      "english": "ice",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "munno",
+      "english": "earth, land",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "iswasekera",
+      "english": "sea",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "haukhe",
+      "english": "lake",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "uhwah",
+      "english": "valley",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sookterrowa",
+      "english": "hill",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sook-taro",
+      "english": "hill",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sookterro",
+      "english": "mountain",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "suck,táro",
+      "english": "mountain",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sauwa",
+      "english": "island",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eedee",
+      "english": "stone, rock",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "noropeweyeh",
+      "english": "copper",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "norope-ee",
+      "english": "iron",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "koos",
+      "english": "maize",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yup",
+      "english": "tree",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eeúp",
+      "english": "wood",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eeapaúh",
+      "english": "leaf",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yunnup-pees",
+      "english": "bark",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "surrak",
+      "english": "grass",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eetawa",
+      "english": "pine-tree",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weedee-yoyunde-e",
+      "english": "flesh, meat",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weedee-youh",
+      "english": "cow-dead",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weedaboy-ah",
+      "english": "deer",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yunnaus",
+      "english": "bison, buffalo",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nomeh",
+      "english": "bear",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yauntsesoore-ee",
+      "english": "wolf",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tauntsee",
+      "english": "dog",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "taunsee",
+      "english": "dog",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dupoyamo-eeha",
+      "english": "fox",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "piup",
+      "english": "squirrel",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "depauksa",
+      "english": "rabbit",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yah",
+      "english": "snake",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "koching",
+      "english": "bird",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "watka-eno",
+      "english": "egg",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ahhah",
+      "english": "goose",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kosaunsopee",
+      "english": "duck",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eetoosewee-yachuh",
+      "english": "pigeon",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eepahka",
+      "english": "partridge",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "watkunterro",
+      "english": "turkey",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yee",
+      "english": "fish",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "houkchuh",
+      "english": "black",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sikechuh",
+      "english": "red",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahwe-hah",
+      "english": "blue",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sekaweehuh",
+      "english": "yellow",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wi-unka",
+      "english": "green",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pauktehera",
+      "english": "great, big",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tee-huera",
+      "english": "small, little",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahneerochora",
+      "english": "strong",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sebaheh",
+      "english": "old",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "worera",
+      "english": "young",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "koonera",
+      "english": "good",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "imbahow-ara",
+      "english": "bad",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "koonehara",
+      "english": "handsome",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ehechowehara",
+      "english": "ugly",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yawahrahcha",
+      "english": "alive, life",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yawahrahhera",
+      "english": "dead, death",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "chehuhcheara",
+      "english": "cold",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "weehuhohechora",
+      "english": "warm, hot",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "derah",
+      "english": "I",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yayah",
+      "english": "thou",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ouwah",
+      "english": "he",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kera-arrera",
+      "english": "they",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "aya",
+      "english": "this",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "heya",
+      "english": "that",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "needem",
+      "english": "all",
+      "pos": "quantifier",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahkano",
+      "english": "many, much",
+      "pos": "quantifier",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tou-a-ena",
+      "english": "who",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahpasa",
+      "english": "today",
+      "pos": "adverb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "sodah",
+      "english": "yesterday",
+      "pos": "adverb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yahwah",
+      "english": "tomorrow",
+      "pos": "adverb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "imbah",
+      "english": "yes",
+      "pos": "interjection",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wahhow-ara",
+      "english": "no",
+      "pos": "interjection",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "noyah",
+      "english": "to eat",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "korooksa",
+      "english": "to drink",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tereeksera",
+      "english": "to run",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "barreeda",
+      "english": "to dance",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "koreda",
+      "english": "to go",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "mana",
+      "english": "to sing",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hemoda",
+      "english": "to sleep",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nedaukwunada",
+      "english": "to speak",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kawneda",
+      "english": "to see",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nummosara",
+      "english": "to love",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eekwah",
+      "english": "to kill",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "eewahna",
+      "english": "to walk",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "datukó",
+      "english": "inner bark",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-ha-",
+      "english": "stative suffix",
+      "pos": "suffix",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-ree",
+      "english": "indicative modal suffix",
+      "pos": "suffix",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "i",
+      "english": "indefinite possessor",
+      "pos": "proclitic",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-ne",
+      "english": "interrogative modal suffix",
+      "pos": "suffix",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-č-",
+      "english": "causative suffix",
+      "pos": "suffix",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "aʔ",
+      "english": "subordinative modal suffix",
+      "pos": "suffix",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-aa-",
+      "english": "negative suffix",
+      "pos": "suffix",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kǫzékǫ",
+      "english": "similar, alike",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "góze égo",
+      "english": "similar, alike",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hkihkǫ́ze",
+      "english": "teaching, religious devotion",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kkikką́ze",
+      "english": "teaching, religious devotion",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Kaáⁿze",
+      "english": "name of the tribe and the language",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "báca",
+      "english": "to string x",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "maabáca",
+      "english": "to string something, beads",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "čséðe",
+      "english": "to doctor x",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wačséðe",
+      "english": "to doctor folks",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ruuk",
+      "english": "to eat x",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "warúc",
+      "english": "to eat something",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wakʰéga",
+      "english": "to be sick",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hébe",
+      "english": "piece",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "thatʰé",
+      "english": "to eat it",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "thatʰága",
+      "english": "eat (imperative)",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wadóⁿba",
+      "english": "she sees us",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "baxú",
+      "english": "to write x",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wabaxú",
+      "english": "to write, to write something",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "'é",
+      "english": "to farm x, to hoe x",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wa'é",
+      "english": "to farm",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "gí'i",
+      "english": "to give x to y to help him/her out",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wé'i",
+      "english": "to give x to folks to help them out, to give stuff to y to help him/her out",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dóⁿbe",
+      "english": "to see x, to look at x",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wadóⁿbe",
+      "english": "to scout",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "uhóⁿ",
+      "english": "to cook x",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "úhoⁿ",
+      "english": "to cook",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wathátʰe",
+      "english": "to eat, to eat something",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "shíⁿ",
+      "english": "(to be) fat",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "washíⁿ",
+      "english": "fat, bacon",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "zhíⁿga",
+      "english": "(to be) small",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wazhíⁿga",
+      "english": "bird",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "zhíde",
+      "english": "(to be) red",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wazhíde",
+      "english": "tomato",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "baxté",
+      "english": "to tie it",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wabáxte",
+      "english": "bundle",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "áthaha",
+      "english": "to put it on",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wáthaha",
+      "english": "clothes",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tóⁿ",
+      "english": "to have (many of) it",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "watóⁿ",
+      "english": "goods",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wabáxu",
+      "english": "letter, writer",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wáthatʰe",
+      "english": "table",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wébaxu",
+      "english": "pencil",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wémagixe",
+      "english": "saw",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ú'e",
+      "english": "field",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wamóⁿthóⁿ",
+      "english": "he steals (things), thief, he steals them",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "moⁿthóⁿ",
+      "english": "he steals x",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wéthai",
+      "english": "discovered the presence of enemies",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "íthe",
+      "english": "to find x",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Noⁿbétóⁿ",
+      "english": "hand",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "moⁿzhóⁿwa­thítoⁿ",
+      "english": "have land",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wagázhi",
+      "english": "work",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "agtha­í",
+      "english": "go home",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Kʰagé­ha",
+      "english": "friend",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ischéxi",
+      "english": "horned water panther or serpent",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wakándas",
+      "english": "spirits or sacred beings",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wakan",
+      "english": "mysterious, sacred, powerful",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wekan",
+      "english": "sacred myths",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wéts'a tazhi lishka",
+      "english": "mythical flying snake",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Pah-hah-wah-tha-hu-ni",
+      "english": "the place that sucks in/the hill that swallows in",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Uye",
+      "english": "Vulva/Vagina",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "mąyąkaígi",
+      "english": "land",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wólahočeyą",
+      "english": "he suck them in",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ítąŋe",
+      "english": "one there",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kʰE",
+      "english": "it is lying",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "aheri",
+      "english": "hill/mountain",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "warashruje",
+      "english": "draws in by mouth",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dhasnin",
+      "english": "to devour, to swallow",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wadhahuni",
+      "english": "synonym for devouring/swallowing",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wa-racrutce",
+      "english": "alternate spelling of warashruje",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wa-rashruce",
+      "english": "alternate spelling of warashruje",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Uze",
+      "english": "genitals",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wakąnda",
+      "english": "God/sacred/mysterious/powerful",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Mą-'ų",
+      "english": "Earth-Maker",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Manyínka Gághe",
+      "english": "Earth Workers Clan",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wakʰąda pʰi skųñį",
+      "english": "No-Good God",
+      "pos": "noun phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wanąxipʰiškųñį",
+      "english": "No-Good Spirit/Evil Spirit/Demon",
+      "pos": "noun phrase",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waxopįnįšišik",
+      "english": "devil",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waxobrį",
+      "english": "sacred/holy/dangerous",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waxobį",
+      "english": "sacred/holy/dangerous",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pį",
+      "english": "good",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nį",
+      "english": "negation morpheme",
+      "pos": "morpheme",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "šįŋe",
+      "english": "little",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "waką",
+      "english": "sacred/holy/powerful",
+      "pos": "adjective",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Teewákącąk",
+      "english": "Devil's Lake/Sacred Lake",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "škųnį",
+      "english": "not; (be) not",
+      "pos": "negation",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "wakándapízhi",
+      "english": "devil",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wakándapéži",
+      "english": "the bad god",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "baa­lisshí­k",
+      "english": "I danced",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "bii­wíisshi­k",
+      "english": "I lied",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "xachií",
+      "english": "move (location)",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "díili",
+      "english": "walk",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "xalússhi",
+      "english": "run",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "iluú",
+      "english": "stand up",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ilíi",
+      "english": "talk, speak",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "baachimmí",
+      "english": "study",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "disshí",
+      "english": "dance",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "chiwakíi",
+      "english": "pray",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "káa",
+      "english": "laugh, smile",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "shée",
+      "english": "die, faint",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "bilihpí",
+      "english": "bathe, swim",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "chía",
+      "english": "be white",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "isáa",
+      "english": "be big",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "satchí",
+      "english": "be thick",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "shishía",
+      "english": "be dirty",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tawée",
+      "english": "be hot",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ítchi",
+      "english": "be good",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "púmmi",
+      "english": "be short",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "xaliá",
+      "english": "be itchy",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "xawíi",
+      "english": "be bad",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "xusshí",
+      "english": "be fast",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "chilíi",
+      "english": "be afraid",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ilutchítchi",
+      "english": "feel guilty",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "bíile",
+      "english": "tell on, tattle",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "apáali",
+      "english": "grow, sprout",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "bíisshi",
+      "english": "tell lie",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "chipí",
+      "english": "drown",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ámmichi",
+      "english": "fall down",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "daxxálua",
+      "english": "slide, skid",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "awé",
+      "english": "ground",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dichí",
+      "english": "hit",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "awélichi",
+      "english": "fall down",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "iiwaannía",
+      "english": "play",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "dée",
+      "english": "go",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "shipíta",
+      "english": "be black",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "háchka",
+      "english": "be tall, long",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "chilía",
+      "english": "be cold",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "axxí",
+      "english": "cough",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "apiiaxxí",
+      "english": "sneeze",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "pía",
+      "english": "fart, break wind",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "kalée",
+      "english": "vomit",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "baashíali",
+      "english": "dream",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "páxpi",
+      "english": "suffer, feel pain",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "iháwi",
+      "english": "sleep",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "apá",
+      "english": "nose",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ii",
+      "english": "instrumental",
+      "pos": "morpheme",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "chilíihche",
+      "english": "forbid someone to do something",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hche",
+      "english": "indirect causative",
+      "pos": "morpheme",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tannáa",
+      "english": "shiver",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ilítshia",
+      "english": "stick, be smelly",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "táwasaali",
+      "english": "sweat, perspire",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "bixúa",
+      "english": "have diarrhea",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "alíishxachii",
+      "english": "shake due to hunger",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "íishpuuxachii",
+      "english": "have cramps in stomach",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "apíiluu",
+      "english": "have nosebleed",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "shéhchikiichi",
+      "english": "hiccough",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "daxchí",
+      "english": "choke (on food), gag",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "asaalí",
+      "english": "come out, exit",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "alíishi",
+      "english": "be hungry",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "xachíi",
+      "english": "move",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "íishpuu",
+      "english": "stomach",
+      "pos": "noun",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ilúu",
+      "english": "persist",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "baláxi",
+      "english": "sing",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "duushí",
+      "english": "eat",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ítchilaa",
+      "english": "be good",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ámmitdaa",
+      "english": "fall",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-lee",
+      "english": "inchoative marker",
+      "pos": "morpheme",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-ssaa",
+      "english": "negative marker",
+      "pos": "morpheme",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-h",
+      "english": "imperative marker",
+      "pos": "morpheme",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-wia",
+      "english": "desiderative marker",
+      "pos": "morpheme",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "-k",
+      "english": "declarative marker",
+      "pos": "morpheme",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "bii-",
+      "english": "first person B marker",
+      "pos": "morpheme",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "bíishi",
+      "english": "unknown meaning",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "óoshi",
+      "english": "be ripe, cooked",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "óosshee",
+      "english": "cook",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "apáalee",
+      "english": "raise",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "koowí",
+      "english": "be complete",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "koowée",
+      "english": "complete, quit",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "úuchi",
+      "english": "be dry",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "úutchee",
+      "english": "dry (something)",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "passhí",
+      "english": "fall off",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "passhée",
+      "english": "make fall down",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "xapí",
+      "english": "fall",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "xapée",
+      "english": "drop",
+      "pos": "verb",
+      "pronunciation": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "bia",
+      "english": "going to",
+      "pos": "modal auxiliary",
+      "pronunciation": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    "Morpheme structure: man-superior-3S-PROX-IND for 'chief, commander'",
+    "Nasal vowels may have been optional in early 1800s but became obligatory by 1934",
+    "Optional nasal vowels may later become obligatory",
+    "axe-large-NEG morphological structure observed in compound words",
+    "man-GEN (genitive) case marking attested",
+    "Pre-nasal sound occurs before yaa 'woman' in older attestations",
+    "Pre-nasal phoneme was no longer obligatory in later references",
+    "Morpheme -da was used for first person singular inalienable possession in older references",
+    "More recent references use -na for first person singular inalienable possession",
+    "Potential modal suffix -we appears in some words",
+    "Morpheme pičineharei-ksana-mu-aʔ may mean 'I want 100 arms'",
+    "Indefinite possessor affix is used for inalienable possessor for nouns that do not identify who that noun belongs to",
+    "Indefinite possessor affix can be the subject to prefixing verbs when the subject is not identified",
+    "-piya suffix is only used for hands and toes",
+    "Morpheme analysis: i- = indefinite possessor, -ksa = arm, -pis = skin",
+    "Morpheme analysis: di- = 1st person singular possessor",
+    "Morpheme analysis: ya- prefix attested in friend construction",
+    "Morpheme analysis: yąwi = water, -h = resembles, -aʔ = stative subject marker",
+    "Independent personal pronoun marker ­ta or ­taʔ was prolific in later studies but not elicited in earlier sources",
+    "Morpheme ­piya means 'extremity'",
+    "Morpheme ­da indicates first person alienable possession",
+    "Morphemes are uncertain for several attested words",
+    "The head-modifier configuration is typical in Catawba",
+    "The term for 'daughter' has always been inalienably possessed",
+    "The term for 'sister' has always been alienably possessed",
+    "First-person alienable possessive marker could have been -dha",
+    "Later Catawba may have nasalized -dha to -na",
+    "Morphological structure includes STAT-IND (stative-indicative) markers",
+    "IDEF-arm indicates indefinite arm morpheme",
+    "1S-want-SUB indicates first person singular want with subordinate marker",
+    "First person singular may once have been ni-",
+    "Archaic first-person singular alienable possession marker is -da",
+    "/č/ is allophonic with /j/",
+    "good-3S-IND structure shows third person singular indicative marking",
+    "CAUS indicates causative morpheme",
+    "SUB indicates subordinate morpheme",
+    "NEG indicates negation",
+    "Morpheme musa means 'to love'",
+    "Morpheme brecha meaning is unclear",
+    "Archaic possessive marker -dau used for 'my father' and 'my mother'",
+    "First person singular possessive marking on kinship terms",
+    "mbara-na shows archaic first person alienable possessive marker",
+    "yaa-naa shows woman-my structure for 'sister'",
+    "yįye shows man+GEN structure for 'Indian'",
+    "i-ską-si shows IDEF-head-hair structure for 'hair'",
+    "hi-nen shows 3S-face structure for 'face'",
+    "i-taap shows IDEF-forehead structure for 'forehead'",
+    "ni-taap shows 1S-forehead structure for 'my forehead'",
+    "Possessive marking: 'nee-' prefix indicates first person singular possession (my)",
+    "Possessive marking: 'hee-' prefix indicates third person singular possession (his)",
+    "Compound formation: '-se' suffix can be added to 'mouth' to form 'tongue' (literally 'mouth-point')",
+    "The suffix peeah is used for 'extremity'",
+    "The suffix icaa? is used for 'extremity' in some words",
+    "The root -iksa can mean 'hand', 'arm', and 'fingers'",
+    "3S- prefix indicates third person singular possession",
+    "1S- prefix indicates first person singular possession",
+    "IDEF- prefix indicates indefinite possession",
+    "SUB indicates subject marker",
+    "NEG indicates negation marker",
+    "CAUS indicates causative marker",
+    "Morpheme kuni means 'good'",
+    "Reduplication and morphological analysis shows complex word formation",
+    "Sometimes s can have an allophone z",
+    "Catawba noun phrases are head-modifier configuration",
+    "Uses habitative suffix",
+    "Uses particle suffix",
+    "Has proximity indicator suffix (PROX)",
+    "Has indicative suffix (IND)",
+    "Has diminutive suffix (DIM)",
+    "Has continuative suffix (CONT)",
+    "Shows coalescence patterns in word formation",
+    "Reduplication signals emphasis or change in meaning",
+    "When hayak is reduplicated, it changes from 'to lighten' to 'lightning'",
+    "Negative suffix can be used to differentiate meanings",
+    "Word accents may be morphemic",
+    "Diminutive suffix (DIM) is used",
+    "Morphological structure includes mountain-large patterns",
+    "Imperative marked with -IMP suffix",
+    "Subordinate clause marked with -SUB suffix",
+    "Second person subject marked as 2S",
+    "Wide appears in unsycopated form in some contexts",
+    "DIM suffix indicates diminutive form",
+    "Entry shows coalescence of -awu- to a back rounded vowel",
+    "3S-SUB indicates third person singular subjunctive",
+    "3S-IND indicates third person singular indicative",
+    "Verbs can take pronominal prefixes and suffixes",
+    "3S indicates third person singular",
+    "IND indicates indicative mode",
+    "STAT indicates stative",
+    "INTS indicates intensive",
+    "EP indicates epenthetic vowel",
+    "PROHIB indicates prohibitive mood",
+    "Describing words in Catawba inflect for person similar to verbs",
+    "Some adjectives like 'cold' and 'hot' do not appear to inflect for person",
+    "The suffix -ha- appears to be a stative suffix",
+    "Some morphemes are uncertain and may be archaisms",
+    "A proclitic du- is often added to 'to eat'",
+    "The du- proclitic appears to be unrelated to the 'hand action' instrumental affix",
+    "Verbs can take subject markers like -1S (first person singular)",
+    "Verbs can take mood markers like -SUB (subjunctive), -IND (indicative), -IMP (imperative)",
+    "The indefinite possessor affix can be the subject of prefixing verbs as well as inalienably possessed objects",
+    "Stative suffix -ha- is used with nouns to create a verb phrase",
+    "Indicative modal suffix -ree shows statement of fact",
+    "Indefinite possessor i appears as a proclitic to indicate that the possessor of an inalienably possessed noun is not identified",
+    "Interrogative modal suffix -ne is used to ask yes or no questions",
+    "Causative suffix -č- is used in verb phrases to show the verb was caused by something",
+    "Presence of causative suffix generally increases verb valency",
+    "Subordinative modal suffix marks a dependent clause",
+    "Subordinative modal suffix has phonemic representation of aʔ or ∅",
+    "Genuine suffix -ye is affixed to nouns to show the noun is genuine or true",
+    "Habitual suffix -k- is affixed to verb phrases to mean the verb action is repeated habitually",
+    "Proximative suffix -ra- is affixed to verb phrases and means 'almost' or 'nearly'",
+    "Continuitive modal suffix -hę is affixed to the end of verb phrases to show the verb 'would' happen",
+    "Imperative modal suffix -dee is affixed to verbs to show a command",
+    "Intensive suffix -čuu- is affixed to verb phrases to show intensification of the verb",
+    "Prohibitive modal suffix -če is affixed to verb phrases to show prohibition of the verb",
+    "The parsing of the Kansa texts is currently morpheme-by-morpheme",
+    "All morphologically complex words in the texts would have to be coded for word-level lexical class",
+    "Some may argue that Kansa has no adjective class, but only stative verbs, while others may disagree",
+    "Practical Kansa <p,t,k> characters correspond to the Dhegiha 'tense' stop series",
+    "Tense stops realized as /pp, tt, kk/ in Kansa, Omaha, Ponca, and Quapaw",
+    "Tense stops realized as /hp, ht, hk/ in Osage",
+    "Plain stops /p, t, k/ in Osage and Quapaw correspond to /b, d, g/ in Kansa, Omaha, and Ponca",
+    "In Dhegiha, determiners associated with the subject often—but not always—take the same form as auxiliaries in the predicate",
+    "The prefix wa- has three different functions: 3rd person plural object marker, antipassive marker, and nominalizer",
+    "There are two types of antipassive constructions with wa- according to referentiality",
+    "Antipassives with generic objects are ambiguous with 3rd person plural object marker",
+    "Antipassives with referring objects are close to the nominalizing function",
+    "wa- and its cognates has an object-removing function",
+    "wa- functions as valency-decreasing, detransitivizing, absolutive, indefinite object marker, or unspecified argument marker",
+    "wa- is commonly translated as 'things' or 'something' or 'people', or not translated at all",
+    "wa- serves as a marker of 3rd person plural objects (O.3PL) in Dhegiha languages and Hochunk-Chiwere languages",
+    "wa- functions as an antipassive marker with a generic object or no object",
+    "wa- functions as an antipassive marker with a referential object",
+    "wa- functions as a nominalizer",
+    "/*wa-í/ → wí",
+    "/*wa-á/ → wá",
+    "/*wa-u/ → ú",
+    "The prefix wa­ serves as third person plural object marker",
+    "wa­ appears independently of the expression of the object as a noun phrase",
+    "wa­ can express first person plural object (O.1PL)",
+    "O.1PL can be marked by additional a­ along with wa­ as awa­",
+    "O.1PL marker takes the form a­wá­ when a preverbal form occurs before it",
+    "wa­ functions as antipassive marker, saturating the object position",
+    "If no object is expressed on a transitive verb, it is understood as definite",
+    "wa­ enables verbs to be used without referring to any specific object",
+    "Wa- prefix forms antipassive verbs where the agent is preserved and the patient either inexpressible or demoted to an oblique function",
+    "Antipassive verbs can take specific, culturally relevant meanings",
+    "Wa- can remove any of the objects of a ditransitive verb",
+    "Wa- is attested on deverbal nouns corresponding to intransitive stative verbs, transitive verbs and ditransitive verbs",
+    "In most cases, the noun corresponds to the patientive argument of the verb, although in some cases, it can correspond to the agent",
+    "wa- prefix combines with applicative prefixes: instrumental í- 'with', locative (superessive) á- 'on', and locative (inessive) u- 'in'",
+    "wa- functions as a nominalizer, especially when deriving nouns from intransitive stative verbs",
+    "wa- can function as 3rd person plural object marker or antipassive marker",
+    "Intransitive stative verbs cannot take an antipassive marker",
+    "Intransitive stative verbs do not take 3rd person plural object marker when their subject is plural",
+    "wa- is an underspecified argument marker",
+    "wa- can correspond to a referring, singular object which is left indefinite by the speaker",
+    "wa- can function as an antipassive marker",
+    "wa- can function as O.3PL marker",
+    "wa- can function as underspecified argument marker",
+    "wa- can function as indefinite object marker (INDEF) which does not reduce verb valency",
+    "A2 personal marker uses initial shp- instead of b-",
+    "wa- may have developed partitive semantics or continuative aspect value",
+    "ANTIP indicates antipassive voice",
+    "O.1PL indicates first person plural object",
+    "PX indicates past experience marker",
+    "Verbs can function as both verbs and nouns",
+    "The prefix wa­ has at least 4 functions: third person animate plural object marker (O.3PL), antipassive marker (generic reading), indefinite object marker (specific reading), and nominalizer",
+    "Ambiguities are possible between O.3PL and generic antipassive functions",
+    "Ambiguities are possible between generic and referring antipassive functions",
+    "Generic referentiality is attested in most Siouan languages",
+    "The INDEF marker often stands for nonplural and/or inanimate objects",
+    "Relative clauses are pervasive in Umoⁿhoⁿ",
+    "Antipassive reading can come from both O.3PL and INDEF",
+    "wa- has multiple synchronic values including possible partitive value",
+    "Formal distinctions found in some contexts for antipassive constructions",
+    "DECL.MALE indicates declarative male speaker marker",
+    "3PAT indicates third person patient marking",
+    "Morpheme-by-morpheme glossing shows compound structure: aheri wa-ra-shruje",
+    "Compound nouns may be formed with lengthy constructs",
+    "Negation expressed with 'pʰi skųñį' meaning 'good-not'",
+    "Negation can also be expressed with 'pʰiškųñį' meaning '(be)good-NEG'",
+    "Nasalization can spread across all a word's syllables, from right to left, and vice versa",
+    "The morpheme nį signals negation",
+    "The diminutive is formed with šįŋe meaning 'little'",
+    "Two syllable words can be reduced to single syllables ending in a stop of the same place of articulation",
+    "Single syllables can be reduplicated to indicate numerous instances",
+    "Possible negation lexeme -cguni- 'not' (cognate to IOM)",
+    "Crow displays an active-stative (or Split-S) system",
+    "First- and second-person agreement markers on intransitive verbs belong to one of two classes: ACTIVE or STATIVE",
+    "Active intransitive verbs take A-set morphemes to refer to subjects",
+    "Stative intransitive verbs take B-set morphemes to refer to subjects",
+    "A- and B-set morphemes also appear on active transitive verbs to reference subjects and objects respectively",
+    "Active verbs take A-set markers whereas stative verbs take B-set markers",
+    "First-person active morpheme is baa-",
+    "First-person stative morpheme is bii-",
+    "Active intransitive verbs use A-set agreement morphemes",
+    "Stative intransitive verbs use B-set agreement morphemes",
+    "A-set 1SG: baa­",
+    "B-set 1SG: bii­",
+    "A-set 2SG: daa­",
+    "B-set 2SG: dii­",
+    "A-set 3SG: ∅",
+    "B-set 3SG: ∅",
+    "A-set 1PL: baa­+PL",
+    "B-set 1PL: balee­",
+    "A-set 2PL: daa­+PL",
+    "B-set 2PL: dii­+PL",
+    "A-set 3PL: ∅­+PL",
+    "B-set 3PL: ∅­+PL",
+    "DECL marks declarative mood",
+    "Over 900 documented intransitive verbs exist",
+    "Distinction between active and stative verbs is based on lexical meaning",
+    "Semantic base involves interaction between agentivity and lexical aspect",
+    "Active intransitives analyzed as unergatives",
+    "Stative intransitives analyzed as unaccusatives",
+    "Contrasting morphosyntactic patterns exist between active and stative verbs",
+    "Mixed-class verbs straddle between active and stative classes and take both A and B-morphemes",
+    "Crow has active-stative verb alignment",
+    "Active and stative verbs have morphosyntactic differences",
+    "Verb class can potentially be predicted based on meaning alone",
+    "Active-stative verb split exists in Crow",
+    "Verb classification can be predicted based on semantic properties",
+    "Stative verbs like 'fall down' and 'perspire' are exceptions to lexical aspect classification",
+    "Active verbs such as 'snore' and 'sneeze' are problematic for agentivity-based classification",
+    "A-set marking with verbs denotes events controlled by the subject",
+    "B-set marking with verbs denotes states or uncontrolled events",
+    "Same verb stem can have different meanings depending on A-set vs B-set marking",
+    "xachií with B-set marking means 'feel movement' or 'being moved'",
+    "Active verbs take A-set morphemes",
+    "Stative verbs take B-set morphemes",
+    "Active verbs typically denote events",
+    "Stative verbs typically denote states",
+    "Some verbs denoting states pattern like active verbs and take A-set morphemes",
+    "Some verbs denoting events take B-set morphemes",
+    "There are exceptions to the pattern of events and states taking different morpheme sets",
+    "Exceptions are more numerous in the stative class",
+    "Active-stative split exists in verb classification",
+    "Fluid-person marking verbs show shifts in meaning",
+    "Active intransitives can denote states",
+    "Stative intransitives can denote events",
+    "Control/agentivity affects verb class membership",
+    "Subject control over situation influences active vs stative classification",
+    "Some verbs involve participants that are in control of their actions (like dancing and praying)",
+    "Other verbs consist of subjects that do not control the situation (like physical attributes)",
+    "Compound verbs can be formed by combining roots (e.g. awé 'ground' + dichí 'hit')",
+    "Active intransitive verbs denote events",
+    "Stative intransitive verbs denote states",
+    "Active verbs tend to involve participant control",
+    "Most stative verbs do not involve participant control",
+    "Some active intransitives have participants lacking control of the situation",
+    "Some stative intransitives have participants controlling the situation",
+    "Verbs denoting internally-caused bodily processes pattern like agentive intransitive verbs",
+    "Morphological composition: apiiaxxí > apá 'nose' + ii 'instrumental' + axxí 'cough'",
+    "Causative formation: chilíihche 'forbid someone to do something' > chilíi 'be afraid' + hche 'indirect causative'",
+    "Verbs are classified into active and stative classes",
+    "Agentivity is a more reliable predictor than lexical aspects for verb classification",
+    "Active verbs have fewer exceptions when agentivity is considered",
+    "Internally-caused bodily processes can appear in both active and stative verb classes",
+    "Degree of participant control affects verb classification - more control leads to active classification, less control leads to stative classification",
+    "Compound verbs can be formed by combining roots (e.g. táwasaali from tawée + asaalí)",
+    "Lexical aspect and agentivity both influence verb classification",
+    "Agentivity is a more reliable predictor than lexical aspect for verb classification",
+    "Active and stative verb classes exist with different exception patterns",
+    "Crow has active and stative verb classes",
+    "Active verbs typically denote events that participants have control over",
+    "Stative verbs typically denote states that lack participant control",
+    "Verb class membership is based on interaction between lexical aspect and agentivity",
+    "Some verbs are exceptions to the typical active/stative patterns",
+    "Verbs that denote events with participant control tend to be classified as active verbs",
+    "Verbs that indicate states with participants lacking control tend to be categorized as stative verbs",
+    "Verbs that denote events without participant control can be found in both active and stative sets",
+    "Active verbs tend to involve subjects that have control over their own behavior in relation to the situation",
+    "Verb class membership in Crow is semantically determined",
+    "For a given intransitive verb, if one knows its meaning, then one can reliably predict which verb class it belongs to",
+    "Intransitive verbs split into active and stative classes based on semantic factors",
+    "Exceptional verbs involving bodily functions form a coherent set within the active class",
+    "Intransitive verbs consist of two classes: unergatives and unaccusatives",
+    "Unergative verbs introduce subjects (external arguments) that behave like subjects of transitive verbs",
+    "Unaccusative verbs introduce subjects (internal arguments) that behave like objects of transitive verbs",
+    "Subjects of unergatives tend to be agentive",
+    "Subjects of unaccusatives behave like objects of transitive verbs",
+    "Active and stative intransitive verbs have different morphosyntactic behaviors",
+    "The two verb classes are semantically predictable but syntactically encoded differently",
+    "Crow has both active transitives and stative transitives",
+    "Multiple exponence is the multiple realization of a single morphological feature within a word",
+    "Multiple exponence obligatorily occurs with modal auxiliaries, continuative auxiliaries, and the benefactive marker -ku",
+    "There is a divide between active and stative intransitive verbs in the realization of multiple exponence",
+    "With modal auxiliary -bia 'going to', multiple exponence occurs only for active intransitives",
+    "Active intransitives analyzed as unergative verbs and stative intransitives as unaccusative verbs",
+    "Four possible unaccusativity diagnostics: multiple exponence, inchoative morpheme -dee, causative alternation, and noun incorporation",
+    "Multiple exponence occurs with active intransitive verbs but not for stative intransitives",
+    "Multiple exponence occurs with active transitive verbs",
+    "baa- marks first person active (1A)",
+    "bii- marks first person active (1A) with stative verbs",
+    "-k marks declarative (DECL)",
+    "-wia- marks future/going to",
+    "-waa- appears to be another first person active marker in future constructions",
+    "A-set markers cross-reference agentive subjects in verbs",
+    "B-set markers refer to non-agentive subjects and objects",
+    "Multiple exponence occurs with A-set agreement morphemes but not B-set markers",
+    "Inchoative suffix -dee combines only with stative intransitives, not active intransitives",
+    "Imperative suffix -ah attaches directly to active intransitive and transitive verbs",
+    "Stative intransitive verbs require inchoative suffix -dee to form imperatives",
+    "Inchoative suffix -dee conjugates irregularly for person of subject",
+    "The imperative suffix in Crow triggers ablaut that is a key feature of Siouan languages",
+    "Morpheme-final -ee is realized as -aa when directly preceding the imperative",
+    "Inchoative marker used with stative intransitives in imperative formation",
+    "Active intransitives and transitives take imperative suffix directly on verbal stem",
+    "Stative intransitives require inchoative before imperative suffix",
+    "Multiple exponence appears adjacent to desiderative marker -bia",
+    "Inchoative derives unergative verb from stative, unaccusative verb",
+    "Imperative formation shows dichotomous relationship between active and stative intransitives",
+    "Inchoative appears in desiderative constructions with stative intransitives",
+    "Inchoative conjugates for first person in desiderative examples",
+    "Imperative suffix -ah requires the verb to have an agentive subject",
+    "Imperatives are a test for agentivity",
+    "Inchoative marker -dee transforms unaccusatives into unergatives",
+    "Inchoative marker imbues the argument with agentive properties",
+    "Desiderative constructions with stative intransitives realize multiple exponence",
+    "Desiderative constructions involve the inchoative suffix",
+    "Multiple exponence typically only occurs with unergative verbs",
+    "Stative verbs with inchoatives are analyzed as derived unergatives",
+    "Inchoative marker -lee is optionally used with certain exceptional verbs in imperative and desiderative constructions",
+    "Third person marking in Crow is null",
+    "Multiple exponence occurs when inchoative is used with desiderative constructions",
+    "Exceptional verbs may straddle both active and stative classes in syntactic representations",
+    "Active verbs expressing internally-caused bodily processes do not permit use of inchoative",
+    "Some verbs may shift from stative to active verb class",
+    "Mixed-class verbs draw from both A- and B-set morphemes in imperative and desiderative constructions",
+    "A-set and B-set cross-reference typically refer to distinct arguments",
+    "Verbs are semantically determined and syntactically represented",
+    "The inchoative morpheme dee- occurs in imperative and desiderative constructions",
+    "The inchoative attaches only to unaccusative verbs, not unergative or transitive verbs",
+    "The inchoative transforms unaccusatives into unergative verbs",
+    "The direct causative -ee is a valence-increasing operation that introduces an additional argument",
+    "The direct causative transforms intransitive verbs into transitive ones",
+    "The direct causative application is restricted to stative verbs",
+    "The direct causative conjugates for the person of the subject",
+    "Multiple exponence occurs in certain constructions",
+    "Multiple exponence occurs on the desiderative morpheme",
+    "Direct causative conjugates for first person",
+    "Motion verbs derived from the form xii behave like active verbs but may take direct causatives",
+    "ch occurs as t before low vowels and obstruents in Crow",
+    "Noun incorporation is a syntactic process whereby a noun combines with and becomes incorporated into the verb",
+    "Noun incorporation is attested only for nouns that are objects of transitive verbs and nouns that are subjects of stative intransitive verbs",
+    "Active verbs do not allow incorporation of their subjects",
+    "Subjects of stative intransitive verbs and objects of transitive verbs pattern in syntactically similar ways",
+    "Direct causatives can only attach to unaccusative verbs because these verbs lack an agentive (external) argument",
+    "The direct causative introduces an external argument"
+  ],
+  "pronunciation_notes": [
+    "Early investigators had difficulty hearing nasal vowels",
+    "Nasal quality was sometimes optional according to Gatschet",
+    "Nature of vowels (short, long, or nasal) is uncertain throughout the corpus",
+    "Nasal quality of vowels may not always be heard or recorded consistently",
+    "The phoneme /l/ is very elusive in Catawba but appears in some Woccon words",
+    "Vowel shifts observed: later /ę/, /e/, or /ee/ often corresponds to earlier /a/ or /aa/ in historical wordlists",
+    "Initial /s/ may alternate with /t/ in some words",
+    "Medial /t/ and /s/ may alternate in some morphemes",
+    "Exact form of -piya phoneme is unknown due to lack of trained linguist recording",
+    "Denasalization of phonemes /n/ and /m/ to /b/ and /d/ occurred when before oral vowels between mid 1800s to mid-1900s",
+    "Phoneme /l/ may have been used in older Catawba",
+    "/l/ was not a Proto-Siouan phoneme",
+    "Possible sound shift from /*a/ or /*aa/ to /e/, /ee/, /ę/",
+    "Mills (1826) records a nasal quality to the word 'woman'",
+    "Lieber recorded this nasality as n'-yah (1858:7)",
+    "More recent references elicited 'woman' as yaa or iyaa rather than with nasal sound",
+    "Nasal quality may be omitted by some recorders",
+    "Initial syllables may be omitted in some recordings",
+    "Note the replacement of č with z in some entries",
+    "Note the absence of the nasal quality in 'man' (yauh-he)",
+    "Miller was able to hear and record the nasal quality in 'hair' (iskonsa) but missed it in 'head' (iska)",
+    "Vowel shift from wa to wee documented between early and later Catawba",
+    "Absence of nasal quality noted in some entries compared to later Catawba",
+    "Miller missed nasal quality in some recordings",
+    "First vowel in knife word has nasal quality",
+    "Recorder missed the nasal quality in some words",
+    "Recorder did not hear the final stop consonant in some words",
+    "Proto-Siouan long /ii/ was reduced to a short /i/ in Woccon",
+    "Coalescence from wičawa to wičɔ occurs",
+    "Coalescence to yɔɔb attested",
+    "Some recorders did not hear nasal quality in certain words",
+    "Miller heard a nasal quality in hiunk-hiunk-huh",
+    "Recorder did not hear nasal quality in epee and moha",
+    "Notice lack of nasalization in eesauh",
+    "Miller missed the nasal quality of the last vowel in some entries",
+    "Archaic Catawba once nasalized the initial /d/",
+    "Gallatin did not hear /č/ sound in some recordings",
+    "/t/ was replaced by /y/ according to Miller",
+    "Miller heard a stop, /p/",
+    "Miller missed the nasal quality of the second vowel",
+    "It is not clear if Miller misheard the suffix -we",
+    "Recorder missed the nasal quality of the first verb in 'yesterday'",
+    "/uuwa/ sounds will coalescence into an /o/ sound",
+    "Hard to distinguish between nasal n and vocalic n in some cases",
+    "Short vowels are presented as: a,e,i,u",
+    "Long vowels are presented as: aa,ee,ii,uu",
+    "Nasal vowels are presented as: ą,ę,į,ų",
+    "The coalesced vowel is presented as: ɔ",
+    "Catawba does not have the vowel /o/ and /oo/ according to Siebert (1945a,b)",
+    "<aáⁿ> in Kansa practical orthography corresponds to a long, nasal vowel",
+    "falling pitch represented as /ą́ą̀/",
+    "practical spelling <Kaáⁿze> corresponds to technical transcription /kką́ą̀ze/",
+    "/wa-u/ → [ú-]",
+    "ch occurs as t before low vowels and obstruents in Crow"
+  ],
+  "cultural_notes": [
+    "This data comes from the Proceedings of the 39th Siouan and Caddoan Languages Conference",
+    "The conference was held at Northeastern State University in Broken Arrow, Oklahoma on May 30-31, 2019",
+    "The proceedings include research on multiple Siouan languages including Catawba, Kansa, Umoⁿhoⁿ, Jiwere-Baxoje, and Crow",
+    "Published under Creative Commons Attribution 4.0 License in 2020",
+    "The Siouan and Caddoan Languages Conference bridges distances between tribal community members, teachers, learners, scholars and academics",
+    "SCLC 39 included presentations on Catawba and various Missouri River, Mississippi Valley, and Ohio Valley Siouan languages",
+    "The conference featured formal grammatical and text analysis, comparative phonology, language attitudes and ideologies, language learning materials, and language program updates",
+    "A screening of the film Umóⁿhoⁿ Íye: The Omaha Speaking was included in the conference",
+    "The Siouan and Caddoan Languages Conference (SCLC) has been running for nearly five decades",
+    "SCLC brings together speakers and researchers of Siouan and Caddoan languages including Elders and young speakers",
+    "Ioway is mentioned as a firstlanguage of one teenage attendee",
+    "SCLC proceedings volumes document scholarship on Siouan and Caddoan languages",
+    "The conference serves as a community gathering for language preservation and research",
+    "Catawba is a dormant language once spoken in southeastern United States",
+    "Catawba is currently being revived",
+    "Catawba belongs to the Siouan-Catawban macrofamily",
+    "Of the Catawban languages, Catawba is the only one that has been extensively documented and studied",
+    "Primary sources from the early 1800s exist as word lists from when Catawba was more widely spoken",
+    "The vast majority of extant field notes can be traced to the last three speakers of Catawba",
+    "All serious investigations about Catawba started in the early 1900s",
+    "Several scholars have compiled unpublished lexicons including Kathy Shea (1984), Paul Voorhis (1990s, 2003), Claudia Heinemann-Priest (1996), and Blair Rudes (2008)",
+    "Catawba is part of the Siouan language family",
+    "Early 19th century Catawba studies focused solely on wordlist construction with no grammatical material captured until Oscar Lieber's publication in 1858",
+    "Benjamin Smith Barton recorded 30 Catawba words in 1798 after meeting two Katahba-Indians in Philadelphia",
+    "John L. Miller recorded at least 147 Catawba words, published by Gallatin in 1836",
+    "Robert Mills published material on Catawba in his 1826 Statistics of South Carolina",
+    "Other lexicons were compiled by Alexander Pickens, Raven McDavid, and Wes Taukchiray",
+    "Large volume of original field notes from sources prior to 1860s remain unanalyzed",
+    "Older reference materials may contain archaic terms valuable for Siouan linguistic studies",
+    "Catawba is a Siouan language",
+    "Samuel Mills documented Catawba words for natural numbers one through ten and eight additional words and phrases",
+    "Albert Gallatin published Catawba words in 1836 compiled by John Miller and Benjamin Barton",
+    "Benjamin Barton published Catawba vocabulary in 1798",
+    "James Owen Dorsey compared nearly 41 Catawba terms against related Siouan languages",
+    "Dorsey had access to additional Catawba wordlists beyond those of Barton and Miller",
+    "Dorsey did not perform original fieldwork in Catawba Country",
+    "Chamberlain (1888) was among the first to make the connection between Catawba and Woccon with other Siouan languages",
+    "Chamberlain proposed a set of cognates based on wordlists available during his time",
+    "Chamberlain did not perform any original field studies and relied solely on words compiled by Miller and Barton",
+    "Albert Gallatin (1848) published 60 words in his Hale's Indians of the North-West American, and Vocabularies of North America",
+    "The sources for Gallatin's list were the original Miller and Barton lists",
+    "Wordlists from Barton (1798), Mills (1826), and Miller (as referenced in Gallatin 1836) were analyzed",
+    "Most of Gatschet's unpublished field notes are currently unanalyzed",
+    "Woccon vocabulary was documented by historical sources including Barton, Mills, and Miller",
+    "Previous Woccon lexicons were compiled by Voorhis, Shea (1984), and Rudes (2008a,b)",
+    "Some Woccon morphemes are only attested by Barton, Mills, and Miller as sole sources",
+    "Woccon terms are analyzed by morphemes when possible",
+    "Woccon is part of Catawban language family",
+    "Historical documentation comes from Mills, Miller, Barton (1798-1836), Oscar Lieber (1858), Gatschet (1900), and Frank Speck (1934)",
+    "Gatschet was trained in studying Native American languages unlike earlier investigators",
+    "All attested words for 'man' in Frank Speck's 1934 Catawba Texts record obligatory nasal vowels",
+    "Analysis is limited by the quality of early linguistic documentation",
+    "This is Catawba language data, which is Siouan",
+    "Much of the Catawba corpus remains unanalyzed in archives across the United States",
+    "Terms described as 'archaic' may not actually be archaic due to incomplete analysis of available materials",
+    "Catawba words show clear Siouan cognates",
+    "Chief Sam Blue was a late Catawba chief who provided linguistic data",
+    "The Catawba numerical system has been documented by multiple scholars including Mills, Miller, Gallatin, and others",
+    "Historical documentation sources include Shea (1984), Gatschet (1900), Mills (1826), Gallatin (1836), and Pickens (1957)",
+    "Wordlists compiled by Barton, Mills, and Miller provide historical documentation",
+    "Woccon shows phonemic alterations similar to those observed in Catawba corpus",
+    "Historical documentation from sources like Gallatin 1836 and Shea 1984",
+    "Some phonemes like /l/ also appear in Catawba proper names from the 1750s",
+    "Woccon may be related to Proto-Siouan based on comparative evidence",
+    "Woccon is a related language to Catawba",
+    "Woccon was documented by Lawson in 1709",
+    "Barton, Mills, and Miller were not trained linguists",
+    "Early transcribers may have heard phonemes /e/ or /ee/ and transcribed /a/ based on English pronunciation",
+    "They may have heard phonemes /i/ or /ii/ and transcribed as /e/",
+    "Archaic form *yaaye may have existed for 'Indian' with oral, long /aa/",
+    "Archaic form *yaa may have existed for 'wind'",
+    "No word exists in Woccon for town, city, or village",
+    "Mills accurately attested pre-nasal sounds, as did Lieber",
+    "Data comes from Speck's texts",
+    "Woccon yaphasohę 'autumn' form matches Biloxi snisníhi 'when the leaves begin to fall'",
+    "Some entries may contain errors or uncertain morpheme analysis",
+    "Individual morphemes have been previously attested in other contexts",
+    "Color word siʔkąči previously attested as siʔką and skę",
+    "This appears to be Catawba language data, which is Siouan",
+    "Catawba was already in the process of language death in the early 1800s",
+    "Much changed in Catawba between pre-civil war era surveys and the 1940s",
+    "Frank Speck and Frank Siebert were actively studying this language in the 1940s",
+    "Chief Haigler was a famous Catawba leader",
+    "The term aráta may be cognate with proto-Siouan *(wa­)Róota meaning 'war'",
+    "Earlier documentation includes work by Gallatin (1836), Barton, Miller, and Lieber (1858)",
+    "Rapid language change occurred over time due to language death process",
+    "There is evidence of English calques entering into Catawba",
+    "Catawba is related to Proto-Siouan",
+    "Woccon is related to Catawba language",
+    "Lieber documented Catawba language configurations in 1858",
+    "Miller documented alternative language configurations",
+    "English may have been entering into Catawba by Miller's time",
+    "Later attested Catawba shows preference for different terms than earlier forms",
+    "Some archaic terms appear to have fallen into disuse in later Catawba",
+    "Language data is documented in scholarly appendices and indices",
+    "Historical documentation includes accounts of travel through several nations of Indians with descriptions of their customs and manners",
+    "Early documentation was published in London, UK",
+    "Woccon is a coastal Catawban language",
+    "Woccon phonology and morphology have been reconstructed by linguist Blair Rudes",
+    "Catawba is classified as a Siouan language",
+    "Historical documentation of Catawba/Woccon includes materials from 1826-2015",
+    "Catawba linguistic materials are housed at institutions including the American Philosophical Society and Smithsonian Institution",
+    "The Comparative Siouan Dictionary includes Catawban data",
+    "Catawba texts and folklore were documented by Frank Speck in the early 1900s",
+    "Catawba vocabulary was documented by Mills (1826) and Gallatin (1836)",
+    "Early Catawba entries are consistent with later attested forms",
+    "Catawba fieldnotes were recorded by Morris Swadesh in 1937",
+    "Frank Speck recorded Catawba texts that provided vocabulary data",
+    "Paul Voorhis compiled Catawba vocabulary from various sources",
+    "Woccon entries are consistent with later attested Catawba",
+    "Historical documentation includes Mills (1826), Gallatin (1836), Lawson (1709), and Lieber (1858)",
+    "Some Woccon number words have been previously recorded by Shea (1984) and Gatschet (1900)",
+    "Oscar Lieber also recorded Woccon number words",
+    "Mills may have recorded archaic forms of some words",
+    "Data comes from Catawba lexicon sources",
+    "Mills (1826) is a historical documentation source",
+    "Gallatin (1836) provided linguistic documentation",
+    "Gatschet (1900) attested various forms",
+    "Shea (1984) provides more recent Catawba language references",
+    "Voorhis (n.d.) conducted linguistic elicitation work",
+    "Some historical entries may contain mistakes or variations from later attested forms",
+    "Woccon data comes from Mills (1826) and Gallatin (1836)",
+    "Woccon entries are consistent with later attested Catawba language",
+    "Truman Michelson documented phonetic variations in 1913",
+    "Sally Brown provided later attestations of Woccon/Catawba words",
+    "Rudes (2008a) provides comparative lexicon data",
+    "Shea (1984) provides comparative linguistic analysis",
+    "Woccon language data is being compared with Catawba language attestations",
+    "Historical sources include Gallatin (1836), Barton (1798), Lieber (1858), Michelson (1913), and Speck's notes",
+    "Lawson recorded Woccon phrases, referenced by Rudes (2000)",
+    "Some Woccon entries are consistent with later attested Catawba forms",
+    "The word for 'father' uses the morpheme for 'to love' meaning 'beloved man'",
+    "Documentation sources include Barton (1798) and Gallatin (1836)",
+    "Comparative analysis shows relationship between Woccon and Catawba",
+    "Historical linguistic analysis by Shea (1984) provides comparative data",
+    "Miller could not differentiate between words for 'husband' and 'wife', suggesting *ya may have been used for both",
+    "Woccon data comes from Lawson (1709)",
+    "Catawba lexicon data comes from sources including Barton (1798), Gallatin (1836), and others",
+    "Later attested Catawba shows consistency with some earlier Woccon entries",
+    "Some entries may represent archaic terms or recording errors",
+    "Comparative analysis shows relationships between Woccon and later Catawba forms",
+    "Woccon vocabulary was documented by Gallatin (1836) and Barton (1798)",
+    "Woccon is related to Proto-Siouan-Catawban language family",
+    "Some Woccon forms lack nasal qualities seen in related Catawba words",
+    "This is Catawba language data, not Woccon",
+    "Data sources include Barton (1798), Gallatin (1836), and Shea (1984)",
+    "Miller was an informant or researcher who provided linguistic data",
+    "Catawba does not differentiate between 'leg' and 'foot'",
+    "Some entries show archaic forms not found in later Catawba lexicons",
+    "Documentation sources include Gallatin (1836) and Barton (1798)",
+    "Some Woccon words may be archaic forms not found in later Catawba",
+    "Possible linguistic contact with Shawnee evidenced in warrior terminology",
+    "Catawba language documentation by Shea (1984) provides comparative data",
+    "Wįsi refers to a fierce monster in Catawba mythology",
+    "Later reanalyzed as 'many people' in Catawba Texts",
+    "Data sources include Speck (1913, 1934), Gallatin (1836), Barton (1798), Lieber (1858)",
+    "Entries show consistency with later attested Catawba language",
+    "Some terms were not attested in later references",
+    "Historical documentation shows evolution of linguistic analysis over time",
+    "Woccon vocabulary was recorded by Gallatin (1836) and Barton (1798)",
+    "Catawba might have metathesized the middle two syllables in some words",
+    "Woccon and Catawba are related Siouan languages",
+    "The Comparative Siouan Dictionary provides insights into Woccon-Catawba relationships",
+    "Proto-Siouan reconstructions help understand Woccon word origins",
+    "This is Catawba lexicon data from historical sources including Barton (1798) and Gallatin (1836)",
+    "In Catawba, 'moon' and 'sun' have the same gloss",
+    "The gloss 'nightsun' for moon appears to be an English calque",
+    "Frank Speck documented variant forms of some words",
+    "Some entries may represent archaic terms compared to later attested Catawba",
+    "Woccon is related to Catawba language family",
+    "Data sourced from Gallatin (1836) and Dorsey collections",
+    "Comparative analysis shows Proto-Siouan connections",
+    "Some Woccon glosses may be previously unattested",
+    "Archaic Catawba forms are closer to Woccon than later Catawba",
+    "Documentation includes cross-references to Shea (1984) and Rudes (2008b)",
+    "Documentation sources include Gallatin (1836), Barton (1798), Shea (1984), and Rudes (2008b)",
+    "Catawba is related to Woccon as part of the same language family",
+    "Some entries were not previously attested in historical records",
+    "Woccon language data is compared with Catawba linguistic records by Shea (1984)",
+    "Some words are not attested in Voorhis or Shea collections",
+    "Chamberlain (1888) and Heinemann (1996) provide plausible word origins",
+    "Data sourced from Gallatin (1836) and Barton (1798) lexicons",
+    "Entries are consistent with later attested Catawba language",
+    "Cross-referenced with Shea (1984), Rudes (2008b), Pickens (1957), and Speck (1934)",
+    "This appears to be Catawba language data rather than Woccon",
+    "Language shows relationship to other Siouan languages through comparative analysis",
+    "Documentation sources include Gallatin (1836), Barton (1798), Shea (1984), Speck (1934), and Lieber (1858)",
+    "Miller was a key documenter of Woccon language",
+    "Oscar Lieber also recorded similar forms",
+    "Data sourced from Gallatin (1836)",
+    "Some forms may represent archaic versions of words",
+    "Documentation includes references to Shea (1984) and Rudes (2008b)",
+    "Some constructions resemble proto-Siouan forms",
+    "Later attestations also documented by Gatschet (1900)",
+    "Woccon entries are documented by Gallatin (1836)",
+    "Woccon entries show consistency with later attested Catawba language",
+    "Linguistic analysis references Rudes (2008), Shea (1984), and Voorhis works on Catawba",
+    "Some Woccon documentation may contain transcription errors from original fieldwork",
+    "This is Catawba lexicon data, not Woccon",
+    "Data sources include Gallatin (1836) and Barton (1798)",
+    "Entries are compared with later attested Catawba from Shea (1984)",
+    "Some entries may contain recording errors by Miller",
+    "Catawba is related to Siouan languages",
+    "Data sourced from Gallatin (1836) documentation",
+    "Cross-referenced with Catawba attestations in Shea (1984) and other sources",
+    "Some entries previously unattested in comparative Siouan materials",
+    "This is Catawba language data from Gallatin (1836) and Dorsey sources",
+    "Entries are consistent with later attested Catawba documented by Shea (1984)",
+    "Some terms may be related to other documented Catawba words",
+    "Documentation includes cross-references to multiple historical linguists including Swadesh and McDavid",
+    "Morphemic analysis follows phonemes described by Rudes (2003)",
+    "Abbreviations follow Rudes's (2008a) verb morphology paper",
+    "Mills' consultant provided linguistic data for analysis",
+    "Indefinite possessor morpheme was first described by Voorhis's grammar sketch",
+    "Historical attestation shows /o/ phoneme usage despite theoretical absence",
+    "The Kansa language is also known as Kanza or Kaw among members of the Kaw Nation",
+    "Kansa belongs to the Dhegiha branch of Mississippi Valley Siouan",
+    "Kansa has a very close relationship to Quapaw, Omaha, Ponca, and especially Osage",
+    "There are presently no L1 speakers of Kansa",
+    "The Kaw Nation has maintained an active and successful language revitalization program for more than two decades",
+    "Fewer than three dozen Kansa texts exist, collected by field researchers like Dorsey (c. 1880) and Rankin (c. 1974-2011)",
+    "These texts represent the whole of extended monologic discourse recorded from L1 Kansa-speaking consultants",
+    "No dialogic texts for Kansa are known to exist",
+    "The texts span several genres with the exception of two prayers",
+    "This text discusses a Kansa language documentation project, not Woccon",
+    "The project involved systematic morphemic parsing of Kansa texts",
+    "Three linguists worked on the project: Justin McBride, Linda Cumberland, and Robert Rankin",
+    "A Community Advisory Group of tribal citizens provided guidance on text selection",
+    "Two print volumes were produced: one scholarly analysis (McBride & Cumberland 2009) and one graded reader (McBride & Cumberland 2010)",
+    "This text discusses Kansa language corpus development, not Woccon",
+    "Kansa texts were collected by Dorsey (c. 1880), Spencer (1908), Morehouse (c. 1908), and Rankin (c. 1970-1979)",
+    "Kansa corpus included myths, personal histories, correspondence, songs, and transcribed speeches",
+    "Two Kansa prayers of sensitive religious nature were omitted from electronic corpus",
+    "Spencer 1908 and Morehouse c. 1908 are sources of Kansa language material",
+    "Rankin collected additional Kansa sentential material",
+    "Kansa is a Siouan language",
+    "There are theoretical concerns about lexical class in Siouan as a whole",
+    "The McBride & Cumberland (2009) volume includes current analysis resulting from the corpus compilation",
+    "Less than 40 copies of the McBride & Cumberland volume were published",
+    "Many copies reside in archives or are owned by individuals who may lack the necessary experience with interlinear analysis",
+    "The corpus project uses XML-based source files with unique coding structure",
+    "There is no convenient query interface for the corpus",
+    "Corpus queries can be approximated by simple search functions in word processing based off of numeric codes associated with individual morphemes",
+    "Kansa is a Siouan language related to other Dhegiha languages",
+    "Dorsey's materials from c. 1880 are considered reliable sources for Kansa",
+    "Rankin's materials from c. 1974-2011 are considered reliable sources for Kansa",
+    "Kansa is related to Omaha, Ponca, Quapaw, and Osage languages",
+    "Language documentation should prioritize tribal citizens' guidance and interests",
+    "There is division between practical and technical spellings for Kansa",
+    "Orthographic concerns have been subject of intense internal debate and planning among tribal citizens",
+    "Rankin documented the language in 1974-1975 notebooks",
+    "Tribal citizens have come to accept the practical spelling <Kaáⁿze>",
+    "Tribal citizens may not recognize technical Siouanist transcription as the same word as practical spelling",
+    "Kansa is a Dhegiha language",
+    "Audio recordings of Kansa elicitation sessions from c. 1970-1979 collected by Rankin survive",
+    "Kaw tribal citizens are one of the main user groups for Kansa language materials",
+    "Kansa language data includes both highly contextualized monologic texts and single-sentence elicitation responses",
+    "Kansa is a Dhegiha Siouan language",
+    "The Kaw Nation Language Department developed an electronic Kansa corpus more than a decade ago",
+    "The corpus was created for developing pedagogical materials for Kaw tribal citizens",
+    "The corpus represents nearly the whole of extended monologic discourse in Kansa",
+    "The corpus was developed from many different sources of many different kinds",
+    "Dhegiha Siouan texts are considered lesser known",
+    "Kaw Nation has a Language Department with staff members working on language preservation",
+    "There are both practical and technical spelling systems used for Kansa",
+    "Siouanists are scholars who study Siouan languages including Kansa",
+    "Kansa language corpus development involves bilingual alignment between Kansa and English",
+    "Kaw (Kansa) language materials were documented by researchers including Rankin (1974-1975), Bourassa (1843), and Morehouse (c. 1908)",
+    "Rankin conducted extensive audio recordings of dictionary elicitation sessions (c. 1970-1979)",
+    "Historical documentation includes Bourassa's 1843 vocabulary with translation of Gospel of Matthew chapters",
+    "Dorsey documented related Siouan languages including Ȼegiha language (1890) and collected Kansa texts (c. 1880)",
+    "Kansa language corpus development requires tribal stakeholder oversight and advisory panel guidance",
+    "The prefix wa- is well attested in all branches of the Siouan languages",
+    "wa- has been reconstructed in Proto-Siouan as an absolutive marker *wa- or *waa-",
+    "wa- is commonly attested on nouns for objects or agents in Siouan languages",
+    "Woccon is part of the Siouan language family",
+    "Research involves comparative analysis with Umoⁿhoⁿ language",
+    "Academic documentation includes dissertation-level linguistic research",
+    "Hidatsa is a Siouan language",
+    "Osage is a Siouan language",
+    "Ho-Chunk is a Siouan language",
+    "Umoⁿhoⁿ is a Siouan language of the Dhegiha group (Mississipi Valley Siouan)",
+    "Dhegiha languages are part of Mississipi Valley Siouan",
+    "Hochunk-Chiwere languages are part of Mississipi Valley Siouan",
+    "Study based on analysis of more than 200 dictionary word entries and exhaustive review of 14 texts containing 177 forms with wa-",
+    "Umoⁿhoⁿ is a Siouan language",
+    "Historical documentation includes work by Dorsey (1890)",
+    "Contemporary speakers include Alice Saunsoci",
+    "Language data sourced from Saunsoci & Eschenberg (2016)",
+    "Historical speakers included Joseph LaFlesche and Pathiⁿ­Noⁿpázhi",
+    "This is Umóⁿhoⁿ language data, not Woccon",
+    "Forms are documented in Dorsey (1890) and UNPS (2015)",
+    "The antipassive was first described by Silverstein (1972) in the description of an ergative language",
+    "This is Umoⁿhoⁿ language data, not Woccon",
+    "Data sourced from Dorsey (1890) and informant Joseph LaFlesche",
+    "Language has documented corpora available for analysis",
+    "Most Siouan languages have a cognate of wa- as absolutive marker",
+    "Only a few Siouan languages have the prefix wa- as O.3PL marker",
+    "Dorsey documented Umoⁿhoⁿ language examples",
+    "Documentation includes work by Dorsey from 1890",
+    "Te­úkoⁿha appears to be a source or speaker name",
+    "B. Gordon provided linguistic consultation on verb interpretations",
+    "Linguistic analysis requires verification with native speakers",
+    "Dorsey (1890) documented Umoⁿhoⁿ language materials",
+    "The functions of referring antipassive and nominalizer are close in Umoⁿhoⁿ",
+    "Two possible diachronic pathways hypothesized for antipassive evolution",
+    "More research needed on antipassive constructions and wa- morpheme",
+    "Siouan languages include Crow, Hoocąk (Ho-Chunk), Winnebago, Omaha, and Ponka",
+    "Comparative Siouan Dictionary exists as an unpublished database (Carter et al. 2006)",
+    "Siouan languages have been documented by linguists including James Owen Dorsey in the 1890s",
+    "Siouan linguistic research includes comparative syntax workshops and ongoing scholarly work",
+    "This text focuses on Otoe-Missouria and Ioway tribes, not Woccon",
+    "Otoe-Missouria and Ioway are Siouan-speaking peoples",
+    "Siouan folklore was documented by James Owen Dorsey, Gordon Marsh, Alanson Skinner, and others",
+    "Siouan peoples share linguistic elements, clan structures, subsistence patterns, kinship systems, and folklore",
+    "Dhegiha-speaking tribes include Osage, Kanza, Quapaw, Omaha, and Ponca",
+    "Many contemporary archeologists link these groups with the site of Cahokia",
+    "Ancestral homelands include Wisconsin, Minnesota, the Dakotas, Nebraska, Iowa, Kansas, and Missouri",
+    "Siouan cosmology includes a three-level cosmos: Sky World, Middle World, and Underworld",
+    "Bodies of water, springs, rivers, and caves serve as portals between worlds in Siouan belief",
+    "This text discusses Iowa/Ioway cosmology, not Woccon language",
+    "The Baxoje-Jiwere peoples had beliefs about Underworld and Sky World forces",
+    "Iowa cosmology includes destructive Underworld Powers represented by water spirits, ghosts, monsters, giants, and little people",
+    "The world was conceived as being a lodge and multi-tiered",
+    "Spirits (wakándas) were believed to dwell in bluffs, water, timber, high rocks, mounds, and household utensils",
+    "Ioway and Otoe-Missouria elders gave warnings about dangers during Puberty Fast rituals",
+    "Woccon people had spiritual beliefs about creatures coming from water or underground that could be dangerous to speak to",
+    "Ritual practices included using burnt stick (charcoal) on face and letting tears drop on earth for spiritual help",
+    "Rock faces were considered 'membranes' between spirit world and human reality",
+    "Stone was associated with both death and ancestral spirits",
+    "Documentation includes references to Skinner 1915 and Stanley 2004 research",
+    "Cultural connections exist with Iowa, Otoe, and Missouri peoples regarding spiritual significance of rock formations",
+    "Strong taboos existed around killing any kind of serpent",
+    "Sacred offerings of tobacco were made to serpents to ensure tribal safety",
+    "Telling wekan (sacred myths) in summer season was taboo because it would attract dangerous creatures",
+    "Among the Hidatsa, only families with Snake bundles could make pottery",
+    "Snakes represent ability to navigate between Middle World and Under World",
+    "Snake skin shedding represents new life and eternal rebirth or resurrection",
+    "Tales exist of a mythical World Snake or Great Serpent in addition to ordinary snakes",
+    "Woccon culture includes beliefs about Old-Woman-Who-Never-Dies (also known as First Woman)",
+    "Woccon mythology includes the Sun (also known as First Man)",
+    "Sacred women held important roles as conduits between underworld and sky world powers",
+    "Woccon beliefs share similarities with widespread Native North American concepts of feminine balance to masculine warrior/sun/Upper World power",
+    "Woccon culture has connections to broader Mississippian cultural patterns including Great Serpent imagery",
+    "Sacred red catlinite stone was used for pipes in related cultural contexts",
+    "The Hoocąk Medicine Dance was a tribal religious society found among the Otoe-Missouria, Ioway, and many non-Siouan Midwestern neighboring tribes",
+    "Members of the Hoocąk Medicine Dance used poetic names for snakes: 'Spirit Walking Soldiers' and 'Crawling Soldiers' to avoid summoning them during ceremonies",
+    "Similar poetic names might be used ceremonially for other powerful creatures, especially the bear",
+    "The Osage had a Rite of Reincarnation for the Dead that invokes the Great Snake",
+    "Snake imagery, especially venomous snakes, appears frequently in regional cultural artifacts",
+    "The Kanza had a mythical flying snake called wéts'a tazhi lishka that was so powerful that just seeing it would mean that person must die",
+    "There was an old woman who used to hold supernatural communication with these mythical creatures",
+    "Winged Serpent imagery is found engraved upon Mississippian ceramic vessels at sites like Moundville, Alabama",
+    "This belief system has widespread nature and roots in the overall Mississippian multicultural and poly-linguistic complex",
+    "The stepped design and circular motif may denote the sacred four snakes put by Earth-maker as anchors of the earth at its four corners to stop it from spinning",
+    "These symbols are found in Osage symbols still recognized in the 20th century",
+    "The Ponca were said to have found the Wind Cave in the Black Hills",
+    "Caves and chasms are perceived as portals to the Underworld in Native American cosmology",
+    "The Earth is viewed as Grandmother in Native American belief systems",
+    "Complete sensory deprivation in caves can be used for entering trance states suitable for spiritual seeking",
+    "The 'Hill That Swallows Living Creatures' motif appears in Jiwere-Baxoje folklore collections from Dorsey (19th century) and Skinner and Marsh (1910-1936)",
+    "This swallowing earth motif is found among Crow, Hidatsa, Wichita, Pawnee, Osage, Ponca, Dakota, and Winnebago tribes",
+    "Thompson categorized this as motif #158 'Sucking Monster' and #159 'Monster killed from within'",
+    "Cave art and deep caverns were associated with contact with the spiritual world",
+    "Torches were regularly used in caves, possibly for original artists to see or for initiates to witness sacred stories illustrated on rock walls",
+    "Motif #159 about victims rescued when swallower is killed was represented by Osage, Ponca, and Dakota peoples",
+    "Robert Small was a key Ioway informant for Skinner's tale collection",
+    "Mrs. Small was a primary source for Marsh's work",
+    "A 1949 manuscript was dictated by a southern Ponca elder to a younger Ponca man and kept in a safety deposit box before being shared",
+    "Howard's ethnography was originally published around 1965",
+    "Wind Cave is known as 'He-sucks-them-in' in Ponca tradition",
+    "Wind Cave is within traditional hunting and travelling range of IOM, Dhegiha, and many other Siouan groups",
+    "The 'Devourer' motif appears in both Trickster stories (Hare/Rabbit) and Hero Twins adventures",
+    "Hero Twins adventures are connected narratives similar to the epic journey of Odysseus",
+    "Story variants include 'the Hill that Swallows up (People)' and 'the Devourer'",
+    "Otoe version appears in 'Rabbit and His Grandmother' (Earth/Old Woman) story",
+    "Source reference: 'The Twins', Marsh n.d.: LN107",
+    "Woccon is a Siouan language studied by J.O. Dorsey",
+    "Dorsey compared Woccon with other Siouan languages like Omaha",
+    "Dorsey's notes are housed in archival boxes and folders (Box 4800 Folder 305, Folder 304)",
+    "Dorsey was not consistent in his spelling/orthography",
+    "Cultural stories include references to geological monsters and figures like Grandmother and the Devourer",
+    "Dorsey emphasized that the monster was NOT part of the earth in his notes",
+    "Stories include characters like Rabbit going to the mountain",
+    "Dorsey documented Oto language materials and compared them to Omaha equivalents",
+    "Dorsey created typed manuscripts of translations including 'Rabbit and Grandmother' story",
+    "Aheri is documented as separate from Grandmother Earth in Dorsey's notes",
+    "Folklorists like Alan Dundes have analyzed Native American stories for themes like Male Birth Envy",
+    "Native American myths about caves contain motifs related to feminine danger and vagina dentata according to Carroll (1992)",
+    "The text discusses Siouan language materials collected by fieldworker James Owen Dorsey",
+    "Siouan tribes mentioned include Ioway, Hoocąk, and Osage",
+    "The Swallowing Monster story occurs across both North and South America",
+    "Siouan stories often feature the trickster Rabbit and themes about breaking taboos",
+    "The Orphan is a heroic figure shared across Otoe-Missouria and Ioway traditions",
+    "Dorsey collected texts from multiple Siouan groups including Osage",
+    "Thompson documented Native North American tale motifs but noted no Siouan, Caddoan, or Algonquin examples for certain motifs",
+    "Woccon mythology shares parallels with other Siouan mythic material",
+    "Woccon cosmology describes the flat earth having edges that are cracks opening and shutting",
+    "Different heroes ventured across boundaries at each cardinal direction in Woccon stories",
+    "Guardian beings existed at each cardinal direction point in Woccon mythology",
+    "Burial mounds are considered human-made geologic features in Woccon culture",
+    "Mounds have been constructed in various forms on the continent for several thousand years",
+    "Text discusses Jiwere-Baxoje (Iowa-Otoe) rather than Woccon language",
+    "Christian missionaries needed to translate concepts like Satan into native languages for proselytizing",
+    "Pre-contact religious concepts existed before European arrival with Bibles and worldviews",
+    "Traditional terms like Wakąnda appear in War Dance songs and prayers",
+    "Indigenous cosmologies had Creator deity concepts that provided parallels for incorporating new religions",
+    "The culture hero Rabbit/Hare appears in traditional stories about supernatural encounters",
+    "There was no conception of negative forces or evil in the world in traditional stories",
+    "Earth effigies are found frequently in the regions where Jiwere-Baxoje speakers lived, including Oneota archaeological sites",
+    "Earth effigies might have served as visual markers of clan identity and ownership",
+    "There are Oneota and even Archaic era echoes in traditional tales",
+    "The Kanza had a clan called the Earth Workers Clan",
+    "French Jesuits established the first mission ca. 1720 at the trading outpost called Ft. Orleans on the Missouri River near present day Marshall, Missouri",
+    "Ft. Orleans would have likely influenced both the Missouria and the nearby Osage village",
+    "Baptist and Presbyterian missionaries were present from the 1830s on, including Revs. William Hamilton and Samuel Irvin",
+    "Missionary publications on the Iowa language included a grammar, a hymnal of sorts, and a catechism",
+    "The Highland Mission school provided education but also served as an assimilation environment for learning English and Christianity",
+    "This data is from Ioway and Otoe-Missouria peoples, not Woccon",
+    "Wanathuje is a famous prophet and culture hero who meets 'the Evil One' near the Mississippi River",
+    "Wanathuje parallels Christ in some ways - born of a virgin, encounters the Dark One similar to Christ's temptation",
+    "Stories are passed through oral tradition and exhibit variation over time",
+    "Information from sermons might filter into old stories and become transformed",
+    "The 'No-Good God' has the ability to know what everyone does and hear what they say, even whispers",
+    "In 'The Twins' tale, a bad spirit tries to kill Twins by making a sweat lodge too hot",
+    "Sources include Skinner 1925, Skinner 1926, and Marsh n.d.",
+    "Woccon has closest linguistic relatives among the Hoocąk",
+    "There are parallels with other Siouan tribes regarding terms for an Evil One",
+    "Terms like Earth-Maker and Wakąnda show connections between Siouan languages",
+    "The Hoocąk term waxopįnįšišik appears cognate with Ioway-Otoe-Missouria (IOM)",
+    "Documentation includes unpublished lexicon work by Miner",
+    "Cultural narratives include stories of evil spirits and the tribe of Ghosts (Wanagri)",
+    "The text discusses Jiwere-Baxoje (Iowa-Otoe) and Hoocąk (Ho-Chunk) languages, which are Siouan languages related to Woccon",
+    "The term waxobrį/waxobį was applied to shamans and shape-shifters",
+    "Devil's Lake was considered a sacred/mysterious site by all tribes",
+    "Native peoples would offer tobacco at Devil's Lake to cross the water safely",
+    "The English name 'Devil's Lake' represents a mistranslation between Native and European cultures",
+    "Water-spirits under the earth were considered positive in traditional cosmology",
+    "Hoocąk creation myths included evil spirits distributed among all three Worlds, not just the underworld",
+    "Traditional stories tell of battles between Thunderbirds and water spirits/underwater panthers",
+    "Certain consonants may prevent nasal spread, such as a glottal stop ['] and other stops such as [k]",
+    "Wisconsin Hoocąk members of the Medicine Dance or Lodge may have kept their belief system more insulated from Western influences",
+    "The 'traditionals' tend to keep separate from the members of the Native American Church, and vice versa",
+    "Omaha, Fox, and Otoe spiritual traditions include accounts of underwater monsters and evil spirits offering power with tragic consequences",
+    "Traditional vision quests involved fasting alone in nature seeking spiritual power",
+    "Text references collected texts transcribed by Radin in early 20th century fieldwork",
+    "References to primordial Evil One concept in native traditions",
+    "Native American Church stories mention evil beings encountered outside the spiritual safety of the tipi",
+    "Some Dhegiha groups have terms for 'the Dark One' or devil concepts",
+    "Dorsey (1894) believed some devil terms were created 'after they learned of him from the whites'",
+    "1949 Ponca interview indicated monotheistic beliefs with different ways to honor God including pipe ceremonies, War Dances, Sun Dance, peyote church, and Christian Church",
+    "Siouan groups including Osage, Ponca, Assiniboine, and Biloxi shared the motif of seven-headed dragons",
+    "Otoe-Missouri tradition describes a Horned being with seven heads that arises from the Mississippi River",
+    "Whitman conducted fieldwork on Otoe-Missouri traditions during 1935-36",
+    "The Otoes had lived on the Big Blue Reservation in southeastern Nebraska more than 50 years before Whitman's fieldwork",
+    "Horned serpent traditions had specific geographic associations with great rivers",
+    "The Piasa was a sacred and dangerous horned serpent depicted in pre-contact rock art overlooking Illinois bluffs on the Mississippi River",
+    "Marquette and Joliet documented the Piasa rock art during their 1763 voyage down the Mississippi River",
+    "Native guides would avert their eyes rather than look upon the powerful monster's image",
+    "Some scholars consider multi-headed creatures and winged beings to be Christian borrowings from the Book of Revelations",
+    "Thunder-man, Lightning-man, Rain-man, and Little-god are described as winged little men with great power in Hero cycles",
+    "The Horned Water Monster appears in IOM (presumably Indigenous/Native American) lore with characteristics including horns, frontward-facing head, and very long tail",
+    "Versions of the Piasa are documented on artifacts from Spiro Mounds in Oklahoma",
+    "Hopewell culture existed in the A.D. 400-800 period, slightly earlier and further northeast than the Mississippian complex",
+    "A Hopewell-era greenstone effigy pipe depicts a human-like figure with wings, potentially representing mythic beings such as Thunder-man and Little-god",
+    "There is a widespread belief that shamans' souls can leave their bodies and fly to the spirit world",
+    "Jiwere language has interplay with material culture from ethnographic and archeological sources",
+    "Siouan (especially Dhegihan) folklore has been integrated with interpretations of upper Mississippian artifacts and cave art",
+    "Traditional Boasian unified four-field approach to anthropology is used in studying Siouan languages",
+    "Oral narratives demonstrate intertribal nature and deep ties to specific ancestral homelands",
+    "Cave that Devours near the Black Hills and Devils' Lake in Wisconsin are significant ancestral locations",
+    "Siouan groups had complex interactions with their Algonquin neighbors",
+    "Siouan languages are linguistically related to Caddoans and Iroquoians",
+    "Similarities in grammatical categories and relations between Siouan, Caddoan, and Iroquoian language families suggest a deeper time frame or 'super-family'",
+    "Grizzly Woman is a haunting and very widespread tale among Siouan peoples",
+    "James Owen Dorsey documented Woccon language materials, housed in the American Anthropological Archives at the Smithsonian Institution",
+    "Dorsey's Woccon papers are preserved in Box 4800 folders 304 & 305 at the Smithsonian",
+    "La Flesche compiled a dictionary of the Osage language, published by the Smithsonian Institution Bureau of American Ethnology in 1932",
+    "Stanley, Lori A. documented a life history of Truman Washington Dailey in 1990 at University of Missouri-Columbia, which may contain relevant cultural and historical information about the community",
+    "Crow is a Siouan language",
+    "Many other Siouan languages display active-stative systems like Crow",
+    "Unaccusativity in Crow is semantically determined but syntactically encoded",
+    "The semantic base underlying verb classes involves interaction between agentivity and lexical aspect",
+    "This text discusses Crow language, not Woccon",
+    "Crow is an active-stative language",
+    "Crow has morphosyntactic properties related to unergative and unaccusative verbs",
+    "Data comes from fieldwork conducted during 2018 and 2019",
+    "Speaker abbreviations used: FBD (Felice Big Day), COE (Cyle Old Elk), JRB (Jack Real Bird), RS (Riley Singer), CY (Charles Yarlott Jr.)",
+    "Crow belongs to the active-stative language type",
+    "Lakota is another Siouan language with active-stative alignment",
+    "Active-stative split in Siouan languages involves semantic factors of lexical aspect and agentivity",
+    "Rankin (2004) provides unpublished research on semantic factors in Siouan languages",
+    "Mithun's semantic typology cannot be applied across all Siouan languages",
+    "Rankin's approach to Siouan classification is comparative and holistic across the language family",
+    "In-depth study of individual languages is required rather than bird's-eye view approach",
+    "Graczyk (2007) studied the active-stative split in Crow language",
+    "This appears to be linguistic analysis of Crow language, not Woccon",
+    "Data shows Siouan language features through active-stative verbal system",
+    "This data is from Crow language, which is Siouan",
+    "Internally-caused bodily processes involve indirect causation by animate participants",
+    "Cross-linguistically, verbs for bodily processes form a homogeneous subset that pattern like agentive verbs",
+    "Cultural variation may affect how bodily processes are classified in terms of subject control",
+    "Culture-specific patterns influence the degree of subject control over bodily processes",
+    "This data comes from Crow language, which is Siouan",
+    "Crow linguistic data is being analyzed for unaccusativity patterns",
+    "Crow verb classification involves complex interactions between semantic factors",
+    "Crow is a language with active-stative verb classification system",
+    "There is ongoing research into optimal teaching methods for Crow language learners",
+    "Some verbs show variation across speakers suggesting possible language change in progress",
+    "Crow linguistic analysis follows patterns found in other Siouan languages like Lakota, Nakota, and Hidatsa",
+    "Crow fits into broader comparative studies of active-stative alignment systems",
+    "This appears to be linguistic data from Crow language, not Woccon",
+    "Multiple exponence in Crow is syntactically motivated",
+    "Unaccusative hypothesis is supported by parallel behavior between subjects of active intransitive verbs and transitive verbs",
+    "Crow has a split-agreement system consisting of φ-agreement and clitic doubling",
+    "Ablaut triggered by imperative suffix is a key feature of Siouan languages",
+    "Data includes speaker initials FBD and JRB indicating community sources",
+    "Analysis references Wallace (1993) suggesting inchoative functions as 'volitional be/become'",
+    "Research follows scholarly approach that imperatives test for agentivity rather than stativity",
+    "Data was collected from language consultants with intra- and inter-speaker variation noted",
+    "FBD appears to be a consultant or data source identifier",
+    "This text discusses Crow language morphology and syntax",
+    "The data comes from linguistic analysis of verb classes and morphological processes",
+    "The research focuses on unaccusative diagnostics in Siouan languages",
+    "Data sources include FBD (consultant), JRB (consultant), and Graczyk (2007)",
+    "Crow language allows speakers to say 'Today I learned to speak Crow' indicating language learning context",
+    "The Proceedings of the Siouan and Caddoan Languages Conference (SCLC) is an annual periodical for research on Siouan and Caddoan languages",
+    "Papers range from theoretical linguistics to philology, language education, and cultural topics relating to Siouan or Caddoan-speaking peoples",
+    "There is historical overlap between scholars who worked with communities from both Siouan and Caddoan cultural and linguistic groups",
+    "The Siouan Linguistics Listserv is operated through the University of Nebraska and serves both Siouan and Caddoan language communities",
+    "Volumes of the Proceedings from SCLC 38 onward are archived at http://www.siouan.org"
+  ]
+}

@@ -1,0 +1,404 @@
+{
+  "language_name": "Woccon",
+  "language_family": "Eastern Siouan (Coastal Catawban)",
+  "historical_location": "North Carolina coastal plain (lower Neuse River), between Neuse River and Contentnea Creek",
+  "documentation_source": "John Lawson's word list (1709), containing 143 attested words",
+  "historical_context": {
+    "tribe_information": "Woccon tribe first documented in 1701 by John Lawson",
+    "population": "Estimated 500-600 individuals in early 1700s",
+    "location": "About two leagues east of the southern villages of the Tuscarora tribe, near present-day Goldsboro/Snow Hill (Wayne/Greene County)",
+    "fate": "Last mentioned in 1712 treaty; likely absorbed by Tuscarora following the Tuscarora wars of 1711-1713"
+  },
+  "phonology": {
+    "vocalic_phonemes": {
+      "short_oral_vowels": ["i", "e", "a", "u"],
+      "long_oral_vowels": ["i:", "e:", "a:", "u:"],
+      "nasal_vowels": ["ĩ", "ẽ", "ã", "ũ"]
+    },
+    "consonantal_phonemes": [
+      {"grapheme": "p", "features": "bilabial stop"},
+      {"grapheme": "t", "features": "alveolar stop"},
+      {"grapheme": "k", "features": "velar stop"},
+      {"grapheme": "č", "features": "palatal affricate", "note": "represented as 'č' in linguistic notation"},
+      {"grapheme": "s", "features": "alveolar fricative"},
+      {"grapheme": "š", "features": "palatal fricative"},
+      {"grapheme": "ś", "features": "palatalized alveolar fricative"},
+      {"grapheme": "h", "features": "glottal fricative"},
+      {"grapheme": "m", "features": "bilabial nasal"},
+      {"grapheme": "n", "features": "alveolar nasal"},
+      {"grapheme": "r", "features": "liquid", "note": "defective in Catawba, cannot occur word-initially"},
+      {"grapheme": "w", "features": "labial-velar approximant"},
+      {"grapheme": "y", "features": "palatal approximant"}
+    ],
+    "phonological_processes": [
+      {
+        "process": "nasalization",
+        "description": "In some words, a long oral vowel in Catawba corresponds to a nasal vowel in Woccon",
+        "examples": [
+          {"Woccon": "kã·ya", "Catawba": "ka:ya", "gloss": "terrapin"}
+        ]
+      },
+      {
+        "process": "denasalization",
+        "description": "Instances of m and n before oral vowels became p and d in Catawba but not in Woccon",
+        "examples": [
+          {"Woccon": "nãpusuʔ", "Catawba": "dãpusuʔ", "gloss": "eight"}
+        ]
+      },
+      {
+        "process": "voicing_assimilation",
+        "description": "Voicing of p and t before voiced consonants",
+        "examples": [
+          {"Woccon": "witʰa:ʔ", "Catawba": "witʰa:ʔ", "gloss": "rat"}
+        ]
+      }
+    ],
+    "sound_correspondences": {
+      "Woccon_to_Catawba": [
+        {"Woccon": "p", "Catawba": "p"},
+        {"Woccon": "t", "Catawba": "t"},
+        {"Woccon": "k", "Catawba": "k"},
+        {"Woccon": "č", "Catawba": "č"},
+        {"Woccon": "s", "Catawba": "s"},
+        {"Woccon": "š", "Catawba": "š"},
+        {"Woccon": "ś", "Catawba": "s"},
+        {"Woccon": "h", "Catawba": "s"},
+        {"Woccon": "h", "Catawba": "h"},
+        {"Woccon": "m", "Catawba": "m", "note": "In Catawba, m often became p before oral vowels"},
+        {"Woccon": "n", "Catawba": "n", "note": "In Catawba, n often became d before oral vowels"},
+        {"Woccon": "n", "Catawba": "r"},
+        {"Woccon": "r", "Catawba": "n"},
+        {"Woccon": "r", "Catawba": "r", "note": "In Catawba, initial r appears as d before oral vowels and n before nasal vowels"},
+        {"Woccon": "w", "Catawba": "w"},
+        {"Woccon": "y", "Catawba": "y"},
+        {"Woccon": "m", "Catawba": "mn"}
+      ]
+    }
+  },
+  "morphology": {
+    "lexical_morphology": {
+      "simple_words": {
+        "description": "Words composed of a single morpheme",
+        "examples": [
+          {"word": "kus", "gloss": "corn"},
+          {"word": "witʰa:ʔ", "gloss": "rat"}
+        ]
+      },
+      "complex_words": {
+        "description": "Words composed of two or more morphemes",
+        "examples": [
+          {"word": "yẽhu:", "gloss": "wind", "components": "ye (air) + hu: (come)"}
+        ]
+      }
+    },
+    "common_roots": [
+      {
+        "root": "ya-",
+        "meaning": "water, fluid, natural element",
+        "derivatives": [
+          {"form": "yawowa", "gloss": "rain"},
+          {"form": "yẽhiya:", "gloss": "water"}
+        ]
+      },
+      {
+        "root": "yau-",
+        "meaning": "path, way",
+        "derivatives": [
+          {"form": "yauh-he", "gloss": "Indians (person-way)"},
+          {"form": "yau", "gloss": "fire"}
+        ]
+      },
+      {
+        "root": "watta-",
+        "meaning": "container, vessel",
+        "derivatives": [
+          {"form": "wattape", "gloss": "gourd, bottle"},
+          {"form": "wattapi", "gloss": "star vessel"}
+        ]
+      },
+      {
+        "root": "roo-",
+        "meaning": "cloth, hide, material",
+        "derivatives": [
+          {"form": "roo-iune", "gloss": "blankets"}
+        ]
+      }
+    ],
+    "reduplication": {
+      "description": "Repetition of all or part of a root to signal frequency or intensity",
+      "examples": [
+        {
+          "word": "kitkilare:",
+          "gloss": "break in pieces",
+          "derivation": "From root kit- (break in two) with reduplication"
+        },
+        {
+          "word": "wawawa",
+          "gloss": "snow",
+          "derivation": "Intensive reduplication"
+        },
+        {
+          "word": "sapĩ pẽ:ʔpẽ:ʔ",
+          "gloss": "mat",
+          "derivation": "From root pẽ:ʔ (step) with frequentive reduplication"
+        }
+      ]
+    },
+    "number_system": {
+      "type": "partial_quinary/decimal",
+      "description": "Numbers show internal structure with identifiable roots",
+      "numerals": [
+        {"value": 1, "form": "Tonne", "woccon": "tu", "catawba": "tu"},
+        {"value": 2, "form": "Num-perre", "woccon": "nũpari", "catawba": "nũpari", "root": "nqp"},
+        {"value": 3, "form": "Nam-mee", "woccon": "nã:misa:", "catawba": "nãm", "root": "nam"},
+        {"value": 4, "form": "Punnum-punne", "woccon": "pũ:nũpari", "catawba": "pũnũpari"},
+        {"value": 5, "form": "Webtau", "woccon": "wεptau"},
+        {"value": 6, "form": "Is-sto", "woccon": "ĩštu"},
+        {"value": 7, "form": "Nommis-sau", "woccon": "nã:misa:", "note": "contains nam (three) plus ending"},
+        {"value": 8, "form": "Nupsau", "woccon": "nãpusa:", "note": "contains nqp (two) plus ending"},
+        {"value": 9, "form": "Wehere", "woccon": "waʔkã:re", "catawba": "waʔkã:", "note": "literally 'there are nine'"},
+        {"value": 10, "form": "Soone noponne", "woccon": "napnẽ:", "alternate_form": "Napnẽ:"},
+        {"value": 11, "form": "Tonne hauk pea", "woccon": "tu hã:ksa:ʔ", "structure": "one plus eleven", "note": "transcription error in original; likely 'Tonne hauk sea'"},
+        {"value": 12, "form": "Soone noponne nam-mee", "structure": "ten three", "note": "reconstructed form"}
+      ],
+      "note": "Possible subtractive formation for 7 and 8 meaning '(10) lacking 3' and '(10) lacking 2'"
+    },
+    "affixes": {
+      "prefixes": [
+        {
+          "form": "watta-",
+          "function": "container prefix",
+          "examples": ["wattape (gourd/bottle)", "wattapi (star vessel)"],
+          "type": "containers"
+        }
+      ],
+      "suffixes": [
+        {
+          "form": "-wa",
+          "function": "indicates natural phenomena or repeated actions",
+          "examples": ["wawawa (snow)", "yawowa (rain)"],
+          "type": "natural_phenomena"
+        },
+        {
+          "form": "-he",
+          "function": "nominal suffix, often in terms for animate beings",
+          "examples": ["yauh-he (Indians)", "tauh-he (dog)"],
+          "type": "animate_beings"
+        },
+        {
+          "form": "-iune",
+          "function": "indicates manufactured or processed items",
+          "examples": ["roo-iune (blankets)"],
+          "type": "artifacts"
+        },
+        {
+          "form": "-pe",
+          "function": "indicates containers or vessels",
+          "examples": ["wattape (gourd/bottle)"],
+          "type": "containers"
+        },
+        {
+          "form": "-re",
+          "function": "independent/indicative mode marker",
+          "examples": ["kuwã:re (he kills it)", "waʔkã:re (there are nine)"],
+          "type": "modal"
+        },
+        {
+          "form": "-hauk",
+          "function": "connective",
+          "meaning": "plus",
+          "examples": ["Tonne hauk pea (one plus eleven)"],
+          "type": "connectives"
+        }
+      ]
+    },
+    "inflectional_morphology": {
+      "modes": [
+        {
+          "name": "independent",
+          "marker": "-re",
+          "description": "Indicates statements or facts",
+          "examples": [
+            {"form": "kuwã:re", "gloss": "he kills it"},
+            {"form": "waʔkã:re", "gloss": "there are nine"}
+          ]
+        },
+        {
+          "name": "participial",
+          "marker": "-(a)ʔ",
+          "description": "Used as ending on verbs in compound verbal construction or as nominalizer",
+          "examples": [
+            {"form": "ĩkta:ʔ", "gloss": "bread (they bake it)"},
+            {"form": "warã:phaʔ", "gloss": "one's fever"}
+          ]
+        },
+        {
+          "name": "imperative",
+          "marker": "-de",
+          "description": "Used to form commands",
+          "examples": [
+            {"form": "ni ku:ʔra:de", "gloss": "give me something to eat"}
+          ]
+        },
+        {
+          "name": "interrogative",
+          "marker": "-ne",
+          "description": "Used to form questions",
+          "examples": [
+            {"form": "katẽ:ne", "gloss": "is that all?"}
+          ]
+        }
+      ],
+      "possession": {
+        "description": "Inalienably possessed nouns mark possessor with prefix; alienably possessed nouns mark possessor with suffix",
+        "examples": [
+          {
+            "word": "ĩsap",
+            "gloss": "leggings, trousers",
+            "possession": "alienable",
+            "possessive_form": "ĩsap pis",
+            "possessive_gloss": "leggings with third person possessive suffix"
+          }
+        ]
+      },
+      "pronominal_marking": {
+        "description": "Pronominal objects marked by proclitics, with third person singular objects unmarked",
+        "examples": [
+          {
+            "form": "ni ku:ʔra:de",
+            "gloss": "give me something to eat",
+            "analysis": "first singular object + give-participial-eat-imperative"
+          }
+        ]
+      }
+    },
+    "noun_composition": {
+      "patterns": [
+        {"structure": "Noun + Noun", "example": "Yau-hauk", "meaning": "snake"},
+        {"structure": "Root + Descriptive", "example": "Wattapi untakeer", "meaning": "star"}
+      ]
+    },
+    "compounding": {
+      "patterns": [
+        {
+          "example": "roo-iune",
+          "meaning": "blankets",
+          "components": ["roo (cloth/hide)", "-iune (manufactured items)"]
+        },
+        {
+          "example": "yauh-he",
+          "meaning": "Indians",
+          "components": ["yau (path/way)", "-he (animate beings)"]
+        },
+        {
+          "example": "Yopoonitsa",
+          "meaning": "box",
+          "components": "yop (wood) + container"
+        },
+        {
+          "example": "Tooseawau",
+          "meaning": "kettle",
+          "components": "tus + container"
+        }
+      ]
+    }
+  },
+  "numeral_patterns": [
+    {
+      "name": "teens",
+      "description": "Add -pea after the base number (ten + X)"
+    },
+    {
+      "name": "multiples of ten",
+      "description": "Use compound forms combining napnẽ: (ten) with the multiplier"
+    }
+  ],
+  "lexical_semantics": {
+    "semantic_domains": {
+      "water_terms": {
+        "root": "ya-",
+        "derivatives": [
+          {"form": "yawowa", "meaning": "rain"},
+          {"form": "yẽhiya:", "meaning": "water"},
+          {"form": "Yacunne", "meaning": "fish", "note": "possibly contains water root"}
+        ]
+      },
+      "path_terms": {
+        "root": "yau-",
+        "derivatives": [
+          {"form": "yauh", "meaning": "path"},
+          {"form": "yauh-he", "meaning": "Indians"}
+        ]
+      },
+      "container_terms": {
+        "root": "watta-",
+        "derivatives": [
+          {"form": "wattape", "meaning": "gourd/bottle"}
+        ]
+      },
+      "material_terms": {
+        "root": "roo-",
+        "derivatives": [
+          {"form": "roo-iune", "meaning": "blankets"}
+        ]
+      },
+      "wood_terms": {
+        "root": "yap/yop",
+        "derivatives": [
+          {"form": "Yonne", "meaning": "wood"},
+          {"form": "Yopoonitsa", "meaning": "box"}
+        ]
+      }
+    },
+    "relic_forms": [
+      {"form": "Yau", "meaning": "fire", "note": "This appears to be a relic form in Catawba, where the usual root for fire is [ipi?]"},
+      {"form": "Yonne", "meaning": "wood", "note": "This appears to be a relic form in Catawba, a compound of [yana] tree and [pis] skin"}
+    ]
+  },
+  "syntax": {
+    "word_order": {
+      "head_modifier": "Head noun followed by modifier (Object-Verb syntax)",
+      "examples": [
+        {
+          "phrase": "ĩtu tira:",
+          "gloss": "boulder (hard/heavy)",
+          "analysis": "stone + big/heavy"
+        }
+      ],
+      "note": "Limited syntactic information available due to nature of word list documentation"
+    }
+  },
+  "lexicon": {
+    "core_vocabulary": [
+      {"Woccon": "tauh-he", "meaning": "dog", "Catawba": "tasi", "Proto-Siouan": "*šųke"},
+      {"Woccon": "yauh", "meaning": "path", "Catawba": "yq"},
+      {"Woccon": "yau", "meaning": "fire", "Catawba": "yamu"},
+      {"Woccon": "kus", "meaning": "corn", "Catawba": "kus/kusi"},
+      {"Woccon": "yicau", "meaning": "old woman", "Catawba": "ya (woman), yamusi (old woman)"},
+      {"Woccon": "wawawa", "meaning": "snow", "Catawba": "wa?/wa?wo"}
+    ],
+    "cross_family_cognates": [
+      {"Woccon": "wattapi untakeer", "meaning": "star", "Proto-North-Caddoan": "*hu-piri"},
+      {"Woccon": "wawawa", "meaning": "snow", "Proto-Siouan": "*wa"}
+    ]
+  },
+  "dialects": {
+    "relation_to_catawba": {
+      "classification": "Part of Coastal Catawban language family",
+      "dialectal_features": "Woccon maintained certain archaic features not preserved in Catawba",
+      "note": "Woccon was spoken on the eastern edge of the territory while Catawba was spoken at the southwestern edge"
+    },
+    "relation_to_catawba_simple": "Distant relative in Eastern Siouan subfamily",
+    "note": "Woccon and Catawba show considerable divergence despite genetic relationship"
+  },
+  "training_considerations": {
+    "data_limitations": "Only 143 items in Lawson's word list",
+    "orthographic_variation": "Original transcription from 1709 with potential spelling inconsistencies",
+    "potential_errors": "Some numerals may have been confused or transposed in original documentation",
+    "reconstruction_approaches": [
+      "Leverage Catawba cognates where available",
+      "Use Proto-Siouan reconstructions for missing items",
+      "Consider sound correspondences with other Siouan languages"
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 """
-Single LLM abstraction: local Ollama (LOCAL_LLM=true) or Microsoft Foundry (LOCAL_LLM=false).
-Returns Ollama-compatible shape so callers can use ["message"]["content"].
+Single LLM abstraction: Anthropic (ANTHROPIC_API_KEY set), local Ollama (LOCAL_LLM=true),
+or Microsoft Foundry (LOCAL_LLM=false). Returns Ollama-compatible shape so callers can use ["message"]["content"].
 """
 import os
 import logging
@@ -14,19 +14,69 @@ def _is_local_llm() -> bool:
     return v in ("true", "1", "yes")
 
 
+def _use_anthropic() -> bool:
+    return bool((os.getenv("ANTHROPIC_API_KEY") or "").strip())
+
+
 def llm_chat(
     model: str,
     messages: List[Dict[str, str]],
     options: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
-    Send chat completion request. Backend is chosen by LOCAL_LLM env var.
-    Returns dict with "message" -> "content" for compatibility with ollama.chat() callers.
+    Send chat completion request. Backend: Anthropic if ANTHROPIC_API_KEY set, else
+    Ollama if LOCAL_LLM=true, else Foundry. Returns dict with "message" -> "content".
     """
     options = options or {}
+    if _use_anthropic():
+        return _anthropic_chat(model, messages, options)
     if _is_local_llm():
         return _local_ollama_chat(model, messages, options)
     return _foundry_chat(model, messages, options)
+
+
+def _anthropic_chat(
+    model: str,
+    messages: List[Dict[str, str]],
+    options: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Use Anthropic Messages API (Claude) via official SDK. Set ANTHROPIC_API_KEY in .env."""
+    try:
+        from anthropic import Anthropic
+    except ImportError:
+        log.error("anthropic package required. pip install anthropic")
+        return {"message": {"content": "Error: pip install anthropic"}}
+    api_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
+    if not api_key:
+        log.error("ANTHROPIC_API_KEY not set")
+        return {"message": {"content": "Error: ANTHROPIC_API_KEY not set."}}
+    model_id = (os.getenv("ANTHROPIC_MODEL") or model or "claude-sonnet-4-20250514").strip()
+    max_tokens = options.get("num_predict", 4096)
+    anthropic_messages = []
+    for m in messages:
+        role = (m.get("role") or "user").lower()
+        if role == "system":
+            anthropic_messages.append({"role": "user", "content": f"[System: {m.get('content', '')}]"})
+        else:
+            anthropic_messages.append({"role": role, "content": (m.get("content") or "")})
+    if not anthropic_messages:
+        return {"message": {"content": "Error: No messages."}}
+    try:
+        client = Anthropic(api_key=api_key)
+        resp = client.messages.create(
+            model=model_id,
+            max_tokens=max_tokens,
+            messages=anthropic_messages,
+            temperature=options.get("temperature", 0.2),
+        )
+        content = ""
+        for block in resp.content:
+            if getattr(block, "type", None) == "text":
+                content += getattr(block, "text", "") or ""
+        return {"message": {"role": "assistant", "content": content.strip()}}
+    except Exception as e:
+        log.error("Anthropic request failed: %s", e)
+        return {"message": {"content": f"Error: Anthropic request failed. {e}"}}
 
 
 def _local_ollama_chat(

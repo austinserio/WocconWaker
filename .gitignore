@@ -1,4 +1,7 @@
 .env
+# Google service account key (keep in Downloads or outside repo)
+*-8b1379baac74.json
+*service*account*.json
 __pycache__/
 *.pyc
 *.log
