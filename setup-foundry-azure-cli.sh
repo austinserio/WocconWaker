@@ -88,14 +88,22 @@ KEY=$(az cognitiveservices account keys list \
   --resource-group "$RESOURCE_GROUP" \
   --query "key1" -o tsv 2>/dev/null || echo "")
 
+CHOSEN_ENDPOINT="${OPENAI_ENDPOINT:-$ENDPOINT}"
 echo ""
 echo "=== Add these to your .env to test Foundry (LOCAL_LLM=false) ==="
 echo ""
 echo "LOCAL_LLM=false"
-echo "FOUNDRY_ENDPOINT=${OPENAI_ENDPOINT:-$ENDPOINT}"
+echo "FOUNDRY_ENDPOINT=$CHOSEN_ENDPOINT"
 echo "FOUNDRY_API_KEY=$KEY"
 echo "FOUNDRY_DEPLOYMENT=$DEPLOYMENT_NAME"
-echo "FOUNDRY_API_VERSION=2024-10-21"
+if echo "$CHOSEN_ENDPOINT" | grep -q 'services\.ai\.azure\.com'; then
+  echo "FOUNDRY_INFERENCE_API_VERSION=2024-05-01-preview"
+elif echo "$CHOSEN_ENDPOINT" | grep -q 'openai\.azure\.com'; then
+  echo "FOUNDRY_API_VERSION=2024-10-21"
+else
+  echo "# If FOUNDRY_ENDPOINT is *.services.ai.azure.com, set FOUNDRY_INFERENCE_API_VERSION=2024-05-01-preview"
+  echo "# If it is *.openai.azure.com, set FOUNDRY_API_VERSION=2024-10-21"
+fi
 echo ""
 echo "Then run: python app.py  (or WOCCON_MODE=server python app.py)"
 echo "No local Ollama will start; all LLM calls go to Foundry."

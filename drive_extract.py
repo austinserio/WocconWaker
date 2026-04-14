@@ -233,6 +233,7 @@ def extract_one_file(
     model: Optional[str] = None,
     *,
     file_id: Optional[str] = None,
+    source_url: Optional[str] = None,
     file_index: int = 0,
     total_files: int = 0,
     chunk_start: int = 0,
@@ -301,7 +302,7 @@ def extract_one_file(
 
     return {
         "source_path": path,
-        "source_url": _source_url(file_id) if file_id else None,
+        "source_url": source_url or (_source_url(file_id) if file_id else None),
         "lexicon_entries": file_lexicon,
         "grammar_notes": file_grammar,
         "pronunciation_notes": file_pronunciation,

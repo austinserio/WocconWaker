@@ -558,6 +558,63 @@ async def reload_language(request: Request):
         return JSONResponse(status_code=500, content={"error": str(e)})
 
 
+@app.post("/admin/extract-document")
+async def extract_document(request: Request):
+    """
+    Extract lexicon and notes from one document (for Frappe upload flow). Same auth as ingest.
+    Body (JSON): {"text": "...", "source_path": "Optional title", "source_url": "Optional link"}
+    Or multipart: file (plain .txt only for now), form fields source_path, source_url.
+    Returns: lexicon_entries, grammar_notes, pronunciation_notes, cultural_notes, source_path, source_url.
+    """
+    _require_ingest_secret(request)
+    text = ""
+    source_path = "upload"
+    source_url = None
+    content_type = (request.headers.get("content-type") or "").split(";")[0].strip().lower()
+    if content_type == "application/json":
+        try:
+            body = await request.json()
+        except Exception:
+            raise HTTPException(status_code=400, detail="Invalid JSON")
+        text = (body.get("text") or "").strip()
+        source_path = (body.get("source_path") or "upload").strip() or "upload"
+        source_url = body.get("source_url") or None
+    elif content_type == "multipart/form-data":
+        form = await request.form()
+        file = form.get("file")
+        if not file or not hasattr(file, "read"):
+            raise HTTPException(status_code=400, detail="Missing file in multipart body")
+        filename = getattr(file, "filename", "") or ""
+        if not filename.lower().endswith(".txt"):
+            raise HTTPException(status_code=400, detail="Only .txt file upload supported; use JSON body with 'text' for other content")
+        try:
+            raw = await file.read()
+            text = raw.decode("utf-8", errors="replace").strip()
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Could not read file: {e}")
+        source_path = (form.get("source_path") or filename or "upload").strip() or "upload"
+        source_url = form.get("source_url") or None
+    else:
+        raise HTTPException(status_code=400, detail="Use Content-Type: application/json or multipart/form-data")
+    if not text:
+        raise HTTPException(status_code=400, detail="No text to extract")
+    try:
+        import drive_extract
+        result = drive_extract.extract_one_file(
+            text, source_path, source_url=source_url,
+        )
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+    return {
+        "lexicon_entries": result.get("lexicon_entries") or [],
+        "grammar_notes": result.get("grammar_notes") or [],
+        "pronunciation_notes": result.get("pronunciation_notes") or [],
+        "cultural_notes": result.get("cultural_notes") or [],
+        "source_path": result.get("source_path") or source_path,
+        "source_url": result.get("source_url") or source_url,
+    }
+
+
 # API endpoint to send a direct message to the assistant
 @app.post("/message")
 async def send_message(message: Dict[str, Any]):

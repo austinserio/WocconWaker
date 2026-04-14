@@ -109,10 +109,11 @@ ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indica
 - **LOCAL_LLM**: When `true`, `1`, or `yes` (case-insensitive), the app uses **local Ollama** (e.g. RunPod/CUDA or CPU). When unset or false and no Anthropic key, the app uses **Microsoft Foundry** (Llama/equivalent via Azure API). No OpenAI models are used; Foundry serves Llama (or HF-equivalent) via an OpenAI-compatible API.
 - **Local (OLLAMA_URL, OLLAMA_MODEL)**: Used only when `LOCAL_LLM` is true.
 - **Foundry (when LOCAL_LLM is false)**:
-  - `FOUNDRY_ENDPOINT` or `AZURE_AI_ENDPOINT`: Foundry/Azure OpenAI base URL (e.g. `https://<resource>.openai.azure.com`).
+  - `FOUNDRY_ENDPOINT` or `AZURE_AI_ENDPOINT`: Base URL from the Azure account — either `https://<resource>.services.ai.azure.com` (Model Inference API) or `https://<resource>.openai.azure.com` (Azure OpenAI SDK path).
   - `FOUNDRY_API_KEY` or `AZURE_INFERENCE_CREDENTIAL`: API key from the Foundry resource.
   - `FOUNDRY_DEPLOYMENT`: Deployment name (e.g. `Llama-3-8B-Instruct`). Defaults to `OLLAMA_MODEL` if unset.
-  - `FOUNDRY_API_VERSION`: Optional; default `2024-10-21`.
+  - `FOUNDRY_INFERENCE_API_VERSION`: Used only when the endpoint host is `*.services.ai.azure.com` (REST `/models/chat/completions`). Default `2024-05-01-preview`. Do not use `FOUNDRY_API_VERSION` for that host — wrong versions return 404.
+  - `FOUNDRY_API_VERSION`: Used only for `*.openai.azure.com` with the Azure OpenAI SDK. Default `2024-10-21`.
   - Use `./setup-foundry-azure-cli.sh` to create the resource and print these values.
 
 ### Drive ingest (Phase 1+)
@@ -136,6 +137,7 @@ python drive_ingest.py
 - `POST /admin/ingest-drive` - Run Drive ingest on demand (optional: X-Ingest-Secret or ?secret=)
 - `GET /admin/ingest-drive/status` - Last ingest result
 - `POST /admin/reload-language` - Reload dictionary/rules and rebuild RAG (same auth as ingest; optional body: `dict_path`, `rules_path`)
+- `POST /admin/extract-document` - Extract one document for Frappe (same auth). JSON: `{"text","source_path","source_url"}` or multipart with `.txt` file + form fields. Returns `lexicon_entries`, `grammar_notes`, `pronunciation_notes`, `cultural_notes`, `source_path`, `source_url`.
 
 ## Notes
 

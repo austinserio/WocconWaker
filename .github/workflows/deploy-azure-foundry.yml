@@ -68,7 +68,6 @@ jobs:
               "FOUNDRY_ENDPOINT=${{ secrets.FOUNDRY_ENDPOINT }}" \
               "FOUNDRY_API_KEY=${{ secrets.FOUNDRY_API_KEY }}" \
               "FOUNDRY_DEPLOYMENT=${{ secrets.FOUNDRY_DEPLOYMENT }}" \
-              "FOUNDRY_API_VERSION=2024-10-21" \
             --output none
 
       - name: Get app URL

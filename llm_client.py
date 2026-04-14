@@ -133,9 +133,14 @@ def _foundry_chat(
         return {"message": {"content": "Error: Foundry endpoint and API key not configured."}}
 
     # Azure AI Model Inference endpoint: POST .../models/chat/completions?api-version=...
+    # Use FOUNDRY_INFERENCE_API_VERSION only here; FOUNDRY_API_VERSION is for *.openai.azure.com (SDK).
     if "services.ai.azure.com" in endpoint:
-        api_version = os.getenv("FOUNDRY_API_VERSION", "2024-05-01-preview")
+        api_version = (
+            (os.getenv("FOUNDRY_INFERENCE_API_VERSION") or "2024-05-01-preview").strip()
+            or "2024-05-01-preview"
+        )
         url = f"{endpoint}/models/chat/completions?api-version={api_version}"
+        log.debug("Foundry Model Inference host=%s api-version=%s", endpoint, api_version)
         headers = {"Content-Type": "application/json", "api-key": api_key}
         payload = {
             "model": model_for_api,
