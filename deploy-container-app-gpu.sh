@@ -5,6 +5,10 @@
 
 set -e
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$ROOT/scripts/load_repo_env.sh" "$ROOT"
+
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -18,15 +22,14 @@ echo -e "${BLUE}║   WocconWaker Container Apps with Serverless GPU          �
 echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
-# Set subscription (nonprofit grant)
-SUBSCRIPTION_ID="58587a07-da50-4691-aa9c-f23859d66df3"
+SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID:?Set AZURE_SUBSCRIPTION_ID in .env (see .env.example)}"
 echo -e "${GREEN}Setting subscription to: ${SUBSCRIPTION_ID}${NC}"
 az account set --subscription "$SUBSCRIPTION_ID"
 
-RESOURCE_GROUP="rg-wocconwaker"
-LOCATION="eastus"  # Serverless GPU supported regions: westus3, eastus, australiaeast, swedencentral
-CONTAINER_APP_ENV="wocconwaker-env-gpu"
-CONTAINER_APP="wocconwaker-app-gpu"
+RESOURCE_GROUP="${AZURE_RESOURCE_GROUP:?Set AZURE_RESOURCE_GROUP in .env (see .env.example)}"
+LOCATION="${AZURE_LOCATION:-eastus}"  # Serverless GPU supported regions: westus3, eastus, australiaeast, swedencentral
+CONTAINER_APP_ENV="${AZURE_CONTAINER_APP_ENV:-wocconwaker-env-gpu}"
+CONTAINER_APP="${AZURE_CONTAINER_APP_NAME:-wocconwaker-app-gpu}"
 
 # GPU configuration
 GPU_TYPE="T4"  # Options: T4 (cheaper) or A100 (faster)

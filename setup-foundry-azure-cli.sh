@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 # Setup Microsoft Foundry (Llama / HF model) via Azure CLI for WocconWaker.
 # When done, set LOCAL_LLM=false and the env vars below to use Foundry.
-# Uses subscription from .cursorrules: 58587a07-da50-4691-aa9c-f23859d66df3
+# Requires AZURE_SUBSCRIPTION_ID in .env (see .env.example).
 
 set -e
-SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID:-58587a07-da50-4691-aa9c-f23859d66df3}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$ROOT/scripts/load_repo_env.sh" "$ROOT"
+SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID:?Set AZURE_SUBSCRIPTION_ID in .env (see .env.example)}"
 RESOURCE_GROUP="${FOUNDRY_RESOURCE_GROUP:-woccon-foundry-rg}"
 LOCATION="${FOUNDRY_LOCATION:-eastus2}"
 ACCOUNT_NAME="${FOUNDRY_ACCOUNT_NAME:-woccon-foundry}"

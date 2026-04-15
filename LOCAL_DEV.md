@@ -1,95 +1,64 @@
 # Local development with Messenger
 
-Run the app on your machine and receive Messenger webhooks at a stable URL using the **UIC Cloudflare** tunnel: `https://local-woccon.urbanindigenouscollective.org`.
+Run the app on your machine and receive Messenger webhooks at a stable URL using a **Cloudflare named tunnel** (or another HTTPS tunnel) pointing at your local app.
 
 ## What you need
 
-- **UIC Cloudflare** – Named tunnel so the webhook URL is always `https://local-woccon.urbanindigenouscollective.org/webhook` (no changing Facebook when you restart).
-- **An app that allows webhook edits** – If your WocconWaker *development* app won’t let you change the webhook (Facebook sometimes locks this by app type/mode), use either:
-  - Your **production WocconWaker app**: when developing locally, set its webhook to the tunnel URL; when done, set it back to the Azure URL, or
-  - Your **Shocktalk dev app** (if it allows webhook changes): add the Woccon Page to that app for testing, or use that app’s page and token in `.env`.
-- **`.env`** – `VERIFY_TOKEN`, `PAGE_ACCESS_TOKEN`, and optional LLM/Foundry vars.
+- **Cloudflare** (or similar) – A named tunnel so the webhook URL is stable (e.g. `https://woccon-dev.example.com/webhook`).
+- **A Meta app that allows webhook edits** – If your development app will not let you change the webhook, use an app that does, or temporarily point production at the tunnel and switch back when done (document your production callback URL in `.env` as `AZURE_CONTAINER_APP_WEBHOOK_URL` so you do not lose it).
+- **`.env`** – Copy from `.env.example` and set `VERIFY_TOKEN`, `PAGE_ACCESS_TOKEN`, and LLM/Foundry vars. See [CLAUDE.md](CLAUDE.md).
+
+Set optional convenience vars (used in docs and helper scripts):
+
+- `CLOUDFLARE_TUNNEL_HOSTNAME` – e.g. `woccon-dev.example.com` (no `https://`).
+- `PUBLIC_WEBHOOK_BASE_URL` – e.g. `https://woccon-dev.example.com` (for copy-paste webhook URL).
+- `AZURE_CONTAINER_APP_WEBHOOK_URL` – production Messenger callback, e.g. `https://<your-app>.<region>.azurecontainerapps.io/webhook`.
 
 ---
 
-## 1. UIC Cloudflare tunnel (local-woccon.urbanindigenouscollective.org)
+## 1. Cloudflare tunnel (example)
 
-Use the UIC Cloudflare account and a named tunnel so the hostname is fixed.
+Use a Cloudflare account that controls the DNS zone for your dev hostname.
 
-### One-time setup (UIC Cloudflare)
+### One-time setup
 
-1. **Log in with UIC Cloudflare**
+1. **Log in**
    ```bash
    cloudflared tunnel login
    ```
-   Use the UIC Cloudflare account when the browser opens.
 
 2. **Create the tunnel**
    ```bash
-   cloudflared tunnel create local-woccon
+   cloudflared tunnel create woccon-dev
    ```
-   Note the tunnel ID (e.g. `abc123-def456-...`) from the output.
+   Note the tunnel ID from the output.
 
-3. **Add DNS (Cloudflare dashboard or CLI)**  
-   In the zone `urbanindigenouscollective.org`, add a CNAME:
-   - **Name**: `local-woccon` (or `local-woccon.urbanindigenouscollective.org` depending on UI)
-   - **Target**: `<TUNNEL_ID>.cfargotunnel.com`  
-   (e.g. `abc123-def456-ghi789.cfargotunnel.com`)
+3. **Add DNS** in your zone (e.g. `example.com`): CNAME from `woccon-dev` (or your chosen host) to `<TUNNEL_ID>.cfargotunnel.com`.
 
-   Or with Cloudflare API/CLI:
+   Or:
    ```bash
-   cloudflared tunnel route dns local-woccon local-woccon.urbanindigenouscollective.org
-   ```
-   (run from the same machine/account that owns the zone)
-
-4. **Create config file**  
-   Save as `~/.cloudflared/config.yml` (or project-local `config.yml` and use `cloudflared tunnel --config config.yml run local-woccon`):
-
-   ```yaml
-   tunnel: <TUNNEL_ID>
-   credentials-file: ~/.cloudflared/<TUNNEL_ID>.json
-
-   ingress:
-     - hostname: local-woccon.urbanindigenouscollective.org
-       service: http://localhost:8000
-     - service: http_status:404
+   cloudflared tunnel route dns woccon-dev woccon-dev.example.com
    ```
 
-   Replace `<TUNNEL_ID>` with the actual ID from step 2. Path to `credentials-file` is usually `~/.cloudflared/<TUNNEL_ID>.json` after `tunnel create`.
+4. **Config** – Copy [cloudflared-example.yml](cloudflared-example.yml) to `cloudflared.yml` (gitignored). Set `tunnel`, `credentials-file`, and `hostname` to match your tunnel and hostname.
 
-### Run the tunnel (when developing)
+### Run the tunnel
 
 ```bash
-cloudflared tunnel run local-woccon
+cloudflared tunnel --config cloudflared.yml run woccon-dev
 ```
 
-Leave this running. Your app will be reachable at **https://local-woccon.urbanindigenouscollective.org**. Webhook URL for Facebook: **https://local-woccon.urbanindigenouscollective.org/webhook**.
+Use `CLOUDFLARE_TUNNEL_HOSTNAME=woccon-dev.example.com` in `.env` so scripts and docs stay consistent.
 
 ---
 
 ## 2. Create `.env` in the project root
 
 ```bash
-# Required for Messenger (use token for the Page you're testing with)
-VERIFY_TOKEN=test-key-beta
-PAGE_ACCESS_TOKEN=your_page_access_token
-
-# Server
-WOCCON_MODE=server
-PORT=8000
-
-# Use Azure Foundry for chat (same as production) — no Ollama needed
-LOCAL_LLM=false
-FOUNDRY_ENDPOINT=https://woccon-foundry.services.ai.azure.com
-FOUNDRY_API_KEY=your_foundry_api_key
-FOUNDRY_DEPLOYMENT=Meta-Llama-3.1-8B-Instruct
-FOUNDRY_API_VERSION=2024-05-01-preview
-
-# Optional
-ENABLE_TYPING_INDICATORS=true
+cp .env.example .env
 ```
 
-Copy the Foundry vars from your Azure Container App. Use the same VERIFY_TOKEN in Facebook and the right Page Access Token for the Page you're testing with.
+Edit `.env`: set Messenger tokens, `WOCCON_MODE=server`, `PORT`, and either local Ollama (`LOCAL_LLM=true`) or Foundry (`FOUNDRY_*`). See [.env.example](.env.example) and [CLAUDE.md](CLAUDE.md).
 
 ---
 
@@ -106,84 +75,42 @@ Or:
 ./run-local-messenger.sh
 ```
 
-App listens on `http://0.0.0.0:8000`. Start the tunnel (step 1) in another terminal so `local-woccon.urbanindigenouscollective.org` forwards to it.
+App listens on `http://0.0.0.0:8000`. Run the tunnel in another terminal so your public hostname forwards to port 8000.
 
 ---
 
 ## 4. Point Facebook at the tunnel
 
-1. Go to [developers.facebook.com](https://developers.facebook.com) → the app you’re using (production WocconWaker or Shocktalk dev, whichever allows webhook edits).
-2. **Messenger** → **Configuration** → **Webhooks** → **Edit**.
-3. **Callback URL**: `https://local-woccon.urbanindigenouscollective.org/webhook`
-4. **Verify token**: same as in `.env` (e.g. `test-key-beta`).
-5. **Verify and Save**. Subscribe to the same fields as production (e.g. `messages`, `messaging_postbacks`, …).
+1. [developers.facebook.com](https://developers.facebook.com) → your app → **Messenger** → **Webhooks** → **Edit**.
+2. **Callback URL**: `https://<CLOUDFLARE_TUNNEL_HOSTNAME>/webhook` (or `PUBLIC_WEBHOOK_BASE_URL` + `/webhook`).
+3. **Verify token**: same as `VERIFY_TOKEN` in `.env`.
+4. Subscribe to the same fields as production.
 
-If your **WocconWaker dev app** won’t let you change the webhook:
-
-- Use the **production WocconWaker app** for local dev: set its webhook to the tunnel URL while you develop, then set it back to `https://wocconwaker-app.icyglacier-d3593e65.eastus2.azurecontainerapps.io/webhook` when you’re done, or
-- Use the **Shocktalk dev app** (where you can change the webhook): use that app’s page and token in `.env` and point its webhook at `https://local-woccon.urbanindigenouscollective.org/webhook`.
+If you temporarily moved **production** webhooks to your tunnel, set **Callback URL** back to `AZURE_CONTAINER_APP_WEBHOOK_URL` when finished.
 
 ---
 
 ## 5. Test
 
-Send a message to the Page tied to the app/token you’re using. You should see logs in the app terminal and get a reply from your local instance.
-
----
-
-## 6. Switch back to production (if using production app for local dev)
-
-When you’re done developing and you had pointed the **production** WocconWaker app at the tunnel:
-
-1. **Webhooks** → **Edit**.
-2. **Callback URL**: `https://wocconwaker-app.icyglacier-d3593e65.eastus2.azurecontainerapps.io/webhook`
-3. **Verify and Save**.
+Send a message to the Page tied to the app/token in `.env`. You should see logs and a reply from your local instance.
 
 ---
 
 ## Webhook URL not resolving?
 
-`https://local-woccon.urbanindigenouscollective.org` only works after this **one-time setup** (UIC Cloudflare):
+1. Confirm `cloudflared tunnel login` used the account that owns your DNS zone.
+2. CNAME target must be `<TUNNEL_ID>.cfargotunnel.com`.
+3. Project `cloudflared.yml` must match tunnel ID and credentials path.
+4. Health check: `https://<your-hostname>/health` should return JSON when the app and tunnel are running.
 
-1. **Log in** (browser opens):
-   ```bash
-   cloudflared tunnel login
-   ```
-   Use the UIC Cloudflare account that owns `urbanindigenouscollective.org`.
-
-2. **Create the tunnel** and note the tunnel ID (e.g. `a1b2c3d4-e5f6-...`):
-   ```bash
-   cloudflared tunnel create local-woccon
-   ```
-
-3. **Add DNS** in Cloudflare (Dashboard → urbanindigenouscollective.org → DNS):
-   - Type: **CNAME**
-   - Name: **local-woccon**
-   - Target: **`<TUNNEL_ID>.cfargotunnel.com`** (e.g. `a1b2c3d4-e5f6-....cfargotunnel.com`)
-   - Save.
-
-   Or add it via cloudflared (must be logged in as the **UIC** account that owns urbanindigenouscollective.org):
-   ```bash
-   cloudflared tunnel login   # sign in with UIC if you have multiple accounts
-   ./setup-tunnel-dns.sh     # adds CNAME local-woccon.urbanindigenouscollective.org
-   ```
-   If you're logged into a different account (e.g. Shocktalk), the record would be created in that zone instead. Use the UIC account so the record is in urbanindigenouscollective.org.
-
-4. **Create `cloudflared.yml`** in the project (copy from `cloudflared-example.yml`):
-   - Set `tunnel:` to your tunnel ID.
-   - Set `credentials-file:` to the path of the JSON file created in step 2 (usually `~/.cloudflared/<TUNNEL_ID>.json`).
-
-5. Restart `./run-local-messenger.sh`. The script will use `cloudflared.yml` and the hostname should resolve in a minute or two.
-
-To confirm: open `https://local-woccon.urbanindigenouscollective.org/health` in a browser (or curl). If you get JSON, the tunnel and app are good; then use `https://local-woccon.urbanindigenouscollective.org/webhook` in Facebook.
+Optional: set `CLOUDFLARE_TUNNEL_ID` and `CLOUDFLARE_TUNNEL_HOSTNAME` in `.env` and run `./setup-tunnel-dns.sh` once (after `cloudflared tunnel login`) to add DNS via CLI.
 
 ---
 
 ## Reference
 
-| Item | Value |
-|------|--------|
+| Item | Typical value |
+|------|----------------|
 | Local app | `http://0.0.0.0:8000` |
-| Public URL | `https://local-woccon.urbanindigenouscollective.org` |
-| Webhook URL | `https://local-woccon.urbanindigenouscollective.org/webhook` |
-| Tunnel | UIC Cloudflare named tunnel `local-woccon` |
+| Public base | Set `PUBLIC_WEBHOOK_BASE_URL` in `.env` |
+| Webhook URL | `{PUBLIC_WEBHOOK_BASE_URL}/webhook` |

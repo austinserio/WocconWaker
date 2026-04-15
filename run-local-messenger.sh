@@ -1,25 +1,24 @@
 #!/usr/bin/env bash
 # Run the app locally for Messenger development.
-# Starts the UIC Cloudflare tunnel (local-woccon) and the app; Ctrl+C stops both.
-# Webhook: https://local-woccon.urbanindigenouscollective.org/webhook (see LOCAL_DEV.md)
+# Starts Cloudflare tunnel (if cloudflared.yml exists) and the app; Ctrl+C stops both.
+# Copy .env.example to .env and set VERIFY_TOKEN, PAGE_ACCESS_TOKEN, LLM vars, and optionally
+# CLOUDFLARE_TUNNEL_HOSTNAME / PUBLIC_WEBHOOK_BASE_URL for printed URLs. See LOCAL_DEV.md.
 
 set -e
-cd "$(dirname "$0")"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT"
+# shellcheck disable=SC1091
+source "$ROOT/scripts/load_repo_env.sh" "$ROOT"
 
 if [[ ! -f .env ]]; then
-  echo "No .env found. Create one with:"
-  echo "  VERIFY_TOKEN=test-key-beta"
-  echo "  PAGE_ACCESS_TOKEN=your_token"
-  echo "  WOCCON_MODE=server"
-  echo "  PORT=8000"
-  echo "  LOCAL_LLM=false   # use Azure Foundry (same as production); true = local Ollama"
-  echo "  FOUNDRY_ENDPOINT=https://woccon-foundry.services.ai.azure.com"
-  echo "  FOUNDRY_API_KEY=..."
-  echo "  FOUNDRY_DEPLOYMENT=Meta-Llama-3.1-8B-Instruct"
-  echo "  FOUNDRY_API_VERSION=2024-05-01-preview"
-  echo "See LOCAL_DEV.md for full setup."
+  echo "No .env found. Run: cp .env.example .env"
+  echo "Then set VERIFY_TOKEN, PAGE_ACCESS_TOKEN, WOCCON_MODE=server, PORT, and LLM/Foundry vars."
+  echo "See LOCAL_DEV.md and CLAUDE.md."
   exit 1
 fi
+
+WH="${CLOUDFLARE_TUNNEL_HOSTNAME:-woccon-dev.example.com}"
+PUB="${PUBLIC_WEBHOOK_BASE_URL:-https://${WH}}"
 
 export WOCCON_MODE=server
 export PORT="${PORT:-8000}"
@@ -51,14 +50,16 @@ trap cleanup EXIT INT TERM
 
 if command -v cloudflared &>/dev/null; then
   if [[ -f cloudflared.yml ]]; then
-    cloudflared tunnel --config cloudflared.yml run local-woccon &
+    cloudflared tunnel --config cloudflared.yml run &
   else
-    echo "Warning: no cloudflared.yml — local-woccon.urbanindigenouscollective.org will not resolve until you:"
-    echo "  1. cloudflared tunnel create local-woccon"
-    echo "  2. Add DNS CNAME: local-woccon -> <TUNNEL_ID>.cfargotunnel.com (in Cloudflare for urbanindigenouscollective.org)"
+    echo "Warning: no cloudflared.yml — public hostname will not resolve until you:"
+    echo "  1. cloudflared tunnel create <name>"
+    echo "  2. Add DNS CNAME: your host -> <TUNNEL_ID>.cfargotunnel.com"
     echo "  3. Copy cloudflared-example.yml to cloudflared.yml and set tunnel ID + credentials path"
-    echo "  See LOCAL_DEV.md 'Webhook URL not resolving?'"
-    cloudflared tunnel run local-woccon &
+    echo "  See LOCAL_DEV.md"
+    TN="${CLOUDFLARE_TUNNEL_NAME:-woccon-dev}"
+    echo "Attempting: cloudflared tunnel run $TN (set CLOUDFLARE_TUNNEL_NAME in .env to change)"
+    cloudflared tunnel run "$TN" &
   fi
   CLOUDFLARED_PID=$!
   echo "Tunnel starting (PID $CLOUDFLARED_PID)..."
@@ -68,7 +69,7 @@ else
 fi
 
 echo "Starting WocconWaker on http://0.0.0.0:${PORT}"
-echo "Webhook URL: https://local-woccon.urbanindigenouscollective.org/webhook"
+echo "Webhook URL (set CLOUDFLARE_TUNNEL_HOSTNAME / PUBLIC_WEBHOOK_BASE_URL in .env to match): ${PUB}/webhook"
 echo ""
 
 "$PYTHON" app.py

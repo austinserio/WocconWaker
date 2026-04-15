@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Add DNS for local-woccon.urbanindigenouscollective.org via cloudflared.
-# Must be logged in as the UIC account (owner of urbanindigenouscollective.org):
-#   cloudflared tunnel login
-# Then run this script once.
+# Add DNS for your tunnel hostname via cloudflared (after `cloudflared tunnel login`).
+# Set CLOUDFLARE_TUNNEL_ID and CLOUDFLARE_TUNNEL_HOSTNAME in .env (see .env.example).
 
 set -e
-cd "$(dirname "$0")"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$ROOT/scripts/load_repo_env.sh" "$ROOT"
 
-TUNNEL_ID="41f20a16-ca3d-45bb-90c3-5fa255509cf5"
-HOSTNAME="local-woccon.urbanindigenouscollective.org"
+TUNNEL_ID="${CLOUDFLARE_TUNNEL_ID:?Set CLOUDFLARE_TUNNEL_ID in .env (output of cloudflared tunnel create)}"
+HOSTNAME="${CLOUDFLARE_TUNNEL_HOSTNAME:?Set CLOUDFLARE_TUNNEL_HOSTNAME in .env (e.g. woccon-dev.example.com)}"
 
 echo "Adding DNS: $HOSTNAME -> tunnel $TUNNEL_ID"
 echo "(Uses the account you're logged into via cloudflared tunnel login.)"
@@ -23,4 +23,4 @@ cloudflared tunnel route dns "$TUNNEL_ID" "$HOSTNAME"
 
 echo ""
 echo "Done. If you saw an error about the wrong zone, run: cloudflared tunnel login"
-echo "and sign in with the UIC account that owns urbanindigenouscollective.org, then run this script again."
+echo "with the Cloudflare account that owns the DNS zone for $HOSTNAME, then run this script again."

@@ -88,6 +88,8 @@ The system supports three operational modes via WOCCON_MODE environment variable
 
 ## Environment Variables
 
+Copy [.env.example](.env.example) to `.env` and fill in values for your environment. `.env` is gitignored.
+
 **Phase 4 – language reload and unified data:**
 - `WOCCON_DICTIONARY_PATH`: Path to dictionary JSON (default `woccon_language/dictionary.json`). Set to `woccon_language/dictionary_unified.json` to use merged community + Lawson lexicon.
 - `WOCCON_RULES_PATH`: Path to rules JSON (default `woccon_language/rules.json`). Set to `woccon_language/rules_unified.json` to use merged rules.
@@ -118,7 +120,7 @@ ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indica
 
 ### Drive ingest (Phase 1+)
 - **GOOGLE_APPLICATION_CREDENTIALS**: Path to service account JSON key file. Required for listing/reading a shared Drive folder (share the folder with the service account email). Do not commit the JSON.
-- **DRIVE_FOLDER_ID**: Optional. Defaults to the Woccon community folder ID.
+- **DRIVE_FOLDER_ID**: **Required** for `drive_ingest.py` and `/admin/ingest-drive`. Set the Google Drive folder ID in `.env`.
 - **INGEST_DRIVE_SECRET**: Optional. If set, `POST /admin/ingest-drive` and `GET /admin/ingest-drive/status` require this value in header `X-Ingest-Secret` or query `secret=`.
 
 ```bash

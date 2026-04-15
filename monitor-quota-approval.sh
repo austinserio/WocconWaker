@@ -4,6 +4,10 @@
 
 set -e
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$ROOT/scripts/load_repo_env.sh" "$ROOT"
+
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -18,7 +22,7 @@ echo -e "${BLUE}╚════════════════════�
 echo ""
 
 # Set subscription (nonprofit grant)
-SUBSCRIPTION_ID="58587a07-da50-4691-aa9c-f23859d66df3"
+SUBSCRIPTION_ID="${AZURE_SUBSCRIPTION_ID:?Set AZURE_SUBSCRIPTION_ID in .env (see .env.example)}"
 az account set --subscription "$SUBSCRIPTION_ID"
 
 SUB_NAME=$(az account show --query name -o tsv)

@@ -1,7 +1,14 @@
 # Build and deploy WocconWaker to Azure Container Apps (Foundry mode) on push to azure-foundry.
-# Requires: GitHub secrets AZURE_CREDENTIALS (JSON: clientId, clientSecret, subscriptionId, tenantId),
-#   FOUNDRY_ENDPOINT, FOUNDRY_API_KEY, FOUNDRY_DEPLOYMENT (and optionally ACR_NAME if not using default from RG).
-# One-time: Create RG, ACR, and Container App (e.g. run deploy-container-app.sh once) or use existing.
+#
+# Secrets (Settings → Secrets and variables → Actions → Secrets):
+#   AZURE_CREDENTIALS (JSON: clientId, clientSecret, subscriptionId, tenantId from create-for-rbac --sdk-auth)
+#   FOUNDRY_ENDPOINT, FOUNDRY_API_KEY, FOUNDRY_DEPLOYMENT
+#
+# Variables (Settings → Secrets and variables → Actions → Variables):
+#   AZURE_RESOURCE_GROUP – resource group containing Container App and ACR
+#   AZURE_CONTAINER_APP_NAME – Container App name
+# Optional variable:
+#   ACR_IMAGE_NAME – Docker image repository name (default: wocconwaker)
 
 name: Deploy to Azure (Foundry)
 
@@ -10,10 +17,9 @@ on:
     branches: [azure-foundry]
 
 env:
-  RESOURCE_GROUP: rg-wocconwaker
-  CONTAINER_APP_NAME: wocconwaker-app
-  CONTAINER_APP_ENV: wocconwaker-env
-  IMAGE_NAME: wocconwaker
+  RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+  CONTAINER_APP_NAME: ${{ vars.AZURE_CONTAINER_APP_NAME }}
+  IMAGE_NAME: ${{ vars.ACR_IMAGE_NAME || 'wocconwaker' }}
 
 jobs:
   build-and-deploy:
@@ -26,6 +32,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Validate Azure repository variables
+        run: |
+          if [ -z "${{ vars.AZURE_RESOURCE_GROUP }}" ]; then
+            echo "::error::Set repository variable AZURE_RESOURCE_GROUP (Settings → Secrets and variables → Actions → Variables)"
+            exit 1
+          fi
+          if [ -z "${{ vars.AZURE_CONTAINER_APP_NAME }}" ]; then
+            echo "::error::Set repository variable AZURE_CONTAINER_APP_NAME"
+            exit 1
+          fi
+
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -36,7 +53,7 @@ jobs:
         run: |
           ACR_NAME=$(az acr list --resource-group "${{ env.RESOURCE_GROUP }}" --query "[0].name" -o tsv)
           if [ -z "$ACR_NAME" ]; then
-            echo "::error::No ACR found in ${{ env.RESOURCE_GROUP }}. Create one (e.g. run deploy-container-app.sh once)."
+            echo "::error::No ACR found in ${{ env.RESOURCE_GROUP }}. Create one in that resource group first."
             exit 1
           fi
           echo "name=$ACR_NAME" >> $GITHUB_OUTPUT

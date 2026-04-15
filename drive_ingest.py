@@ -11,11 +11,23 @@ from typing import Any, Dict, List, Optional
 
 log = logging.getLogger("drive_ingest")
 
-# Default folder from plan
-DEFAULT_FOLDER_ID = "1s1CgonVWEqj1SBKLKj0FcNotcpAHRYIt"
 GOOGLE_DOCS_MIME = "application/vnd.google-apps.document"
 PDF_MIME = "application/pdf"
 GOOGLE_FOLDER_MIME = "application/vnd.google-apps.folder"
+
+
+def _resolved_folder_id(folder_id: Optional[str]) -> str:
+    """Drive folder to ingest: explicit arg, else DRIVE_FOLDER_ID env (required for public installs)."""
+    if folder_id is not None and str(folder_id).strip():
+        return str(folder_id).strip()
+    env_id = (os.environ.get("DRIVE_FOLDER_ID") or "").strip()
+    if env_id:
+        return env_id
+    raise RuntimeError(
+        "DRIVE_FOLDER_ID is not set. Export it or add it to .env (copy from .env.example), "
+        "or pass folder_id when calling ingest APIs."
+    )
+
 
 # Sync state: only re-fetch and re-extract when Drive file modifiedTime changes
 SYNC_STATE_FILENAME = "sync_state.json"
@@ -100,7 +112,7 @@ def list_files_in_folder(
     List all files in the given Drive folder.
     Returns list of dicts with id, name, mimeType, modifiedTime.
     """
-    folder_id = folder_id or os.environ.get("DRIVE_FOLDER_ID") or DEFAULT_FOLDER_ID
+    folder_id = _resolved_folder_id(folder_id)
     if not service:
         creds = _get_credentials()
         service = _build_drive_service(creds)
@@ -209,7 +221,7 @@ def ingest_folder(
     Files we don't support (e.g. Sheets) get text = "" and a log.
     """
     from googleapiclient.errors import HttpError
-    folder_id = folder_id or os.environ.get("DRIVE_FOLDER_ID") or DEFAULT_FOLDER_ID
+    folder_id = _resolved_folder_id(folder_id)
     creds = _get_credentials()
     service = _build_drive_service(creds)
     try:
@@ -291,7 +303,7 @@ def run_phase1_verify(skip_extraction: bool = False) -> Dict[str, Any]:
     Phase 1+3: list files, fetch text, then (unless skip_extraction) run structured extraction and write staging.
     Returns a summary dict for inspection.
     """
-    folder_id = os.environ.get("DRIVE_FOLDER_ID") or DEFAULT_FOLDER_ID
+    folder_id = _resolved_folder_id(None)
     ingest_limit = os.environ.get("DRIVE_INGEST_LIMIT", "").strip()
     summary = {
         "folder_id": folder_id,

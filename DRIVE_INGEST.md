@@ -7,19 +7,20 @@
 | Variable | Required | Description |
 |----------|----------|-------------|
 | **GOOGLE_APPLICATION_CREDENTIALS** | **Yes** | Path to the **service account JSON** key file. The Drive folder must be shared with this service account’s email (e.g. `xxx@project.iam.gserviceaccount.com`). Do not commit the JSON. |
-| **DRIVE_FOLDER_ID** | No | Folder ID to ingest. Default: `1s1CgonVWEqj1SBKLKj0FcNotcpAHRYIt`. |
+| **DRIVE_FOLDER_ID** | **Yes** | Google Drive folder ID to ingest (from the folder URL). Set in `.env` (see `.env.example`). |
 **Note:** The Drive API does not accept API keys for listing/reading (401). Use a service account JSON only.
 
 ### Setup (service account)
 
 1. In Google Cloud Console: create a service account, create a key (JSON), download it.
 2. Share the Drive folder with the service account email (Editor or Viewer).
-3. Set in `.env` or shell: `export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your-key.json`
+3. Set in `.env` or shell: `export GOOGLE_APPLICATION_CREDENTIALS=/path/to/your-key.json` and `export DRIVE_FOLDER_ID=<folder_id>`
 
 ### Run Phase 1 verify
 
 ```bash
 pip install -r requirements.txt
+cp .env.example .env   # if needed; then set GOOGLE_APPLICATION_CREDENTIALS and DRIVE_FOLDER_ID
 python drive_ingest.py
 ```
 
@@ -55,7 +56,7 @@ crontab -e
 Use the **absolute path** to `run_drive_ingest.sh` on your machine (e.g. `$(pwd)/run_drive_ingest.sh` from the project root).
 
 **Option B – call Python with env file**  
-If you don’t use the script, set `GOOGLE_APPLICATION_CREDENTIALS` (and optionally `DRIVE_FOLDER_ID`) in the crontab or in a small wrapper that sources `.env` then runs `python3 drive_ingest.py`.
+If you don’t use the script, set `GOOGLE_APPLICATION_CREDENTIALS` and `DRIVE_FOLDER_ID` in the crontab or in a small wrapper that sources `.env` then runs `python3 drive_ingest.py`.
 
 ### On-demand via API
 
@@ -63,7 +64,7 @@ With the FastAPI server running:
 
 - **Trigger ingest:**  
   `POST /admin/ingest-drive`  
-  Returns the same JSON summary as `drive_ingest.py` (files_listed, docs_fetched, pdfs_fetched, errors, etc.).
+  Returns the same JSON summary as `drive_ingest.py` (files_listed, docs_fetched, pdfs_fetched, errors, etc.). Requires `DRIVE_FOLDER_ID` (and credentials) in the server environment.
 
 - **Optional auth:**  
   If you set `INGEST_DRIVE_SECRET` in `.env`, require it on each request:

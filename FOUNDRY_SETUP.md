@@ -2,17 +2,27 @@
 
 Use Foundry (Llama or Hugging Face–equivalent model on Azure) when **LOCAL_LLM** is not set or is false. All setup can be done with Azure CLI.
 
+## 0. Configure `.env` for scripts
+
+From the repo root:
+
+```bash
+cp .env.example .env
+```
+
+Set at least `AZURE_SUBSCRIPTION_ID` in `.env` before running `setup-foundry-azure-cli.sh` or other Azure helper scripts. Shell scripts load `.env` automatically via [scripts/load_repo_env.sh](scripts/load_repo_env.sh).
+
 ## 1. One-time setup
 
 ```bash
-# Use project subscription (see .cursorrules)
-export AZURE_SUBSCRIPTION_ID="58587a07-da50-4691-aa9c-f23859d66df3"
 az login
 az account set --subscription "$AZURE_SUBSCRIPTION_ID"
 
 # Install Foundry CLI extension
 az extension add --name cognitiveservices
 ```
+
+(`AZURE_SUBSCRIPTION_ID` can be exported from your filled `.env`.)
 
 ## 2. Run the setup script
 
@@ -29,7 +39,7 @@ This will:
 - List available models (look for Llama / Meta 8B Instruct)
 - Print the endpoint and key to add to your `.env`
 
-Optional overrides (before running the script):
+Optional overrides (environment variables — add to `.env` or export):
 
 - `FOUNDRY_RESOURCE_GROUP` (default: `woccon-foundry-rg`)
 - `FOUNDRY_LOCATION` (default: `eastus2`)
@@ -38,7 +48,7 @@ Optional overrides (before running the script):
 
 ## 3. Create a model deployment
 
-After the script lists models, create a deployment. Use the **name**, **version**, and **format** from the list (e.g. `Meta` for Llama). Example:
+After the script lists models, create a deployment. Use the **name**, **version**, and **format** from the list (e.g. `Meta` for Llama). Example (replace names with your account / resource group / model from `list-models`):
 
 ```bash
 ACCOUNT_NAME="woccon-foundry"
@@ -80,57 +90,56 @@ az cognitiveservices account keys list -n "$ACCOUNT_NAME" -g "$RESOURCE_GROUP" \
   --query "key1" -o tsv
 ```
 
+Put the values in `.env` as `FOUNDRY_ENDPOINT`, `FOUNDRY_API_KEY`, and `FOUNDRY_DEPLOYMENT` (see [.env.example](.env.example)).
+
 ## 5. Test the Foundry version
 
-A `.env` file is already present with your Foundry credentials (endpoint, key, deployment). Ensure you have the `openai` package:
+Ensure you have dependencies:
 
 ```bash
 pip install -r requirements.txt
-# or: pip install openai
 ```
 
-Then run the app (no local Ollama will start; load .env manually if your app doesn't):
+Run the app (`app.py` loads `.env` when `python-dotenv` is installed):
 
 ```bash
-# If your app doesn't load .env automatically, export first:
-export $(grep -v '^#' .env | xargs)
-
 python app.py
 # Or: WOCCON_MODE=server python app.py
 ```
 
-Chat and lessons will use the Foundry deployment (Llama-3-8B-Instruct, not OpenAI models).
+Chat and lessons will use your Foundry deployment (not OpenAI’s consumer API).
 
 ---
 
-## 6. GitHub → Azure deployment (azure-foundry branch)
+## 6. GitHub → Azure deployment (`azure-foundry` branch)
 
-Pushing the `azure-foundry` branch triggers a GitHub Actions workflow that builds the app (Dockerfile.azure) and deploys to Azure Container Apps.
+Pushing the `azure-foundry` branch triggers a GitHub Actions workflow that builds the app (`Dockerfile.azure`) and deploys to Azure Container Apps.
 
 **One-time setup**
 
-1. **Create Azure resources** (if not already): in the same subscription, create a resource group and Container App environment/app. From the repo root:
-   ```bash
-   # Uses subscription 2fef1120, creates rg-wocconwaker, ACR, wocconwaker-env, wocconwaker-app
-   ./deploy-container-app.sh
-   ```
-   This creates the ACR and Container App; the first image may be local-Ollama. After the workflow runs, the app will use Foundry.
+1. **Create Azure resources** (resource group, Container Apps environment, ACR, Container App) in your subscription — use the Azure Portal, Bicep/Terraform, or your own deploy script. Note the resource group name and container app name.
 
-2. **Create a service principal** (for GitHub to deploy):
+2. **Repository variables** (Settings → Secrets and variables → Actions → **Variables**): set
+   - `AZURE_RESOURCE_GROUP` – resource group containing the Container App and ACR
+   - `AZURE_CONTAINER_APP_NAME` – Container App name
+   - Optionally `ACR_IMAGE_NAME` – Docker image repository name (default `wocconwaker` if unset)
+
+3. **Create a service principal** (for GitHub to deploy), scoped to your resource group:
+
    ```bash
    az ad sp create-for-rbac --name "WocconWaker-GitHub" --role contributor \
-     --scopes /subscriptions/2fef1120-5b1e-4224-9b93-091eb5d5424e/resourceGroups/rg-wocconwaker \
+     --scopes /subscriptions/<YOUR_SUBSCRIPTION_ID>/resourceGroups/<YOUR_RESOURCE_GROUP> \
      --sdk-auth
    ```
-   Use the JSON output to fill GitHub secrets (or set the four fields below).
 
-3. **GitHub repo secrets** (Settings → Secrets and variables → Actions): add
-   - `AZURE_CLIENT_ID`
-   - `AZURE_TENANT_ID`
-   - `AZURE_SUBSCRIPTION_ID` = `2fef1120-5b1e-4224-9b93-091eb5d5424e`
-   - `AZURE_CLIENT_SECRET`
-   - `FOUNDRY_ENDPOINT` = `https://woccon-foundry.openai.azure.com`
-   - `FOUNDRY_API_KEY` = (your Foundry key)
-   - `FOUNDRY_DEPLOYMENT` = `Llama-3-8B-Instruct`
+   Store the resulting JSON as the `AZURE_CREDENTIALS` **secret** (or use OIDC per [Azure/login](https://github.com/Azure/login) docs).
 
-After pushing to `azure-foundry`, the workflow builds, pushes the image to ACR, and updates the Container App. The run summary shows the app URL and **Messenger webhook URL** (`https://<fqdn>/webhook`).
+4. **GitHub secrets** (Settings → Secrets and variables → Actions): add
+   - `AZURE_CREDENTIALS` – output of `create-for-rbac --sdk-auth` (JSON) if using that login method
+   - `FOUNDRY_ENDPOINT`
+   - `FOUNDRY_API_KEY`
+   - `FOUNDRY_DEPLOYMENT`
+
+After pushing to `azure-foundry`, the workflow builds, pushes the image to ACR, and updates the Container App. The run summary shows the app URL and Messenger webhook URL (`https://<fqdn>/webhook`).
+
+**Migrating an existing fork:** if the workflow previously used hardcoded resource names, define repository variables `AZURE_RESOURCE_GROUP` and `AZURE_CONTAINER_APP_NAME` to match your Azure resources before the next run.

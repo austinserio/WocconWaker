@@ -24,7 +24,13 @@ app = FastAPI(title="Webhook Test Server")
 
 # Get the verification token from environment
 VERIFY_TOKEN = os.environ.get('VERIFY_TOKEN')
-logger.info(f"Server starting with VERIFY_TOKEN: {VERIFY_TOKEN}")
+_vt = VERIFY_TOKEN or ""
+logger.info(
+    "Server starting; VERIFY_TOKEN %s",
+    "set (masked)" if _vt else "not set",
+)
+if _vt:
+    logger.debug("VERIFY_TOKEN prefix: %s****", _vt[:4] if len(_vt) > 4 else "****")
 
 @app.get("/")
 async def root():

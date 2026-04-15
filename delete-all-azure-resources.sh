@@ -3,6 +3,10 @@
 
 set -e
 
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$ROOT/scripts/load_repo_env.sh" "$ROOT"
+
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -15,8 +19,7 @@ echo -e "${RED}║     EMERGENCY: Deleting ALL Azure Resources              ║$
 echo -e "${RED}╚════════════════════════════════════════════════════════════╝${NC}"
 echo ""
 
-# Set to WocconWaker subscription
-WOCCON_SUBSCRIPTION="2fef1120-5b1e-4224-9b93-091eb5d5424e"
+WOCCON_SUBSCRIPTION="${AZURE_SUBSCRIPTION_ID:?Set AZURE_SUBSCRIPTION_ID in .env (see .env.example)}"
 az account set --subscription "$WOCCON_SUBSCRIPTION"
 SUB_NAME=$(az account show --query name -o tsv)
 SUB_ID=$(az account show --query id -o tsv)
@@ -26,7 +29,7 @@ echo -e "${GREEN}Subscription: ${SUB_NAME}${NC}"
 echo -e "${GREEN}User: ${USER}${NC}"
 echo ""
 
-RESOURCE_GROUP="rg-wocconwaker"
+RESOURCE_GROUP="${AZURE_RESOURCE_GROUP:?Set AZURE_RESOURCE_GROUP in .env (see .env.example)}"
 
 # Check if resource group exists
 if ! az group show --name "$RESOURCE_GROUP" &>/dev/null; then
