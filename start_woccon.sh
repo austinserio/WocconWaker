@@ -8,10 +8,12 @@ echo "$(date): Starting WocconWaker setup" >> "$LOG_FILE"
 # Install necessary tools
 apt-get update && apt-get install -y tmux git curl >> "$LOG_FILE" 2>&1
 
-# Clone or update the repo
+# Clone or update the repo (never embed tokens in this script).
+# For a private repo, set WOCCON_GIT_CLONE_URL to e.g. https://<TOKEN>@github.com/org/WocconWaker.git in the host environment.
+REPO_URL="${WOCCON_GIT_CLONE_URL:-https://github.com/austinserio/WocconWaker.git}"
 if [ ! -d "$REPO_DIR/.git" ]; then
     echo "$(date): Cloning repository" >> "$LOG_FILE"
-    git clone -b ollama https://<REDACTED_GITHUB_PAT>@github.com/austinserio/WocconWaker.git "$REPO_DIR" >> "$LOG_FILE" 2>&1
+    git clone -b ollama "$REPO_URL" "$REPO_DIR" >> "$LOG_FILE" 2>&1
 else
     echo "$(date): Repository exists, pulling latest" >> "$LOG_FILE"
     cd "$REPO_DIR"

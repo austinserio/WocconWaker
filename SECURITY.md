@@ -15,3 +15,26 @@ Operational values (subscription IDs, resource names, hostnames) should live in 
 ## GitHub Actions
 
 Store `AZURE_CREDENTIALS`, `FOUNDRY_API_KEY`, and related values in **Actions secrets**. Store non-secret configuration such as `AZURE_RESOURCE_GROUP` and `AZURE_CONTAINER_APP_NAME` in **Actions variables**. See [.github/workflows/deploy-azure-foundry.yml](.github/workflows/deploy-azure-foundry.yml).
+
+## Secret scan (full git history)
+
+Run locally:
+
+```bash
+brew install gitleaks   # or see https://github.com/gitleaks/gitleaks
+gitleaks detect --source .
+```
+
+Repository config: [.gitleaks.toml](.gitleaks.toml) (allows `.env.example` placeholders only; do not put real secrets there).
+
+### Latest scan summary (maintainers: update after each run)
+
+| Date | Tool | Result |
+|------|------|--------|
+| 2026-04-15 | gitleaks 8.30.1 + `git filter-repo` | History rewritten: `QUICK_START.md` removed from all commits; leaked token strings redacted. **Revoke any GitHub PAT that was ever embedded in old `start_woccon.sh`** (Settings → Developer settings → Personal access tokens). |
+
+**`.env.example`** is allowlisted in [.gitleaks.toml](.gitleaks.toml) for empty placeholder lines only — never commit real secrets there.
+
+**After a history rewrite:** everyone with a clone must **re-clone** or reset to the new history. To update GitHub: `git push --force-with-lease origin --all` and `git push --force-with-lease origin --tags` (coordinate with collaborators).
+
+**Ongoing:** run `gitleaks detect --source .` before releases; optional CI job recommended.

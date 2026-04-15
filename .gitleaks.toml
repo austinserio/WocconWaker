@@ -1,0 +1,13 @@
+# Local / CI secret scanning (gitleaks). Run: gitleaks detect --source .
+# Extend defaults but allow template files that only contain empty placeholders.
+
+title = "WocconWaker gitleaks"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Committed env templates must never hold real secrets; empty keys trigger false positives."
+paths = [
+  '''\.env\.example$''',
+]
