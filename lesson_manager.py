@@ -2,6 +2,13 @@ import os, json, re, logging, random
 from collections import deque
 from typing import Dict, List, Tuple, Optional, Any
 from llm_client import llm_chat
+from lesson_intent import (
+    classify_exit_intent_via_llm,
+    classify_explain_intent_via_llm,
+    has_obvious_exit_intent,
+    has_obvious_explain_intent,
+    response_looks_like_answer,
+)
 
 log = logging.getLogger("woccon_assistant")
 
@@ -188,8 +195,8 @@ class LessonManager:
             hint = self.generate_hint()
             return (f"{hint}\n\nWould you like to try answering now, or do you need more help?", False)
         
-        # HANDLE EXIT REQUESTS
-        if self.is_exit_request(usr_lower):
+        # HANDLE EXIT REQUESTS (skip when message looks like an answer to the current word)
+        if self.is_exit_request(usr_lower, expected_answer):
             self.exit_attempts += 1
             self.paused = False  # Reset pause state
             
@@ -203,8 +210,8 @@ class LessonManager:
                     False
                 )
                 
-        # Confirm exit if they previously wanted to exit
-        if self.exit_attempts > 0 and re.search(r"\b(yes|yeah|yep|yup|correct|right|sure|ok|okay)\b", usr_lower):
+        # Confirm exit if they previously wanted to exit (explicit only)
+        if self.exit_attempts > 0 and re.search(r"\b(yes|yeah|yep|yup)\b", usr_lower):
             return (f"👋 Vocabulary lesson exited. Final score: {self.score}. Type 'lesson' to start another.", True)
             
         # Reset exit counter if they want to continue
@@ -280,7 +287,7 @@ class LessonManager:
                 return (response, False)
         
         # HANDLE EXPLANATION REQUESTS
-        if self.is_explanation_request(usr_lower):
+        if self.is_explanation_request(usr_lower, expected_answer):
             if self.parent and hasattr(self.parent, 'woccon'):
                 self.paused = True
                 self.off_topic_counter = 0
@@ -441,24 +448,13 @@ class LessonManager:
                 self.off_topic_counter = 0
                 return self._advance("Moving on to the next word!")
                 
-            # During reinforcement, we need to be careful not to interpret typing the answer as an exit request
-            # Check for exact match with expected answer first
-            expected_answer_lower = expected_answer.lower()
-            if usr_lower == expected_answer_lower or usr_lower == expected_answer_lower.replace(",", ""):
-                # They typed the exact answer - advance to next word
+            # Reinforce step requires exact spelling (case-insensitive), matching the prompt
+            if self._is_exact_reinforce_match(usr_lower, expected_answer):
                 self.mode = "woc_to_eng" if self.mode == "eng_to_woc" else "eng_to_woc"
                 self.off_topic_counter = 0
                 return self._advance("✅ Great! On to the next one 👏")
-                
-            # More lenient matching for reinforcement stage
-            if self._is_close_answer(usr_lower, expected_answer, threshold=0.6):
-                # Toggle mode
-                self.mode = "woc_to_eng" if self.mode == "eng_to_woc" else "eng_to_woc"
-                self.off_topic_counter = 0
-                return self._advance("✅ Great! On to the next one 👏")
-            
-            # Only check for exit request if it's not similar to the expected answer
-            if self.is_exit_request(usr_lower) and self._string_similarity(usr_lower, expected_answer_lower) < 0.5:
+
+            if self.is_exit_request(usr_lower, expected_answer):
                 self.exit_attempts += 1
                 
                 # If they've tried to exit multiple times, just let them out
@@ -473,18 +469,22 @@ class LessonManager:
                 
             return ("❌ Try typing it again, or say 'skip' to move on to the next word:", False)
             
+    def _is_exact_reinforce_match(self, user_answer: str, expected_answer: str) -> bool:
+        """Reinforce stage: exact match only (case-insensitive, ignore commas)."""
+        def norm(s: str) -> str:
+            return s.lower().strip().replace(",", "")
+        return norm(user_answer) == norm(expected_answer)
+
     def _is_correct_answer(self, user_answer: str, expected_answer: str) -> bool:
         """Check if the user's answer is correct with natural language flexibility."""
-        # Exact match
-        if user_answer == expected_answer:
+        if response_looks_like_answer(
+            user_answer,
+            expected_answer,
+            self.alternative_answers,
+            similarity_fn=self._string_similarity,
+            similarity_threshold=0.8,
+        ):
             return True
-            
-        # For English answers (woc_to_eng mode), be more flexible
-        if expected_answer in user_answer or user_answer in expected_answer:
-            # One is contained within the other
-            return True
-            
-        # Check for close match using character similarity
         return self._string_similarity(user_answer, expected_answer) > 0.8
 
     def _is_close_answer(self, user_answer: str, expected_answer: str, threshold: float = 0.7) -> bool:
@@ -592,95 +592,35 @@ class LessonManager:
             
         return any(re.search(pattern, text) for pattern in dont_know_patterns)
 
-    def is_exit_request(self, text: str) -> bool:
-        """Check if user is trying to exit the lesson using LLM contextual understanding."""
-        # Quick keyword check for very obvious cases
-        obvious_exit_words = ['exit', 'quit', 'stop', 'end', 'leave', 'cancel']
-        if any(word in text.lower() for word in obvious_exit_words):
+    def is_exit_request(self, text: str, expected_answer: str = "") -> bool:
+        """Check if user wants to exit. Fast path first; LLM only when ambiguous."""
+        if expected_answer and response_looks_like_answer(
+            text,
+            expected_answer,
+            self.alternative_answers,
+            similarity_fn=self._string_similarity,
+        ):
+            return False
+        if has_obvious_exit_intent(text):
             return True
-            
-        # For ambiguous cases, use LLM to understand intent
-        try:
-            prompt = f"""
-            Analyze this user message in the context of a vocabulary lesson to determine if they want to exit/leave the lesson.
+        return classify_exit_intent_via_llm(
+            text, "vocabulary", self.parent.model, llm_chat
+        )
 
-            USER MESSAGE: "{text}"
-            CONTEXT: The user is currently in the middle of a vocabulary learning lesson.
-
-            Determine if the user wants to:
-            - EXIT the lesson (stop doing the lesson entirely)
-            - CONTINUE with the lesson (stay in the lesson)
-
-            Consider expressions like:
-            - "I'm done" = EXIT
-            - "That's enough" = EXIT  
-            - "This is hard" = CONTINUE (they're expressing difficulty, not wanting to leave)
-            - "Uhhhhhhhhhhhhh got a suggestion?" = CONTINUE (asking for help, not leaving)
-            - "I give up" = EXIT
-            - "Can you help me?" = CONTINUE
-
-            Respond with only: EXIT or CONTINUE
-            """
-            
-            messages = [{"role": "user", "content": prompt}]
-            response = llm_chat(
-                model=self.parent.model,
-                messages=messages,
-                options={"temperature": 0.1, "num_predict": 10}
-            )["message"]["content"].strip().upper()
-            
-            return "EXIT" in response
-            
-        except Exception as e:
-            log.error(f"Error in LLM exit detection: {e}")
-            # Fallback to conservative approach - only obvious exit words
-            return any(word in text.lower() for word in obvious_exit_words)
-
-    def is_explanation_request(self, text: str) -> bool:
-        """Check if user is asking for an explanation using LLM contextual understanding."""
-        # Quick keyword check for very obvious cases
-        obvious_explain_words = ['explain', 'explanation', 'why', 'how', 'what', 'help', 'suggestion', 'hint']
-        if any(word in text.lower() for word in obvious_explain_words):
-            # Use LLM to distinguish between explanation requests and other types of questions
-            try:
-                prompt = f"""
-                Analyze this user message in the context of a vocabulary lesson to determine their intent.
-
-                USER MESSAGE: "{text}"
-                CONTEXT: The user is currently in a vocabulary learning lesson and just encountered a question.
-
-                Determine if the user wants:
-                - EXPLANATION (they want more information about the current word/concept)
-                - HELP (they want assistance with the current question)
-                - OTHER (they're asking something unrelated or just answering)
-
-                Examples:
-                - "explain this word" = EXPLANATION
-                - "Uhhhhhhhhhhhhh got a suggestion?" = HELP
-                - "help me" = HELP
-                - "what does this mean?" = EXPLANATION
-                - "I don't know what this is" = HELP
-                - "can you tell me more?" = EXPLANATION
-                - "yakau" = OTHER (just an answer)
-
-                Respond with only: EXPLANATION, HELP, or OTHER
-                """
-                
-                messages = [{"role": "user", "content": prompt}]
-                response = llm_chat(
-                    model=self.parent.model,
-                    messages=messages,
-                    options={"temperature": 0.1, "num_predict": 15}
-                )["message"]["content"].strip().upper()
-                
-                return "EXPLANATION" in response or "HELP" in response
-                
-            except Exception as e:
-                log.error(f"Error in LLM explanation detection: {e}")
-                # Fallback to keyword check
-                return any(word in text.lower() for word in obvious_explain_words)
-        
-        return False
+    def is_explanation_request(self, text: str, expected_answer: str = "") -> bool:
+        """Check if user is asking for an explanation. Fast path first; LLM when needed."""
+        if expected_answer and response_looks_like_answer(
+            text,
+            expected_answer,
+            self.alternative_answers,
+            similarity_fn=self._string_similarity,
+        ):
+            return False
+        if not has_obvious_explain_intent(text):
+            return False
+        return classify_explain_intent_via_llm(
+            text, "vocabulary", self.parent.model, llm_chat
+        )
     
     def is_continue_request(self, text: str) -> bool:
         """Check if user wants to continue with the lesson."""
