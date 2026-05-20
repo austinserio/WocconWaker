@@ -11,6 +11,7 @@ from woccon_enhancer import WocconEnhancer
 from woccon_orthographic_validator import FactualGuardRailIntegration
 from main import WocconT5
 from fastapi import FastAPI, Request, Response, HTTPException, BackgroundTasks
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from messenger_integration import MessengerIntegration
 import os
@@ -41,6 +42,28 @@ app = FastAPI(
     description="A FastAPI server for the Wocconwaker language assistant with Messenger integration",
     version="1.0.0"
 )
+
+# Control panel API + CORS for Vite dev
+try:
+    from panel_api.config import get_settings as _panel_settings
+    from panel_api.router import api_router as _panel_api_router
+
+    _ps = _panel_settings()
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=_ps.cors_origins_list,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    app.include_router(_panel_api_router)
+    _panel_dist = os.path.join(os.path.dirname(__file__), "panel", "dist")
+    if os.path.isdir(_panel_dist):
+        from fastapi.staticfiles import StaticFiles
+
+        app.mount("/panel", StaticFiles(directory=_panel_dist, html=True), name="panel")
+except ImportError as _panel_err:
+    print(f"Panel API not loaded: {_panel_err}")
 
 # Create a global assistant instance
 assistant = None
@@ -728,6 +751,47 @@ def start_ollama():
 @app.on_event("startup")
 async def startup_event():
     """Run when the FastAPI server starts up."""
+    try:
+        from panel_api.db import get_session_factory, init_db
+        from panel_api.services.bootstrap import run_bootstrap
+
+        init_db()
+        db = get_session_factory()()
+        try:
+            summary = run_bootstrap(db)
+            print(f"Panel bootstrap: {summary}")
+            from panel_api.services.reclassify import reclassify_all_grammar
+            from panel_api.db import CanonicalRule
+
+            unclassified = (
+                db.query(CanonicalRule)
+                .filter(
+                    CanonicalRule.category == "grammar",
+                    CanonicalRule.grammar_domain.is_(None),
+                )
+                .count()
+            )
+            if unclassified > 0:
+                rc = reclassify_all_grammar(db)
+                print(f"Panel reclassified grammar rules: {rc}")
+            from panel_api.db import CanonicalLexicon
+            from panel_api.services.lexicon_reclassify import reclassify_all_lexicon
+
+            unclassified_lex = (
+                db.query(CanonicalLexicon)
+                .filter(CanonicalLexicon.teaching_unit.is_(None))
+                .count()
+            )
+            if unclassified_lex > 0:
+                lx = reclassify_all_lexicon(db)
+                print(f"Panel reclassified lexicon: {lx}")
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"Panel DB bootstrap skipped: {e}")
+
+    app.state.assistant = assistant
+
     if _use_local_llm():
         print("LOCAL_LLM=true: Starting Ollama 🦙")
         start_ollama()

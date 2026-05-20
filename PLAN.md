@@ -8,7 +8,7 @@
 | 2. Schedule & on-demand | **Superseded** | See revised approach below (upload-first, no scheduled Drive scrape) |
 | 3. Structured extraction | **Done** | LLM + merge + verification; Sonnet/Haiku; source_url in output |
 | 4. RAG & dictionary | **Done** | Reload endpoint + [Community] RAG tagging and precedence |
-| 5. Frappe UI | **Revised** | Control-panel vision below; upload → review → commit flow |
+| 5. Control panel UI | **In progress** | Monorepo `panel/` + `panel_api/` — see [docs/CONTROL_PANEL.md](docs/CONTROL_PANEL.md) (replaces Frappe plan) |
 
 ---
 
@@ -88,9 +88,10 @@ Rebuild the **logic behind Woccon** (rules, lexicon, morphology, phonology) in a
 
 ---
 
-## Phase 5 (revised): Frappe UI — control panel and workflow
+## Phase 5 (revised): Control panel — monorepo SPA + JWT API
 
-- **Scope:** Frappe as the main “control panel” for the language.
+- **Scope:** Tailwind/React panel in `panel/` and FastAPI routes in `panel_api/` (see [docs/CONTROL_PANEL.md](docs/CONTROL_PANEL.md)). Frappe approach archived in [docs/FRAPPE_WOCCON_APP.md](docs/FRAPPE_WOCCON_APP.md).
+- **Former Frappe scope (now implemented in panel):**
 - **Structure:**
   - **Woccon Waker plugin** (or app) in Frappe.
   - **Tabs / top-level pages:** Grammar, Lexicon, Pronunciation, etc.

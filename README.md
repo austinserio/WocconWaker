@@ -14,6 +14,7 @@ python app.py
 - **[CLAUDE.md](CLAUDE.md)** – commands, architecture, and environment variables.
 - **[LOCAL_DEV.md](LOCAL_DEV.md)** – Messenger webhooks and local tunnels.
 - **[DRIVE_INGEST.md](DRIVE_INGEST.md)** – Google Drive → staging ingest (`DRIVE_FOLDER_ID` and service account required).
+- **[docs/CONTROL_PANEL.md](docs/CONTROL_PANEL.md)** – JWT admin UI (`panel/`), upload/review/commit workflow.
 - **[FOUNDRY_SETUP.md](FOUNDRY_SETUP.md)** – Azure Foundry setup via CLI.
 - **[SECURITY.md](SECURITY.md)** – reporting issues; pre-publication checks.
 

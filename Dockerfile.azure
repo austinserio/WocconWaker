@@ -1,5 +1,12 @@
-# Azure Container Apps (Foundry mode): CPU-only, no local Ollama.
+# Azure Container Apps: API + control panel static assets (Foundry mode).
 # Set LOCAL_LLM=false and FOUNDRY_* env vars in the container.
+FROM node:20-alpine AS panel-build
+WORKDIR /panel
+COPY panel/package.json panel/package-lock.json* ./
+RUN npm install
+COPY panel/ ./
+RUN npm run build
+
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -12,10 +19,11 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+COPY --from=panel-build /panel/dist ./panel/dist
 
 EXPOSE 8000
 
-# app.py is the FastAPI module
 ENV WOCCON_MODE=server
 ENV PORT=8000
+ENV DATABASE_URL=sqlite:///./data/woccon.db
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -9,3 +9,6 @@ __pycache__/
 venv/
 .env.local
 cloudflared.yml
+data/
+panel/node_modules/
+panel/dist/

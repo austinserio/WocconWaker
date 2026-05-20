@@ -139,7 +139,8 @@ python drive_ingest.py
 - `POST /admin/ingest-drive` - Run Drive ingest on demand (optional: X-Ingest-Secret or ?secret=)
 - `GET /admin/ingest-drive/status` - Last ingest result
 - `POST /admin/reload-language` - Reload dictionary/rules and rebuild RAG (same auth as ingest; optional body: `dict_path`, `rules_path`)
-- `POST /admin/extract-document` - Extract one document for Frappe (same auth). JSON: `{"text","source_path","source_url"}` or multipart with `.txt` file + form fields. Returns `lexicon_entries`, `grammar_notes`, `pronunciation_notes`, `cultural_notes`, `source_path`, `source_url`.
+- `POST /admin/extract-document` - Extract one document (same auth as ingest). JSON or multipart `.txt`.
+- **Control panel** (`panel_api`, JWT): `POST /api/auth/login/json`, `POST /api/documents`, `GET /api/pending/*`, `GET /api/rules`, `PATCH /api/rules/reorder`, `GET /api/lexicon`, `POST /api/admin/commit`. See [docs/CONTROL_PANEL.md](docs/CONTROL_PANEL.md). Env: `DATABASE_URL`, `JWT_SECRET`, `PANEL_ADMIN_EMAIL`, `PANEL_ADMIN_PASSWORD`, `PANEL_CORS_ORIGINS`, `WOCCON_UPLOAD_DIR`, `DUPLICATE_THRESHOLD`.
 
 ## Notes
 
