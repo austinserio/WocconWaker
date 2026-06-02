@@ -11,10 +11,14 @@ log = logging.getLogger("reclassify")
 def reclassify_all_grammar(db: Session) -> dict:
     counts = {"canonical": 0, "pending": 0}
     for row in db.query(CanonicalRule).filter(CanonicalRule.category == "grammar").all():
-        apply_classification_to_rule(row, "grammar", row.content)
+        apply_classification_to_rule(
+            row, "grammar", row.content, grammar_lineage=getattr(row, "grammar_lineage", None)
+        )
         counts["canonical"] += 1
     for row in db.query(PendingRule).filter(PendingRule.category == "grammar").all():
-        apply_classification_to_rule(row, "grammar", row.content)
+        apply_classification_to_rule(
+            row, "grammar", row.content, grammar_lineage=getattr(row, "grammar_lineage", None)
+        )
         counts["pending"] += 1
     db.commit()
     log.info("Reclassified grammar rules: %s", counts)

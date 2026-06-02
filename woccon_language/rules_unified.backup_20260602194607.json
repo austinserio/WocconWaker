@@ -1,0 +1,2229 @@
+{
+  "language_name": "Woccon",
+  "language_family": "Eastern Siouan (Coastal Catawban)",
+  "historical_location": "North Carolina coastal plain (lower Neuse River), between Neuse River and Contentnea Creek",
+  "documentation_source": "John Lawson's word list (1709), containing 143 attested words",
+  "historical_context": {
+    "tribe_information": "Woccon tribe first documented in 1701 by John Lawson",
+    "population": "Estimated 500-600 individuals in early 1700s",
+    "location": "About two leagues east of the southern villages of the Tuscarora tribe, near present-day Goldsboro/Snow Hill (Wayne/Greene County)",
+    "fate": "Last mentioned in 1712 treaty; likely absorbed by Tuscarora following the Tuscarora wars of 1711-1713"
+  },
+  "phonology": {
+    "vocalic_phonemes": {
+      "short_oral_vowels": [
+        "i",
+        "e",
+        "a",
+        "u"
+      ],
+      "long_oral_vowels": [
+        "i:",
+        "e:",
+        "a:",
+        "u:"
+      ],
+      "nasal_vowels": [
+        "ĩ",
+        "ẽ",
+        "ã",
+        "ũ"
+      ]
+    },
+    "consonantal_phonemes": [
+      {
+        "grapheme": "p",
+        "features": "bilabial stop"
+      },
+      {
+        "grapheme": "t",
+        "features": "alveolar stop"
+      },
+      {
+        "grapheme": "k",
+        "features": "velar stop"
+      },
+      {
+        "grapheme": "č",
+        "features": "palatal affricate",
+        "note": "represented as 'č' in linguistic notation"
+      },
+      {
+        "grapheme": "s",
+        "features": "alveolar fricative"
+      },
+      {
+        "grapheme": "š",
+        "features": "palatal fricative"
+      },
+      {
+        "grapheme": "ś",
+        "features": "palatalized alveolar fricative"
+      },
+      {
+        "grapheme": "h",
+        "features": "glottal fricative"
+      },
+      {
+        "grapheme": "m",
+        "features": "bilabial nasal"
+      },
+      {
+        "grapheme": "n",
+        "features": "alveolar nasal"
+      },
+      {
+        "grapheme": "r",
+        "features": "liquid",
+        "note": "defective in Catawba, cannot occur word-initially"
+      },
+      {
+        "grapheme": "w",
+        "features": "labial-velar approximant"
+      },
+      {
+        "grapheme": "y",
+        "features": "palatal approximant"
+      }
+    ],
+    "phonological_processes": [
+      {
+        "process": "nasalization",
+        "description": "In some words, a long oral vowel in Catawba corresponds to a nasal vowel in Woccon",
+        "examples": [
+          {
+            "Woccon": "kã·ya",
+            "Catawba": "ka:ya",
+            "gloss": "terrapin"
+          }
+        ]
+      },
+      {
+        "process": "denasalization",
+        "description": "Instances of m and n before oral vowels became p and d in Catawba but not in Woccon",
+        "examples": [
+          {
+            "Woccon": "nãpusuʔ",
+            "Catawba": "dãpusuʔ",
+            "gloss": "eight"
+          }
+        ]
+      },
+      {
+        "process": "voicing_assimilation",
+        "description": "Voicing of p and t before voiced consonants",
+        "examples": [
+          {
+            "Woccon": "witʰa:ʔ",
+            "Catawba": "witʰa:ʔ",
+            "gloss": "rat"
+          }
+        ]
+      }
+    ],
+    "sound_correspondences": {
+      "Woccon_to_Catawba": [
+        {
+          "Woccon": "p",
+          "Catawba": "p"
+        },
+        {
+          "Woccon": "t",
+          "Catawba": "t"
+        },
+        {
+          "Woccon": "k",
+          "Catawba": "k"
+        },
+        {
+          "Woccon": "č",
+          "Catawba": "č"
+        },
+        {
+          "Woccon": "s",
+          "Catawba": "s"
+        },
+        {
+          "Woccon": "š",
+          "Catawba": "š"
+        },
+        {
+          "Woccon": "ś",
+          "Catawba": "s"
+        },
+        {
+          "Woccon": "h",
+          "Catawba": "s"
+        },
+        {
+          "Woccon": "h",
+          "Catawba": "h"
+        },
+        {
+          "Woccon": "m",
+          "Catawba": "m",
+          "note": "In Catawba, m often became p before oral vowels"
+        },
+        {
+          "Woccon": "n",
+          "Catawba": "n",
+          "note": "In Catawba, n often became d before oral vowels"
+        },
+        {
+          "Woccon": "n",
+          "Catawba": "r"
+        },
+        {
+          "Woccon": "r",
+          "Catawba": "n"
+        },
+        {
+          "Woccon": "r",
+          "Catawba": "r",
+          "note": "In Catawba, initial r appears as d before oral vowels and n before nasal vowels"
+        },
+        {
+          "Woccon": "w",
+          "Catawba": "w"
+        },
+        {
+          "Woccon": "y",
+          "Catawba": "y"
+        },
+        {
+          "Woccon": "m",
+          "Catawba": "mn"
+        }
+      ]
+    }
+  },
+  "morphology": {
+    "lexical_morphology": {
+      "simple_words": {
+        "description": "Words composed of a single morpheme",
+        "examples": [
+          {
+            "word": "kus",
+            "gloss": "corn"
+          },
+          {
+            "word": "witʰa:ʔ",
+            "gloss": "rat"
+          }
+        ]
+      },
+      "complex_words": {
+        "description": "Words composed of two or more morphemes",
+        "examples": [
+          {
+            "word": "yẽhu:",
+            "gloss": "wind",
+            "components": "ye (air) + hu: (come)"
+          }
+        ]
+      }
+    },
+    "common_roots": [
+      {
+        "root": "ya-",
+        "meaning": "water, fluid, natural element",
+        "derivatives": [
+          {
+            "form": "yawowa",
+            "gloss": "rain"
+          },
+          {
+            "form": "yẽhiya:",
+            "gloss": "water"
+          }
+        ]
+      },
+      {
+        "root": "yau-",
+        "meaning": "path, way",
+        "derivatives": [
+          {
+            "form": "yauh-he",
+            "gloss": "Indians (person-way)"
+          },
+          {
+            "form": "yau",
+            "gloss": "fire"
+          }
+        ]
+      },
+      {
+        "root": "watta-",
+        "meaning": "container, vessel",
+        "derivatives": [
+          {
+            "form": "wattape",
+            "gloss": "gourd, bottle"
+          },
+          {
+            "form": "wattapi",
+            "gloss": "star vessel"
+          }
+        ]
+      },
+      {
+        "root": "roo-",
+        "meaning": "cloth, hide, material",
+        "derivatives": [
+          {
+            "form": "roo-iune",
+            "gloss": "blankets"
+          }
+        ]
+      }
+    ],
+    "reduplication": {
+      "description": "Repetition of all or part of a root to signal frequency or intensity",
+      "examples": [
+        {
+          "word": "kitkilare:",
+          "gloss": "break in pieces",
+          "derivation": "From root kit- (break in two) with reduplication"
+        },
+        {
+          "word": "wawawa",
+          "gloss": "snow",
+          "derivation": "Intensive reduplication"
+        },
+        {
+          "word": "sapĩ pẽ:ʔpẽ:ʔ",
+          "gloss": "mat",
+          "derivation": "From root pẽ:ʔ (step) with frequentive reduplication"
+        }
+      ]
+    },
+    "number_system": {
+      "type": "partial_quinary/decimal",
+      "description": "Numbers show internal structure with identifiable roots",
+      "numerals": [
+        {
+          "value": 1,
+          "form": "Tonne",
+          "woccon": "tu",
+          "catawba": "tu"
+        },
+        {
+          "value": 2,
+          "form": "Num-perre",
+          "woccon": "nũpari",
+          "catawba": "nũpari",
+          "root": "nqp"
+        },
+        {
+          "value": 3,
+          "form": "Nam-mee",
+          "woccon": "nã:misa:",
+          "catawba": "nãm",
+          "root": "nam"
+        },
+        {
+          "value": 4,
+          "form": "Punnum-punne",
+          "woccon": "pũ:nũpari",
+          "catawba": "pũnũpari"
+        },
+        {
+          "value": 5,
+          "form": "Webtau",
+          "woccon": "wεptau"
+        },
+        {
+          "value": 6,
+          "form": "Is-sto",
+          "woccon": "ĩštu"
+        },
+        {
+          "value": 7,
+          "form": "Nommis-sau",
+          "woccon": "nã:misa:",
+          "note": "contains nam (three) plus ending"
+        },
+        {
+          "value": 8,
+          "form": "Nupsau",
+          "woccon": "nãpusa:",
+          "note": "contains nqp (two) plus ending"
+        },
+        {
+          "value": 9,
+          "form": "Wehere",
+          "woccon": "waʔkã:re",
+          "catawba": "waʔkã:",
+          "note": "literally 'there are nine'"
+        },
+        {
+          "value": 10,
+          "form": "Soone noponne",
+          "woccon": "napnẽ:",
+          "alternate_form": "Napnẽ:"
+        },
+        {
+          "value": 11,
+          "form": "Tonne hauk pea",
+          "woccon": "tu hã:ksa:ʔ",
+          "structure": "one plus eleven",
+          "note": "transcription error in original; likely 'Tonne hauk sea'"
+        },
+        {
+          "value": 12,
+          "form": "Soone noponne nam-mee",
+          "structure": "ten three",
+          "note": "reconstructed form"
+        }
+      ],
+      "note": "Possible subtractive formation for 7 and 8 meaning '(10) lacking 3' and '(10) lacking 2'"
+    },
+    "affixes": {
+      "prefixes": [
+        {
+          "form": "watta-",
+          "function": "container prefix",
+          "examples": [
+            "wattape (gourd/bottle)",
+            "wattapi (star vessel)"
+          ],
+          "type": "containers"
+        }
+      ],
+      "suffixes": [
+        {
+          "form": "-wa",
+          "function": "indicates natural phenomena or repeated actions",
+          "examples": [
+            "wawawa (snow)",
+            "yawowa (rain)"
+          ],
+          "type": "natural_phenomena"
+        },
+        {
+          "form": "-he",
+          "function": "nominal suffix, often in terms for animate beings",
+          "examples": [
+            "yauh-he (Indians)",
+            "tauh-he (dog)"
+          ],
+          "type": "animate_beings"
+        },
+        {
+          "form": "-iune",
+          "function": "indicates manufactured or processed items",
+          "examples": [
+            "roo-iune (blankets)"
+          ],
+          "type": "artifacts"
+        },
+        {
+          "form": "-pe",
+          "function": "indicates containers or vessels",
+          "examples": [
+            "wattape (gourd/bottle)"
+          ],
+          "type": "containers"
+        },
+        {
+          "form": "-re",
+          "function": "independent/indicative mode marker",
+          "examples": [
+            "kuwã:re (he kills it)",
+            "waʔkã:re (there are nine)"
+          ],
+          "type": "modal"
+        },
+        {
+          "form": "-hauk",
+          "function": "connective",
+          "meaning": "plus",
+          "examples": [
+            "Tonne hauk pea (one plus eleven)"
+          ],
+          "type": "connectives"
+        }
+      ]
+    },
+    "inflectional_morphology": {
+      "modes": [
+        {
+          "name": "independent",
+          "marker": "-re",
+          "description": "Indicates statements or facts",
+          "examples": [
+            {
+              "form": "kuwã:re",
+              "gloss": "he kills it"
+            },
+            {
+              "form": "waʔkã:re",
+              "gloss": "there are nine"
+            }
+          ]
+        },
+        {
+          "name": "participial",
+          "marker": "-(a)ʔ",
+          "description": "Used as ending on verbs in compound verbal construction or as nominalizer",
+          "examples": [
+            {
+              "form": "ĩkta:ʔ",
+              "gloss": "bread (they bake it)"
+            },
+            {
+              "form": "warã:phaʔ",
+              "gloss": "one's fever"
+            }
+          ]
+        },
+        {
+          "name": "imperative",
+          "marker": "-de",
+          "description": "Used to form commands",
+          "examples": [
+            {
+              "form": "ni ku:ʔra:de",
+              "gloss": "give me something to eat"
+            }
+          ]
+        },
+        {
+          "name": "interrogative",
+          "marker": "-ne",
+          "description": "Used to form questions",
+          "examples": [
+            {
+              "form": "katẽ:ne",
+              "gloss": "is that all?"
+            }
+          ]
+        }
+      ],
+      "possession": {
+        "description": "Inalienably possessed nouns mark possessor with prefix; alienably possessed nouns mark possessor with suffix",
+        "examples": [
+          {
+            "word": "ĩsap",
+            "gloss": "leggings, trousers",
+            "possession": "alienable",
+            "possessive_form": "ĩsap pis",
+            "possessive_gloss": "leggings with third person possessive suffix"
+          }
+        ]
+      },
+      "pronominal_marking": {
+        "description": "Pronominal objects marked by proclitics, with third person singular objects unmarked",
+        "examples": [
+          {
+            "form": "ni ku:ʔra:de",
+            "gloss": "give me something to eat",
+            "analysis": "first singular object + give-participial-eat-imperative"
+          }
+        ]
+      }
+    },
+    "noun_composition": {
+      "patterns": [
+        {
+          "structure": "Noun + Noun",
+          "example": "Yau-hauk",
+          "meaning": "snake"
+        },
+        {
+          "structure": "Root + Descriptive",
+          "example": "Wattapi untakeer",
+          "meaning": "star"
+        }
+      ]
+    },
+    "compounding": {
+      "patterns": [
+        {
+          "example": "roo-iune",
+          "meaning": "blankets",
+          "components": [
+            "roo (cloth/hide)",
+            "-iune (manufactured items)"
+          ]
+        },
+        {
+          "example": "yauh-he",
+          "meaning": "Indians",
+          "components": [
+            "yau (path/way)",
+            "-he (animate beings)"
+          ]
+        },
+        {
+          "example": "Yopoonitsa",
+          "meaning": "box",
+          "components": "yop (wood) + container"
+        },
+        {
+          "example": "Tooseawau",
+          "meaning": "kettle",
+          "components": "tus + container"
+        }
+      ]
+    }
+  },
+  "numeral_patterns": [
+    {
+      "name": "teens",
+      "description": "Add -pea after the base number (ten + X)"
+    },
+    {
+      "name": "multiples of ten",
+      "description": "Use compound forms combining napnẽ: (ten) with the multiplier"
+    }
+  ],
+  "lexical_semantics": {
+    "semantic_domains": {
+      "water_terms": {
+        "root": "ya-",
+        "derivatives": [
+          {
+            "form": "yawowa",
+            "meaning": "rain"
+          },
+          {
+            "form": "yẽhiya:",
+            "meaning": "water"
+          },
+          {
+            "form": "Yacunne",
+            "meaning": "fish",
+            "note": "possibly contains water root"
+          }
+        ]
+      },
+      "path_terms": {
+        "root": "yau-",
+        "derivatives": [
+          {
+            "form": "yauh",
+            "meaning": "path"
+          },
+          {
+            "form": "yauh-he",
+            "meaning": "Indians"
+          }
+        ]
+      },
+      "container_terms": {
+        "root": "watta-",
+        "derivatives": [
+          {
+            "form": "wattape",
+            "meaning": "gourd/bottle"
+          }
+        ]
+      },
+      "material_terms": {
+        "root": "roo-",
+        "derivatives": [
+          {
+            "form": "roo-iune",
+            "meaning": "blankets"
+          }
+        ]
+      },
+      "wood_terms": {
+        "root": "yap/yop",
+        "derivatives": [
+          {
+            "form": "Yonne",
+            "meaning": "wood"
+          },
+          {
+            "form": "Yopoonitsa",
+            "meaning": "box"
+          }
+        ]
+      }
+    },
+    "relic_forms": [
+      {
+        "form": "Yau",
+        "meaning": "fire",
+        "note": "This appears to be a relic form in Catawba, where the usual root for fire is [ipi?]"
+      },
+      {
+        "form": "Yonne",
+        "meaning": "wood",
+        "note": "This appears to be a relic form in Catawba, a compound of [yana] tree and [pis] skin"
+      }
+    ]
+  },
+  "syntax": {
+    "word_order": {
+      "head_modifier": "Head noun followed by modifier (Object-Verb syntax)",
+      "examples": [
+        {
+          "phrase": "ĩtu tira:",
+          "gloss": "boulder (hard/heavy)",
+          "analysis": "stone + big/heavy"
+        }
+      ],
+      "note": "Limited syntactic information available due to nature of word list documentation"
+    }
+  },
+  "lexicon": {
+    "core_vocabulary": [
+      {
+        "Woccon": "tauh-he",
+        "meaning": "dog",
+        "Catawba": "tasi",
+        "Proto-Siouan": "*šųke"
+      },
+      {
+        "Woccon": "yauh",
+        "meaning": "path",
+        "Catawba": "yq"
+      },
+      {
+        "Woccon": "yau",
+        "meaning": "fire",
+        "Catawba": "yamu"
+      },
+      {
+        "Woccon": "kus",
+        "meaning": "corn",
+        "Catawba": "kus/kusi"
+      },
+      {
+        "Woccon": "yicau",
+        "meaning": "old woman",
+        "Catawba": "ya (woman), yamusi (old woman)"
+      },
+      {
+        "Woccon": "wawawa",
+        "meaning": "snow",
+        "Catawba": "wa?/wa?wo"
+      }
+    ],
+    "cross_family_cognates": [
+      {
+        "Woccon": "wattapi untakeer",
+        "meaning": "star",
+        "Proto-North-Caddoan": "*hu-piri"
+      },
+      {
+        "Woccon": "wawawa",
+        "meaning": "snow",
+        "Proto-Siouan": "*wa"
+      }
+    ]
+  },
+  "dialects": {
+    "relation_to_catawba": {
+      "classification": "Part of Coastal Catawban language family",
+      "dialectal_features": "Woccon maintained certain archaic features not preserved in Catawba",
+      "note": "Woccon was spoken on the eastern edge of the territory while Catawba was spoken at the southwestern edge"
+    },
+    "relation_to_catawba_simple": "Distant relative in Eastern Siouan subfamily",
+    "note": "Woccon and Catawba show considerable divergence despite genetic relationship"
+  },
+  "training_considerations": {
+    "data_limitations": "Only 143 items in Lawson's word list",
+    "orthographic_variation": "Original transcription from 1709 with potential spelling inconsistencies",
+    "potential_errors": "Some numerals may have been confused or transposed in original documentation",
+    "reconstruction_approaches": [
+      "Leverage Catawba cognates where available",
+      "Use Proto-Siouan reconstructions for missing items",
+      "Consider sound correspondences with other Siouan languages"
+    ]
+  },
+  "community_grammar_notes": [
+    {
+      "text": "The Catawban languages have a relationship with the Siouan languages.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_excerpt": "the relationship between the Woccon and Catawba languages-collectively known as the RESURRECTING COASTAL CATAWBAN 229 Catawban languages-and the Siouan languages",
+      "provenance_status": "missing",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d.",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "Woccon phoneme inventory is similar to that of Catawba, but a number of Catawba phonemes are entirely lacking in Woccon.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "While this inventory is similar to that of Catawba, a number of Catawba phonemes are entirely lacking in Woccon.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "Missing phonemes in Woccon suggest innovations occurred after the separation of Woccon and Catawba languages.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "This fact, when combined with internal evidence from Catawba (Rudes, forthcoming), suggests that these innovations occurred after the separation of the two languages.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shared the same inventory of vowels as the Catawba language, specifically twelve vowel phonemes divided into three series.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "The data indicate that the Woccon language shared the same inventory of vowels as the Catawba language, specifically, twelve vowel phonemes divided into three series",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "In most correspondence sets between Catawba and Woccon, Woccon shows a long oral vowel where Catawba shows a nasal vowel.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "In most cases, it is Woccon that shows a long oral vowel where Catawba shows a nasal vowel.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon appears to have had essentially the same inventory of consonantal phonemes as Catawba.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Woccon appears to have had essentially the same inventory of con- sonantal phonemes as Catawba.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "The phonemes of Catawba are p, t, k, 2, b, d, č, s, š, h, m, n, r, w, y.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "The phonemes of Catawba are p, t, k, 2, b, d, č, s, š, h, m, n, r, w, y (Rudes, forthcoming).",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "The consonantal phonemes of Woccon were p, t, k, (2), č, s, h, m, n, r, w, y",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Based on the available evidence, the consonantal phonemes of Woccon were p, t, k, (2), č, s, h, m, n, r, w, y",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "There is no evidence in Lawson's vocabulary for assuming the phonemes b, d, & for Woccon",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "there is no evidence in Lawson's vocabulary for assuming the phonemes b, d, & for Woccon",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "lexicon",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "Many instances of m and n became b and d in Catawba before oral vowels, a change that did not occur in Woccon",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "many instances of m and n became b and d, respectively, in Catawba before oral vowels, a change that did not occur in Woccon",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "It seems that dápa may have meant (wild) animal in Proto-Catawban, a meaning retained in Woccon but only in compounds in Catawba",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 11,
+      "source_excerpt": "Raw-skin [wild animal] *dápa: W (Teep) 'Raw-skin undrest' C dápa 'something, some', dapadá·re· ‘he hunts (compare dáre· ‘he goes'), dapa- \"prefix on animal names\". (It seems that dápa may have meant (wild) animal in Proto-Catawban, a meaning retained in Woccon but only in compounds in Catawba.) of animals, names for some manufactured items, and at least one verb. The \"root\" appears to be cognate with\nthe independent word dápa some, something' Examples in- clude dapahí ye 'alligator (dapa + yehiye\nwater'), dapamá-ya? 'boat, watercraft' (compare namá-ya? 'boat, canoe, dugout, pirogue'), and\ndapadá-?hire- 'he hunts' (compare dá·?hire· 'he goes'). Although there is no cognate for the stem\nbuilding root |dapa- in Woccon, the same process appears to be at work with a different morpheme.",
+      "provenance_status": "manual",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 11",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "There is little phonological fusion of adjacent morphemes in Woccon, making morphemic composition nearly always transparent.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "As in Catawba, there is little phonological fusion of adjacent morphemes, and as a result, the morphemic composition of words is nearly always transparent.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "Woccon may have shared with Catawba the characteristics of an Object-Verb syntax.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "suggesting that Woccon may have shared with Catawba the characteristics of an Object-Verb syntax.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "morphosyntax",
+      "pos_tag": "verb",
+      "construction_type": "na"
+    },
+    {
+      "text": "Many Woccon words for manufactured items begin with an element spelled (Roo) or (Ru).",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Many of the words that refer to manufactured items in Lawson's list begin with an element spelled (Roo) or (Ru)",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "The initial (Roo)/(Ru) element in Woccon may be cognate with Catawba pronominal stem ru-.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "This initial element may be cognate with the Catawba pronominal stem ru- that occurs in words such as duwé 'what', dûye 'thing, nothing",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "lexicon",
+      "pos_tag": "pronoun",
+      "construction_type": "na"
+    },
+    {
+      "text": "Woccon possesses four attested modes: independent (indicative), participial, imperative, and interrogative.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Four of these modes appear to be attested in the Woccon data: the independent (or indicative), the participial, the imperative, and the interrogative.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "question"
+    },
+    {
+      "text": "The independent modal suffix -re may be added to verbs, nouns, adverbs, adjectives, and particles to form a predicate.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 5,
+      "source_excerpt": "This morpheme, which has the form -re'], may be added to verbs, nouns, adverbs, adjectives, and particles to form a predicate.",
+      "provenance_status": "manual",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 5",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "affix",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "The participial mode has the form --(a)?) and is used as an ending on verbs in compound constructions and as a nominalizer.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Another frequent modal marker in Catawba is the participial, which has the form --(a)?). It is used both as an ending on one of the several verbs in a compound verbal construction and as a nominalizer",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "The interrogative mode has the form -ne, attested in one word.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "The fourth mode, the interrogative, which has the form -ne in Catawba, is attested in one word",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "question"
+    },
+    {
+      "text": "Third person singular subjects were unmarked in Woccon",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "A couple of forms, however, indicate that third per- son singular subjects were unmarked in Woccon",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "pronoun",
+      "construction_type": "na"
+    },
+    {
+      "text": "Singular imperative verbs are unmarked for pronominal subject in Woccon",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "In Catawba, singular imperative verbs are unmarked for pronominal subject. Examples from the Woccon data illustrating the same pattern",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "morphosyntax",
+      "pos_tag": "pronoun",
+      "construction_type": "imperative"
+    },
+    {
+      "text": "Woccon shows a third person plural prefix |-i-|",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "There is also one example that ap- pears to show a third person plural prefix |-| in Woccon, as in Catawba",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "pronoun",
+      "construction_type": "na"
+    },
+    {
+      "text": "Pronominal objects were marked by proclitics in Woccon, except third person singular objects which were unmarked",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "There is at least one example from the Woccon data that indicates that pronomi- nal objects were marked in the same way in this language",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "pronoun",
+      "construction_type": "na"
+    },
+    {
+      "text": "Catawba developed voiced obstruent phonemes b and d from the denasalization of m and n.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "the creation of voiced obstruent phonemes b and d from the denasalization of m and n",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Catawba eliminated r from word-initial position through nasalization to ʼn before nasal vowels and obstuentization to d before oral vowels.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "the elimination of r from word-initial position through nasali- zation to ʼn before nasal vowels and the obstuentization to d before oral vowels",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Catawba underwent weakening of vowels in unstressed syllables, leading to syncope of unstressed short vowels.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "the weakening of vowels in unstressed syllables, leading to syncope of unstressed short vowels",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "The Catawban language family does not appear to have had much internal diversity.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "the Catawban language family does not appear to have had much internal diversity",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "Either Woccon or Catawba has metathesized the first two syllables of this word.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Either Woccon or Catawba has metathesized the first two syllables of this word.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "The Woccon form 'Ikettau' for bread is apparently a participle.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_excerpt": "Bread *iktá·?: W (Ikettau) 'Bread'; C iktare 'they bake it'. (The Woccon form is apparently a participle.)",
+      "provenance_status": "missing",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d.",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "Woccon 'Rooeyaukitte' for breeches is composed of 'dress' plus 'break in two'.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 9,
+      "source_excerpt": "Breeches *ruhiya'? kítha?: W (Rooeyaukitte) 'Breeches, Cyúhiya? 'dress' (Saraw dialect) plus kitha? 'break in two",
+      "provenance_status": "manual",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 9",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "The Catawba word, and therefore presumably the Woccon word as well, is a contraction of the phrase kus sirá-k 'corn-weed'.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "The Catawba word, and therefore presumably the Woccon word as well, is a contraction of the phrase kus sirá-k 'corn-weed'.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "The Woccon construction shows intensive reduplication of the word for tree indicating that a rundlet is a river heavily grown over with trees.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "The Woccon construction shows intensive reduplication of the word for tree indicating that a rundlet is a river heavily grown over with trees.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "other",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "The initial syllable of the word for grass is typically dropped in compounds.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "The initial syllable of the word for grass is typically dropped in compounds [cf. 1.36].",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    },
+    {
+      "text": "Proto-Siouan initial *wi- is a pronominal element that marks non-human animates",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Proto-Siouan initial *|wi- is a pronominal element that marks non-human animates [Rankin 1998]",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "historical",
+      "pos_tag": "pronoun",
+      "construction_type": "na"
+    },
+    {
+      "text": "The third person singular affix -h- and the independent mode marker |-re- can be added to give the meaning 'he is (a) Windsor, he is English'.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "with the addition of the third person singular affix -h- and the independent mode marker |-re-, giving the meaning 'he is (a) Windsor, he is English'.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "pronoun",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon appears to use a modal suffix marking potential states, cognate to Catawba [-we]. This suffix appears in weather-related terms. Attested forms: W Wawawa 'snow' (compare C wa?wowe 'it may snow'), W Yawowa 'rain'. Both Woccon forms show parallel structure with the modal suffix, suggesting a productive pattern for expressing potential or ongoing weather states. The suffix may be reconstructed as *-wa based on these examples.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 4,
+      "source_excerpt": "The Woccon word apparently contains a suffix cognate to the Catawba [-we], a modal suffix marking potential states... The Woccon form Yawowa rain parallels the form Wawawa snow and again contains the modal suffix.",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 4",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "affix",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows evidence of compound formation in kinship and descriptive terms using apparent root combinations. Attested examples: W Yicauau 'wife' appears to contain the root yicau- 'old woman' plus additional morphology (compare simple W Yicau 'old woman'). This suggests a pattern where kinship terms may be formed by modifying or extending basic descriptive terms. The exact nature of the additional morphology in -au is unclear from available data.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 4,
+      "source_excerpt": "W Yicau old woman, Yicauau wife, C ya woman, yamusi old woman",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 4",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon demonstrates compound word formation in specialized vocabulary, particularly for manufactured items. Attested form: W Ynpyupseunne 'rundlet' (small cask/barrel) appears to contain yup- 'wood' + -yupse- 'rum' + additional morphology. This suggests Woccon could form compounds describing objects by their material and function/contents. The wood root yup- may also appear in the place name Yupwauremau and in W Yopoonitsa 'box', indicating productive use of this root in object terminology.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 4,
+      "source_excerpt": "W Yopoonitsa box, Ynpyupseunne rundlet... The sequence [-yupse-] which immediately follows is the form for rum, recorded by Lawson elsewhere in his vocabulary. The root for wood might also occur in Yupwauremau",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 4",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits semantic narrowing patterns where cognate terms with Catawba show more specialized meanings in Woccon. ATTESTED EXAMPLES: W 'Intom' (pipe) vs C 'ito?, jtu?' (clay) - the Woccon term represents semantic narrowing from general 'clay' to specific 'pipe'; W 'Wee-kau' (belt) vs C 'wiya' (string, rope) - Woccon shows narrowing from general cordage to specific belt garment. This pattern suggests Woccon developed more specialized vocabulary in certain semantic domains, possibly reflecting cultural or technological distinctions. The narrowing appears consistent across material culture terms.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 5,
+      "source_excerpt": "W Intom pipe; C ito?, jtu? clay... The Woccon term seems to represent a semantic narrowing... W Wee-kau belt; C wiya string, rope. The Woccon word again suggests semantic narrowing.",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 5",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "lexicon",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows a productive root pattern with 'Roo-/Rum-/Rhoo-' forms relating to cloth, hide, and garments. ATTESTED FORMS: 'Roo-iune' (blankets), 'Rummissau' (coat), 'Rummaer' (ronoak), 'Rhooeyau' (aflap), 'Rookau' (buckskin), 'Rooeyaukitte' (breeches), 'Rooesoo possoo' (stockings). MORPHOLOGICAL ANALYSIS: The root 'Roo-' (with variants 'Rum-', 'Rhoo-', 'Rooe-') appears to be a productive morpheme meaning 'cloth/hide/textile material' that combines with various elements to form clothing and textile terms. This suggests Woccon had a systematic morphological process for deriving garment terminology from a common textile root.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 5,
+      "source_excerpt": "That the Woccon form contains a root meaning cloth, hide is suggested by Rummissau coat, Rummaer ronoak, Rhooeyau aflap, Rookau buckskin, Rooeyaukitte breeches, and Rooesoo possoo stockings.",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 5",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "affix",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits first-person active agreement marker infixation patterns. This is evidenced in the form [chewathi] 'I built a fire', where the first-person active agreement marker is infixed within the stem rather than prefixed or suffixed. This infixation pattern suggests that certain Woccon verb stems may be compounds, with the agreement marker inserted at morpheme boundaries within the compound structure. The infixation of agreement markers is a notable morphological feature that distinguishes Woccon verbal inflection from simple prefixing or suffixing patterns.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 8,
+      "source_excerpt": "infixation of the first-person active agreement marker in [chewathi] I built a fire shows that this Lakhota stem is an old compound.",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 8",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "verb",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits a quinary or partial quinary number system pattern where numbers for seven and eight are derived from roots for two and three, but with an apparent reversal compared to typical patterns. In Woccon: Num-perre 'two' relates to Nupsau 'eight', and Nam-mee 'three' relates to Nommis-sau 'seven'. This contrasts with the normal pattern in quinary systems where seven derives from two and eight derives from three. The Woccon forms show morphological relationships: Num-perre ~ Nupsau (two ~ eight) and Nam-mee ~ Nommis-sau (three ~ seven), suggesting derivational processes in the number system. This pattern may represent either genuine historical restructuring of the number system or recording errors, but demonstrates systematic morphological relationships within Woccon numerals.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_excerpt": "Woccon also shows this pattern, but with an apparent reversal: Num-perre two, Nupsau eight, Nam-mee three, Nommis-sau seven. While it might be the case that this reversal represents a genuine historical restructuring of the number system",
+      "provenance_status": "missing",
+      "citation_short": "Woccon by Carter.pdf n.d.",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon numeral formation for 'eleven' follows a compositional pattern: numeral + connective + base. The attested form 'Tonne hauk pea' (eleven) breaks down as: Tonne (one) + hauk (plus/connective) + pea (ten). This demonstrates that Woccon constructs compound numerals by combining smaller numerical units with a connective morpheme. The morpheme 'hauk' functions as an additive connective meaning 'plus' in numerical contexts. This pattern aligns with broader Siouan tendencies where eleven and twelve mean 'ten plus one' and 'ten plus two' respectively, but uses Woccon-specific morphemes. The root 'pea' for ten in this compound may be a variant of the root [pi ~ wi] also seen in 'Winnop' (twenty).",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 9,
+      "source_excerpt": "Tonne hauk pea looks quite plausible as eleven in the light of the fact that the Catawba word for ten is [picano]. The Woccon form thus looks like Tonne one, hauk plus, and pea ten, where the latter root is cognate, in part, with the corresponding form in Catawba.",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 9",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "affix",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits multiple roots for the numeral 'one': 'Tonne' and 'noponne'. These appear in different numerical contexts - 'Tonne' appears in 'Tonne hauk pea' (eleven) and as a standalone form for 'one', while 'noponne' appears in 'Soone noponne' (ten). This suggests that Woccon may have had contextual or dialectal variation in expressing the concept 'one', or that these roots had different semantic or grammatical distributions in numerical expressions. The existence of multiple roots for the same numeral indicates flexibility in Woccon numerical morphology.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 9,
+      "source_excerpt": "Second, Woccon had two roots for one, Tonne and noponne. Third, Lawson recorded two different forms for eleven: Tonne hauk pea, where hauk is possibly cognate with Lakhota [akhe], and Sonne noponne",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 9",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "semantics",
+      "pos_tag": "numeral",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows variation in the root for 'ten' with the forms [pi ~ wi]. This alternation appears in 'Winnop' (twenty) and is analyzed as underlying the 'pea' component in 'Tonne hauk pea' (eleven). The [pi ~ wi] alternation suggests either phonological variation (possibly conditioned by environment) or morphophonological processes affecting the ten-root in different numerical contexts. This root variation is significant for understanding Woccon numerical morphology and compound formation patterns.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 9,
+      "source_excerpt": "First, the root for ten is [pi ~ wi] and appears in Tonne hauk pea eleven and Winnop twenty... Support for this latter possibility is seen in the Woccon form Winnop twenty, which can now be analyzed as a compound of [pi ~ wi] ten",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 9",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows a specific pattern of consonant cluster simplification in the word for 'three' that differs from other Siouan languages. The Proto-Siouan root for 'three' contained a medial [*mn] cluster, as evidenced by forms like Catawba [namone], Lakhota [yamni], and Omaha [dabdi]. Woccon simplified this cluster by losing the second element (the [n]), resulting in Nam-mee, phonetically [nami]. This contrasts with Tutelo, Ofo, Biloxi, and the Chiwere dialects, which lost the first element instead, giving Tutelo [nani]. Woccon's pattern of losing the second element aligns it with Hidatsa and Crow rather than with the Virginia Siouan languages. This phonological process demonstrates that Woccon belongs to the Carolina Siouan group and shows closer affinity to Catawba than to Tutelo or other eastern Siouan languages.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 10,
+      "source_excerpt": "The word for three provides an instructive example... Proto-Siouan root contained a medial [*mn] cluster... Woccon and Tutelo have both simplified this cluster, but they have done so in different ways... while Woccon, like Hidatsa and Crow, has lost the second. Thus, Tutelo has [nani], while Woccon has Nam-mee, phonetically [nami].",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 10",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "PREDICATIVE SUFFIX [-re] IN CITATION FORMS: The citation form of the number 'two' in Woccon has incorporated the predicative suffix [-re], creating a grammaticalized form used when the numeral appears in predicative contexts. This suffix appears to be a shared innovation between Woccon and Catawba. However, in Woccon compounds, the root for 'two' appears without this suffix, indicating that the bare root is still accessible for morphological composition. This suggests a morphological alternation where 'two' has both a citation form (root + [-re]) and a compositional form (bare root) depending on syntactic context. The predicative suffix [-re] may be a general feature that can attach to numerals to create predicative forms, though only the 'two' example is explicitly attested in this source.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_excerpt": "the citation form of the number two in both languages has incorporated the predicative suffix [-re], although various compounds in Woccon show the root alone",
+      "provenance_status": "missing",
+      "citation_short": "Woccon by Carter.pdf n.d.",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "affix",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon preserves Proto-Macro-Siouan *[y] as [y]. This sound correspondence is attested in multiple Woccon lexical items and represents a conservative retention from the proto-language. Examples from Woccon include: 'Yonne' (tree), 'Yau' (fire), 'Yah-testea' (ashes, black/blue), 'Yau-huk' (snake), 'Yacunne' (fish), 'ya-' (water), and 'Yauh' (road). This pattern shows Woccon maintains the original *[y] sound where related languages like Lakhota show [ch]. The preservation of this sound in word-initial position appears to be systematic in Woccon, making it a reliable phonological feature for identifying cognate relationships and reconstructing proto-forms.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 12,
+      "source_excerpt": "Woccon [y] Examples: 7... Tree: W Yonne; Fire: W Yau; Ashes: W Yah-testea black, blue; Snake: W Yau-huk; Fish: W Yacunne; Water: W ya-; Road: W Yauh",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 12",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "lexicon",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows a systematic correspondence with initial [wa-] patterns that align with broader Macro-Siouan relationships. In lexical sets comparing Woccon with related languages, Woccon preserves [wa-] initial sequences that correspond to Catawba [wa-] and contrast with Proto-North-Caddoan [hu-]. Attested examples include: 'Wawawa' (snow) where Catawba has 'wa?, wa?wa', and 'Wattapi untakeer' (star) where Catawba has 'wapitnu'. This [wa-] preservation in Woccon represents retention of an older pattern, as evidenced by the fact that the [wa-] form is also preserved in Caddo while Proto-North-Caddoan [hu-] represents an innovation. This correspondence pattern can be used to identify potential cognates and analyze the historical development of Woccon phonology.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 12,
+      "source_excerpt": "Snow: W Wawawa; C wa?, wa?wa... Star: W Wattapi untakeer; C wapitnu... correspondence between initial [wa-] or [ma-] in Woccon and Catawba and initial [hu-] in Proto-North-Caddoan",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 12",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon preserves Macro-Siouan root structures in compound formations. The language maintains ancient root patterns in lexical items that show clear cognate relationships across the Siouan family. Attested examples include: 'Wonsh-shee' (arrow, awl) which corresponds to Catawba 'wa' and Proto-Siouan '*ma', and 'Wee-kau' (belt) which corresponds to Catawba 'wiya'. These forms demonstrate that Woccon retains recognizable Macro-Siouan morphological patterns in both simple and compound lexical structures. The preservation of these root patterns suggests that Woccon morphology maintains archaic features that can be used to analyze the internal structure of complex words and identify component morphemes.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 12,
+      "source_excerpt": "Woccon also preserves Macro-Siouan roots in the following lexical sets: Arrow, awl: W Wonsh-shee; C wa; PS *ma... String: W Wee-kau belt; C wiya",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 12",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon [r] corresponds with Catawba [n] in comparative forms. This sound correspondence is attested in multiple lexical items when comparing Woccon with its sister language Catawba. For example, in the word for 'bear', Woccon shows 'Ourka' while Catawba shows 'nome?', where the Woccon [r] corresponds to Catawba [n]. This correspondence pattern appears consistently across the lexicon and suggests a regular sound change between the two languages. This correspondence rule can be applied when analyzing potential cognates between Woccon and Catawba forms, or when reconstructing proto-forms that may have given rise to both languages.",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 13,
+      "source_excerpt": "Woccon [r] corresponds with Catawba [n] in other forms, as noted above. The correspondence of Woccon [k] with Catawba [m] would not be unusual if both were reflexes of an earlier labiovelar stop.",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 13",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "lexicon",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon [k] corresponds with Catawba [m] in certain contexts, potentially reflecting reflexes of an earlier labiovelar stop. This sound correspondence is exemplified in the comparison between Woccon 'Ourka' (bear-skin) and Catawba 'nome?' (bear), where Woccon [k] corresponds to Catawba [m]. The author notes this correspondence would not be unusual if both sounds were reflexes of an earlier labiovelar stop, suggesting a historical sound change process. This correspondence pattern should be considered when analyzing Woccon forms that contain [k] sounds, particularly when comparing with potential Catawba cognates containing [m].",
+      "source_url": "https://drive.google.com/file/d/1709qKAVgUD1opM8tIhdAO9LiR6F5CNnC/view",
+      "source_page": 13,
+      "source_excerpt": "The correspondence of Woccon [k] with Catawba [m] would not be unusual if both were reflexes of an earlier labiovelar stop.",
+      "provenance_status": "inferred",
+      "citation_short": "Woccon by Carter.pdf n.d., p. 13",
+      "citation_full": "n.d.. *Woccon by Carter.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits a quinary (base-5) or partial quinary number system, following a pattern common to southeastern United States native languages. In this system, the numbers for seven and eight are derived from the roots for two and three, but with an apparent reversal of the typical pattern. The attested forms show: Num-perre 'two' → Nupsau 'eight' (typically two would derive seven), and Nam-mee 'three' → Nommis-sau 'seven' (typically three would derive eight). This derivational pattern suggests morphological processes where higher numbers (7, 8) are formed by adding elements to lower number roots (2, 3), though the specific morphological structure of the derivational elements is unclear from the available data. The reversal from the typical southeastern pattern may represent a genuine linguistic feature of Woccon or could reflect recording errors in the historical documentation.",
+      "source_url": "https://drive.google.com/file/d/1lQ-qeuw991MC9MY9rOwxZx1mmryssq4V/view",
+      "source_excerpt": "Woccon also shows this pattern, but with an apparent reversal; Num-perre 'two', Nupsau 'eight', Nam-mee 'three', Nommis-sau 'seven'. While it might be the case that this reversal represents a",
+      "provenance_status": "missing",
+      "citation_short": "Rudes-UniversalversusParticular-1985.pdf 1985",
+      "citation_full": "1985. *Rudes-UniversalversusParticular-1985.pdf*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon numeral formation: The numeral 'eight' in Woccon is formed from the root for 'two'. Attested form: Nupsau 'eight'. This demonstrates a derivational pattern where higher numerals can be morphologically related to lower numerals. The exact morphological process is not detailed in the source, but the relationship to the 'two' root is established through comparison with Catawba ddwasa 'eight' which also derives from the root for 'two'. This suggests Woccon may have inherited or developed similar numeral derivation patterns as found in related Catawban languages.",
+      "source_url": "https://drive.google.com/file/d/1lQ-qeuw991MC9MY9rOwxZx1mmryssq4V/view",
+      "source_excerpt": "Given the existence of Catawba ddwasa 'eight' alongside Woccon Nupsau 'eight', and the fact that both appear to derive from the root of the word for two",
+      "provenance_status": "missing",
+      "citation_short": "Rudes-UniversalversusParticular-1985.pdf 1985",
+      "citation_full": "1985. *Rudes-UniversalversusParticular-1985.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "numeral",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits subtractive formation patterns in numeral morphology, specifically for numbers meaning 'seven' and 'eight'. These forms appear to represent subtractive formations that originally meant something like '(ten) lacking two' or 'two away from (ten)'. This subtractive formation pattern is attested in Woccon alongside other Siouan languages including Crow, Dakota, Hidatsa, Mandan, and Winnebago, as well as the closely related Catawba. While subtractive formations are infrequent in general among world languages, they are not at all uncommon in the Siouan languages. The Woccon numeral data recorded by Lawson provides evidence for this morphological process, suggesting that higher numerals in Woccon were formed through subtraction from a base number rather than simple addition.",
+      "source_url": "https://drive.google.com/file/d/1lQ-qeuw991MC9MY9rOwxZx1mmryssq4V/view",
+      "source_page": 4,
+      "source_excerpt": "the most logical explanation of their origin would be that they represent subtractive formations, and originally meant something like '(ten) lacking two' or 'two away from (ten)'. While infrequent in general among the languages of the world, subtractive formations are not at all uncommon in the Siouan languages. Zeyrek and Rankin (1982) note the existence of such constructions for one or more of the number words 'seven', 'eight', and 'nine' in Crow, Dakota, Hidatsa, Mandan, and Winnebago, as well as Catawba and Woccon.",
+      "provenance_status": "inferred",
+      "citation_short": "Rudes-UniversalversusParticular-1985.pdf 1985, p. 4",
+      "citation_full": "1985. *Rudes-UniversalversusParticular-1985.pdf*.",
+      "grammar_domain": "semantics",
+      "pos_tag": "numeral",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "WOCCON INITIAL CONSONANT CORRESPONDENCE: Woccon shows [y] initial consonants that correspond to Catawba [y] in cognate forms. This phonological correspondence pattern supports the genetic relationship between Woccon and Catawba languages. ATTESTED FORM: Woccon 'Yicau' (old woman) corresponds to Catawba equivalent with initial [y]. USAGE: This correspondence appears in lexical cognates between the two languages. CAVEAT: This pattern is noted in the context of correcting transcription errors in comparative materials where Lawson's original Woccon form 'Yicau' was misrepresented as 'Zicau' or 'Ticau' in later comparative works.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "For example, in the reproduction of Lawson's vocabulary the Woccon equivalent for the gloss old woman is given as Zicau, while the comparative list has Ticau. The actual form given by Lawson is Yicau, with the initial [y] corresponding to Catawba [y] in the equivalent word.",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon employs a modal suffix marking potential states, attested in weather terms. The suffix appears as a reduplicative or extended form in: W 'Wawawa' (snow) and W 'Yawowa' (rain). This suffix is cognate with Catawba [-we], a modal suffix marking potential states (compare C 'wa?wowe' it may snow). The Woccon modal construction appears to involve full word reduplication or vowel alternation patterns (wa-wa-wa, ya-wo-wa) rather than simple suffixation. This modal marking specifically occurs with meteorological phenomena in the attested data. The exact morpheme boundaries within these reduplicated forms require further analysis, but the pattern suggests Woccon had grammaticalized modal marking for potential or ongoing states.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 5,
+      "source_excerpt": "W Wawawa snow, C wa?, wa?wo snow, wa?wowe it may snow. The Woccon word apparently contains a suffix cognate to the Catawba [-we], a modal suffix marking potential states... W Yup-se rum, Yawowa rain; C ya, yqhe, ye, yehiyq water. The Woccon form Yawowa rain parallels the form Wawawa snow and again contains the modal suffix.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 5",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "affix",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows evidence of compound formation with apparent root combinations in complex terms. In W 'Yopoonitsa' (box) and 'Ynpyupseunne' (rundlet/small cask), the sequence [yup-] appears to be the root for 'wood' (compare the separate entry W 'Yonne' wood). The compound 'Ynpyupseunne' apparently contains: [yup-] 'wood' + [-yupse-] 'rum' (attested separately as W 'Yup-se' rum) + additional morphology. This suggests Woccon could form compounds by combining nominal roots, particularly for manufactured objects. The wood root [yup-] may also appear in the village name 'Yupwauremau', though the full meaning is unclear. Compound formation appears productive for material culture terms.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 5,
+      "source_excerpt": "W Yopoonitsa box, Ynpyupseunne rundlet; C yap wood, tree... The sequence [yup-] thus appears to be the root for wood. The sequence [-yupse-] which immediately follows is the form for rum, recorded by Lawson elsewhere in his vocabulary. The root for wood might also occur in Yupwauremau, the name of one of the Woccon villages.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 5",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "noun",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon demonstrates a locative suffix [-mu] that appears with various roots to indicate spatial relationships. This is attested in the comparison with Catawba: W 'Yau' (fire) corresponds to C 'yamu' (in the fire), where Catawba shows the locative suffix [-mu] with other roots in texts. While the Woccon fire root 'Yau' appears to be a relic form (Catawba typically uses [ipi?] for fire), the existence of the locative suffix [-mu] in the related Catawba suggests this morphological pattern was available in Woccon as well. The locative suffix appears to be productive across different nominal roots for expressing spatial relations.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 5,
+      "source_excerpt": "W Yau fire; C yamu in the fire. This appears to be a relic form in Catawba, the usual root for fire being [ipi?]. The locative suffix [-mu] appears in the texts with other roots.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 5",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "noun",
+      "construction_type": "na"
+    },
+    {
+      "text": "Woccon exhibits semantic narrowing patterns in lexical cognates compared to Catawba. ATTESTED EXAMPLES: W 'Intom' (pipe) vs C 'ito?, jtu?' (clay) - the Woccon term represents semantic narrowing from the general concept of clay to the specific manufactured object (pipe). W 'Wee-kau' (belt) vs C 'wiya' (string, rope) - again showing semantic narrowing from general cordage to specific garment item. This pattern suggests Woccon developed more specialized terminology for certain material culture items compared to the broader semantic ranges preserved in Catawba cognates. MORPHOLOGICAL STRUCTURE: These appear to be simplex lexical items without obvious internal morphological complexity. USE: This semantic narrowing pattern may be relevant for understanding how Woccon developed specialized vocabulary and could inform strategies for expanding modern Woccon vocabulary by applying similar semantic specialization processes to reconstructed roots.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 6,
+      "source_excerpt": "W Intom pipe; C ito?, jtu? clay... The Woccon term seems to represent a semantic narrowing... W Wee-kau belt; C wiya string, rope. The Woccon word again suggests semantic narrowing.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 6",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphosyntax",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows evidence of a productive root 'Roo-' meaning 'cloth/hide' that appears in multiple lexical items. ATTESTED EXAMPLES: W 'Roo-iune' (blankets), 'Rummissau' (coat), 'Rummaer' (ronoak), 'Rhooeyau' (aflap), 'Rookau' (buckskin), 'Rooey aukitte' (breeches), 'Rooesoo possoo' (stockings). MORPHOLOGICAL STRUCTURE: The root appears as 'Roo-', 'Rum-', 'Rhoo-' suggesting possible phonological variation or morphophonemic alternation. This root combines with various elements to form terms for different textile and leather goods. USE: This root could be productively used to create new Woccon terms for modern clothing and fabric items. CAVEATS: The exact conditioning factors for the phonological variants (Roo- vs Rum- vs Rhoo-) are not clear from the available data and would need further analysis.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 6,
+      "source_excerpt": "That the Woccon form contains a root meaning cloth, hide is suggested by Rummissau coat, Rummaer ronoak, Rhooeyau aflap, Rookau buckskin, Rooey aukitte breeches, and Rooesoo possoo stockings.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 6",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits regular sound correspondences with Catawba that follow systematic patterns. ATTESTED CORRESPONDENCES: Woccon /p/ : Catawba /p/ (in lexical sets 1,4,12,14,18,28); Woccon /t/ : Catawba /t/ (sets 8,10,12,14,21,25); Woccon /k/ : Catawba /k/ (sets 9,30); Woccon /s/ : Catawba /s/ (sets 9,10); Woccon /S/ : Catawba /S/ (set 31); Woccon /S/ : Catawba /s/ (set 25); Woccon /h/ : Catawba /s/ (set 8); Woccon /h/ : Catawba /h/ (set 5). MORPHOLOGICAL STRUCTURE: These correspondences operate at the phoneme level across lexical items. USE: These sound correspondences can be applied to predict Woccon forms from reconstructed proto-forms or to analyze the historical development of Woccon phonology. They may also help in determining authentic Woccon pronunciations for revitalization efforts. CAVEATS: The correspondences are based on limited lexical sets and may not represent the complete phonological system.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 6,
+      "source_excerpt": "the thirty-four pairs of similar lexical items exhibit a limited number of regular sound correspondences. These correspondences, summarized in table 2... Woccon Catawba Lexical Sets p p 1,4,12,14,18,28 t t 8,10,12,14,21,25 k k 9,30 s s 9,10 S S 31 S s 25 h s 8 h h 5",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 6",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits phonological simplification of consonant clusters, specifically the reduction of [mn] clusters to [m]. This represents a systematic sound change that distinguishes Woccon from related Catawban languages. The simplification pattern shows Woccon's independent phonological development within the Siouan family. This rule would apply to any inherited or borrowed forms containing [mn] sequences, reducing them to simple [m] in Woccon pronunciation and potentially affecting morphophonological alternations in word formation.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "Certain of the phonological innovations represented in table 2 (e.g., the simplification of the [mn] cluster to [m] in Woccon and the correspondence of some Woccon [r] to Catawba",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows a systematic sound correspondence where some instances of Woccon [r] correspond to different sounds in Catawba. This represents a phonological innovation specific to Woccon that affects the realization of certain inherited sounds. The [r] correspondence pattern indicates that Woccon developed its own phonological system distinct from Catawba, which would influence the pronunciation of cognate forms and potentially create morphophonological alternations in related word forms within Woccon.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "the simplification of the [mn] cluster to [m] in Woccon and the correspondence of some Woccon [r] to Catawba",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "lexicon",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits a distinct phonological pattern in the word for 'red' that shows unique sound correspondence. The attested Woccon form 'Yauta' (red) demonstrates an apparently unique sound correspondence in its first consonant when compared to related Siouan languages. This suggests Woccon underwent specific phonological changes not shared with other Siouan languages. Compare: Woccon 'Yauta' vs Ofo 'achuti', Biloxi 'acuti', Tutelo 'acuti', Lakhota 'luta'. The initial consonant variation (Y- in Woccon vs. vowel-initial or l- in other languages) represents a Woccon-specific development that must be considered when analyzing or reconstructing other Woccon forms with similar phonological environments.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 9,
+      "source_excerpt": "(11) Red: W Yauta; O achuti; B acu twi; T acuti; L luta. This root has an apparently unique sound correspondence in its first consonant.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 9",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon preserves Proto-Siouan initial *w- in certain lexical items where other Siouan languages have lost or modified this consonant. The attested Woccon form 'Watt' (boat, canoe) retains the initial w- from Proto-Siouan *wati, while Ofo and Biloxi lost initial [w] at a relatively early stage, with Ofo showing epenthetic [y] (iyati) and Biloxi showing epenthetic [h] (nahati). This pattern suggests that when analyzing or reconstructing Woccon forms, initial w- may be preserved in contexts where related languages show vowel-initial forms or epenthetic consonants. Compare: Woccon 'Watt' vs Ofo 'iyati', Biloxi 'nahati' from Proto-Siouan *wati.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 9,
+      "source_excerpt": "(8) Boat, canoe: W Watt; 0 iyati; B nahati; L wata; Cr wa'ce; PS *wati. Both Ofo and Biloxi lost initial [w] at a relatively early stage in their development from Proto-Siouan; the Ofo [y] and Biloxi [h] are epenthetic.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 9",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits a quinary or partial quinary number system pattern where numbers for seven and eight are derived from roots for two and three, but with an apparent reversal from the typical pattern. In most Siouan languages with quinary systems, seven derives from two and eight derives from three. However, in Woccon the pattern appears reversed: 'Num-perre' (two) appears related to 'Nommis-sau' (seven), while 'Nam-mee' (three) appears related to 'Nupsau' (eight). This represents either genuine historical restructuring of the number system or possible recording errors in the original documentation. The derivational relationship suggests compound formation in higher numerals using lower numeral roots plus additional morphological material (the -sau element in both seven and eight).",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "It is normally the case in such languages that the numbers for seven and eight are derived from the roots for two and three, respectively. Woccon also shows this pattern, but with an apparent reversal: Num-perre two, Nupsau eight, Nam-mee three, Nommis-sau seven.",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "numeral",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon forms compound numerals using additive structure for numbers above ten. The attested form 'Tonne hauk pea' (eleven) can be analyzed as: Tonne (one) + hauk (plus/more than) + pea (ten), following a pattern of 'base number + addition marker + ten'. This mirrors structures found in other Siouan languages where eleven means 'ten plus one'. The morpheme 'hauk' functions as an additive connector in numerical compounds. Evidence: W 'Tonne hauk pea' eleven, compared with the separate attestations W 'Tonne' one and the root 'pea' (variant of 'pi ~ wi') ten. The form 'Winnop' twenty may also show compounding with the ten-root 'pi ~ wi'. This additive numerical compounding system appears to be a retained Siouan feature in Woccon.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 10,
+      "source_excerpt": "Tonne hauk pea looks quite plausible as eleven in the light of the fact that the Catawba word for ten is [picano]. The Woccon form thus looks like Tonne one, hauk plus, and pea ten, where the latter root is cognate, in part, with the corresponding form in Catawba.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 10",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "affix",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits phonological variation in the root for 'ten', appearing as both [pi] and [wi]. This variation is seen in the compound 'Winnop' (twenty), which can be analyzed as containing the ten-root [pi ~ wi]. The root appears as 'pea' in 'Tonne hauk pea' (eleven), showing further phonological development. This [pi ~ wi] alternation represents systematic phonological variation within Woccon morphology, not random variation. Evidence: W 'Winnop' twenty (analyzed as compound with [pi ~ wi] ten), W 'Tonne hauk pea' eleven (with 'pea' < ten-root). The ten-root shows cognacy with other Siouan languages while maintaining Woccon-specific phonological developments.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 10,
+      "source_excerpt": "the root for ten is [pi ~ wi] and appears in Tonne hauk pea eleven and Winnop twenty... Woccon form thus looks like Tonne one, hauk plus, and pea ten",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 10",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows lexical variation with two distinct roots for 'one': 'Tonne' and 'noponne'. Both forms are attested in different numerical contexts. 'Tonne' appears in 'Tonne hauk pea' (eleven), while 'noponne' appears in 'Soone noponne' (ten). This suggests either dialectal variation, semantic specialization, or different morphological contexts for the two 'one' roots. Evidence: W 'Tonne' one (in eleven compound), W 'noponne' one (in ten compound 'Soone noponne'). The existence of two roots for 'one' indicates morphological complexity in Woccon numerical system that differs from the typical single root pattern in related languages.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 10,
+      "source_excerpt": "Woccon had two roots for one, Tonne and noponne... Lawson recorded two different forms for eleven: Tonne hauk pea... and Sonne noponne",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 10",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon numeral formation shows evidence of morphological complexity in higher numerals. The attested form 'Soone nomme' (twelve) appears to contain a root for 'three' rather than 'two', suggesting a non-decimal counting pattern or compound formation strategy. This contrasts with the simpler forms 'nlp' (two) and 'noponne' (ten), where 'noponne' shows no clear relationship to 'nlp' but contains a cognate element with Catawba [nopq] 'one'. The morphological structure of Woccon numerals indicates complex formation rules that may involve root substitution or compound patterns not immediately transparent from the surface forms. Workers should note that Woccon numeral morphology may not follow expected decimal patterns and should analyze each numeral form independently for its constituent morphemes.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "The Woccon [nlp] two. The form noponne ten shows no relationship to the first form, though, and seems to contain a cognate with Catawba [nopq] one. The form Soone nomme twelve clearly contains the root for three, rather than that for two.",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "numeral",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows a specific pattern of consonant cluster simplification in the word for 'three' that distinguishes it from other Siouan languages. The Proto-Siouan root for 'three' contained a medial [*mn] cluster, as evidenced by forms like Catawba [namone], Lakhota [yamni], and Omaha [dabdi]. Woccon simplified this cluster by losing the second element (the [n]), resulting in Nam-mee, phonetically [nami]. This pattern contrasts with Tutelo and other Siouan languages (Ofo, Biloxi, Chiwere dialects) which lost the first element instead, giving Tutelo [nani]. Woccon's simplification pattern ([*mn] > [m]) aligns with Hidatsa and Crow rather than the eastern Siouan pattern. This phonological process may be applicable to other Woccon words containing similar consonant clusters inherited from Proto-Siouan.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 11,
+      "source_excerpt": "Proto-Siouan root contained a medial [*mn] cluster is clearly shown by such forms as Catawba [namone], Lakhota [yamni], and Omaha [dabdi]. Woccon and Tutelo have both simplified this cluster, but they have done so in different ways: Tutelo, like Ofo, Biloxi, and the Chiwere dialects, has lost the first element, while Woccon, like Hidatsa and Crow, has lost the second. Thus, Tutelo has [nani], while Woccon has Nam-mee, phonetically [nami].",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 11",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "WOCCON PREDICATIVE SUFFIX [-re] IN NUMERALS: The citation form of the number 'two' in Woccon has incorporated the predicative suffix [-re], creating a grammaticalized numeral form. This represents a shared innovation between Woccon and Catawba. However, various compounds in Woccon show the root alone without the [-re] suffix, indicating that the bare numeral root is still accessible for word formation. This suggests that Woccon has two forms for 'two': a citation/predicative form with [-re] and a compositional form without the suffix used in compounds. The predicative suffix [-re] appears to mark numerals when they function as predicates rather than as modifiers or components in larger words.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "the citation form of the number two in both languages has incorporated the predicative suffix [-re], although various compounds in Woccon show the root alone",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "affix",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon preserves Proto-Macro-Siouan *[y] as [y]. This sound correspondence is evidenced in multiple lexical items where Woccon maintains the original [y] sound that appears across Siouan languages. Attested Woccon examples include: 'Yonne' (tree), 'Yau' (fire), 'Yah-testea' (ashes, black/blue), 'Yau-huk' (snake), 'Yacunne' (fish), 'ya-' (water), and 'Yauh' (road). This preservation contrasts with Lakhota which shows [ch] reflexes for the same proto-sound. The consistent [y] reflex in Woccon indicates a conservative phonological development from the proto-language and can be applied to analyze other potential Woccon cognates with Siouan languages.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 13,
+      "source_excerpt": "Woccon [y] Examples: 7... Tree: W Yonne; Fire: W Yau; Ashes: W Yah-testea black, blue; Snake: W Yau-huk; Fish: W Yacunne; Water: W ya-; Road: W Yauh",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 13",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows initial [wa-] correspondence with Proto-North-Caddoan [hu-] in certain lexical sets, suggesting potential Macro-Siouan relationships. Attested Woccon forms include: 'Wawawa' (snow) corresponding to Catawba 'wa?' and Proto-North-Caddoan '*huna'u?', and 'Wattapi untakeer' (star) corresponding to Catawba 'wapitnu' and Proto-North-Caddoan '*hu-piri'. This [wa-]/[hu-] correspondence pattern can be used to identify potential cognates between Woccon and other Macro-Siouan languages, though the author notes the correspondence sets are limited in number.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 13,
+      "source_excerpt": "Snow: W Wawawa; C wa?, wa?wa; PS *wa; PNC *huna'u?. Star: W Wattapi untakeer; C wapitnu; PNC *hu-piri... correspondence between initial [wa-] or [ma-] in Woccon and Catawba and initial [hu-] in Proto-North-Caddoan",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 13",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "historical",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon preserves Macro-Siouan root forms in compound constructions. Attested examples include: 'Wonsh-shee' (arrow, awl) which contains a root cognate with Catawba 'wa' and Proto-Siouan '*ma', and 'Wee-kau' (belt) which relates to Catawba 'wiya' and appears in Seneca incorporated noun constructions. The compound structure 'Wonsh-shee' suggests Woccon may use multi-morphemic forms for tool/implement terms, while 'Wee-kau' indicates potential compound formation for clothing/accessory items. These patterns can guide analysis of other potential Woccon compounds containing preserved Macro-Siouan roots.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 13,
+      "source_excerpt": "Arrow, awl: W Wonsh-shee; C wa; PS *ma... String: W Wee-kau belt; C wiya; S -(h/')w(a)- incorporated noun root",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 13",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "noun",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon numeral formation shows distinct morphological patterns. The numeral 'two' is formed as 'Num-perre', where 'Num-' appears to be a numeral prefix or stem element, combined with '-perre'. This contrasts with related Catawban forms like Catawba 'nqpre, n4p' and suggests Woccon may have developed its own numeral morphology. The numeral 'three' is formed as 'Nam-mee', showing a different initial element 'Nam-' rather than 'Num-', indicating possible morphological variation in numeral construction or a different etymological source for this numeral.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 14,
+      "source_excerpt": "Two: W Num-perre; C nqpre, n4p... Three: W Nam-mee; C namone",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 14",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "morphology",
+      "pos_tag": "affix",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon shows a specific sound correspondence pattern where Woccon [r] corresponds with Catawba [n] in cognate forms. This is noted as a regular correspondence pattern that can be used to identify related forms between the two languages. The pattern is exemplified in comparative data and represents a systematic phonological relationship that distinguishes Woccon from its sister language Catawba.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 14,
+      "source_excerpt": "Woccon [r] corresponds with Catawba [n] in other forms, as noted above",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 14",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "lexicon",
+      "pos_tag": "multi",
+      "construction_type": "coordination"
+    },
+    {
+      "text": "Woccon exhibits a sound correspondence where [kka] in Woccon corresponds to [m] in Catawba, as seen in the comparison of Woccon 'Ourka' (bear) with Catawba 'nome?' (bear). This correspondence pattern would be consistent with both forms being reflexes of an earlier labiovelar stop, suggesting a systematic sound change in the development of Woccon phonology from proto-forms.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 14,
+      "source_excerpt": "Bear: W Ourka; C nome?... The correspondence of Woccon [kka] with Catawba [m] would not be unusual if both were reflexes of an earlier labiovelar stop",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 14",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*.",
+      "grammar_domain": "phonology",
+      "pos_tag": "multi",
+      "construction_type": "na"
+    }
+  ],
+  "community_pronunciation_notes": [
+    {
+      "text": "In some cases a Woccon word has a nasal vowel where the corresponding Catawba word has a long oral vowel.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "There are also a few cases in which a Woccon word has a nasal vowel where the corresponding Catawba word has a long oral vowel.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Woccon phoneme inventory can be reconstituted by examining words that have certain Catawba cognates.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "By examining the Woccon words that have certain Catawba cognates, it is possible to reconstitute the phoneme inventory of Woccon.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Woccon had twelve vowel phonemes: four short oral vowels (i, e, a, u), four long oral vowels (ī, ē, ā, ū), and four nasal vowels (į, ę, ą, ų).",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "twelve vowel phonemes divided into three series: four short oral vowels (i, e, a, u), four long oral vowels (i, e, a, u), and four nasal vowels (į, e, q. u)",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "English orthography does not provide a distinctive means for writing nasal vowels, particularly before fricatives.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 2,
+      "source_excerpt": "English orthography does not provide a distinctive means for writing nasal vowels, in particular before fricatives",
+      "provenance_status": "manual",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 2",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Of the consonants, S is extremely rare and b is not very frequent.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Of those consonants, S is extremely rare and b is not very frequent.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The phoneme ? is assumed for Woccon although not attested in the data",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "The phoneme ? is assumed for Woccon, although not attested in the data, since the phoneme is frequent in Catawba",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The voiced consonant of the Catawba imperative marker |-de- results from intervocalic voicing in Woccon.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "the Woccon form suggests that the voiced consonant of the Ca- tawba imperative marker |-de- results from intervocalic voicing, a pro- cess attested elsewhere in the Catawba language",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "There was a longstanding vacillation in the pronunciation of long oral vowels and nasal vowels in Catawban languages.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "there was a longstanding vacillation in the pronunciation of long oral vowels and nasal vowels, with the one replacing the other in various words in different Catawban languages",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "In citing Woccon words, the elongated 's' is replaced with non-elongated 's' in the documentation by Rudes and Carter.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 7,
+      "source_excerpt": "In citing Woccon words, I follow the practice of Carter (1980) in re- placing the elongated \"s\" (i.e. f) with non-elongated \"s\".",
+      "provenance_status": "manual",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 7",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Catawba word for river is typically pronounced [iswa] with syncope of the second vowel.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "The Catawba word for river is typically pronounced [iswa] with syn- cope of the second vowel.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Lawson used a wide variety of different grapheme combinations to render medial & for both Woccon and Tuscarora.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "(Lawson used a wide variety of different grapheme combinations to render medial & for both Woccon and Tuscarora. The orthography in this word is one of the more unusual.)",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "In Woccon the medial dy cluster was apparently affricated ([dz]), a pronunciation also recorded for Catawba.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Fawn [meat] *widyu W (Wisto) (error for (Witso)) 'Fawn-skin', C wirdyu 'meat'. (In Woccon the medial dy cluster was apparently affricated ([dz]), a pronunciation also recorded for Catawba.)",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Woccon word 'Punnum-punne' shows nasalization of the r's to n's due to the medial nasal vowel.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Four *páraparı: W (Punnum-punne) 'Four': C párapari 'four'. (The Woccon words shows nasalization of the r's to n's due to the medial nasal vowel.)",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The unstressed vowel in the second syllable has weakened to [a] and been deleted",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "I assume that, as in Catawba, the unstressed vowel in the second syllable has weakened to [a] and been deleted",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Catawba word for river is typically pronounced [i-swa?] with syncope of the second vowel.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Note that the Catawba word for river is typically pronounced [i-swa?] with syncope of the second vowel.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Either Woccon or Catawba has metathesized the first two syllables of the sun/moon word",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Either Woccon or Catawba has metathesized the first two syllables of this word",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Lawson used multiple orthographic spellings for the Woccon tribal name: Woccon, Waccon, and Wacon. These variant spellings reflect early colonial-era attempts to represent Woccon phonology in English orthography.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 170,
+      "source_excerpt": "Lawson also used the spellings Waccon and Wacon.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 170",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Historical transcription errors are documented in Woccon materials. Schoolcraft's 1855 reproduction of Lawson's Woccon vocabulary contains \"a number of significant errors in transcription.\" In Schoolcraft's comparative word list, \"of the sixteen Woccon forms cited, seven contain significant transcriptional errors, even when compared with the Woccon vocabulary presented by Schoolcraft a few pages earlier.\" This indicates inconsistent orthographic representation across sources and highlights the need for careful evaluation of attested forms when working with historical Woccon data.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 3,
+      "source_excerpt": "Schoolcraft also presented a list of comparisons between Woccon and Catawba; of sixteen pairs of words in the list, ten are marked in a footnote as \"Coincidences between Waccoa and Catawba.\"...of the",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 3",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Woccon initial [y] corresponds to Catawba [y] in equivalent words. This sound correspondence is demonstrated in the word for 'old woman' where Woccon has Yicau with initial [y] that corresponds to Catawba [y] in the equivalent word. Earlier transcriptions sometimes rendered this initial sound inconsistently (as Zicau or Ticau), but the attested form is Yicau with [y].",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "The actual form given by Lawson is Yicau, with the initial [y] corresponding to Catawba [y] in the equivalent word.",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "The combination of ink and typeface used in the production of the 1709 edition occasionally allowed letters to \"fill\" with ink, making it easy for later editors to confuse e with o, h with b, and u with n. In most cases, however, this \"filling\" of letters was only partial, so that careful examination allows correct identification of the letter in question. This affects the orthographic representation of Woccon forms and requires careful attention to distinguish original letters from printing artifacts.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 4,
+      "source_excerpt": "the combination of ink and typeface used in the production of the 1709 edition occasionally allowed letters to \"fill\" with ink, making it easy for later editors to confuse e with o, h with b, and u wi",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 4",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Orthographic uncertainty exists in Lawson's 1709 transcription where final letters are almost completely 'filled,' making it unclear whether 'e' or 'o' was intended. This affects the forms Punnum-punne (four) and Rooesoo possoo (stockings), where the final vowel quality cannot be definitively determined from the manuscript.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 5,
+      "source_excerpt": "* The final letters of these forms are almost completely \"filled,\" so that it is not clear whether e or o was intended.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 5",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Manuscript transcription errors include letter inversions, as seen in the Woccon form Ynpyupseunne (rundlet), where the first 'n' is almost certainly an inverted 'u'. This suggests the actual form should be Yupyupseunne, containing the root [yup-] for 'wood' followed by [-yupse-] meaning 'rum'.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 5,
+      "source_excerpt": "The form for rundlet, a small cask or barrel, apparently contains a misprint. The first n is almost certainly an inverted u, and the first sequence [yup-] thus appears to be the root for wood.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 5",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Lawson's orthographic 'j' may represent the phonetic sound [y]. This interpretation is suggested by Schoolcraft's analysis, possibly based on the assumption that Lawson's j corresponds phonetically to [y]. However, there are questions about the reliability of Lawson's orthographic conventions.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "Schoolcraft, possibly on the assumption that Lawson's j is phonetically [y]. On the other hand, Lawson's orthography",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Regular sound correspondences between Woccon and Catawba have been identified across 34 pairs of similar lexical items. These correspondences include: Woccon p corresponds to Catawba p (in lexical sets 1, 4, 12, 14, 18, 28); Woccon t corresponds to Catawba t (sets 8, 10, 12, 14, 21, 25); Woccon k corresponds to Catawba k (sets 9, 30); Woccon s corresponds to Catawba s (sets 9, 10); Woccon S corresponds to Catawba S (set 31); Woccon s corresponds to Catawba s (set 25); Woccon h corresponds to Catawba s (set 8); and Woccon h corresponds to Catawba h (set 5). These regular correspondences support a genetic relationship between the languages rather than borrowing.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 6,
+      "source_excerpt": "the thirty-four pairs of similar lexical items exhibit a limited number of regular sound correspondences. These correspondences, summarized in table 2... TABLE 2 RECURRENT SOUND CORRESPONDENCES Woccon",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 6",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Lawson was apparently less consistent in his recording of vowels compared to consonants. The comparative data analysis is therefore restricted to consonants due to this inconsistency in vowel documentation.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "The data are restricted here to consonants, as Lawson was apparently less consistent in his recording of vowels.",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Woccon exhibits phonological innovations including simplification of consonant clusters and sound correspondences with related Siouan languages. The [mn] cluster simplifies to [m] in Woccon. Some Woccon [r] corresponds to Catawba forms, indicating systematic sound changes between these related languages. These phonological innovations support the divergence between Woccon and Catawba noted by Sturtevant.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "Certain of the phonological innovations represented in table 2 (e.g., the simplification of the [mn] cluster to [m] in Woccon and the correspondence of some Woccon [r] to Catawba",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "All forms have been normalized to a common orthography, except for Woccon. This indicates that Woccon forms in the study retain their original orthographic representation rather than being converted to a standardized writing system used for other Siouan languages in the comparative analysis.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "All forms have been normalized to a common orthography, except for Woccon.",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Both Ofo and Biloxi lost initial [w] at a relatively early stage in their development from Proto-Siouan; the Ofo [y] and Biloxi [h] are epenthetic. This is demonstrated in the cognate set for 'boat, canoe': Woccon 'Watt', Ofo 'iyati', Biloxi 'nahati', Lakhota 'wata', Crow 'wa'ce', reconstructed Proto-Siouan '*wati'. The Woccon form retains the initial [w] from Proto-Siouan, while Ofo and Biloxi show systematic loss of this consonant with epenthetic vowel insertion.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 9,
+      "source_excerpt": "Both Ofo and Biloxi lost initial [w] at a relatively early stage in their development from Proto-Siouan; the Ofo [y] and Biloxi [h] are epenthetic.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 9",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Woccon exhibits a unique sound correspondence in the word for 'red': Woccon 'Yauta' compared to Ofo 'achuti', Biloxi 'acuti', Tutelo 'acuti', and Lakhota 'luta'. The initial consonant in the Woccon form shows an apparently unique development from the proto-form, differing from all other attested Siouan languages in this cognate set.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 9,
+      "source_excerpt": "Red: W Yauta; O achuti; B acuti; T acuti; L luta. This root has an apparently unique sound correspondence in its first consonant.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 9",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Woccon and Tutelo had quite distinct phonological histories, as evidenced by systematic differences in their cognate forms. This phonological divergence is apparent from comparison of multiple cognate sets in the comparative word list.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 9,
+      "source_excerpt": "That Woccon and Tutelo had quite distinct phonological histories is apparent from a number of these forms",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 9",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "The root for ten in Woccon shows phonological variation [pi ~ wi], appearing in different forms. This alternation is seen in the analysis of Woccon 'pea' (ten) in 'Tonne hauk pea' (eleven) and 'Winnop' (twenty), where the latter can be analyzed as a compound of [pi ~ wi] + ten. The [pi ~ wi] alternation may be cognate with Catawba 'picano' (ten), Tutelo 'pucka', Lakhota 'wikcemna', and Crow 'pireka', though the Lakhota [wi-] correspondence is noted as unusual.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 10,
+      "source_excerpt": "the root for ten is [pi ~ wi] and appears in Tonne hauk pea eleven and Winnop twenty... Woccon form thus looks like Tonne one, hauk plus, and pea ten... Winnop twenty, which can now be analyzed as a c",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 10",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Regular contraction pattern: [sam] is a regular contraction of [sapa] 'more than' in Lakhota numeral formation. This demonstrates a phonological process where longer forms undergo contraction in compound numerals, as seen in [sam ntpa] 'twelve' derived from [sapa] + [ntpa].",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "The form [sam] is a regular contraction of [sapa] more than. By appealing to errors in Lawson's recording of the higher numerals",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Woccon simplified Proto-Siouan medial [*mn] clusters by losing the second element (the [n]), similar to Hidatsa and Crow. This contrasts with Tutelo, Ofo, Biloxi, and Chiwere dialects which lost the first element (the [m]). Example: Proto-Siouan root for 'three' with medial [*mn] cluster becomes Woccon Nam-mee [nami], while Tutelo has [nani]. Other reflexes include Catawba [namone], Lakhota [yamni], and Omaha [dabdi].",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 11,
+      "source_excerpt": "Proto-Siouan root contained a medial [*mn] cluster is clearly shown by such forms as Catawba [namone], Lakhota [yamni], and Omaha [dabdi]. Woccon and Tutelo have both simplified this cluster, but they",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 11",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Woccon and Tutelo had quite distinct phonological histories, as revealed by cognate sets. This phonological divergence distinguishes Woccon from Tutelo and indicates separate historical development paths within the Siouan language family.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "a number of the cognate sets presented in the list in 2 reveal that Tutelo and Woccon had quite distinct phonological histories",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "The most frequent Woccon-Catawba sound correspondence is the reflex of Proto-Siouan [*y]. This correspondence has been extended to other Macro-Siouan languages in comparative analysis. This represents a systematic sound change that distinguishes Eastern Siouan (Woccon and Catawba) from Western Siouan languages, where Proto-Siouan [*y] has undergone different developments.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 12,
+      "source_excerpt": "the most frequent Woccon-Catawba sound correspondence, the reflex of Proto-Siouan [*y], has been extended to other Macro-Siouan languages",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 12",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Proto-Macro-Siouan *[y] has different reflexes across language families: Woccon [y], Catawba [y], Biloxi [y], Lakhota [ch], Seneca [y], Proto-North-Caddoan [*l], Kitsai [y], Wichita [y], and Yuchi [y] or [s]. This sound correspondence is demonstrated across multiple cognate sets including words for tree, fire, ashes, snake, fish, water, road, body, beaver, tobacco, and name.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 13,
+      "source_excerpt": "TABLE 4 SOME REFLEXES OF PROTO-MACRO-SIOUAN: Woccon [y] Examples: 7 Catawba [y] Examples: 8 Biloxi [y] Examples: 6 Lakhota [ch] Examples: 10 IROQUOIAN: Seneca [y] Examples: 6 [j] Examples: 4 CADDOAN:",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 13",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "A correspondence pattern exists between initial [wa-] or [ma-] in Woccon and Catawba and initial [hu-] in Proto-North-Caddoan. Examples include: Snow (W Wawawa, C wa?, PNC *huna'u?), Star (W Wattapi untakeer, C wapitnu, PNC *hu-piri), and Earth/dirt sets. The initial [wa-] is preserved in Caddo while Proto-North-Caddoan [hu-] represents an innovation.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 13,
+      "source_excerpt": "In these three sets we see a correspondence between initial [wa-] or [ma-] in Woccon and Catawba and initial [hu-] in Proto-North-Caddoan; the last set reveals that the initial [wa-] is preserved in C",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 13",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Regular sound correspondences are documented between Woccon and related languages including Seneca and Yuchi. These correspondences are summarized in a comparative table (table 4) and are considered especially convincing evidence for linguistic relationships. The correspondences are derived from cognate sets comparing basic vocabulary items across the language families.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_excerpt": "The regular sound correspondences apparent in this list are summarized in table 4. The Seneca and Yuchi examples seem especially convincing; although the total number of probable cognate sets in this",
+      "provenance_status": "missing",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Woccon [r] corresponds with Catawba [n] in comparative forms. This sound correspondence is attested in multiple cognate pairs between Woccon and Catawba, suggesting a regular phonological relationship where Woccon maintains [r] where Catawba has [n].",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 14,
+      "source_excerpt": "Woccon [r] corresponds with Catawba [n] in other forms, as noted above.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 14",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "The correspondence of Woccon [kka] with Catawba [m] represents a plausible sound change if both were reflexes of an earlier labiovelar stop. This suggests that Woccon [kka] and Catawba [m] can derive from the same proto-form containing a labiovelar stop, indicating a systematic phonological correspondence between the languages.",
+      "source_url": "https://drive.google.com/file/d/1QieCrXYLhuui2BpCyOzURsSllS28d3zV/view",
+      "source_page": 14,
+      "source_excerpt": "The correspondence of Woccon [kka] with Catawba [m] would not be unusual if both were reflexes of an earlier labiovelar stop.",
+      "provenance_status": "inferred",
+      "citation_short": "Carter-WocconLanguageNorth-1980.pdf 1980, p. 14",
+      "citation_full": "1980. *Carter-WocconLanguageNorth-1980.pdf*."
+    },
+    {
+      "text": "Catawba number word ddwasa represents an exact cognate for the Woccon word for eight. The double 'd' notation (ddwasa) appears to indicate a specific phonological feature in Catawba that corresponds to the Woccon form, suggesting shared phonological patterns between these closely related Siouan languages.",
+      "source_url": "https://drive.google.com/file/d/1lQ-qeuw991MC9MY9rOwxZx1mmryssq4V/view",
+      "source_page": 3,
+      "source_excerpt": "An examination of Catawba number words reveals that there is an exact cognate for the Woccon word for eight, Catawba ddwasa.",
+      "provenance_status": "inferred",
+      "citation_short": "Rudes-UniversalversusParticular-1985.pdf 1985, p. 3",
+      "citation_full": "1985. *Rudes-UniversalversusParticular-1985.pdf*."
+    },
+    {
+      "text": "Proto-Siouan reconstruction *sakuwT for 'seven' shows the use of asterisk notation for reconstructed forms and capital T for a reconstructed consonant. The Catawba reflex wasignture demonstrates the phonological development from Proto-Siouan to Catawba, providing insight into sound changes that may also apply to Woccon phonological development.",
+      "source_url": "https://drive.google.com/file/d/1lQ-qeuw991MC9MY9rOwxZx1mmryssq4V/view",
+      "source_page": 3,
+      "source_excerpt": "The Catawba word for seven, on the other hand, is distinct from that found in Woccon and derives instead from a Proto-Siouan root, *sakuwT, Catawba wasignture.",
+      "provenance_status": "inferred",
+      "citation_short": "Rudes-UniversalversusParticular-1985.pdf 1985, p. 3",
+      "citation_full": "1985. *Rudes-UniversalversusParticular-1985.pdf*."
+    },
+    {
+      "text": "Proto-Siouan *sakuwT underwent phonological reduction in the Catawba-Woccon branch: *wasakuwlre > *wasdkumfre > *wasdgmure > wasignture. This demonstrates a pattern of consonant cluster simplification and vowel reduction in polysyllabic forms. The process shows lenition of stops and loss of unstressed vowels in medial syllables.",
+      "source_url": "https://drive.google.com/file/d/1lQ-qeuw991MC9MY9rOwxZx1mmryssq4V/view",
+      "source_excerpt": "Proto-Siouan *sakuwT became pre-Catawba-Woccon *wa-sakuwf-re, which underwent phonological reduction along the lines *wasakuwlre > *wasdkumfre > *wasdgmure > wasignture",
+      "provenance_status": "missing",
+      "citation_short": "Rudes-UniversalversusParticular-1985.pdf 1985",
+      "citation_full": "1985. *Rudes-UniversalversusParticular-1985.pdf*."
+    },
+    {
+      "text": "Medial labial stops can undergo lenition in Catawba-Woccon languages. This is evidenced by comparing Gallatin's (1836) form lubbosa 'eight' where the medial labial stop is preserved unlenited, versus later Catawba forms like Gatschet's dowesare, ddwussa, ddwesa where lenition has occurred.",
+      "source_url": "https://drive.google.com/file/d/1lQ-qeuw991MC9MY9rOwxZx1mmryssq4V/view",
+      "source_excerpt": "The relationship of the Catawba word to that found in Woccon, as well as to the root of 'two', is perhaps better illustrated by the form cited in Gallatin (1836), lubbosa 'eight', where the medial lab",
+      "provenance_status": "missing",
+      "citation_short": "Rudes-UniversalversusParticular-1985.pdf 1985",
+      "citation_full": "1985. *Rudes-UniversalversusParticular-1985.pdf*."
+    }
+  ],
+  "community_cultural_notes": [
+    {
+      "text": "The Woccon had two villages named Yupwaureau and Tooptatmeer.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "He wrote that the Woccon had two villages-Yupwaureau and Tooptatmeer-and a total of 150 fighting men.",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Woccon villages were located about two leagues east of the southern Tuscarora villages between the Neuse River and Contentnea Creek.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Lawson located the Woccon villages about two leagues east of the southern villages of the Tuscarora tribe between the Neuse River and Contentnea Creek, around present-day Goldsboro in Wayne County or",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Woccon tribe joined with neighboring Tuscarora towns in the Tuscarora wars of 1711-1713.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "It is known that the Woccon tribe joined with the neighboring Tuscarora towns in the Tuscarora wars of 1711-1713, and most likely were ab- sorbed by the more populous Tuscaroras following their defeat",
+      "provenance_status": "manual",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "John Lawson included a vocabulary of 143 Woccon words in his journal despite never meeting a member of the tribe.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Lawson's path on his pioneering journey from Charleston through the interior of the Carolinas to Albemarle Sound bypassed the Woccon villages, and there is no record that he ever met a member of the t",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The relationship between Catawban and Siouan languages was first suggested by Lewis Henry Morgan in 1870.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "a relationship first suggested by Lewis Henry Morgan (1870)",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Woccon contains loan words from neighboring languages.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Loan words from neighboring languages are shown in appendix 5",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Lawson was an explorer, not a linguist, which impacted the accuracy of his Woccon vocabulary recordings.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Lawson was an explorer, not a linguist, and that English orthography does not provide a distinctive means for writing nasal vowels",
+      "provenance_status": "manual",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Woccon data consists of only 143 words from Lawson's vocabulary",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Although the data on the Woccon language are meager---only 143 words--and derive from only one source, Lawson's vocabulary",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Woccon language was closely related to the Catawba language",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "they are adequate to demonstrate that the language was closely related to the Ca- tawba language",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Woccon was spoken at the extreme eastern edge of Catawban territory, near the Atlantic coast of North Carolina.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "Woccon, on the other hand, was spoken at the ex- treme eastern edge, near the Atlantic coast of North Carolina",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Due to its isolation from other Catawban languages on the piedmont, Woccon was more conservative in its vocabulary.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "due to its isolation from the other Catawban languages on the piedmont, Woccon was more conservative in its vocabulary",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Woccon has a number of words that have Proto-Siouan cognates but no cognates in Catawba.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "there are a number of Woccon words that have Proto-Siouan cognates, but no cognates in Catawba",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "Yupwauremau was one of the two Woccon towns listed in Lawson",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "(Yupwauremau) (one of the two Woccon towns listed in Lawson [1967 (1709): 242])",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Woccon word for white is apparently a metaphoric extension from 'white hot'",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "The Woccon word is apparently a metaphoric extension from 'white hot'",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Woccon word for white is probably the source of the Tuscarora word for white",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "the Woccon word is probably the source of the Tuscarora word for white, uhwarya ke?",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Woccon word for shoes was blended with Algonquian (Powhatan) mahkesen 'moccasin', with the model coming from Carolina Algonquian dialects.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "C wité shoe' (Esaw dia- lect) blended with Algonquian (Powhatan) mahkesen 'moccasin (The model for the reshaping of Woccon shoes would have come from one of the Carolina Algonquian dialects",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The Woccon population was estimated at 500 to 600 individuals based on 150 fighting men.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "He wrote that the Woccon had two villages-Yupwaureau and Tooptatmeer-and a total of 150 fighting men. Based on that information, Frank T. Siebert, Jr. (1941-52) estimat- ed a total Woccon population o",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    },
+    {
+      "text": "The relationship between Woccon and Catawba languages was first claimed by Adelung and Vater in 1816.",
+      "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+      "source_page": 1,
+      "source_excerpt": "a claim first made by Adelung and Vater (1816)",
+      "provenance_status": "verified",
+      "citation_short": "Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of ... n.d., p. 1",
+      "citation_full": "n.d.. *Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language*."
+    }
+  ],
+  "source_note": "Legacy rules plus community notes from control panel."
+}

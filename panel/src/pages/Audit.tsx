@@ -8,6 +8,7 @@ interface AuditEntry {
   entity_id: string;
   action: string;
   user_id?: string;
+  user_display?: string;
   created_at: string;
 }
 
@@ -52,8 +53,8 @@ export default function Audit() {
                   <td className="px-4 py-3 text-render-muted font-mono text-xs">
                     {r.entity_type} / {r.entity_id.slice(0, 8)}…
                   </td>
-                  <td className="px-4 py-3 text-render-subtle font-mono text-xs">
-                    {r.user_id?.slice(0, 8) ?? "—"}
+                  <td className="px-4 py-3 text-render-subtle text-xs">
+                    {r.user_display ?? "—"}
                   </td>
                 </tr>
               ))}

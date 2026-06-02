@@ -74,6 +74,21 @@ jobs:
 
       - name: Deploy to Container App
         run: |
+          FQDN=$(az containerapp show \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --query "properties.configuration.ingress.fqdn" -o tsv)
+          az containerapp secret set \
+            --name "${{ env.CONTAINER_APP_NAME }}" \
+            --resource-group "${{ env.RESOURCE_GROUP }}" \
+            --secrets \
+              "foundry-api-key=${{ secrets.FOUNDRY_API_KEY }}" \
+              "jwt-secret=${{ secrets.JWT_SECRET }}" \
+              "smtp-password=${{ secrets.SMTP_PASSWORD }}" \
+              "anthropic-api-key=${{ secrets.ANTHROPIC_API_KEY }}" \
+              "panel-admin-password=${{ secrets.PANEL_ADMIN_PASSWORD }}" \
+              "page-access-token=${{ secrets.PAGE_ACCESS_TOKEN }}" \
+            --output none
           az containerapp update \
             --name "${{ env.CONTAINER_APP_NAME }}" \
             --resource-group "${{ env.RESOURCE_GROUP }}" \
@@ -83,8 +98,29 @@ jobs:
               "PORT=8000" \
               "LOCAL_LLM=false" \
               "FOUNDRY_ENDPOINT=${{ secrets.FOUNDRY_ENDPOINT }}" \
-              "FOUNDRY_API_KEY=${{ secrets.FOUNDRY_API_KEY }}" \
+              "FOUNDRY_API_KEY=secretref:foundry-api-key" \
               "FOUNDRY_DEPLOYMENT=${{ secrets.FOUNDRY_DEPLOYMENT }}" \
+              "FOUNDRY_API_VERSION=${{ vars.FOUNDRY_API_VERSION || '2024-05-01-preview' }}" \
+              "ANTHROPIC_API_KEY=secretref:anthropic-api-key" \
+              "ANTHROPIC_MODEL=${{ vars.ANTHROPIC_MODEL }}" \
+              "JWT_SECRET=secretref:jwt-secret" \
+              "JWT_EXPIRE_MINUTES=1440" \
+              "PANEL_ADMIN_EMAIL=${{ vars.PANEL_ADMIN_EMAIL }}" \
+              "PANEL_ADMIN_PASSWORD=secretref:panel-admin-password" \
+              "PANEL_PUBLIC_BASE_URL=https://${FQDN}" \
+              "PANEL_CORS_ORIGINS=https://${FQDN}" \
+              "EMAIL_MODE=${{ vars.EMAIL_MODE || 'smtp' }}" \
+              "SMTP_HOST=${{ vars.SMTP_HOST }}" \
+              "SMTP_PORT=${{ vars.SMTP_PORT || '587' }}" \
+              "SMTP_USER=${{ vars.SMTP_USER }}" \
+              "SMTP_PASSWORD=secretref:smtp-password" \
+              "SMTP_FROM=${{ vars.SMTP_FROM }}" \
+              "SMTP_USE_TLS=true" \
+              "DATABASE_URL=${{ vars.DATABASE_URL || 'sqlite:///./data/woccon.db' }}" \
+              "WOCCON_DICTIONARY_PATH=woccon_language/dictionary_unified.json" \
+              "WOCCON_RULES_PATH=woccon_language/rules_unified.json" \
+              "PAGE_ACCESS_TOKEN=secretref:page-access-token" \
+              "VERIFY_TOKEN=${{ secrets.VERIFY_TOKEN }}" \
             --output none
 
       - name: Get app URL

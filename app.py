@@ -62,6 +62,7 @@ try:
         from fastapi.staticfiles import StaticFiles
 
         app.mount("/panel", StaticFiles(directory=_panel_dist, html=True), name="panel")
+        print(f"Control panel UI mounted at /panel/ (from {_panel_dist})")
 except ImportError as _panel_err:
     print(f"Panel API not loaded: {_panel_err}")
 

@@ -29,7 +29,7 @@ This lists all files in the folder and fetches text from every Google Doc and PD
 ### Supported file types (Phase 1)
 
 - **Google Docs**: exported as plain text.
-- **PDFs**: text extracted (no OCR). Scanned PDFs will yield little or no text until OCR is added later.
+- **PDFs**: text extracted via pdfplumber; if pages are sparse (scanned), **Claude vision OCR** runs automatically when `ANTHROPIC_API_KEY` is set (`PDF_OCR_ENABLED=true` by default). Library uploads show `Vision OCR` / `Hybrid OCR` badges when OCR was used.
 
 Other types (e.g. Sheets) are skipped and only listed.
 

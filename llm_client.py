@@ -2,6 +2,7 @@
 Single LLM abstraction: Anthropic (ANTHROPIC_API_KEY set), local Ollama (LOCAL_LLM=true),
 or Microsoft Foundry (LOCAL_LLM=false). Returns Ollama-compatible shape so callers can use ["message"]["content"].
 """
+import base64
 import os
 import logging
 from typing import Any, Dict, List, Optional
@@ -77,6 +78,65 @@ def _anthropic_chat(
     except Exception as e:
         log.error("Anthropic request failed: %s", e)
         return {"message": {"content": f"Error: Anthropic request failed. {e}"}}
+
+
+def llm_vision_chat(
+    model: str,
+    text_prompt: str,
+    image_bytes_list: List[bytes],
+    options: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """
+    Anthropic vision request: one or more PNG/JPEG images plus a text prompt.
+    Requires ANTHROPIC_API_KEY (Anthropic-only).
+    """
+    if not _use_anthropic():
+        raise RuntimeError(
+            "Scanned PDF detected; set ANTHROPIC_API_KEY for vision OCR."
+        )
+    try:
+        from anthropic import Anthropic
+    except ImportError:
+        log.error("anthropic package required. pip install anthropic")
+        return {"message": {"content": "Error: pip install anthropic"}}
+    api_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
+    model_id = (
+        os.getenv("PDF_OCR_MODEL")
+        or os.getenv("ANTHROPIC_MODEL")
+        or model
+        or "claude-sonnet-4-20250514"
+    ).strip()
+    options = options or {}
+    max_tokens = options.get("num_predict", 4096)
+    content: List[Dict[str, Any]] = []
+    for img in image_bytes_list:
+        content.append(
+            {
+                "type": "image",
+                "source": {
+                    "type": "base64",
+                    "media_type": "image/png",
+                    "data": base64.standard_b64encode(img).decode("ascii"),
+                },
+            }
+        )
+    content.append({"type": "text", "text": text_prompt})
+    try:
+        client = Anthropic(api_key=api_key)
+        resp = client.messages.create(
+            model=model_id,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": content}],
+            temperature=options.get("temperature", 0.0),
+        )
+        text_out = ""
+        for block in resp.content:
+            if getattr(block, "type", None) == "text":
+                text_out += getattr(block, "text", "") or ""
+        return {"message": {"role": "assistant", "content": text_out.strip()}}
+    except Exception as e:
+        log.error("Anthropic vision request failed: %s", e)
+        return {"message": {"content": f"Error: Anthropic vision request failed. {e}"}}
 
 
 def _local_ollama_chat(

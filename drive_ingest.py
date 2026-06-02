@@ -181,24 +181,17 @@ def fetch_doc_text(service: Any, file_id: str) -> str:
 
 
 def fetch_pdf_text(service: Any, file_id: str) -> str:
-    """Download a PDF and extract text (no OCR). Returns empty string if extraction fails."""
-    import pdfplumber
+    """Download a PDF and extract text (pdfplumber + optional vision OCR)."""
+    from panel_api.services.pdf_text import extract_pdf_plain
+
     data = service.files().get_media(fileId=file_id).execute()
-    if isinstance(data, bytes):
-        buf = io.BytesIO(data)
-    else:
-        buf = io.BytesIO(data.encode() if isinstance(data, str) else b"")
-    text_parts = []
+    if not isinstance(data, bytes):
+        data = bytes(data) if data else b""
     try:
-        with pdfplumber.open(buf) as pdf:
-            for page in pdf.pages:
-                t = page.extract_text()
-                if t:
-                    text_parts.append(t)
+        return extract_pdf_plain(data)
     except Exception as e:
         log.warning("PDF text extraction failed for %s: %s", file_id, e)
         return ""
-    return "\n\n".join(text_parts)
 
 
 def _is_403(e: Exception) -> bool:

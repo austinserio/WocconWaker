@@ -10,13 +10,50 @@ from sqlalchemy.orm import Session
 
 from panel_api.config import get_settings
 from panel_api.db import CanonicalLexicon, CanonicalRule, PendingLexicon, PendingRule
+from panel_api.services.citation import citation_for_entry
 from panel_api.services.duplicates import normalize_text
+from panel_api.services.vocab_match import find_base_match
 
 log = logging.getLogger("panel_commit")
 
 
 def _normalize_woccon(w: str) -> str:
     return (w or "").strip().lower()
+
+
+def _copy_locators(target, pending) -> None:
+    target.source_document_id = pending.source_document_id or getattr(target, "source_document_id", None)
+    target.source_page = pending.source_page
+    target.source_page_end = pending.source_page_end
+    target.source_excerpt = pending.source_excerpt
+    target.source_chunk_index = pending.source_chunk_index
+    target.provenance_status = pending.provenance_status
+
+
+def _provenance_export(db: Session, row) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
+    if row.source_page is not None:
+        out["source_page"] = row.source_page
+    if row.source_page_end is not None:
+        out["source_page_end"] = row.source_page_end
+    if row.source_excerpt:
+        out["source_excerpt"] = row.source_excerpt
+    if row.provenance_status:
+        out["provenance_status"] = row.provenance_status
+    citation = citation_for_entry(
+        db,
+        source_document_id=getattr(row, "source_document_id", None),
+        source=getattr(row, "source", None),
+        source_url=getattr(row, "source_url", None),
+        source_page=getattr(row, "source_page", None),
+        source_page_end=getattr(row, "source_page_end", None),
+        source_excerpt=getattr(row, "source_excerpt", None),
+        provenance_status=getattr(row, "provenance_status", None),
+    )
+    if citation:
+        out["citation_short"] = citation.short
+        out["citation_full"] = citation.full
+    return out
 
 
 def commit_pending(db: Session) -> Dict[str, Any]:
@@ -30,33 +67,95 @@ def commit_pending(db: Session) -> Dict[str, Any]:
         .all()
     ):
         key = _normalize_woccon(pending.woccon)
+        base_id = pending.base_entry_id
+        base_score = pending.base_match_score
+        base_method = pending.base_match_method
+        if not base_id:
+            base_id, base_score, base_method = find_base_match(db, pending.woccon, pending.english)
+
         existing = (
             db.query(CanonicalLexicon).filter(CanonicalLexicon.woccon_normalized == key).first()
         )
-        if existing:
-            existing.english = pending.english
-            existing.pos = pending.pos
-            existing.pronunciation = pending.pronunciation
-            existing.source_url = pending.source_url or existing.source_url
-            existing.source = "community_drive"
-            existing.teaching_unit = pending.teaching_unit or existing.teaching_unit
-            existing.word_class = pending.word_class or existing.word_class
-            existing.lesson_band = pending.lesson_band or existing.lesson_band
-        else:
-            db.add(
-                CanonicalLexicon(
-                    woccon=pending.woccon,
-                    english=pending.english,
-                    pos=pending.pos,
-                    pronunciation=pending.pronunciation,
-                    source="community_drive",
-                    source_url=pending.source_url,
-                    woccon_normalized=key,
-                    teaching_unit=pending.teaching_unit,
-                    word_class=pending.word_class,
-                    lesson_band=pending.lesson_band,
+
+        if existing and existing.is_base_entry:
+            variant = (
+                db.query(CanonicalLexicon)
+                .filter(
+                    CanonicalLexicon.woccon_normalized == key,
+                    CanonicalLexicon.is_base_entry.is_(False),
+                    CanonicalLexicon.base_entry_id == existing.id,
                 )
+                .first()
             )
+            target = variant or CanonicalLexicon(
+                woccon=pending.woccon,
+                english=pending.english,
+                pos=pending.pos,
+                pronunciation=pending.pronunciation,
+                source="community_drive",
+                source_url=pending.source_url,
+                source_document_id=pending.source_document_id,
+                woccon_normalized=key,
+                teaching_unit=pending.teaching_unit,
+                word_class=pending.word_class,
+                lesson_band=pending.lesson_band,
+                source_page=pending.source_page,
+                source_page_end=pending.source_page_end,
+                source_excerpt=pending.source_excerpt,
+                source_chunk_index=pending.source_chunk_index,
+                provenance_status=pending.provenance_status,
+                is_base_entry=False,
+                base_entry_id=existing.id,
+                base_match_score=base_score,
+                base_match_method=base_method or "woccon_exact",
+            )
+            if variant:
+                variant.english = pending.english
+                variant.pos = pending.pos
+                variant.pronunciation = pending.pronunciation
+                variant.source_url = pending.source_url or variant.source_url
+                _copy_locators(variant, pending)
+            else:
+                db.add(target)
+        elif existing:
+            if not existing.is_base_entry:
+                existing.english = pending.english
+                existing.pos = pending.pos
+                existing.pronunciation = pending.pronunciation
+                existing.source_url = pending.source_url or existing.source_url
+                existing.source = "community_drive"
+                existing.teaching_unit = pending.teaching_unit or existing.teaching_unit
+                existing.word_class = pending.word_class or existing.word_class
+                existing.lesson_band = pending.lesson_band or existing.lesson_band
+                if base_id and not existing.is_base_entry:
+                    existing.base_entry_id = base_id
+                    existing.base_match_score = base_score
+                    existing.base_match_method = base_method
+                _copy_locators(existing, pending)
+        else:
+            row = CanonicalLexicon(
+                woccon=pending.woccon,
+                english=pending.english,
+                pos=pending.pos,
+                pronunciation=pending.pronunciation,
+                source="community_drive",
+                source_url=pending.source_url,
+                source_document_id=pending.source_document_id,
+                woccon_normalized=key,
+                teaching_unit=pending.teaching_unit,
+                word_class=pending.word_class,
+                lesson_band=pending.lesson_band,
+                source_page=pending.source_page,
+                source_page_end=pending.source_page_end,
+                source_excerpt=pending.source_excerpt,
+                source_chunk_index=pending.source_chunk_index,
+                provenance_status=pending.provenance_status,
+                is_base_entry=False,
+                base_entry_id=base_id,
+                base_match_score=base_score,
+                base_match_method=base_method,
+            )
+            db.add(row)
         pending.status = "committed"
         lexicon_committed += 1
 
@@ -86,6 +185,11 @@ def commit_pending(db: Session) -> Dict[str, Any]:
                 grammar_domain=pending.grammar_domain,
                 pos_tag=pending.pos_tag,
                 construction_type=pending.construction_type,
+                source_page=pending.source_page,
+                source_page_end=pending.source_page_end,
+                source_excerpt=pending.source_excerpt,
+                source_chunk_index=pending.source_chunk_index,
+                provenance_status=pending.provenance_status,
             )
         )
         max_order[cat] = order + 1
@@ -131,6 +235,11 @@ def export_unified_json(db: Session) -> Dict[str, str]:
             entry["word_class"] = row.word_class
         if row.lesson_band:
             entry["lesson_band"] = row.lesson_band
+        if row.is_base_entry:
+            entry["is_base_entry"] = True
+        if row.base_entry_id:
+            entry["base_entry_id"] = row.base_entry_id
+        entry.update(_provenance_export(db, row))
         community_lexicon.append(entry)
 
     import merge_staging
@@ -182,6 +291,7 @@ def export_unified_json(db: Session) -> Dict[str, str]:
                 .all()
             ):
                 note = {"text": row.content, "source_url": row.source_url}
+                note.update(_provenance_export(db, row))
                 if cat == "grammar":
                     if row.grammar_domain:
                         note["grammar_domain"] = row.grammar_domain

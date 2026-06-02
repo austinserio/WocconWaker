@@ -6,7 +6,8 @@ import json
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 log = logging.getLogger("drive_extract")
 
@@ -32,6 +33,15 @@ MAX_CHUNK_CHARS = 2400
 # Anthropic requires streaming for long requests, so when using Anthropic we always chunk (effective 0).
 MAX_WHOLE_FILE_CHARS_DEFAULT = int(os.environ.get("DRIVE_EXTRACT_WHOLE_FILE_MAX_CHARS", "14000"))
 EXTRACTION_SOURCE = "community_drive"
+PAGE_MARKER_RE = re.compile(r"\[\[PAGE\s+(\d+)\]\]", re.IGNORECASE)
+
+
+@dataclass
+class ChunkMeta:
+    text: str
+    chunk_index: int
+    page_start: Optional[int] = None
+    page_end: Optional[int] = None
 
 
 def _max_whole_file_chars() -> int:
@@ -109,21 +119,33 @@ def chunk_text(text: str, max_chars: int = MAX_CHUNK_CHARS) -> List[str]:
     return chunks
 
 
-EXTRACTION_PROMPT = """You are extracting structured Woccon language data from community-authored text (Waccamaw people + Siouan linguist). This data is authoritative.
+def chunk_page_range(chunk: str) -> Tuple[Optional[int], Optional[int]]:
+    pages = [int(m.group(1)) for m in PAGE_MARKER_RE.finditer(chunk)]
+    if not pages:
+        return None, None
+    return min(pages), max(pages)
 
-From the following text, extract:
-1. lexicon_entries: list of Woccon vocabulary items. Each item has: woccon (the Woccon word), english (meaning), pos (part of speech, e.g. noun, verb), and optionally pronunciation (e.g. "(ay-COOCH-ro-moan)" or phonetic hint). If you see patterns like "Word= woccon (pronunciation)" or "Bag= ekoocromon (ay-COOCH-ro-moan)", extract them.
-2. grammar_notes: list of short factual sentences or bullet points about grammar (e.g. "Subject-Object-Verb order", "Reduplication signals emphasis").
-3. pronunciation_notes: list of short notes about pronunciation (e.g. "a= ah").
-4. cultural_notes: list of short factual sentences that help an agent understand context—e.g. that Woccon is Siouan and how we know, historical names we were called, tribal history, documentation sources, cultural context. Things that are not vocabulary or grammar but are important for answering "how do we know X?" or "what is the context?"
 
-Output ONLY a single JSON object with keys: "lexicon_entries", "grammar_notes", "pronunciation_notes", "cultural_notes". Use empty arrays if nothing relevant. No markdown, no explanation.
+def chunk_text_with_meta(text: str, max_chars: int = MAX_CHUNK_CHARS) -> List[ChunkMeta]:
+    raw_chunks = chunk_text(text, max_chars)
+    return [
+        ChunkMeta(
+            text=c,
+            chunk_index=i,
+            page_start=chunk_page_range(c)[0],
+            page_end=chunk_page_range(c)[1],
+        )
+        for i, c in enumerate(raw_chunks)
+    ]
 
-Text:
----
-{text}
----
-JSON:"""
+
+MAX_LEXICON_EXCERPT = 200
+MAX_NOTE_EXCERPT = 200
+MAX_GRAMMAR_EXCERPT = 800
+MAX_GRAMMAR_EXCERPT_FALLBACK = 400
+
+# Legacy alias — prompts built dynamically via panel_api.extraction_config.build_extraction_prompt
+EXTRACTION_PROMPT = None
 
 
 def _parse_json_from_response(content: str) -> Optional[Dict[str, Any]]:
@@ -170,19 +192,15 @@ def _validate_extraction(raw: Dict[str, Any]) -> Tuple[bool, Dict[str, Any]]:
             "english": str(eng).strip(),
             "pos": str(e.get("pos") or e.get("part_of_speech") or "").strip() or "unknown",
             "pronunciation": str(e.get("pronunciation") or "").strip() or None,
+            "source_page": _coerce_int(e.get("source_page")),
+            "source_excerpt": _cap_excerpt(e.get("source_excerpt"), MAX_LEXICON_EXCERPT),
         })
-    normalized_grammar = [str(g).strip() for g in grammar if g]
-    normalized_pronunciation = [str(p).strip() for p in pronunciation if p]
-    normalized_cultural = []
-    for c in cultural:
-        if not c:
-            continue
-        s = str(c).strip()
-        # Unwrap LLM artifact: "{'text': '...'}" or similar
-        m = re.match(r"^\s*\{['\"]text['\"]\s*:\s*['\"](.+)['\"]\s*\}\s*$", s, re.DOTALL)
-        if m:
-            s = m.group(1).replace("\\'", "'").strip()
-        normalized_cultural.append(s)
+    normalized_grammar = [_normalize_note(g, excerpt_max=MAX_GRAMMAR_EXCERPT, excerpt_fallback=MAX_GRAMMAR_EXCERPT_FALLBACK) for g in grammar if g]
+    normalized_pronunciation = [_normalize_note(p) for p in pronunciation if p]
+    normalized_cultural = [_normalize_note(c) for c in cultural if c]
+    normalized_grammar = [n for n in normalized_grammar if n]
+    normalized_pronunciation = [n for n in normalized_pronunciation if n]
+    normalized_cultural = [n for n in normalized_cultural if n]
     return True, {
         "lexicon_entries": normalized_lexicon,
         "grammar_notes": normalized_grammar,
@@ -191,20 +209,109 @@ def _validate_extraction(raw: Dict[str, Any]) -> Tuple[bool, Dict[str, Any]]:
     }
 
 
+def _coerce_int(val: Any) -> Optional[int]:
+    if val is None or val == "":
+        return None
+    try:
+        return int(val)
+    except (TypeError, ValueError):
+        return None
+
+
+def _cap_excerpt(val: Any, max_len: int = MAX_NOTE_EXCERPT) -> Optional[str]:
+    if not val:
+        return None
+    s = " ".join(str(val).split())
+    return s[:max_len] if len(s) > max_len else s
+
+
+def _normalize_note(
+    note: Any,
+    *,
+    excerpt_max: int = MAX_NOTE_EXCERPT,
+    excerpt_fallback: int = 120,
+) -> Optional[Dict[str, Any]]:
+    if not note:
+        return None
+    if isinstance(note, dict):
+        text = (note.get("text") or note.get("content") or "").strip()
+        if not text:
+            return None
+        out = {
+            "text": text,
+            "source_page": _coerce_int(note.get("source_page")),
+            "source_page_end": _coerce_int(note.get("source_page_end")),
+            "source_excerpt": _cap_excerpt(
+                note.get("source_excerpt") or text[:excerpt_fallback],
+                excerpt_max,
+            ),
+        }
+        gl = (note.get("grammar_lineage") or "").strip()
+        if gl:
+            out["grammar_lineage"] = gl
+        return out
+    s = str(note).strip()
+    m = re.match(r"^\s*\{['\"]text['\"]\s*:\s*['\"](.+)['\"]\s*\}\s*$", s, re.DOTALL)
+    if m:
+        s = m.group(1).replace("\\'", "'").strip()
+    if not s:
+        return None
+    return {"text": s, "source_excerpt": _cap_excerpt(s[:excerpt_fallback], excerpt_max)}
+
+
+def _apply_extraction_focus(data: Dict[str, Any], focus: str) -> Dict[str, Any]:
+    """Drop buckets not requested by the extraction focus."""
+    from panel_api.extraction_config import EXTRACTION_FOCUS_IDS
+
+    f = focus if focus in EXTRACTION_FOCUS_IDS else "general"
+    out = dict(data)
+    if f == "vocabulary":
+        out["grammar_notes"] = []
+        out["pronunciation_notes"] = []
+        out["cultural_notes"] = []
+    elif f == "grammar":
+        out["lexicon_entries"] = []
+        out["pronunciation_notes"] = []
+        out["cultural_notes"] = []
+    elif f == "pronunciation":
+        out["lexicon_entries"] = []
+        out["grammar_notes"] = []
+        out["cultural_notes"] = []
+    elif f == "culture":
+        out["lexicon_entries"] = []
+        out["grammar_notes"] = []
+        out["pronunciation_notes"] = []
+    return out
+
+
 def extract_from_chunk(
     chunk: str,
     file_path: str,
     model: Optional[str] = None,
     retry: bool = True,
     max_text_chars: int = 2200,
-    num_predict: int = 800,
+    num_predict: int = 4096,
+    *,
+    context_header: str = "",
+    chunk_index: Optional[int] = None,
+    chunk_page_start: Optional[int] = None,
+    chunk_page_end: Optional[int] = None,
+    extraction_focus: str = "general",
+    grammar_lineage: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Call LLM on one chunk (or full file text); return normalized extraction or empty dict on failure."""
     from llm_client import llm_chat
+    from panel_api.extraction_config import build_extraction_prompt
 
-    model = model or os.getenv("ANTHROPIC_MODEL") or os.getenv("FOUNDRY_DEPLOYMENT") or os.getenv("OLLAMA_MODEL", "llama3:8b")
+    model = model or os.getenv("REEXTRACT_MODEL") or os.getenv("ANTHROPIC_MODEL") or os.getenv("FOUNDRY_DEPLOYMENT") or os.getenv("OLLAMA_MODEL", "llama3:8b")
     text_slice = chunk[:max_text_chars] if max_text_chars else chunk
-    prompt = EXTRACTION_PROMPT.format(text=text_slice)
+    header = context_header or "Extract from the following source text."
+    prompt = build_extraction_prompt(
+        context_header=header,
+        text=text_slice,
+        focus=extraction_focus,
+        grammar_lineage=grammar_lineage,
+    )
     messages = [
         {"role": "user", "content": prompt},
     ]
@@ -216,14 +323,51 @@ def extract_from_chunk(
             if len(content) > 500:
                 log.warning("Extraction returned no valid JSON (response length=%d). Increase num_predict if truncated.", len(content))
             if retry:
-                return extract_from_chunk(chunk, file_path, model=model, retry=False, max_text_chars=max_text_chars, num_predict=num_predict)
+                return extract_from_chunk(
+                    chunk,
+                    file_path,
+                    model=model,
+                    retry=False,
+                    max_text_chars=max_text_chars,
+                    num_predict=num_predict,
+                    context_header=context_header,
+                    chunk_index=chunk_index,
+                    chunk_page_start=chunk_page_start,
+                    chunk_page_end=chunk_page_end,
+                    extraction_focus=extraction_focus,
+                    grammar_lineage=grammar_lineage,
+                )
             return {"lexicon_entries": [], "grammar_notes": [], "pronunciation_notes": [], "cultural_notes": []}
         ok, normalized = _validate_extraction(data)
+        normalized = _apply_extraction_focus(normalized, extraction_focus)
+        for e in normalized.get("lexicon_entries", []):
+            e["source_chunk_index"] = chunk_index
+            e["_chunk_page_start"] = chunk_page_start
+            e["_chunk_page_end"] = chunk_page_end
+        for key in ("grammar_notes", "pronunciation_notes", "cultural_notes"):
+            for n in normalized.get(key, []):
+                if isinstance(n, dict):
+                    n["source_chunk_index"] = chunk_index
+                    n["_chunk_page_start"] = chunk_page_start
+                    n["_chunk_page_end"] = chunk_page_end
         return normalized
     except Exception as e:
         log.warning("Extraction failed for chunk from %s: %s", file_path, e)
         if retry:
-            return extract_from_chunk(chunk, file_path, model=model, retry=False, max_text_chars=max_text_chars, num_predict=num_predict)
+            return extract_from_chunk(
+                chunk,
+                file_path,
+                model=model,
+                retry=False,
+                max_text_chars=max_text_chars,
+                num_predict=num_predict,
+                context_header=context_header,
+                chunk_index=chunk_index,
+                chunk_page_start=chunk_page_start,
+                chunk_page_end=chunk_page_end,
+                extraction_focus=extraction_focus,
+                grammar_lineage=grammar_lineage,
+            )
         return {"lexicon_entries": [], "grammar_notes": [], "pronunciation_notes": [], "cultural_notes": []}
 
 
@@ -238,6 +382,11 @@ def extract_one_file(
     total_files: int = 0,
     chunk_start: int = 0,
     total_chunks: int = 0,
+    short_title: Optional[str] = None,
+    marked_source_text: Optional[str] = None,
+    on_progress: Optional[Callable[[int, str], None]] = None,
+    extraction_focus: str = "general",
+    grammar_lineage: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Run extraction on a single file's text. When the file fits in MAX_WHOLE_FILE_CHARS,
@@ -245,10 +394,14 @@ def extract_one_file(
     Dedupe within this file only. Returns dict with lexicon_entries, grammar_notes, etc.
     """
     file_lexicon: List[Dict[str, Any]] = []
-    file_grammar: List[str] = []
-    file_pronunciation: List[str] = []
-    file_cultural: List[str] = []
+    file_grammar: List[Dict[str, Any]] = []
+    file_pronunciation: List[Dict[str, Any]] = []
+    file_cultural: List[Dict[str, Any]] = []
     seen_woccon: set = set()
+    seen_notes: set = set()
+
+    def _note_key(n: Dict[str, Any]) -> str:
+        return (n.get("text") or "").strip().lower()
 
     def merge_extraction(extracted: Dict[str, Any]) -> None:
         for e in extracted.get("lexicon_entries", []):
@@ -259,9 +412,29 @@ def extract_one_file(
             e = dict(e)
             e["source"] = EXTRACTION_SOURCE
             file_lexicon.append(e)
-        file_grammar.extend(extracted.get("grammar_notes") or [])
-        file_pronunciation.extend(extracted.get("pronunciation_notes") or [])
-        file_cultural.extend(extracted.get("cultural_notes") or [])
+        for bucket, target in (
+            ("grammar_notes", file_grammar),
+            ("pronunciation_notes", file_pronunciation),
+            ("cultural_notes", file_cultural),
+        ):
+            for note in extracted.get(bucket) or []:
+                if isinstance(note, str):
+                    note = _normalize_note(note)
+                if not note:
+                    continue
+                nk = _note_key(note)
+                if not nk or nk in seen_notes:
+                    continue
+                seen_notes.add(nk)
+                target.append(dict(note))
+
+    def _context_header(meta: ChunkMeta) -> str:
+        label = short_title or path
+        if meta.page_start is not None:
+            if meta.page_end is not None and meta.page_end != meta.page_start:
+                return f'Text from pages {meta.page_start}–{meta.page_end} of "{label}".'
+            return f'Text from page {meta.page_start} of "{label}".'
+        return f'Text from "{label}".'
 
     # Whole-file path: beam the entire file in one call when it fits (no input chunking).
     max_whole = _max_whole_file_chars()
@@ -270,35 +443,56 @@ def extract_one_file(
             "Document %d/%d (%s) | whole file (%d chars, no chunking)",
             file_index, total_files, path, len(text),
         )
+        if on_progress:
+            on_progress(5, "Extracting document (single pass)")
+        meta = ChunkMeta(text=text, chunk_index=0, page_start=chunk_page_range(text)[0], page_end=chunk_page_range(text)[1])
         extracted = extract_from_chunk(
             text,
             path,
             model=model,
             max_text_chars=max_whole,
             num_predict=32768,
+            context_header=_context_header(meta),
+            chunk_index=0,
+            chunk_page_start=meta.page_start,
+            chunk_page_end=meta.page_end,
+            extraction_focus=extraction_focus,
+            grammar_lineage=grammar_lineage,
         )
         merge_extraction(extracted)
+        if on_progress:
+            on_progress(90, "Extraction complete")
     else:
-        chunks = chunk_text(text)
-        for i, chunk in enumerate(chunks):
+        chunks = chunk_text_with_meta(text)
+        total = len(chunks) or 1
+        for i, meta in enumerate(chunks):
             current_chunk = chunk_start + i + 1
-            pct = int(100 * current_chunk / total_chunks) if total_chunks else 0
+            pct = int(100 * (i + 1) / total)
+            if on_progress:
+                on_progress(min(pct, 90), f"Extracting chunk {i + 1}/{total}")
+            pct_log = int(100 * current_chunk / total_chunks) if total_chunks else 0
             log.info(
                 "Document %d/%d (%s) | chunk %d/%d of file | overall %d/%d (%d%%)",
-                file_index, total_files, path, i + 1, len(chunks), current_chunk, total_chunks, pct,
+                file_index, total_files, path, i + 1, len(chunks), current_chunk, total_chunks, pct_log,
             )
             extracted = extract_from_chunk(
-                chunk,
+                meta.text,
                 path,
                 model=model,
                 max_text_chars=MAX_CHUNK_CHARS,
                 num_predict=4096,
+                context_header=_context_header(meta),
+                chunk_index=meta.chunk_index,
+                chunk_page_start=meta.page_start,
+                chunk_page_end=meta.page_end,
+                extraction_focus=extraction_focus,
+                grammar_lineage=grammar_lineage,
             )
             merge_extraction(extracted)
 
-    file_grammar = list(dict.fromkeys(g.strip() for g in file_grammar if g and g.strip()))
-    file_pronunciation = list(dict.fromkeys(p.strip() for p in file_pronunciation if p and p.strip()))
-    file_cultural = list(dict.fromkeys(c.strip() for c in file_cultural if c and c.strip()))
+    file_grammar = list({n["text"]: n for n in file_grammar if n.get("text")}.values())
+    file_pronunciation = list({n["text"]: n for n in file_pronunciation if n.get("text")}.values())
+    file_cultural = list({n["text"]: n for n in file_cultural if n.get("text")}.values())
 
     return {
         "source_path": path,

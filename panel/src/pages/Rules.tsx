@@ -18,9 +18,11 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { api, CanonicalRule } from "../api";
 import { RuleBadges } from "../components/RuleBadges";
-import { RuleEditPanel } from "../components/RuleEditPanel";
+import { SourceCitation } from "../components/SourceCitation";
+import { RuleEntryEditor } from "../components/RuleEditPanel";
 import { EmptyState, PageHeader, PillTabs, Spinner } from "../components/ui";
 import { Taxonomy } from "../taxonomy";
+import { useAuth } from "../context/AuthContext";
 
 const NOTE_CATEGORIES = [
   { id: "grammar" as const, label: "Grammar" },
@@ -45,11 +47,13 @@ function SortableRuleCard({
   taxonomy,
   editing,
   onEdit,
+  readOnly,
 }: {
   rule: CanonicalRule;
   taxonomy: Taxonomy;
   editing: boolean;
   onEdit: () => void;
+  readOnly?: boolean;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: rule.id,
@@ -66,14 +70,16 @@ function SortableRuleCard({
       className={`panel-card p-4 mb-2 ${isDragging ? "opacity-90 scale-[1.01] shadow-card-hover z-10" : ""}`}
     >
       <div className="flex gap-3">
-        <button
-          type="button"
-          className="cursor-grab text-render-subtle hover:text-render-text px-1 shrink-0"
-          {...attributes}
-          {...listeners}
-        >
-          ⋮⋮
-        </button>
+        {!readOnly && (
+          <button
+            type="button"
+            className="cursor-grab text-render-subtle hover:text-render-text px-1 shrink-0"
+            {...attributes}
+            {...listeners}
+          >
+            ⋮⋮
+          </button>
+        )}
         <div className="flex-1 min-w-0">
           <p className="text-sm text-render-text leading-relaxed">{rule.content}</p>
           <RuleBadges
@@ -81,21 +87,15 @@ function SortableRuleCard({
             grammar_domain={rule.grammar_domain}
             pos_tag={rule.pos_tag}
             construction_type={rule.construction_type}
+            grammar_lineage={rule.grammar_lineage}
           />
           <div className="flex gap-3 mt-2">
-            {rule.source_url && (
-              <a
-                href={rule.source_url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs text-render-muted hover:text-white transition-colors"
-              >
-                Source →
-              </a>
+            <SourceCitation citation={rule.citation} />
+            {!readOnly && (
+              <button type="button" onClick={onEdit} className="text-xs text-render-muted hover:text-white">
+                {editing ? "Close" : "Edit"}
+              </button>
             )}
-            <button type="button" onClick={onEdit} className="text-xs text-render-muted hover:text-white">
-              {editing ? "Close" : "Edit tags"}
-            </button>
           </div>
         </div>
       </div>
@@ -104,6 +104,7 @@ function SortableRuleCard({
 }
 
 function GrammarRulesView({ taxonomy }: { taxonomy: Taxonomy }) {
+  const { canWrite } = useAuth();
   const [groups, setGroups] = useState<RuleGroup[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -148,7 +149,7 @@ function GrammarRulesView({ taxonomy }: { taxonomy: Taxonomy }) {
   );
 
   const onDragEnd = async (event: DragEndEvent) => {
-    if (!activeGroup) return;
+    if (!canWrite || !activeGroup) return;
     const { active, over } = event;
     if (!over || active.id === over.id) return;
     const rules = [...activeGroup.rules];
@@ -281,9 +282,10 @@ function GrammarRulesView({ taxonomy }: { taxonomy: Taxonomy }) {
                         taxonomy={taxonomy}
                         editing={editId === r.id}
                         onEdit={() => setEditId(editId === r.id ? null : r.id)}
+                        readOnly={!canWrite}
                       />
-                      {editId === r.id && (
-                        <RuleEditPanel
+                      {canWrite && editId === r.id && (
+                        <RuleEntryEditor
                           rule={r}
                           taxonomy={taxonomy}
                           onClose={() => setEditId(null)}
@@ -302,12 +304,19 @@ function GrammarRulesView({ taxonomy }: { taxonomy: Taxonomy }) {
   );
 }
 
-function SimpleRulesList({ category }: { category: string }) {
+function SimpleRulesList({ category, taxonomy }: { category: string; taxonomy: Taxonomy }) {
+  const { canWrite } = useAuth();
   const [rules, setRules] = useState<CanonicalRule[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editId, setEditId] = useState<string | null>(null);
+
+  const load = () => {
+    setLoading(true);
+    api<CanonicalRule[]>(`/rules?category=${category}`).then(setRules).finally(() => setLoading(false));
+  };
 
   useEffect(() => {
-    api<CanonicalRule[]>(`/rules?category=${category}`).then(setRules).finally(() => setLoading(false));
+    load();
   }, [category]);
 
   if (loading) {
@@ -324,15 +333,23 @@ function SimpleRulesList({ category }: { category: string }) {
       {rules.map((r) => (
         <li key={r.id} className="panel-card p-4">
           <p className="text-sm text-render-text">{r.content}</p>
-          {r.source_url && (
-            <a
-              href={r.source_url}
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs text-render-muted hover:text-white mt-2 inline-block"
+          <SourceCitation citation={r.citation} />
+          {canWrite && (
+            <button
+              type="button"
+              onClick={() => setEditId(editId === r.id ? null : r.id)}
+              className="text-xs text-render-muted hover:text-white mt-2"
             >
-              Source →
-            </a>
+              {editId === r.id ? "Close" : "Edit"}
+            </button>
+          )}
+          {canWrite && editId === r.id && (
+            <RuleEntryEditor
+              rule={r}
+              taxonomy={taxonomy}
+              onClose={() => setEditId(null)}
+              onSaved={load}
+            />
           )}
         </li>
       ))}
@@ -354,8 +371,8 @@ export default function Rules() {
         title="Language rules"
         subtitle={
           category === "grammar"
-            ? "Organized by grammar area, part of speech, and sentence construction. Edit tags on any rule."
-            : "Drag to reorder where supported."
+            ? "Organized by grammar area, POS, and construction. New rules: Pending → Commit."
+            : "Edit or delete notes. New rules: Pending → Commit."
         }
       />
 
@@ -365,9 +382,9 @@ export default function Rules() {
 
       {category === "grammar" && taxonomy ? (
         <GrammarRulesView taxonomy={taxonomy} />
-      ) : (
-        <SimpleRulesList category={category} />
-      )}
+      ) : taxonomy ? (
+        <SimpleRulesList category={category} taxonomy={taxonomy} />
+      ) : null}
     </div>
   );
 }

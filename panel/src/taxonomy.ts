@@ -9,6 +9,8 @@ export interface Taxonomy {
   pos_tags: TaxonomyOption[];
   construction_types: TaxonomyOption[];
   note_categories: string[];
+  extraction_focuses?: TaxonomyOption[];
+  grammar_lineages?: TaxonomyOption[];
 }
 
 export function labelFor(options: TaxonomyOption[], id?: string | null): string {

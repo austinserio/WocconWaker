@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api, setToken, User } from "../api";
 
 export default function Login() {
@@ -78,6 +78,11 @@ export default function Login() {
         <button type="submit" className="btn-primary w-full" disabled={loading}>
           {loading ? "Signing in…" : "Continue"}
         </button>
+        <p className="mt-4 text-center">
+          <Link to="/forgot-password" className="text-sm text-render-muted hover:text-white">
+            Forgot password?
+          </Link>
+        </p>
       </form>
     </div>
   );

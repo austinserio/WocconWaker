@@ -49,6 +49,16 @@ _CONSTRUCTION_RULES = [
     (r"\b(tense|aspect|future|past)\b", "tense_aspect"),
 ]
 
+# Comparative / attestation level — order matters (specific proto nodes before generic)
+_LINEAGE_RULES = [
+    (r"\b(proto.?siouan.?catawban|proto-siouan-catawban|\*psc\b|siouan.?catawban)\b", "proto_siouan_catawban"),
+    (r"\b(proto.?catawban|proto-catawban|\*pc\b|coastal catawban|catawba-woccon)\b", "proto_catawban"),
+    (r"\b(proto.?siouan|proto-siouan|\*ps\b|pan-siouan)\b", "proto_siouan"),
+    (r"\b(yuchi|biloxi|tunica)\b", "other_comparative"),
+    (r"\b(catawba|catawban|siouan|cognate|comparative)\b", "siouan_comparative"),
+    (r"\b(woccon|w\s*\(|attested)\b", "woccon_attested"),
+]
+
 
 def _first_match(text: str, rules: list) -> Optional[str]:
     lower = text.lower()
@@ -56,6 +66,11 @@ def _first_match(text: str, rules: list) -> Optional[str]:
         if re.search(pattern, lower, re.I):
             return value
     return None
+
+
+def classify_grammar_lineage(content: str) -> Optional[str]:
+    """Heuristic grammar lineage when the extractor did not tag a note."""
+    return _first_match(content, _LINEAGE_RULES)
 
 
 def classify_grammar_rule(content: str) -> Dict[str, str]:
@@ -75,14 +90,23 @@ def classify_grammar_rule(content: str) -> Dict[str, str]:
     }
 
 
-def apply_classification_to_rule(row, category: str, content: str) -> None:
+def apply_classification_to_rule(
+    row,
+    category: str,
+    content: str,
+    *,
+    grammar_lineage: Optional[str] = None,
+) -> None:
     """Set classification fields on a PendingRule or CanonicalRule row."""
     if category != "grammar":
         row.grammar_domain = None
         row.pos_tag = None
         row.construction_type = None
+        row.grammar_lineage = None
         return
     tags = classify_grammar_rule(content)
     row.grammar_domain = tags["grammar_domain"]
     row.pos_tag = tags["pos_tag"]
     row.construction_type = tags["construction_type"]
+    gl = (grammar_lineage or "").strip() or classify_grammar_lineage(content)
+    row.grammar_lineage = gl

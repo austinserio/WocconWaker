@@ -1,11 +1,11 @@
 from collections import defaultdict
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Response
 from sqlalchemy import or_
 
-from panel_api.db import CanonicalLexicon
-from panel_api.deps import CurrentUser, DbSession, RequireAdmin, RequireReviewer
+from panel_api.db import CanonicalLexicon, PendingLexicon
+from panel_api.deps import CurrentUser, DbSession, RequireAdmin, RequireWorker
 from panel_api.lexicon_taxonomy import (
     LESSON_BAND_IDS,
     TEACHING_UNIT_IDS,
@@ -20,10 +20,24 @@ from panel_api.schemas import (
     LexiconGroupOut,
     LexiconListResponse,
 )
+from panel_api.services.audit import write_audit
 from panel_api.services.lexicon_classifier import apply_lexicon_classification, normalize_word_class
 from panel_api.services.lexicon_reclassify import reclassify_all_lexicon
+from panel_api.services.serializers import canonical_lexicon_out
 
 router = APIRouter(prefix="/lexicon", tags=["lexicon"])
+
+
+def _apply_dedupe_filter(query, dedupe: bool):
+    """Hide variant rows that are already grouped under a base entry."""
+    if dedupe:
+        query = query.filter(
+            or_(
+                CanonicalLexicon.is_base_entry.is_(True),
+                CanonicalLexicon.base_entry_id.is_(None),
+            )
+        )
+    return query
 
 
 def _lexicon_query(
@@ -35,8 +49,17 @@ def _lexicon_query(
     lesson_band: Optional[str],
     source: Optional[str],
     pos: Optional[str],
+    view: Optional[str] = None,
+    dedupe: bool = True,
 ):
     query = db.query(CanonicalLexicon)
+    if view == "base":
+        query = query.filter(CanonicalLexicon.is_base_entry.is_(True))
+    elif view == "unlinked":
+        query = query.filter(
+            CanonicalLexicon.is_base_entry.is_(False),
+            CanonicalLexicon.base_entry_id.is_(None),
+        )
     if q:
         like = f"%{q}%"
         query = query.filter(
@@ -52,6 +75,12 @@ def _lexicon_query(
         query = query.filter(CanonicalLexicon.source == source)
     if pos:
         query = query.filter(CanonicalLexicon.pos.ilike(f"%{pos}%"))
+    query = _apply_dedupe_filter(query, dedupe)
+    if view == "base":
+        return query.order_by(
+            CanonicalLexicon.sort_order.asc().nulls_last(),
+            CanonicalLexicon.woccon,
+        )
     return query.order_by(
         CanonicalLexicon.teaching_unit.asc().nulls_last(),
         CanonicalLexicon.lesson_band.asc().nulls_last(),
@@ -70,12 +99,29 @@ def lexicon_stats(db: DbSession, user: CurrentUser):
     by_unit: dict = defaultdict(int)
     by_class: dict = defaultdict(int)
     by_band: dict = defaultdict(int)
+    base_count = 0
+    variant_count = 0
     for r in rows:
         by_unit[r.teaching_unit or "other"] += 1
         by_class[r.word_class or "unknown"] += 1
         by_band[r.lesson_band or "intermediate"] += 1
+        if r.is_base_entry:
+            base_count += 1
+        elif r.base_entry_id:
+            variant_count += 1
+    unmatched_pending = (
+        db.query(PendingLexicon)
+        .filter(
+            PendingLexicon.status.in_(["pending", "modified"]),
+            PendingLexicon.match_status == "unmatched",
+        )
+        .count()
+    )
     return {
         "total": len(rows),
+        "base_count": base_count,
+        "variant_count": variant_count,
+        "unmatched_pending": unmatched_pending,
         "by_teaching_unit": dict(by_unit),
         "by_word_class": dict(by_class),
         "by_lesson_band": dict(by_band),
@@ -89,6 +135,7 @@ def list_lexicon_grouped(
     word_class: Optional[str] = Query(None),
     lesson_band: Optional[str] = Query(None),
     q: Optional[str] = Query(None),
+    dedupe: bool = Query(True),
 ):
     rows = _lexicon_query(
         db,
@@ -98,11 +145,12 @@ def list_lexicon_grouped(
         lesson_band=lesson_band,
         source=None,
         pos=None,
+        dedupe=dedupe,
     ).all()
     groups: dict = defaultdict(list)
     for r in rows:
         key = r.teaching_unit or "other"
-        groups[key].append(CanonicalLexiconOut.model_validate(r))
+        groups[key].append(canonical_lexicon_out(db, r, include_variant_count=True))
     unit_order = [u["id"] for u in TEACHING_UNITS]
     result = []
     for uid in unit_order:
@@ -128,6 +176,40 @@ def list_lexicon_grouped(
     return result
 
 
+@router.get("/base", response_model=LexiconListResponse)
+def list_base_lexicon(
+    db: DbSession,
+    user: CurrentUser,
+    q: Optional[str] = Query(None),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(200, ge=1, le=500),
+    sort: Optional[str] = Query("order"),
+):
+    query = db.query(CanonicalLexicon).filter(CanonicalLexicon.is_base_entry.is_(True))
+    if q:
+        like = f"%{q}%"
+        query = query.filter(
+            or_(CanonicalLexicon.woccon.ilike(like), CanonicalLexicon.english.ilike(like))
+        )
+    if sort == "woccon":
+        query = query.order_by(CanonicalLexicon.woccon)
+    elif sort == "english":
+        query = query.order_by(CanonicalLexicon.english)
+    else:
+        query = query.order_by(
+            CanonicalLexicon.sort_order.asc().nulls_last(),
+            CanonicalLexicon.woccon,
+        )
+    total = query.count()
+    rows = query.offset((page - 1) * page_size).limit(page_size).all()
+    return LexiconListResponse(
+        items=[canonical_lexicon_out(db, r, include_variant_count=True) for r in rows],
+        total=total,
+        page=page,
+        page_size=page_size,
+    )
+
+
 @router.get("", response_model=LexiconListResponse)
 def list_lexicon(
     db: DbSession,
@@ -138,8 +220,11 @@ def list_lexicon(
     lesson_band: Optional[str] = Query(None),
     pos: Optional[str] = Query(None),
     source: Optional[str] = Query(None),
+    view: Optional[str] = Query(None),
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=200),
+    sort: Optional[str] = Query(None),
+    dedupe: bool = Query(True),
 ):
     query = _lexicon_query(
         db,
@@ -149,11 +234,19 @@ def list_lexicon(
         lesson_band=lesson_band,
         source=source,
         pos=pos,
+        view=view,
+        dedupe=dedupe,
     )
+    if sort in ("english", "woccon"):
+        col = CanonicalLexicon.english if sort == "english" else CanonicalLexicon.woccon
+        query = query.order_by(None).order_by(col)
     total = query.count()
     rows = query.offset((page - 1) * page_size).limit(page_size).all()
     return LexiconListResponse(
-        items=[CanonicalLexiconOut.model_validate(r) for r in rows],
+        items=[
+            canonical_lexicon_out(db, r, include_variant_count=r.is_base_entry)
+            for r in rows
+        ],
         total=total,
         page=page,
         page_size=page_size,
@@ -165,20 +258,39 @@ def reclassify_lexicon(db: DbSession, admin: RequireAdmin):
     return reclassify_all_lexicon(db)
 
 
+@router.get("/{entry_id}/variants", response_model=List[CanonicalLexiconOut])
+def list_lexicon_variants(entry_id: str, db: DbSession, user: CurrentUser):
+    base = db.get(CanonicalLexicon, entry_id)
+    if not base or not base.is_base_entry:
+        raise HTTPException(status_code=404, detail="Base entry not found")
+    rows = (
+        db.query(CanonicalLexicon)
+        .filter(CanonicalLexicon.base_entry_id == entry_id, CanonicalLexicon.is_base_entry.is_(False))
+        .order_by(CanonicalLexicon.woccon)
+        .all()
+    )
+    return [canonical_lexicon_out(db, r) for r in rows]
+
+
 @router.get("/{entry_id}", response_model=CanonicalLexiconOut)
 def get_lexicon(entry_id: str, db: DbSession, user: CurrentUser):
     row = db.get(CanonicalLexicon, entry_id)
     if not row:
         raise HTTPException(status_code=404, detail="Not found")
-    return CanonicalLexiconOut.model_validate(row)
+    return canonical_lexicon_out(db, row)
 
 
 @router.patch("/{entry_id}", response_model=CanonicalLexiconOut)
-def patch_lexicon(entry_id: str, body: CanonicalLexiconPatch, db: DbSession, user: RequireReviewer):
+def patch_lexicon(entry_id: str, body: CanonicalLexiconPatch, db: DbSession, user: RequireWorker):
     row = db.get(CanonicalLexicon, entry_id)
     if not row:
         raise HTTPException(status_code=404, detail="Not found")
     data = body.model_dump(exclude_unset=True)
+    if row.is_base_entry and any(k in data for k in ("woccon", "english")):
+        raise HTTPException(
+            status_code=409,
+            detail="Base vocabulary entries cannot change woccon/english here; sync from the definitive Google Doc.",
+        )
     for k, v in data.items():
         if k == "teaching_unit" and v is not None and v not in TEACHING_UNIT_IDS:
             raise HTTPException(status_code=400, detail=f"Invalid teaching_unit: {v}")
@@ -195,6 +307,36 @@ def patch_lexicon(entry_id: str, body: CanonicalLexiconPatch, db: DbSession, use
         apply_lexicon_classification(row, row.woccon, row.english, row.pos, row.source)
     elif "pos" in data:
         row.word_class = normalize_word_class(row.pos)
+    if any(k in data for k in ("source_page", "source_page_end", "source_excerpt")):
+        row.provenance_status = "manual"
     db.commit()
     db.refresh(row)
-    return CanonicalLexiconOut.model_validate(row)
+    return canonical_lexicon_out(db, row)
+
+
+@router.delete("/{entry_id}", status_code=204)
+def delete_lexicon(entry_id: str, db: DbSession, user: RequireWorker):
+    row = db.get(CanonicalLexicon, entry_id)
+    if not row:
+        raise HTTPException(status_code=404, detail="Not found")
+    if row.is_base_entry:
+        raise HTTPException(
+            status_code=409,
+            detail="Base vocabulary entries cannot be deleted; re-sync from the definitive Google Doc.",
+        )
+    if row.source and "lawson" in row.source.lower():
+        raise HTTPException(
+            status_code=409,
+            detail="Lawson seed entries cannot be deleted from the panel; they would reappear on commit from the legacy dictionary.",
+        )
+    write_audit(
+        db,
+        entity_type="canonical_lexicon",
+        entity_id=row.id,
+        action="delete",
+        user_id=user.id,
+        payload={"woccon": row.woccon, "english": row.english, "source": row.source},
+    )
+    db.delete(row)
+    db.commit()
+    return Response(status_code=204)

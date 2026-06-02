@@ -3,15 +3,17 @@ from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Response
 from sqlalchemy import or_
 
 from panel_api.config import get_settings
 from panel_api.db import CanonicalRule
-from panel_api.deps import CurrentUser, DbSession, RequireAdmin, RequireReviewer
+from panel_api.deps import CurrentUser, DbSession, RequireAdmin, RequireWorker
 from panel_api.schemas import CanonicalRuleOut, CanonicalRulePatch, RuleGroupOut, RuleReorderRequest
+from panel_api.services.audit import write_audit
 from panel_api.services.duplicates import normalize_text
 from panel_api.services.reclassify import reclassify_all_grammar
+from panel_api.services.serializers import canonical_rule_out
 from panel_api.services.rule_classifier import apply_classification_to_rule
 from panel_api.taxonomy import (
     CONSTRUCTION_IDS,
@@ -100,7 +102,7 @@ def list_rules_grouped(
     groups: dict = defaultdict(list)
     for r in rows:
         key = r.grammar_domain or "other"
-        groups[key].append(CanonicalRuleOut.model_validate(r))
+        groups[key].append(canonical_rule_out(db, r))
     domain_order = [d["id"] for d in GRAMMAR_DOMAINS]
     result = []
     for domain_id in domain_order:
@@ -144,7 +146,7 @@ def list_rules(
         construction_type=construction_type,
         q=q,
     ).all()
-    return [CanonicalRuleOut.model_validate(r) for r in rows]
+    return [canonical_rule_out(db, r) for r in rows]
 
 
 @router.get("/legacy")
@@ -170,7 +172,7 @@ def reclassify_rules(db: DbSession, admin: RequireAdmin):
 
 
 @router.patch("/reorder")
-def reorder_rules(body: RuleReorderRequest, db: DbSession, user: RequireReviewer):
+def reorder_rules(body: RuleReorderRequest, db: DbSession, user: RequireWorker):
     if body.category not in ("grammar", "pronunciation", "cultural"):
         raise HTTPException(status_code=400, detail="Invalid category")
 
@@ -206,7 +208,7 @@ def reorder_rules(body: RuleReorderRequest, db: DbSession, user: RequireReviewer
 
 
 @router.patch("/{rule_id}", response_model=CanonicalRuleOut)
-def patch_rule(rule_id: str, body: CanonicalRulePatch, db: DbSession, user: RequireReviewer):
+def patch_rule(rule_id: str, body: CanonicalRulePatch, db: DbSession, user: RequireWorker):
     row = db.get(CanonicalRule, rule_id)
     if not row:
         raise HTTPException(status_code=404, detail="Not found")
@@ -226,6 +228,26 @@ def patch_rule(rule_id: str, body: CanonicalRulePatch, db: DbSession, user: Requ
             k in data for k in ("grammar_domain", "pos_tag", "construction_type")
         ):
             apply_classification_to_rule(row, row.category, row.content)
+    if any(k in data for k in ("source_page", "source_page_end", "source_excerpt")):
+        row.provenance_status = "manual"
     db.commit()
     db.refresh(row)
-    return CanonicalRuleOut.model_validate(row)
+    return canonical_rule_out(db, row)
+
+
+@router.delete("/{rule_id}", status_code=204)
+def delete_rule(rule_id: str, db: DbSession, user: RequireWorker):
+    row = db.get(CanonicalRule, rule_id)
+    if not row:
+        raise HTTPException(status_code=404, detail="Not found")
+    write_audit(
+        db,
+        entity_type="canonical_rule",
+        entity_id=row.id,
+        action="delete",
+        user_id=user.id,
+        payload={"category": row.category, "content": row.content[:200]},
+    )
+    db.delete(row)
+    db.commit()
+    return Response(status_code=204)

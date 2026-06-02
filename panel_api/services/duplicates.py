@@ -105,3 +105,29 @@ def find_rule_duplicate(db: Session, category: str, content: str) -> Tuple[Optio
             return row.id, score, "pending"
 
     return None, None, ""
+
+
+def resolve_lexicon_duplicate(db: Session, duplicate_of_id: Optional[str]):
+    """Load the canonical or pending row referenced by duplicate_of_id."""
+    if not duplicate_of_id:
+        return None, ""
+    row = db.get(CanonicalLexicon, duplicate_of_id)
+    if row:
+        return row, "canonical"
+    row = db.get(PendingLexicon, duplicate_of_id)
+    if row:
+        return row, "pending"
+    return None, ""
+
+
+def resolve_rule_duplicate(db: Session, duplicate_of_id: Optional[str]):
+    """Load the canonical or pending row referenced by duplicate_of_id."""
+    if not duplicate_of_id:
+        return None, ""
+    row = db.get(CanonicalRule, duplicate_of_id)
+    if row:
+        return row, "canonical"
+    row = db.get(PendingRule, duplicate_of_id)
+    if row:
+        return row, "pending"
+    return None, ""

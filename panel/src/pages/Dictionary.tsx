@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, LexiconEntry } from "../api";
-import { LexiconBadges } from "../components/LexiconBadges";
-import { LexiconEditPanel } from "../components/LexiconEditPanel";
+import { useSearchParams } from "react-router-dom";
+import { api, LexiconEntry, LexiconListResponse } from "../api";
+import { LexiconEntryEditor } from "../components/LexiconEditPanel";
+import { LexiconEntryCard } from "../components/LexiconEntryCard";
 import { EmptyState, PageHeader, Spinner } from "../components/ui";
 import { LexiconTaxonomy } from "../lexiconTaxonomy";
+import { useAuth } from "../context/AuthContext";
+
+type ViewMode = "base" | "all" | "units";
 
 interface LexiconGroup {
   teaching_unit: string;
@@ -14,70 +18,35 @@ interface LexiconGroup {
 
 interface LexiconStats {
   total: number;
+  base_count?: number;
+  variant_count?: number;
+  unmatched_pending?: number;
   by_teaching_unit: Record<string, number>;
 }
 
-function LexiconEntryCard({
-  entry,
-  taxonomy,
-  editing,
-  onEdit,
-}: {
-  entry: LexiconEntry;
-  taxonomy: LexiconTaxonomy;
-  editing: boolean;
-  onEdit: () => void;
-}) {
-  return (
-    <li className="panel-card p-4 mb-2">
-      <div className="flex flex-wrap gap-x-4 gap-y-1">
-        <span className="font-medium text-render-text">{entry.woccon}</span>
-        <span className="text-sm text-render-muted">{entry.english}</span>
-        {entry.pos && (
-          <span className="text-xs text-render-subtle self-center">({entry.pos})</span>
-        )}
-      </div>
-      {entry.pronunciation && (
-        <p className="text-xs text-render-subtle mt-1">/{entry.pronunciation}/</p>
-      )}
-      <LexiconBadges
-        taxonomy={taxonomy}
-        teaching_unit={entry.teaching_unit}
-        word_class={entry.word_class}
-        lesson_band={entry.lesson_band}
-      />
-      <div className="flex gap-3 mt-2">
-        {entry.source_url ? (
-          <a
-            href={entry.source_url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-xs text-render-muted hover:text-white transition-colors"
-          >
-            Source →
-          </a>
-        ) : entry.source ? (
-          <span className="text-xs text-render-subtle">{entry.source}</span>
-        ) : null}
-        <button type="button" onClick={onEdit} className="text-xs text-render-muted hover:text-white">
-          {editing ? "Close" : "Edit tags"}
-        </button>
-      </div>
-    </li>
-  );
-}
-
 export default function Dictionary() {
+  const { canWrite } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialView = (searchParams.get("view") as ViewMode) || "base";
+
   const [taxonomy, setTaxonomy] = useState<LexiconTaxonomy | null>(null);
   const [groups, setGroups] = useState<LexiconGroup[]>([]);
+  const [baseItems, setBaseItems] = useState<LexiconEntry[]>([]);
+  const [allItems, setAllItems] = useState<LexiconEntry[]>([]);
   const [stats, setStats] = useState<LexiconStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [activeUnit, setActiveUnit] = useState<string | null>(null);
   const [wordClassFilter, setWordClassFilter] = useState<string | null>(null);
   const [bandFilter, setBandFilter] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [editId, setEditId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [reclassifying, setReclassifying] = useState(false);
+  const [allPage, setAllPage] = useState(1);
+  const [allTotal, setAllTotal] = useState(0);
+  const [allSort, setAllSort] = useState<"woccon" | "english">("woccon");
+  const pageSize = 100;
 
   useEffect(() => {
     api<LexiconTaxonomy>("/lexicon/taxonomy").then(setTaxonomy);
@@ -89,21 +58,53 @@ export default function Dictionary() {
     if (wordClassFilter) params.set("word_class", wordClassFilter);
     if (bandFilter) params.set("lesson_band", bandFilter);
     if (search.trim()) params.set("q", search.trim());
-    Promise.all([
-      api<LexiconGroup[]>(`/lexicon/grouped?${params}`),
-      api<LexiconStats>("/lexicon/stats"),
-    ])
-      .then(([g, s]) => {
-        setGroups(g);
+
+    const requests: Promise<unknown>[] = [api<LexiconStats>("/lexicon/stats")];
+
+    if (viewMode === "base") {
+      const baseParams = new URLSearchParams(params);
+      baseParams.set("page_size", "500");
+      baseParams.set("sort", "order");
+      requests.push(api<LexiconListResponse>(`/lexicon/base?${baseParams}`));
+    } else if (viewMode === "all") {
+      const allParams = new URLSearchParams(params);
+      allParams.set("page", String(allPage));
+      allParams.set("page_size", String(pageSize));
+      allParams.set("sort", allSort);
+      allParams.set("dedupe", "true");
+      requests.push(api<LexiconListResponse>(`/lexicon?${allParams}`));
+    } else {
+      params.set("dedupe", "true");
+      requests.push(api<LexiconGroup[]>(`/lexicon/grouped?${params}`));
+    }
+
+    Promise.all(requests)
+      .then((results) => {
+        const s = results[0] as LexiconStats;
         setStats(s);
-        setActiveUnit((prev) => prev ?? g[0]?.teaching_unit ?? null);
+        if (viewMode === "base") {
+          const resp = results[1] as LexiconListResponse;
+          setBaseItems(resp.items);
+        } else if (viewMode === "all") {
+          const resp = results[1] as LexiconListResponse;
+          setAllItems(resp.items);
+          setAllTotal(resp.total);
+        } else {
+          const g = results[1] as LexiconGroup[];
+          setGroups(g);
+          setActiveUnit((prev) => prev ?? g[0]?.teaching_unit ?? null);
+        }
       })
       .finally(() => setLoading(false));
-  }, [wordClassFilter, bandFilter, search]);
+  }, [viewMode, wordClassFilter, bandFilter, search, allPage, allSort]);
 
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    setSearchParams(viewMode === "base" ? {} : { view: viewMode }, { replace: true });
+  }, [viewMode, setSearchParams]);
 
   const activeGroup = useMemo(() => {
     if (!activeUnit) return groups[0];
@@ -128,6 +129,39 @@ export default function Dictionary() {
     }
   };
 
+  const setMode = (mode: ViewMode) => {
+    setViewMode(mode);
+    setEditId(null);
+    setExpandedId(null);
+    if (mode === "all") setAllPage(1);
+  };
+
+  const renderEntries = (entries: LexiconEntry[], showExpand: boolean) => (
+    <ul>
+      {entries.map((entry) => (
+        <div key={entry.id}>
+          <LexiconEntryCard
+            entry={entry}
+            taxonomy={taxonomy}
+            editing={editId === entry.id}
+            onEdit={canWrite ? () => setEditId(editId === entry.id ? null : entry.id) : undefined}
+            showExpand={showExpand || entry.is_base_entry === true}
+            expanded={expandedId === entry.id}
+            onToggleExpand={() => setExpandedId(expandedId === entry.id ? null : entry.id)}
+          />
+          {canWrite && editId === entry.id && taxonomy && (
+            <LexiconEntryEditor
+              entry={entry}
+              taxonomy={taxonomy}
+              onClose={() => setEditId(null)}
+              onSaved={load}
+            />
+          )}
+        </div>
+      ))}
+    </ul>
+  );
+
   if (!taxonomy) {
     return (
       <div className="flex items-center gap-2 text-render-muted py-8">
@@ -137,58 +171,61 @@ export default function Dictionary() {
     );
   }
 
+  const subtitle = stats
+    ? `${stats.base_count ?? 0} base words · ${stats.variant_count ?? 0} linked variants · ${stats.total} total`
+    : "Teaching-oriented vocabulary";
+
   return (
     <div>
       <PageHeader
         title="Dictionary"
-        subtitle={
-          stats
-            ? `${stats.total.toLocaleString()} entries grouped by teaching unit for lessons. Edit tags on any word.`
-            : "Teaching-oriented vocabulary"
-        }
+        subtitle={subtitle}
         action={
-          <button
-            type="button"
-            onClick={reclassify}
-            disabled={reclassifying}
-            className="btn-secondary text-xs"
-          >
-            {reclassifying ? "Reclassifying…" : "Reclassify all"}
-          </button>
+          canWrite ? (
+            <button
+              type="button"
+              onClick={reclassify}
+              disabled={reclassifying}
+              className="btn-secondary text-xs"
+            >
+              {reclassifying ? "Reclassifying…" : "Reclassify all"}
+            </button>
+          ) : undefined
         }
       />
 
-      <div className="flex gap-6">
-        <aside className="w-56 shrink-0 space-y-1">
-          <p className="text-[10px] uppercase tracking-wider text-render-subtle px-3 mb-2">
-            Teaching unit
-          </p>
-          {unitNav.map((u) => (
-            <button
-              key={u.id}
-              type="button"
-              onClick={() => setActiveUnit(u.id)}
-              className={`w-full text-left rounded-full px-3 py-2 text-sm transition-all duration-200 flex justify-between gap-2 ${
-                activeUnit === u.id
-                  ? "bg-white/10 text-white"
-                  : "text-render-muted hover:bg-white/5 hover:text-render-text"
-              }`}
-            >
-              <span className="truncate">{u.label}</span>
-              <span className="text-xs text-render-subtle shrink-0">{u.count}</span>
-            </button>
-          ))}
-        </aside>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {(
+          [
+            ["base", "Base vocabulary"],
+            ["all", "All entries"],
+            ["units", "By teaching unit"],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setMode(id)}
+            className={`pill-tab text-xs py-1 ${viewMode === id ? "pill-tab-active" : "pill-tab-inactive"}`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
-        <div className="flex-1 min-w-0">
-          <input
-            type="search"
-            placeholder="Search Woccon or English…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="input-field mb-4 max-w-md"
-          />
+      <input
+        type="search"
+        placeholder="Search Woccon or English…"
+        value={search}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          setAllPage(1);
+        }}
+        className="input-field mb-4 max-w-md"
+      />
 
+      {viewMode !== "base" && (
+        <>
           <div className="flex flex-wrap gap-2 mb-4">
             <span className="text-xs text-render-subtle self-center mr-1">Word class:</span>
             <button
@@ -198,7 +235,7 @@ export default function Dictionary() {
             >
               All
             </button>
-            {taxonomy.word_classes.slice(0, 10).map((w) => (
+            {taxonomy.word_classes.map((w) => (
               <button
                 key={w.id}
                 type="button"
@@ -234,49 +271,113 @@ export default function Dictionary() {
               </button>
             ))}
           </div>
+        </>
+      )}
 
-          {loading ? (
-            <div className="flex items-center gap-2 text-render-muted py-8">
-              <Spinner />
-              <span className="text-sm">Loading…</span>
-            </div>
-          ) : !activeGroup || activeGroup.entries.length === 0 ? (
-            <EmptyState message="No entries match these filters." />
-          ) : (
-            <>
-              <div className="mb-4">
-                <h3 className="text-lg font-medium text-render-text">{activeGroup.label}</h3>
-                <p className="text-xs text-render-muted mt-1">
-                  {taxonomy.teaching_units.find((u) => u.id === activeGroup.teaching_unit)?.description}
-                </p>
-                <p className="text-xs text-render-subtle mt-1">
-                  {activeGroup.count} {activeGroup.count === 1 ? "word" : "words"} in this unit
-                </p>
-              </div>
-              <ul>
-                {activeGroup.entries.map((entry) => (
-                  <div key={entry.id}>
-                    <LexiconEntryCard
-                      entry={entry}
-                      taxonomy={taxonomy}
-                      editing={editId === entry.id}
-                      onEdit={() => setEditId(editId === entry.id ? null : entry.id)}
-                    />
-                    {editId === entry.id && (
-                      <LexiconEditPanel
-                        entry={entry}
-                        taxonomy={taxonomy}
-                        onClose={() => setEditId(null)}
-                        onSaved={load}
-                      />
-                    )}
-                  </div>
-                ))}
-              </ul>
-            </>
-          )}
+      {viewMode === "all" && (
+        <div className="flex flex-wrap gap-2 mb-4 items-center">
+          <span className="text-xs text-render-subtle">Sort:</span>
+          <button
+            type="button"
+            onClick={() => setAllSort("woccon")}
+            className={`pill-tab text-xs py-1 ${allSort === "woccon" ? "pill-tab-active" : "pill-tab-inactive"}`}
+          >
+            Woccon
+          </button>
+          <button
+            type="button"
+            onClick={() => setAllSort("english")}
+            className={`pill-tab text-xs py-1 ${allSort === "english" ? "pill-tab-active" : "pill-tab-inactive"}`}
+          >
+            English
+          </button>
         </div>
-      </div>
+      )}
+
+      {loading ? (
+        <div className="flex items-center gap-2 text-render-muted py-8">
+          <Spinner />
+          <span className="text-sm">Loading…</span>
+        </div>
+      ) : viewMode === "base" ? (
+        baseItems.length === 0 ? (
+          <EmptyState message="No base vocabulary imported yet. Sync from Library." />
+        ) : (
+          <>
+            <p className="text-xs text-render-subtle mb-4">
+              Definitive word list — expand a row to see linked attestations from other sources.
+            </p>
+            {renderEntries(baseItems, true)}
+          </>
+        )
+      ) : viewMode === "all" ? (
+        allItems.length === 0 ? (
+          <EmptyState message="No entries match these filters." />
+        ) : (
+          <>
+            <p className="text-xs text-render-subtle mb-4">
+              Showing {(allPage - 1) * pageSize + 1}–{Math.min(allPage * pageSize, allTotal)} of{" "}
+              {allTotal}
+            </p>
+            {renderEntries(allItems, false)}
+            <div className="flex gap-2 mt-4">
+              <button
+                type="button"
+                disabled={allPage <= 1}
+                onClick={() => setAllPage((p) => p - 1)}
+                className="btn-secondary text-xs"
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                disabled={allPage * pageSize >= allTotal}
+                onClick={() => setAllPage((p) => p + 1)}
+                className="btn-secondary text-xs"
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )
+      ) : !activeGroup || activeGroup.entries.length === 0 ? (
+        <EmptyState message="No entries match these filters." />
+      ) : (
+        <div className="flex gap-6">
+          <aside className="w-56 shrink-0 space-y-1">
+            <p className="text-[10px] uppercase tracking-wider text-render-subtle px-3 mb-2">
+              Teaching unit
+            </p>
+            {unitNav.map((u) => (
+              <button
+                key={u.id}
+                type="button"
+                onClick={() => setActiveUnit(u.id)}
+                className={`w-full text-left rounded-full px-3 py-2 text-sm transition-all duration-200 flex justify-between gap-2 ${
+                  activeUnit === u.id
+                    ? "bg-white/10 text-white"
+                    : "text-render-muted hover:bg-white/5 hover:text-render-text"
+                }`}
+              >
+                <span className="truncate">{u.label}</span>
+                <span className="text-xs text-render-subtle shrink-0">{u.count}</span>
+              </button>
+            ))}
+          </aside>
+          <div className="flex-1 min-w-0">
+            <div className="mb-4">
+              <h3 className="text-lg font-medium text-render-text">{activeGroup.label}</h3>
+              <p className="text-xs text-render-muted mt-1">
+                {taxonomy.teaching_units.find((u) => u.id === activeGroup.teaching_unit)?.description}
+              </p>
+              <p className="text-xs text-render-subtle mt-1">
+                {activeGroup.count} {activeGroup.count === 1 ? "word" : "words"} in this unit
+              </p>
+            </div>
+            {renderEntries(activeGroup.entries, false)}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

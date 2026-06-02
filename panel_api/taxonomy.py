@@ -5,6 +5,28 @@ from typing import Any, Dict, List, Optional
 # Top-level note category (unchanged)
 NOTE_CATEGORIES = ("grammar", "pronunciation", "cultural")
 
+# Extraction focus modes (document AI analysis)
+EXTRACTION_FOCUSES: List[Dict[str, str]] = [
+    {"id": "general", "label": "General (all)", "description": "Vocabulary, grammar, pronunciation, and culture"},
+    {"id": "vocabulary", "label": "Vocabulary only", "description": "Lexicon entries only"},
+    {"id": "grammar", "label": "Grammar only", "description": "Grammar rule packets — lineage filter (skips pronunciation & culture)"},
+    {"id": "pronunciation", "label": "Pronunciation only", "description": "Phonology and pronunciation guides"},
+    {"id": "culture", "label": "Culture only", "description": "Cultural usage and context only"},
+]
+
+# Comparative / attestation level for grammar rules
+GRAMMAR_LINEAGES: List[Dict[str, str]] = [
+    {"id": "woccon_attested", "label": "Attested Woccon", "description": "Rules grounded in attested Woccon forms"},
+    {"id": "siouan_comparative", "label": "Siouan comparative", "description": "Cross-Siouan patterns without a proto node"},
+    {"id": "proto_siouan", "label": "Proto-Siouan", "description": "Proto-Siouan (*PS) reconstructions"},
+    {"id": "proto_siouan_catawban", "label": "Proto-Siouan-Catawban", "description": "Siouan-Catawban node (*PSC)"},
+    {"id": "proto_catawban", "label": "Proto-Catawban", "description": "Coastal Catawban / Catawba-Woccon node (*PC)"},
+    {"id": "other_comparative", "label": "Other comparative", "description": "Yuchi, Biloxi-only, or other comparative material"},
+]
+
+EXTRACTION_FOCUS_IDS = {f["id"] for f in EXTRACTION_FOCUSES}
+GRAMMAR_LINEAGE_IDS = {g["id"] for g in GRAMMAR_LINEAGES}
+
 # Grammar subdomain — what area of grammar the rule describes
 GRAMMAR_DOMAINS: List[Dict[str, str]] = [
     {"id": "phonology", "label": "Phonology", "description": "Sounds, alternations, phonological processes"},
@@ -69,6 +91,8 @@ def taxonomy_payload() -> Dict[str, Any]:
         "pos_tags": POS_TAGS,
         "construction_types": CONSTRUCTION_TYPES,
         "note_categories": list(NOTE_CATEGORIES),
+        "extraction_focuses": EXTRACTION_FOCUSES,
+        "grammar_lineages": GRAMMAR_LINEAGES,
     }
 
 

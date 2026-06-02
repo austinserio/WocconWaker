@@ -67,6 +67,16 @@ def build_community_lexicon(files_data: List[Dict[str, Any]]) -> List[Dict[str, 
                 "source": "community_drive",
                 "source_url": source_url,
             }
+            for field in (
+                "source_page",
+                "source_page_end",
+                "source_excerpt",
+                "provenance_status",
+                "citation_short",
+                "citation_full",
+            ):
+                if e.get(field) is not None:
+                    entry[field] = e.get(field)
             if not entry["english"]:
                 continue
             existing = by_key.get(key)
@@ -83,17 +93,47 @@ def build_community_notes(files_data: List[Dict[str, Any]]) -> Dict[str, List[Di
     for data in files_data:
         url = data.get("source_url")
         for g in data.get("grammar_notes") or []:
-            t = (g if isinstance(g, str) else str(g)).strip()
+            t = (g.get("text") if isinstance(g, dict) else str(g)).strip()
             if t:
-                grammar.append({"text": t, "source_url": url})
+                note = {"text": t, "source_url": url}
+                if isinstance(g, dict):
+                    for field in (
+                        "source_page",
+                        "source_page_end",
+                        "source_excerpt",
+                        "provenance_status",
+                    ):
+                        if g.get(field) is not None:
+                            note[field] = g.get(field)
+                grammar.append(note)
         for p in data.get("pronunciation_notes") or []:
-            t = (p if isinstance(p, str) else str(p)).strip()
+            t = (p.get("text") if isinstance(p, dict) else str(p)).strip()
             if t:
-                pronunciation.append({"text": t, "source_url": url})
+                note = {"text": t, "source_url": url}
+                if isinstance(p, dict):
+                    for field in (
+                        "source_page",
+                        "source_page_end",
+                        "source_excerpt",
+                        "provenance_status",
+                    ):
+                        if p.get(field) is not None:
+                            note[field] = p.get(field)
+                pronunciation.append(note)
         for c in data.get("cultural_notes") or []:
-            t = (c if isinstance(c, str) else str(c)).strip()
+            t = (c.get("text") if isinstance(c, dict) else str(c)).strip()
             if t:
-                cultural.append({"text": t, "source_url": url})
+                note = {"text": t, "source_url": url}
+                if isinstance(c, dict):
+                    for field in (
+                        "source_page",
+                        "source_page_end",
+                        "source_excerpt",
+                        "provenance_status",
+                    ):
+                        if c.get(field) is not None:
+                            note[field] = c.get(field)
+                cultural.append(note)
     return {"grammar_notes": grammar, "pronunciation_notes": pronunciation, "cultural_notes": cultural}
 
 
