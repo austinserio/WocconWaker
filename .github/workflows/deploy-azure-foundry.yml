@@ -6,7 +6,7 @@
 #
 # Variables (Settings → Secrets and variables → Actions → Variables):
 #   AZURE_RESOURCE_GROUP – resource group containing Container App and ACR
-#   AZURE_CONTAINER_APP_NAME – Container App name
+#   AZURE_CONTAINER_APP_NAME – Container App name (production: wocconwaker-app-central)
 # Optional variable:
 #   ACR_IMAGE_NAME – Docker image repository name (default: wocconwaker)
 

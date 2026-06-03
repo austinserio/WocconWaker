@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Sync .env values to Azure Container App (wocconwaker-app).
+# Sync .env values to Azure Container App (wocconwaker-app-central).
 # Secrets go to Container App secrets; other vars as plain env.
 # Usage: ./scripts/sync-azure-container-env.sh [--dry-run]
 #
@@ -13,7 +13,7 @@ source "$ROOT/scripts/load_repo_env.sh" "$ROOT"
 DRY_RUN=false
 [[ "${1:-}" == "--dry-run" ]] && DRY_RUN=true
 
-APP="${AZURE_CONTAINER_APP_NAME:-wocconwaker-app}"
+APP="${AZURE_CONTAINER_APP_NAME:-wocconwaker-app-central}"
 RG="${AZURE_RESOURCE_GROUP:-rg-wocconwaker}"
 SUB="${AZURE_SUBSCRIPTION_ID:-}"
 
@@ -47,6 +47,9 @@ SECRET_ARGS=()
 add_secret() {
   local name="$1"
   local val="$2"
+  [[ -z "$val" ]] && return
+  # Trim whitespace/newlines — common cause of Messenger send failures in Azure.
+  val="$(printf '%s' "$val" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
   [[ -z "$val" ]] && return
   SECRET_ARGS+=("${name}=${val}")
 }
