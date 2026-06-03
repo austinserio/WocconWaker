@@ -19,8 +19,8 @@ class MessengerIntegration:
             verify_token: Custom token you set to verify webhook
             app_secret: App secret for request validation (optional)
         """
-        self.page_access_token = page_access_token
-        self.verify_token = verify_token
+        self.page_access_token = (page_access_token or "").strip()
+        self.verify_token = (verify_token or "").strip()
         self.app_secret = app_secret
         self.api_url = "https://graph.facebook.com/v18.0/me/messages"
         self.profile_url = "https://graph.facebook.com/v18.0/me/messenger_profile"
@@ -158,7 +158,8 @@ class MessengerIntegration:
         headers = {"Content-Type": "application/json"}
         payload = {
             "recipient": {"id": recipient_id},
-            "message": {"text": message_text}
+            "messaging_type": "RESPONSE",
+            "message": {"text": message_text},
         }
         
         print(f"[DEBUG] Sending to Facebook API: {payload}")
@@ -385,23 +386,42 @@ class MessengerIntegration:
         return response.json()
     
     def setup_get_started_button(self) -> Dict[str, Any]:
-        """Set up the Get Started button for new conversations."""
+        """Set up Get Started, greeting, and ice breakers for new conversations.
+
+        Ice breaker provides a reliable tap target when Facebook's native Get Started
+        pill is clipped on mobile; all entry points use the GET_STARTED payload.
+        """
         params = {
             "access_token": self.page_access_token
         }
-        
+
         payload = {
             "get_started": {
                 "payload": "GET_STARTED"
-            }
+            },
+            "greeting": [
+                {
+                    "locale": "default",
+                    "text": (
+                        'Select "Get started" to begin learning about the Woccon language '
+                        "and culture."
+                    ),
+                }
+            ],
+            "ice_breakers": [
+                {
+                    "question": "Get started",
+                    "payload": "GET_STARTED",
+                }
+            ],
         }
-        
+
         response = requests.post(
             self.profile_url,
             params=params,
             json=payload
         )
-        
+
         return response.json()
 
     def setup_persistent_menu(self) -> Dict[str, Any]:
