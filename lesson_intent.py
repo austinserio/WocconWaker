@@ -1,7 +1,7 @@
 """Shared intent detection for vocabulary and grammar lessons."""
 import logging
 import re
-from typing import Callable, Dict, List, Optional
+from typing import Callable, Dict, List, Optional, Tuple
 
 log = logging.getLogger("woccon_assistant")
 
@@ -17,6 +17,27 @@ EXPLAIN_KEYWORD_PATTERNS = [
     r"\b(explain|explanation|help|hint|suggestion)\b",
     r"\b(what|why|how)\b.*\?",
     r"^\s*(what|why|how)\b",
+]
+
+# Whole-message give-up phrases (used only when the message is not also a valid answer).
+UNCERTAINTY_STANDALONE_PATTERNS = [
+    r"^\s*(idk|not sure|no idea|no clue|confused|don'?t know|unsure)\s*$",
+    r"^\s*(i don't know|i do not know)\s*$",
+    r"^\s*(can'?t remember|don'?t have a guess|skip|pass)\s*$",
+    r"^\s*(what is it|what'?s the answer|tell me|reveal|show me)\s*$",
+    r"^\s*(give up|stumped|clueless|beats me|drawing a blank)\s*$",
+    r"^\s*(um|uh|hmm|err)\s*$",
+    r"^\s*(whatever|dunno|who knows)\s*$",
+]
+
+UNCERTAINTY_PHRASE_PATTERNS = [
+    r"\b(i don't know|idk|no idea|no clue|uncertain|don't remember|forgot)\b",
+    r"\b(can'?t remember|don'?t have a guess)\b",
+    r"\b(what is it|what'?s the answer|tell me|reveal|show me)\b",
+    r"\b(not positive|not confident|not certain|not really sure)\b",
+    r"\b(i'm not|im not).*(sure|positive|certain|confident)\b",
+    r"\b(no idea|haven'?t a clue|give up|stumped)\b",
+    r"\b(beats me|beyond me|drawing a blank|lost|clueless)\b",
 ]
 
 
@@ -97,6 +118,72 @@ def response_looks_like_answer(
     if similarity_fn and similarity_fn(user, exp) >= similarity_threshold:
         return True
     return False
+
+
+def is_standalone_uncertainty(
+    text: str,
+    expected: Optional[str] = None,
+    alternatives: Optional[Dict[str, str]] = None,
+    similarity_fn: Optional[Callable[[str, str], float]] = None,
+) -> bool:
+    """
+    True when the user is giving up, not answering.
+    Returns False if the message already overlaps the expected answer (e.g. 'interrogative not sure').
+    """
+    if not text or not str(text).strip():
+        return False
+    if expected and response_looks_like_answer(
+        text, expected, alternatives, similarity_fn=similarity_fn
+    ):
+        return False
+    t = text.lower().strip()
+    if t in ("no", "nope", "not", "negative", "nah"):
+        return True
+    if any(re.search(p, t) for p in UNCERTAINTY_STANDALONE_PATTERNS):
+        return True
+    # Substring uncertainty only when the message is short (avoid matching inside long answers).
+    if len(t.split()) <= 6 and any(re.search(p, t) for p in UNCERTAINTY_PHRASE_PATTERNS):
+        if re.search(r"\bnot sure\b", t):
+            return True
+        if re.search(r"\b(idk|i don't know|no idea|give up|stumped|clueless)\b", t):
+            return True
+    return False
+
+
+def answer_fast_accept(
+    user_text: str,
+    expected: str,
+    alternatives: Optional[Dict[str, str]] = None,
+    similarity_fn: Optional[Callable[[str, str], float]] = None,
+    similarity_threshold: float = 0.85,
+    short_answer_max_words: int = 4,
+) -> Tuple[bool, str]:
+    """
+    High-precision accept before LLM: token overlap, alternatives, or short-string similarity.
+    Returns (accepted, reason).
+    """
+    if not expected or not user_text:
+        return False, ""
+    if response_looks_like_answer(
+        user_text, expected, alternatives, similarity_fn=similarity_fn
+    ):
+        return True, "Matches expected answer or alternative"
+    if similarity_fn:
+        user_norm = normalize_lesson_text(user_text)
+        exp_norm = normalize_lesson_text(expected)
+        if (
+            user_norm
+            and exp_norm
+            and len(user_norm.split()) <= short_answer_max_words
+        ):
+            if similarity_fn(user_norm, exp_norm) >= similarity_threshold:
+                return True, "Close string match to expected answer"
+            if alternatives:
+                for alt_key in alternatives:
+                    alt_norm = normalize_lesson_text(alt_key)
+                    if alt_norm and similarity_fn(user_norm, alt_norm) >= similarity_threshold:
+                        return True, "Close string match to acceptable alternative"
+    return False, ""
 
 
 def classify_exit_intent_via_llm(

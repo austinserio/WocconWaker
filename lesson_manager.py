@@ -7,6 +7,7 @@ from lesson_intent import (
     classify_explain_intent_via_llm,
     has_obvious_exit_intent,
     has_obvious_explain_intent,
+    is_standalone_uncertainty,
     response_looks_like_answer,
 )
 
@@ -365,7 +366,12 @@ class LessonManager:
                 
                 return self._advance(f"✅ Correct! {celebration} +{10 + (self.streak * 2)} points!{fun_fact}")
             
-            elif self.is_dont_know_response(usr):
+            elif is_standalone_uncertainty(
+                usr,
+                expected=expected_answer,
+                alternatives=self.alternative_answers,
+                similarity_fn=self._string_similarity,
+            ):
                 # Reset streak on giving up
                 self.streak = 0
                 self.off_topic_counter = 0
@@ -572,25 +578,14 @@ class LessonManager:
             # Add "to X" for verbs
             self.alternative_answers["to " + english_word] = english_word
 
-    def is_dont_know_response(self, text: str) -> bool:
-        """Check if user response indicates they don't know using natural language understanding."""
-        text = text.lower().strip()
-        dont_know_patterns = [
-            r"\b(i don't know|idk|not sure|no idea|no clue|uncertain|don't remember|forgot|unsure)\b",
-            r"\b(can'?t remember|don'?t have a guess|skip|pass|next)\b",
-            r"\b(what is it|what'?s the answer|tell me|reveal|show me)\b",
-            r"\b(um|uh|hmm|err)\b",  # Hesitation markers
-            r"\b(lol|haha)\b",  # Laughter often indicates uncertainty in this context
-            r"\b(whatever|dunno|who knows|doesn't matter|don't care)\b",  # Dismissive responses
-            r"\b(no idea|haven'?t a clue|give up|stumped)\b",  # Additional expressions
-            r"\b(beats me|beyond me|drawing a blank|lost|clueless)\b",  # More expressions
-        ]
-        
-        # Check if text is just a negative response
-        if text in ["no", "nope", "not", "negative", "nah"]:
-            return True
-            
-        return any(re.search(pattern, text) for pattern in dont_know_patterns)
+    def is_dont_know_response(self, text: str, expected_answer: str = "") -> bool:
+        """Check if user is giving up (standalone uncertainty only)."""
+        return is_standalone_uncertainty(
+            text,
+            expected=expected_answer or None,
+            alternatives=self.alternative_answers,
+            similarity_fn=self._string_similarity,
+        )
 
     def is_exit_request(self, text: str, expected_answer: str = "") -> bool:
         """Check if user wants to exit. Fast path first; LLM only when ambiguous."""

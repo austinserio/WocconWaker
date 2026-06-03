@@ -563,9 +563,11 @@ async def ingest_drive_status(request: Request):
 @app.post("/admin/reload-language")
 async def reload_language(request: Request):
     """
-    Reload dictionary and rules from disk and rebuild RAG corpus (Phase 4).
-    Use after merge_staging.py or when switching to unified files. Same auth as ingest (INGEST_DRIVE_SECRET).
-    Optional body: {"dict_path": "...", "rules_path": "..."} to override paths for this reload only.
+    Reload dictionary and rules and rebuild RAG corpus.
+    Default (WOCCON_LANGUAGE_SOURCE=panel_db): reads canonical data from the control panel DB.
+    Set WOCCON_LANGUAGE_SOURCE=json to reload from unified JSON files on disk instead.
+    Same auth as ingest (INGEST_DRIVE_SECRET).
+    Optional body: {"dict_path": "...", "rules_path": "..."} when using json mode.
     """
     _require_ingest_secret(request)
     body = {}
@@ -576,7 +578,17 @@ async def reload_language(request: Request):
     dict_path = body.get("dict_path")
     rules_path = body.get("rules_path")
     try:
-        result = assistant.reload_language_data(dict_path=dict_path, rules_path=rules_path)
+        from panel_api.services.language_snapshot import (
+            sync_assistant_from_panel_db,
+            use_panel_db_source,
+        )
+
+        if use_panel_db_source() and not dict_path and not rules_path:
+            result = sync_assistant_from_panel_db(assistant)
+        else:
+            result = assistant.reload_language_data(
+                dict_path=dict_path, rules_path=rules_path, source="json"
+            )
         return {"status": "ok", **result}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
@@ -694,10 +706,34 @@ def initialize_assistant():
     global assistant
     try:
         assistant = create_enhanced_assistant()
+        _sync_assistant_language_from_panel(assistant)
+        app.state.assistant = assistant
         print("Assistant initialization complete!")
         assistant_ready.set()
     except Exception as e:
         print(f"Error initializing assistant: {e}")
+
+
+def _sync_assistant_language_from_panel(assistant) -> None:
+    """Load lexicon/rules from panel DB when WOCCON_LANGUAGE_SOURCE=panel_db (default)."""
+    try:
+        from panel_api.services.language_snapshot import (
+            sync_assistant_from_panel_db,
+            use_panel_db_source,
+        )
+
+        if not use_panel_db_source():
+            print("WOCCON_LANGUAGE_SOURCE=json: assistant using unified JSON paths from env")
+            return
+        summary = sync_assistant_from_panel_db(assistant)
+        print(
+            f"Assistant language from panel DB: "
+            f"{summary.get('lexicon_count', 0)} lexicon, "
+            f"{summary.get('cultural_notes_count', 0)} cultural notes, "
+            f"{summary.get('chunks_count', 0)} RAG chunks"
+        )
+    except Exception as e:
+        print(f"Panel DB language sync skipped (using JSON fallback): {e}")
 
 def pull_llama_model():
     """Ensure the LLaMA model is pulled before starting."""

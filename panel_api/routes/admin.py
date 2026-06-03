@@ -82,7 +82,7 @@ def run_commit(request: Request, db: DbSession, admin: RequireAdmin):
     result = commit_pending(db)
     assistant = getattr(request.app.state, "assistant", None)
     if assistant:
-        result["reload_summary"] = reload_assistant(assistant)
+        result["reload_summary"] = reload_assistant(assistant, db=db)
     db.add(
         AuditLog(
             entity_type="commit",

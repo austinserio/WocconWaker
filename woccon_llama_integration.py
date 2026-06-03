@@ -128,24 +128,67 @@ class WocconAssistant:
                     f"Grammar: Phonological process {process['process']} | "
                     f"Description: {process['description']} | Examples: {examples_text}"
                 )
+        for key, label in [
+            ("community_cultural_notes", "Cultural"),
+            ("community_grammar_notes", "Grammar note"),
+            ("community_pronunciation_notes", "Pronunciation"),
+        ]:
+            for note in self.rules.get(key) or []:
+                text = (note.get("text") or "").strip()
+                if not text:
+                    continue
+                line = f"{label}: {text}"
+                if note.get("source_url"):
+                    line += f" | Source: {note['source_url']}"
+                if note.get("citation_short"):
+                    line += f" | Citation: {note['citation_short']}"
+                chunks.append("[Community] " + line)
         return documented_words, chunks
 
-    def reload_language_data(self, dict_path: Optional[str] = None, rules_path: Optional[str] = None) -> Dict[str, Any]:
+    def reload_language_data(
+        self,
+        dict_path: Optional[str] = None,
+        rules_path: Optional[str] = None,
+        dictionary: Optional[Dict[str, Any]] = None,
+        rules: Optional[Dict[str, Any]] = None,
+        source: str = "json",
+    ) -> Dict[str, Any]:
         """
-        Reload dictionary and rules from disk and rebuild RAG corpus. Use after merge or when switching to unified files.
-        Returns summary (lexicon_count, chunks_count).
+        Reload dictionary and rules and rebuild RAG corpus.
+        Pass dictionary/rules dicts (panel DB snapshot) or dict_path/rules_path (JSON files).
         """
-        if dict_path is not None:
+        if dictionary is not None:
+            self.dictionary = dictionary
+            self._dict_path = dict_path or self._dict_path
+        elif dict_path is not None:
             self._dict_path = dict_path
-        if rules_path is not None:
+            self.dictionary = self._load_json(self._dict_path)
+        else:
+            self.dictionary = self._load_json(self._dict_path)
+
+        if rules is not None:
+            self.rules = rules
+            self._rules_path = rules_path or self._rules_path
+        elif rules_path is not None:
             self._rules_path = rules_path
-        self.dictionary = self._load_json(self._dict_path)
-        self.rules = self._load_json(self._rules_path)
+            self.rules = self._load_json(self._rules_path)
+        else:
+            self.rules = self._load_json(self._rules_path)
+
         self.documented_words, self.chunks = self._build_rag_corpus()
-        log.info("Reloaded language data: %d lexicon entries, %d RAG chunks", len(self.dictionary.get("lexicon", [])), len(self.chunks))
+        cultural = len(self.rules.get("community_cultural_notes") or [])
+        log.info(
+            "Reloaded language data (%s): %d lexicon entries, %d cultural notes, %d RAG chunks",
+            source,
+            len(self.dictionary.get("lexicon", [])),
+            cultural,
+            len(self.chunks),
+        )
         return {
             "lexicon_count": len(self.dictionary.get("lexicon", [])),
+            "cultural_notes_count": cultural,
             "chunks_count": len(self.chunks),
+            "source": source,
             "dict_path": self._dict_path,
             "rules_path": self._rules_path,
         }

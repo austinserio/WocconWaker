@@ -10,8 +10,8 @@ from sqlalchemy.orm import Session
 
 from panel_api.config import get_settings
 from panel_api.db import CanonicalLexicon, CanonicalRule, PendingLexicon, PendingRule
-from panel_api.services.citation import citation_for_entry
 from panel_api.services.duplicates import normalize_text
+from panel_api.services.language_snapshot import build_language_snapshot
 from panel_api.services.vocab_match import find_base_match
 
 log = logging.getLogger("panel_commit")
@@ -31,29 +31,9 @@ def _copy_locators(target, pending) -> None:
 
 
 def _provenance_export(db: Session, row) -> Dict[str, Any]:
-    out: Dict[str, Any] = {}
-    if row.source_page is not None:
-        out["source_page"] = row.source_page
-    if row.source_page_end is not None:
-        out["source_page_end"] = row.source_page_end
-    if row.source_excerpt:
-        out["source_excerpt"] = row.source_excerpt
-    if row.provenance_status:
-        out["provenance_status"] = row.provenance_status
-    citation = citation_for_entry(
-        db,
-        source_document_id=getattr(row, "source_document_id", None),
-        source=getattr(row, "source", None),
-        source_url=getattr(row, "source_url", None),
-        source_page=getattr(row, "source_page", None),
-        source_page_end=getattr(row, "source_page_end", None),
-        source_excerpt=getattr(row, "source_excerpt", None),
-        provenance_status=getattr(row, "provenance_status", None),
-    )
-    if citation:
-        out["citation_short"] = citation.short
-        out["citation_full"] = citation.full
-    return out
+    from panel_api.services.language_snapshot import provenance_export
+
+    return provenance_export(db, row)
 
 
 def commit_pending(db: Session) -> Dict[str, Any]:
@@ -209,58 +189,16 @@ def commit_pending(db: Session) -> Dict[str, Any]:
 
 
 def export_unified_json(db: Session) -> Dict[str, str]:
+    """Write unified JSON backups (not the assistant runtime source when panel_db mode)."""
     settings = get_settings()
-    dict_legacy_path = Path(settings.dictionary_legacy_path)
-    rules_legacy_path = Path(settings.rules_legacy_path)
-
-    if dict_legacy_path.is_file():
-        with open(dict_legacy_path, encoding="utf-8") as f:
-            legacy_dict = json.load(f)
-    else:
-        legacy_dict = {"language": "Woccon", "lexicon": []}
-
-    community_lexicon = []
-    for row in db.query(CanonicalLexicon).all():
-        entry = {
-            "woccon": row.woccon,
-            "english": row.english,
-            "pos": row.pos,
-            "pronunciation": row.pronunciation,
-            "source": row.source or "community_drive",
-            "source_url": row.source_url,
-        }
-        if row.teaching_unit:
-            entry["teaching_unit"] = row.teaching_unit
-        if row.word_class:
-            entry["word_class"] = row.word_class
-        if row.lesson_band:
-            entry["lesson_band"] = row.lesson_band
-        if row.is_base_entry:
-            entry["is_base_entry"] = True
-        if row.base_entry_id:
-            entry["base_entry_id"] = row.base_entry_id
-        entry.update(_provenance_export(db, row))
-        community_lexicon.append(entry)
-
-    import merge_staging
-
-    legacy_lexicon = legacy_dict.get("lexicon") or []
-    old_only, new_only, overlap, old_by_key, new_by_key = merge_staging.compare_lexicons(
-        community_lexicon, legacy_lexicon
-    )
-    unified_lexicon = merge_staging.build_unified_lexicon(
-        community_lexicon,
-        legacy_lexicon,
-        old_only,
-        overlap,
-        old_by_key,
-        new_by_key,
-    )
-    unified_dictionary = dict(legacy_dict)
-    unified_dictionary["lexicon"] = unified_lexicon
+    unified_dictionary, unified_rules = build_language_snapshot(db)
     unified_dictionary["source_note"] = (
         "Merged via control panel commit: community + Lawson."
     )
+    if unified_rules:
+        unified_rules["source_note"] = (
+            "Legacy rules plus community notes from control panel."
+        )
 
     dict_out = Path(settings.dictionary_unified_path)
     dict_out.parent.mkdir(parents=True, exist_ok=True)
@@ -273,35 +211,7 @@ def export_unified_json(db: Session) -> Dict[str, str]:
         json.dump(unified_dictionary, f, indent=2, ensure_ascii=False)
 
     rules_out_path = Path(settings.rules_unified_path)
-    unified_rules = None
-    if rules_legacy_path.is_file():
-        with open(rules_legacy_path, encoding="utf-8") as f:
-            legacy_rules = json.load(f)
-        unified_rules = dict(legacy_rules)
-        for cat, key in [
-            ("grammar", "community_grammar_notes"),
-            ("pronunciation", "community_pronunciation_notes"),
-            ("cultural", "community_cultural_notes"),
-        ]:
-            notes = []
-            for row in (
-                db.query(CanonicalRule)
-                .filter(CanonicalRule.category == cat)
-                .order_by(CanonicalRule.sort_order)
-                .all()
-            ):
-                note = {"text": row.content, "source_url": row.source_url}
-                note.update(_provenance_export(db, row))
-                if cat == "grammar":
-                    if row.grammar_domain:
-                        note["grammar_domain"] = row.grammar_domain
-                    if row.pos_tag:
-                        note["pos_tag"] = row.pos_tag
-                    if row.construction_type:
-                        note["construction_type"] = row.construction_type
-                notes.append(note)
-            unified_rules[key] = notes
-        unified_rules["source_note"] = "Legacy rules plus community notes from control panel."
+    if unified_rules:
         if rules_out_path.is_file():
             backup = rules_out_path.with_suffix(
                 f".backup_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}.json"
@@ -316,9 +226,17 @@ def export_unified_json(db: Session) -> Dict[str, str]:
     }
 
 
-def reload_assistant(assistant: Any, dict_path: Optional[str] = None, rules_path: Optional[str] = None) -> Dict:
+def reload_assistant(assistant: Any, db: Optional[Session] = None) -> Dict:
+    from panel_api.services.language_snapshot import (
+        sync_assistant_from_panel_db,
+        use_panel_db_source,
+    )
+
+    if use_panel_db_source():
+        return sync_assistant_from_panel_db(assistant, db=db)
     settings = get_settings()
     return assistant.reload_language_data(
-        dict_path=dict_path or settings.dictionary_unified_path,
-        rules_path=rules_path or settings.rules_unified_path,
+        dict_path=settings.dictionary_unified_path,
+        rules_path=settings.rules_unified_path,
+        source="json",
     )

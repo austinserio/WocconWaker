@@ -4,12 +4,25 @@ Monorepo admin UI for reviewing extracted lexicon and grammar rules, uploading s
 
 ## Quick start (local)
 
+**Panel only** (backend + Vite dev server):
+
 ```bash
 cp .env.example .env        # set JWT_SECRET, PANEL_ADMIN_PASSWORD, etc.
 alembic upgrade head        # optional; startup also runs create_all + bootstrap
 ./run-panel-dev.sh          # starts backend + Vite; Ctrl+C stops both
 # Open http://localhost:5173/panel/login
 ```
+
+**Panel + Messenger** (tunnel + backend + Vite — one command):
+
+```bash
+./run-local-full.sh
+# Panel UI: http://localhost:5173/panel/login
+# Webhook:  https://<CLOUDFLARE_TUNNEL_HOSTNAME>/webhook
+# Stop stale processes: ./run-local-full.sh --stop
+```
+
+See [LOCAL_DEV.md](../LOCAL_DEV.md) for Cloudflare tunnel setup.
 
 Or run backend and frontend in **separate terminals** (stopping one does not stop the other):
 
@@ -23,7 +36,7 @@ WOCCON_MODE=server python app.py
 cd panel && npm install && npm run dev
 ```
 
-To stop stale dev processes left on ports 5173/8000: `./run-panel-dev.sh --stop`
+To stop stale dev processes left on ports 5173/8000: `./run-panel-dev.sh --stop` (panel only) or `./run-local-full.sh --stop` (full stack including tunnel).
 
 Default admin (from `.env`): `PANEL_ADMIN_EMAIL` / `PANEL_ADMIN_PASSWORD`.
 
@@ -62,6 +75,12 @@ cd panel && npm run build
 Scanned PDF OCR requires `ANTHROPIC_API_KEY` (Anthropic-only for vision). Library shows **Vision OCR** / **Hybrid OCR** on documents when OCR was used.
 
 Machine admin endpoints (`/admin/reload-language`, `/admin/ingest-drive`) still use `INGEST_DRIVE_SECRET`.
+
+### Messenger / assistant data source
+
+With default `WOCCON_LANGUAGE_SOURCE=panel_db`, the Woccon assistant (Messenger and `POST /message`) loads lexicon and community rules **from the same SQLite/Postgres DB** as the control panel (`DATABASE_URL`), not from `dictionary_unified.json` / `rules_unified.json`. Those unified files are **backup exports** written when you **Commit**; treat old unified JSON as archival.
+
+After editing canonical dictionary or rules in the panel, restart the app or call `POST /admin/reload-language` so the assistant picks up changes without a Commit. Set `WOCCON_LANGUAGE_SOURCE=json` only if you intentionally want file-based loading.
 
 ## Team access and roles
 

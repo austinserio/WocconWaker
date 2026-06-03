@@ -9,6 +9,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Start main FastAPI server (primary entry point)
 python app.py
 
+# Full local dev: Messenger tunnel + backend + control panel Vite
+./run-local-full.sh
+
+# Messenger + tunnel only (no panel Vite dev server)
+./run-local-messenger.sh
+
+# Control panel only (backend + Vite dev server)
+./run-panel-dev.sh
+
 # CLI interface only
 python woccon_cli.py
 

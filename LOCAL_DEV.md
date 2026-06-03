@@ -64,18 +64,34 @@ Edit `.env`: set Messenger tokens, `WOCCON_MODE=server`, `PORT`, and either loca
 
 ## 3. Start the app
 
+**Full local stack (recommended)** — Messenger tunnel + backend + control panel dev UI in one terminal:
+
 ```bash
-pip install -r requirements.txt
-python app.py
+./run-local-full.sh
 ```
 
-Or:
+- Panel UI: `http://localhost:5173/panel/login`
+- Backend: `http://127.0.0.1:8000`
+- Messenger webhook: `https://<CLOUDFLARE_TUNNEL_HOSTNAME>/webhook` (printed on startup)
+- Ctrl+C stops tunnel, backend, and Vite together
+- Stop stale processes: `./run-local-full.sh --stop`
+
+**Messenger only** (tunnel + backend, no Vite dev server):
 
 ```bash
 ./run-local-messenger.sh
 ```
 
-App listens on `http://0.0.0.0:8000`. Run the tunnel in another terminal so your public hostname forwards to port 8000.
+App listens on `http://0.0.0.0:8000`. With a built panel (`cd panel && npm run build`), the admin UI is also at `http://localhost:8000/panel/`.
+
+**Manual start:**
+
+```bash
+pip install -r requirements.txt
+python app.py
+```
+
+Then run the tunnel in another terminal so your public hostname forwards to port 8000.
 
 ---
 
@@ -111,6 +127,9 @@ Optional: set `CLOUDFLARE_TUNNEL_ID` and `CLOUDFLARE_TUNNEL_HOSTNAME` in `.env` 
 
 | Item | Typical value |
 |------|----------------|
+| Start everything | `./run-local-full.sh` |
+| Panel UI (dev) | `http://localhost:5173/panel/login` |
 | Local app | `http://0.0.0.0:8000` |
 | Public base | Set `PUBLIC_WEBHOOK_BASE_URL` in `.env` |
 | Webhook URL | `{PUBLIC_WEBHOOK_BASE_URL}/webhook` |
+| Stop stale dev processes | `./run-local-full.sh --stop` |
