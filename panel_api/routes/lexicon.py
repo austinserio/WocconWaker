@@ -2,9 +2,9 @@ from collections import defaultdict
 from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException, Query, Response
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 
-from panel_api.db import CanonicalLexicon, PendingLexicon
+from panel_api.db import CanonicalLexicon, PendingLexicon, SourceDocument
 from panel_api.deps import CurrentUser, DbSession, RequireAdmin, RequireWorker
 from panel_api.lexicon_taxonomy import (
     LESSON_BAND_IDS,
@@ -26,6 +26,40 @@ from panel_api.services.lexicon_reclassify import reclassify_all_lexicon
 from panel_api.services.serializers import canonical_lexicon_out
 
 router = APIRouter(prefix="/lexicon", tags=["lexicon"])
+
+
+def _lexicon_batch_context(db, rows: list) -> dict:
+    """Prefetch documents and variant stats for grouped/list responses."""
+    doc_ids = {r.source_document_id for r in rows if r.source_document_id}
+    doc_cache = {}
+    if doc_ids:
+        doc_cache = {
+            d.id: d
+            for d in db.query(SourceDocument).filter(SourceDocument.id.in_(doc_ids)).all()
+        }
+    variant_counts = dict(
+        db.query(CanonicalLexicon.base_entry_id, func.count())
+        .filter(CanonicalLexicon.base_entry_id.isnot(None))
+        .group_by(CanonicalLexicon.base_entry_id)
+        .all()
+    )
+    base_ids = [r.id for r in rows if r.is_base_entry]
+    variants_by_base: dict = defaultdict(list)
+    if base_ids:
+        for v in (
+            db.query(CanonicalLexicon)
+            .filter(
+                CanonicalLexicon.base_entry_id.in_(base_ids),
+                CanonicalLexicon.is_base_entry.is_(False),
+            )
+            .all()
+        ):
+            variants_by_base[v.base_entry_id].append(v)
+    return {
+        "doc_cache": doc_cache,
+        "variant_counts": variant_counts,
+        "variants_by_base": dict(variants_by_base),
+    }
 
 
 def _apply_dedupe_filter(query, dedupe: bool):
@@ -95,20 +129,46 @@ def get_lexicon_taxonomy(user: CurrentUser):
 
 @router.get("/stats")
 def lexicon_stats(db: DbSession, user: CurrentUser):
-    rows = db.query(CanonicalLexicon).all()
-    by_unit: dict = defaultdict(int)
-    by_class: dict = defaultdict(int)
-    by_band: dict = defaultdict(int)
-    base_count = 0
-    variant_count = 0
-    for r in rows:
-        by_unit[r.teaching_unit or "other"] += 1
-        by_class[r.word_class or "unknown"] += 1
-        by_band[r.lesson_band or "intermediate"] += 1
-        if r.is_base_entry:
-            base_count += 1
-        elif r.base_entry_id:
-            variant_count += 1
+    total = db.query(func.count(CanonicalLexicon.id)).scalar() or 0
+    base_count = (
+        db.query(func.count(CanonicalLexicon.id))
+        .filter(CanonicalLexicon.is_base_entry.is_(True))
+        .scalar()
+        or 0
+    )
+    variant_count = (
+        db.query(func.count(CanonicalLexicon.id))
+        .filter(
+            CanonicalLexicon.is_base_entry.is_(False),
+            CanonicalLexicon.base_entry_id.isnot(None),
+        )
+        .scalar()
+        or 0
+    )
+    by_unit = dict(
+        db.query(
+            func.coalesce(CanonicalLexicon.teaching_unit, "other"),
+            func.count(),
+        )
+        .group_by(func.coalesce(CanonicalLexicon.teaching_unit, "other"))
+        .all()
+    )
+    by_class = dict(
+        db.query(
+            func.coalesce(CanonicalLexicon.word_class, "unknown"),
+            func.count(),
+        )
+        .group_by(func.coalesce(CanonicalLexicon.word_class, "unknown"))
+        .all()
+    )
+    by_band = dict(
+        db.query(
+            func.coalesce(CanonicalLexicon.lesson_band, "intermediate"),
+            func.count(),
+        )
+        .group_by(func.coalesce(CanonicalLexicon.lesson_band, "intermediate"))
+        .all()
+    )
     unmatched_pending = (
         db.query(PendingLexicon)
         .filter(
@@ -118,13 +178,13 @@ def lexicon_stats(db: DbSession, user: CurrentUser):
         .count()
     )
     return {
-        "total": len(rows),
+        "total": total,
         "base_count": base_count,
         "variant_count": variant_count,
         "unmatched_pending": unmatched_pending,
-        "by_teaching_unit": dict(by_unit),
-        "by_word_class": dict(by_class),
-        "by_lesson_band": dict(by_band),
+        "by_teaching_unit": by_unit,
+        "by_word_class": by_class,
+        "by_lesson_band": by_band,
     }
 
 
@@ -147,10 +207,20 @@ def list_lexicon_grouped(
         pos=None,
         dedupe=dedupe,
     ).all()
+    ctx = _lexicon_batch_context(db, rows)
     groups: dict = defaultdict(list)
     for r in rows:
         key = r.teaching_unit or "other"
-        groups[key].append(canonical_lexicon_out(db, r, include_variant_count=True))
+        groups[key].append(
+            canonical_lexicon_out(
+                db,
+                r,
+                include_variant_count=True,
+                doc_cache=ctx["doc_cache"],
+                variant_counts=ctx["variant_counts"],
+                variants_by_base=ctx["variants_by_base"],
+            )
+        )
     unit_order = [u["id"] for u in TEACHING_UNITS]
     result = []
     for uid in unit_order:

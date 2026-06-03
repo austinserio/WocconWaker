@@ -154,8 +154,10 @@ def citation_for_entry(
     source_page_end: Optional[int] = None,
     source_excerpt: Optional[str] = None,
     provenance_status: Optional[str] = None,
+    doc: Optional[SourceDocument] = None,
 ) -> Optional[CitationOut]:
-    doc = db.get(SourceDocument, source_document_id) if source_document_id else None
+    if doc is None and source_document_id:
+        doc = db.get(SourceDocument, source_document_id)
     if doc is None and source and source.lower() in ("lawson", "lawson1709"):
         doc = db.get(SourceDocument, LAWSON_SEED_ID)
     fallback = None

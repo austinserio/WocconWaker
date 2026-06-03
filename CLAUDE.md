@@ -150,6 +150,7 @@ python drive_ingest.py
 - `POST /admin/reload-language` - Reload dictionary/rules and rebuild RAG (same auth as ingest; optional body: `dict_path`, `rules_path`)
 - `POST /admin/extract-document` - Extract one document (same auth as ingest). JSON or multipart `.txt`.
 - **Control panel** (`panel_api`, JWT): `POST /api/auth/login/json`, `POST /api/documents`, `GET /api/pending/*`, `GET /api/rules`, `PATCH /api/rules/reorder`, `GET /api/lexicon`, `POST /api/admin/commit`. See [docs/CONTROL_PANEL.md](docs/CONTROL_PANEL.md). Env: `DATABASE_URL`, `JWT_SECRET`, `PANEL_ADMIN_EMAIL`, `PANEL_ADMIN_PASSWORD`, `PANEL_CORS_ORIGINS`, `WOCCON_UPLOAD_DIR`, `DUPLICATE_THRESHOLD`.
+- **Reconstruction roadmap:** [docs/RECONSTRUCTION_ROADMAP.md](docs/RECONSTRUCTION_ROADMAP.md) — comparative pipeline, hybrid model stack, grammar tiers, phased DoD.
 
 ## Notes
 

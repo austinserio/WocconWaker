@@ -59,10 +59,43 @@ try:
     app.include_router(_panel_api_router)
     _panel_dist = os.path.join(os.path.dirname(__file__), "panel", "dist")
     if os.path.isdir(_panel_dist):
+        from fastapi.responses import FileResponse, RedirectResponse
         from fastapi.staticfiles import StaticFiles
 
-        app.mount("/panel", StaticFiles(directory=_panel_dist, html=True), name="panel")
-        print(f"Control panel UI mounted at /panel/ (from {_panel_dist})")
+        _panel_index_html = os.path.join(_panel_dist, "index.html")
+        _panel_assets = os.path.join(_panel_dist, "assets")
+        if os.path.isdir(_panel_assets):
+            app.mount(
+                "/panel/assets",
+                StaticFiles(directory=_panel_assets),
+                name="panel_assets",
+            )
+
+        def _panel_static_file(path: str) -> str | None:
+            if not path or path.endswith("/"):
+                return None
+            candidate = os.path.join(_panel_dist, path)
+            if os.path.isfile(candidate):
+                return candidate
+            return None
+
+        @app.get("/")
+        async def _root_redirect():
+            return RedirectResponse(url="/panel/", status_code=302)
+
+        @app.get("/panel")
+        @app.get("/panel/")
+        async def _serve_panel_index():
+            return FileResponse(_panel_index_html)
+
+        @app.get("/panel/{full_path:path}")
+        async def _serve_panel_spa(full_path: str):
+            static = _panel_static_file(full_path)
+            if static:
+                return FileResponse(static)
+            return FileResponse(_panel_index_html)
+
+        print(f"Control panel UI at /panel/ (SPA fallback, {_panel_dist})")
 except ImportError as _panel_err:
     print(f"Panel API not loaded: {_panel_err}")
 

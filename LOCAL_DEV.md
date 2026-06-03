@@ -123,6 +123,35 @@ Optional: set `CLOUDFLARE_TUNNEL_ID` and `CLOUDFLARE_TUNNEL_HOSTNAME` in `.env` 
 
 ---
 
+## Database environments
+
+| Environment | `DATABASE_URL` | Notes |
+|-------------|----------------|--------|
+| **Local dev** | `sqlite:///./data/woccon.db` | Default; safe for experiments |
+| **Production** (Azure Container App) | Postgres via secret `database-url` | Set with `./scripts/setup-azure-postgres.sh` + `./scripts/sync-azure-container-env.sh` |
+
+Keep **`POSTGRES_DATABASE_URL`** in `.env` for migration, Azure sync, and pulling prod data—leave **`DATABASE_URL`** on SQLite for day-to-day local work.
+
+```bash
+# One-time: provision Postgres and migrate **current** local SQLite → prod
+./scripts/setup-azure-postgres.sh
+# Add POSTGRES_DATABASE_URL to .env (printed by setup script)
+./scripts/migrate_sqlite_to_postgres.py          # uses ./data/woccon.db (backs up first)
+./scripts/migrate_library_from_sqlite.py         # re-sync Library only from current local DB
+./scripts/sync-azure-container-env.sh
+
+# Refresh local SQLite from production (stop local app first)
+./scripts/pull_panel_db_from_postgres.sh
+
+**Source of truth:** always `./data/woccon.db` on your machine. Do not point migration scripts at old files under `data/backups/` unless you intentionally mean to restore history.
+
+**Regions:** Postgres is in **Central US** (East US 2 is not available for Flexible Server on this subscription). The Container App is in **East US 2**, which adds latency. Prefer moving the app to Central US when you can; do not move Postgres to East US 2 until Azure allows it.
+```
+
+Do not run `reset_panel_db.py --wipe` while `DATABASE_URL` or `POSTGRES_DATABASE_URL` points at production Postgres.
+
+---
+
 ## Reference
 
 | Item | Typical value |
@@ -133,3 +162,4 @@ Optional: set `CLOUDFLARE_TUNNEL_ID` and `CLOUDFLARE_TUNNEL_HOSTNAME` in `.env` 
 | Public base | Set `PUBLIC_WEBHOOK_BASE_URL` in `.env` |
 | Webhook URL | `{PUBLIC_WEBHOOK_BASE_URL}/webhook` |
 | Stop stale dev processes | `./run-local-full.sh --stop` |
+| Refresh local DB from prod | `./scripts/pull_panel_db_from_postgres.sh` |

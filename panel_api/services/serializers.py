@@ -20,7 +20,7 @@ from panel_api.services.vocab_match import (
 )
 
 
-def _attach_citation(db, row, out_cls, extra: dict | None = None):
+def _attach_citation(db, row, out_cls, extra: dict | None = None, doc=None):
     data = {c.name: getattr(row, c.name) for c in row.__table__.columns}
     if extra:
         data.update(extra)
@@ -34,6 +34,7 @@ def _attach_citation(db, row, out_cls, extra: dict | None = None):
         source_page_end=getattr(row, "source_page_end", None),
         source_excerpt=getattr(row, "source_excerpt", None),
         provenance_status=getattr(row, "provenance_status", None),
+        doc=doc,
     )
     payload = out.model_dump()
     payload["citation"] = citation
@@ -106,14 +107,44 @@ def pending_rule_out(db, row) -> PendingRuleOut:
 
 
 def canonical_lexicon_out(
-    db, row, *, include_variant_count: bool = False
+    db,
+    row,
+    *,
+    include_variant_count: bool = False,
+    doc_cache: dict | None = None,
+    variant_counts: dict | None = None,
+    variants_by_base: dict | None = None,
 ) -> CanonicalLexiconOut:
     extra: dict = {}
+    doc = None
+    if doc_cache is not None and getattr(row, "source_document_id", None):
+        doc = doc_cache.get(row.source_document_id)
     if include_variant_count and getattr(row, "is_base_entry", False):
-        vc = variant_count(db, row.id)
-        extra["variant_count"] = vc
-        extra["source_count"] = attestation_citation_count(db, row)
-    return _attach_citation(db, row, CanonicalLexiconOut, extra)
+        if variant_counts is not None:
+            extra["variant_count"] = variant_counts.get(row.id, 0)
+        else:
+            extra["variant_count"] = variant_count(db, row.id)
+        if variants_by_base is not None:
+            variants = variants_by_base.get(row.id, [])
+            extra["source_count"] = _attestation_count_from_rows(row, variants)
+        else:
+            extra["source_count"] = attestation_citation_count(db, row)
+    return _attach_citation(db, row, CanonicalLexiconOut, extra, doc=doc)
+
+
+def _attestation_count_from_rows(base_row, variants: list) -> int:
+    """Same logic as attestation_citation_count without extra queries."""
+    from panel_api.services.vocab_match import _citation_key
+
+    seen: set[str] = set()
+    count = 0
+    for item in [base_row, *variants]:
+        key = _citation_key(item)
+        if key in seen:
+            continue
+        seen.add(key)
+        count += 1
+    return count
 
 
 def canonical_rule_out(db, row) -> CanonicalRuleOut:

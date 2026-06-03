@@ -51,7 +51,8 @@ cd panel && npm run build
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `DATABASE_URL` | `sqlite:///./data/woccon.db` | SQLite local; `postgresql://...` on Azure |
+| `DATABASE_URL` | `sqlite:///./data/woccon.db` | Local dev SQLite; app connection |
+| `POSTGRES_DATABASE_URL` | — | Azure Postgres URL for prod sync/migrate/pull (see below) |
 | `JWT_SECRET` | (required in prod) | JWT signing |
 | `JWT_EXPIRE_MINUTES` | `1440` | Token lifetime |
 | `PANEL_ADMIN_EMAIL` | `admin@woccon.local` | Bootstrap admin |
@@ -133,18 +134,33 @@ All panel routes are under `/api` with `Authorization: Bearer <token>` except lo
 
 ## Azure Container Apps
 
-`Dockerfile.azure` builds the panel SPA and copies `panel/dist` into the image. Set at minimum:
+`Dockerfile.azure` builds the panel SPA and copies `panel/dist` into the image.
 
-- `DATABASE_URL` — Azure Database for PostgreSQL connection string
+### Production database (PostgreSQL)
+
+Provision and migrate once:
+
+```bash
+./scripts/setup-azure-postgres.sh          # Flexible Server in East US 2
+# Add POSTGRES_DATABASE_URL to .env (printed by script)
+./scripts/migrate_sqlite_to_postgres.py      # local SQLite → Postgres
+./scripts/sync-azure-container-env.sh      # Container App secret database-url
+```
+
+The Container App uses `DATABASE_URL=secretref:database-url` (full Postgres URL). Local dev stays on SQLite; refresh with `./scripts/pull_panel_db_from_postgres.sh`.
+
+Set at minimum:
+
+- `POSTGRES_DATABASE_URL` — in `.env` for sync/migrate; copied to Container App as secret `database-url`
 - `JWT_SECRET` — strong random secret
 - `PANEL_ADMIN_PASSWORD` — change from default (bootstrap admin only)
 - `PANEL_PUBLIC_BASE_URL` — Container App HTTPS URL
 - `EMAIL_MODE=smtp` + `SMTP_*` — for team invites (see `./scripts/setup-panel-email-azure-cli.sh`)
-- `WOCCON_DICTIONARY_PATH` / `WOCCON_RULES_PATH` — unified file paths (writable volume if committing in-container)
+- `WOCCON_DICTIONARY_PATH` / `WOCCON_RULES_PATH` — unified JSON backup paths on Commit
 
-Mount a persistent volume on `/app/data` for SQLite uploads **or** use Postgres + Azure Files for `WOCCON_UPLOAD_DIR`.
+If you upload PDFs in-panel, mount **Azure Files** on `WOCCON_UPLOAD_DIR` (Drive-linked library docs need no upload volume).
 
-Run `alembic upgrade head` after deploy (migration `009_users_auth` adds names, invitations, role renames).
+Run `alembic upgrade head` against Postgres after first provision (`migrate_sqlite_to_postgres.py` runs this automatically).
 
 ### Sync env from local `.env` to Azure
 

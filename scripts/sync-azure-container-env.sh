@@ -59,6 +59,15 @@ add_secret "panel-admin-password" "${PANEL_ADMIN_PASSWORD:-}"
 add_secret "page-access-token" "${PAGE_ACCESS_TOKEN:-}"
 add_secret "ingest-drive-secret" "${INGEST_DRIVE_SECRET:-}"
 
+# Postgres for production: prefer POSTGRES_DATABASE_URL (local .env can keep sqlite DATABASE_URL)
+AZURE_DB_URL="${POSTGRES_DATABASE_URL:-}"
+if [[ -z "$AZURE_DB_URL" && "${DATABASE_URL:-}" == postgresql* ]]; then
+  AZURE_DB_URL="${DATABASE_URL}"
+fi
+if [[ -n "$AZURE_DB_URL" && "$AZURE_DB_URL" == postgresql* ]]; then
+  add_secret "database-url" "$AZURE_DB_URL"
+fi
+
 # --- plain env vars (aligned with local .env) ---
 ENV_VARS=(
   "WOCCON_MODE=${WOCCON_MODE:-server}"
@@ -74,7 +83,6 @@ ENV_VARS=(
   "DRIVE_FOLDER_ID=${DRIVE_FOLDER_ID:-}"
   "WOCCON_DICTIONARY_PATH=${WOCCON_DICTIONARY_PATH:-woccon_language/dictionary_unified.json}"
   "WOCCON_RULES_PATH=${WOCCON_RULES_PATH:-woccon_language/rules_unified.json}"
-  "DATABASE_URL=${DATABASE_URL:-sqlite:///./data/woccon.db}"
   "JWT_EXPIRE_MINUTES=${JWT_EXPIRE_MINUTES:-1440}"
   "PANEL_ADMIN_EMAIL=${PANEL_ADMIN_EMAIL:-}"
   "PANEL_CORS_ORIGINS=${PANEL_CORS_ORIGINS}"
@@ -102,6 +110,11 @@ ENV_VARS=(
 [[ -n "${PANEL_ADMIN_PASSWORD:-}" ]] && ENV_VARS+=("PANEL_ADMIN_PASSWORD=secretref:panel-admin-password")
 [[ -n "${PAGE_ACCESS_TOKEN:-}" ]] && ENV_VARS+=("PAGE_ACCESS_TOKEN=secretref:page-access-token")
 [[ -n "${INGEST_DRIVE_SECRET:-}" ]] && ENV_VARS+=("INGEST_DRIVE_SECRET=secretref:ingest-drive-secret")
+if [[ -n "$AZURE_DB_URL" && "$AZURE_DB_URL" == postgresql* ]]; then
+  ENV_VARS+=("DATABASE_URL=secretref:database-url")
+else
+  ENV_VARS+=("DATABASE_URL=${DATABASE_URL:-sqlite:///./data/woccon.db}")
+fi
 
 if [[ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" && -f "${GOOGLE_APPLICATION_CREDENTIALS}" ]]; then
   echo "NOTE: GOOGLE_APPLICATION_CREDENTIALS is a local file path."
@@ -110,9 +123,12 @@ if [[ -n "${GOOGLE_APPLICATION_CREDENTIALS:-}" && -f "${GOOGLE_APPLICATION_CREDE
   echo ""
 fi
 
-if [[ "$DATABASE_URL" == sqlite* ]]; then
-  echo "NOTE: DATABASE_URL uses SQLite. Container filesystem is ephemeral unless you mount a volume."
-  echo "      For production persistence, use Azure PostgreSQL and update DATABASE_URL."
+if [[ -z "$AZURE_DB_URL" || "$AZURE_DB_URL" == sqlite* ]]; then
+  echo "NOTE: No POSTGRES_DATABASE_URL set. Container will use SQLite (ephemeral unless you mount a volume)."
+  echo "      Run ./scripts/setup-azure-postgres.sh and set POSTGRES_DATABASE_URL in .env."
+  echo ""
+elif [[ "$AZURE_DB_URL" == postgresql* ]]; then
+  echo "Database: PostgreSQL via secret database-url"
   echo ""
 fi
 

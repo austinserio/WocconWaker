@@ -5,7 +5,21 @@
       "Bash(python:*)",
       "WebFetch(domain:developers.facebook.com)",
       "Bash(chmod:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(sqlite3 -header woccon.db \"SELECT substr\\(title,1,55\\) as title, source_type, COALESCE\\(short_title,''\\) as cite, COALESCE\\(authors,''\\) as authors FROM source_documents;\")",
+      "Bash(sqlite3 woccon.db \".schema source_documents\")",
+      "Bash(sqlite3 woccon.db \"SELECT source, COUNT\\(*\\) FROM canonical_lexicon GROUP BY source;\")",
+      "Bash(sqlite3 woccon.db \"SELECT COUNT\\(*\\) FROM canonical_lexicon WHERE is_base_entry=1;\")",
+      "Bash(sqlite3 woccon.db \"SELECT COUNT\\(*\\) FROM canonical_rules WHERE content LIKE '%atawba%';\")",
+      "Bash(sqlite3 woccon.db \"SELECT COUNT\\(*\\) FROM canonical_rules WHERE content LIKE '%roto-Siouan%' OR content LIKE '%roto Siouan%' OR content LIKE '%PSi%';\")",
+      "Bash(sqlite3 woccon.db \"SELECT COUNT\\(*\\) FROM canonical_rules WHERE content LIKE '%roto-Catawb%' OR content LIKE '%roto Catawb%';\")",
+      "Bash(sqlite3 woccon.db \"SELECT COALESCE\\(grammar_lineage,'\\(null\\)'\\), COUNT\\(*\\) FROM canonical_rules GROUP BY grammar_lineage;\")",
+      "Bash(sqlite3 woccon.db \"SELECT substr\\(content,1,260\\) FROM canonical_rules WHERE content LIKE '%atawba%' LIMIT 8;\")",
+      "Bash(sqlite3 woccon.db \"SELECT substr\\(content,1,300\\) FROM canonical_rules WHERE content LIKE '%correspond%' OR content LIKE '%cognate%' OR content LIKE '%Woccon%Catawba%' LIMIT 15;\")",
+      "Bash(sqlite3 woccon.db \"SELECT '• '||content FROM canonical_rules WHERE content LIKE '%dápa%' OR content LIKE '%cognate with Catawba%' OR content LIKE '% = %' OR content LIKE '%Proto-Siouan *%' LIMIT 12;\")",
+      "Bash(sqlite3 woccon.db \"SELECT COUNT\\(*\\) FROM canonical_rules WHERE content LIKE '%allatin%';\")",
+      "Bash(sqlite3 woccon.db \"SELECT COUNT\\(*\\) FROM canonical_lexicon WHERE source_url LIKE '%allatin%' OR english LIKE '%allatin%';\")",
+      "Bash(sqlite3 woccon.db \"SELECT COUNT\\(*\\) FROM pending_rules WHERE content LIKE '%atawba%';\")"
     ],
     "deny": []
   }
