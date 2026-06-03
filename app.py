@@ -213,7 +213,11 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
         if not data.get("object") == "page":
             return JSONResponse(content={"status": "ignored"})
 
-        messages = messenger.process_webhook(data)
+        for entry in data.get("entry", []):
+            print(f"[WEBHOOK] page_id={entry.get('id')} events={len(entry.get('messaging', []))}")
+
+        msg_client = get_messenger()
+        messages = msg_client.process_webhook(data)
         print(f"[DEBUG] Processed {len(messages)} messages from webhook")
 
         if not messages:
@@ -222,7 +226,7 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
         # Make sure assistant is initialized
         if not assistant_ready.is_set():
             for msg in messages:
-                messenger.send_message(
+                msg_client.send_message(
                     msg['user_id'],
                     "I'm still waking up. Please wait a moment..."
                 )
@@ -235,7 +239,7 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
 
             # Show typing indicator immediately (no extra permission needed; uses same Send API)
             try:
-                messenger.send_typing_indicator(user_id, True)
+                msg_client.send_typing_indicator(user_id, True)
             except Exception as send_err:
                 print(f"[DEBUG] Typing indicator send failed: {send_err}")
 

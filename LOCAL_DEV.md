@@ -145,7 +145,27 @@ Keep **`POSTGRES_DATABASE_URL`** in `.env` for migration, Azure sync, and pullin
 
 **Source of truth:** always `./data/woccon.db` on your machine. Do not point migration scripts at old files under `data/backups/` unless you intentionally mean to restore history.
 
-**Regions:** Postgres is in **Central US** (East US 2 is not available for Flexible Server on this subscription). The Container App is in **East US 2**, which adds latency. Prefer moving the app to Central US when you can; do not move Postgres to East US 2 until Azure allows it.
+**Regions:** Postgres and the production Container App are in **Central US**. Foundry stays in **East US 2** (HTTPS API). Do not move Postgres to East US 2 until Azure allows it on your subscription.
+
+### Relocate / Central production
+
+```bash
+# Provision Central ACR + env + app (does not delete East US 2)
+./scripts/relocate-to-central.sh
+
+# After validating the new FQDN, update Facebook Messenger webhook to:
+#   https://<central-app-fqdn>/webhook
+
+# East teardown only when you explicitly confirm:
+./scripts/teardown-east-resources.sh --confirm
+```
+
+Set in `.env` for Central targets (updated automatically by `relocate-to-central.sh`):
+
+- `AZURE_LOCATION=centralus`
+- `AZURE_ACR_NAME=wocconwakerwicus`
+- `AZURE_CONTAINER_APP_ENV=wocconwaker-env-central`
+- `AZURE_CONTAINER_APP_NAME=wocconwaker-app-central`
 ```
 
 Do not run `reset_panel_db.py --wipe` while `DATABASE_URL` or `POSTGRES_DATABASE_URL` points at production Postgres.

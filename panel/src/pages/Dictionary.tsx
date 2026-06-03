@@ -78,19 +78,23 @@ export default function Dictionary() {
       requests.push(api<LexiconGroup[]>(`/lexicon/grouped?${params}`));
     }
 
-    Promise.all(requests)
+    Promise.allSettled(requests)
       .then((results) => {
-        const s = results[0] as LexiconStats;
-        setStats(s);
+        const statsResult = results[0];
+        if (statsResult.status === "fulfilled") {
+          setStats(statsResult.value as LexiconStats);
+        }
+        const dataResult = results[1];
+        if (dataResult.status !== "fulfilled") return;
         if (viewMode === "base") {
-          const resp = results[1] as LexiconListResponse;
+          const resp = dataResult.value as LexiconListResponse;
           setBaseItems(resp.items);
         } else if (viewMode === "all") {
-          const resp = results[1] as LexiconListResponse;
+          const resp = dataResult.value as LexiconListResponse;
           setAllItems(resp.items);
           setAllTotal(resp.total);
         } else {
-          const g = results[1] as LexiconGroup[];
+          const g = dataResult.value as LexiconGroup[];
           setGroups(g);
           setActiveUnit((prev) => prev ?? g[0]?.teaching_unit ?? null);
         }

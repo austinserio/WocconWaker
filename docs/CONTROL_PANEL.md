@@ -136,12 +136,14 @@ All panel routes are under `/api` with `Authorization: Bearer <token>` except lo
 
 `Dockerfile.azure` builds the panel SPA and copies `panel/dist` into the image.
 
+Production runs in **Central US** (`wocconwaker-app-central`, `wocconwaker-env-central`, ACR `wocconwakerwicus`) co-located with Postgres. **Foundry** remains in East US 2. East US 2 app/env/ACR are removed only after `./scripts/teardown-east-resources.sh --confirm`.
+
 ### Production database (PostgreSQL)
 
 Provision and migrate once:
 
 ```bash
-./scripts/setup-azure-postgres.sh          # Flexible Server in East US 2
+./scripts/setup-azure-postgres.sh          # Flexible Server in Central US
 # Add POSTGRES_DATABASE_URL to .env (printed by script)
 ./scripts/migrate_sqlite_to_postgres.py      # local SQLite → Postgres
 ./scripts/sync-azure-container-env.sh      # Container App secret database-url
@@ -173,7 +175,25 @@ After editing `.env` locally:
 
 Sets `PANEL_PUBLIC_BASE_URL` to `https://<container-app-fqdn>` automatically. The **control panel** (not a separate process) is served at `/panel/` by the same `uvicorn` process when `panel/dist` is in the Docker image (`Dockerfile.azure` builds it).
 
-Production URL example: `https://wocconwaker-app.<region>.azurecontainerapps.io/panel/login`
+`sync-azure-container-env.sh` targets whichever app is named in `.env` as `AZURE_CONTAINER_APP_NAME` (default `wocconwaker-app-central` after relocation).
+
+### Central US relocation
+
+```bash
+./scripts/relocate-to-central.sh    # ACR build + Central env/app; patches .env; runs sync
+```
+
+Optional `.env` overrides: `AZURE_LOCATION`, `AZURE_ACR_NAME`, `AZURE_CONTAINER_APP_ENV`, `AZURE_CONTAINER_APP_NAME`.
+
+### Messenger webhook cutover
+
+After Central validation, update the Meta app webhook URL to:
+
+`https://<central-container-app-fqdn>/webhook`
+
+(Printed by `relocate-to-central.sh`.) East US 2 remains as rollback until `./scripts/teardown-east-resources.sh --confirm`.
+
+Production URL example: `https://wocconwaker-app-central.<env-id>.centralus.azurecontainerapps.io/panel/login`
 
 ## Grammar rule organization
 

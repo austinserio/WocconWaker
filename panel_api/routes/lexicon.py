@@ -145,30 +145,25 @@ def lexicon_stats(db: DbSession, user: CurrentUser):
         .scalar()
         or 0
     )
-    by_unit = dict(
-        db.query(
-            func.coalesce(CanonicalLexicon.teaching_unit, "other"),
-            func.count(),
-        )
-        .group_by(func.coalesce(CanonicalLexicon.teaching_unit, "other"))
+    # Group on raw columns (Postgres rejects coalesce() in SELECT vs GROUP BY as different exprs).
+    by_unit = {
+        (k or "other"): v
+        for k, v in db.query(CanonicalLexicon.teaching_unit, func.count())
+        .group_by(CanonicalLexicon.teaching_unit)
         .all()
-    )
-    by_class = dict(
-        db.query(
-            func.coalesce(CanonicalLexicon.word_class, "unknown"),
-            func.count(),
-        )
-        .group_by(func.coalesce(CanonicalLexicon.word_class, "unknown"))
+    }
+    by_class = {
+        (k or "unknown"): v
+        for k, v in db.query(CanonicalLexicon.word_class, func.count())
+        .group_by(CanonicalLexicon.word_class)
         .all()
-    )
-    by_band = dict(
-        db.query(
-            func.coalesce(CanonicalLexicon.lesson_band, "intermediate"),
-            func.count(),
-        )
-        .group_by(func.coalesce(CanonicalLexicon.lesson_band, "intermediate"))
+    }
+    by_band = {
+        (k or "intermediate"): v
+        for k, v in db.query(CanonicalLexicon.lesson_band, func.count())
+        .group_by(CanonicalLexicon.lesson_band)
         .all()
-    )
+    }
     unmatched_pending = (
         db.query(PendingLexicon)
         .filter(
