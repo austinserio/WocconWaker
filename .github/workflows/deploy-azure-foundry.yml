@@ -1,4 +1,4 @@
-# Build and deploy WocconWaker to Azure Container Apps (Foundry mode) on push to azure-foundry.
+# Build and deploy WocconWaker to Azure Container Apps (Foundry mode) on push to main.
 # Container env vars and secrets are managed in Azure; CI only builds and rolls out the image.
 #
 # Secrets (Settings → Secrets and variables → Actions → Secrets):
@@ -14,7 +14,7 @@ name: Deploy to Azure (Foundry)
 
 on:
   push:
-    branches: [azure-foundry]
+    branches: [main, azure-foundry]
 
 env:
   RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
