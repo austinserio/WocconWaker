@@ -136,11 +136,11 @@ def extract_pdf_text(
         log.warning("PDF has sparse pages but PDF_OCR_ENABLED=false; using pdfplumber text only")
         return mark_text_with_pages(page_texts), "text"
 
-    from llm_client import _use_anthropic
+    from llm_client import _allow_anthropic_fallback, _use_anthropic
 
-    if not _use_anthropic():
+    if not _allow_anthropic_fallback() or not _use_anthropic():
         raise ScannedPdfOcrRequiredError(
-            "Scanned PDF detected; set ANTHROPIC_API_KEY for vision OCR."
+            "Scanned PDF detected; set ANTHROPIC_API_KEY and ALLOW_ANTHROPIC_FALLBACK=true for vision OCR."
         )
 
     if on_progress:

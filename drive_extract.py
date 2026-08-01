@@ -45,10 +45,27 @@ class ChunkMeta:
 
 
 def _max_whole_file_chars() -> int:
-    """Use 0 when Anthropic is in use so we always chunk and avoid 'Streaming is required' errors."""
-    if (os.environ.get("ANTHROPIC_API_KEY") or "").strip():
-        return 0
+    """Whole-file threshold; Anthropic streaming in llm_client supports long single-pass requests."""
     return MAX_WHOLE_FILE_CHARS_DEFAULT
+
+
+def _normalize_lexicon_key(woccon: str, english: str) -> Tuple[str, str]:
+    return ((woccon or "").strip().lower(), (english or "").strip().lower())
+
+
+def _lexicon_dedup_key(woccon: str, english: str) -> str:
+    w, e = _normalize_lexicon_key(woccon, english)
+    return f"{w}\x00{e}"
+
+
+def _empty_extraction_audit() -> Dict[str, Any]:
+    return {
+        "raw_lexicon_count": 0,
+        "kept_lexicon_count": 0,
+        "dropped_missing_fields": [],
+        "dropped_duplicates": [],
+        "dropped_non_dict": 0,
+    }
 
 
 def _source_url(file_id: str) -> str:
@@ -165,8 +182,8 @@ def _parse_json_from_response(content: str) -> Optional[Dict[str, Any]]:
         return None
 
 
-def _validate_extraction(raw: Dict[str, Any]) -> Tuple[bool, Dict[str, Any]]:
-    """Validate and normalize extraction. Returns (ok, normalized_dict)."""
+def _validate_extraction(raw: Dict[str, Any]) -> Tuple[bool, Dict[str, Any], Dict[str, Any]]:
+    """Validate and normalize extraction. Returns (ok, normalized_dict, audit_dict)."""
     lexicon = raw.get("lexicon_entries")
     grammar = raw.get("grammar_notes")
     pronunciation = raw.get("pronunciation_notes")
@@ -179,13 +196,24 @@ def _validate_extraction(raw: Dict[str, Any]) -> Tuple[bool, Dict[str, Any]]:
         pronunciation = []
     if not isinstance(cultural, list):
         cultural = []
+    audit: Dict[str, Any] = {
+        "raw_lexicon_count": len(lexicon),
+        "dropped_missing_fields": [],
+        "dropped_non_dict": 0,
+    }
     normalized_lexicon = []
     for e in lexicon:
         if not isinstance(e, dict):
+            audit["dropped_non_dict"] = int(audit.get("dropped_non_dict") or 0) + 1
             continue
         w = e.get("woccon") or e.get("woccon_word")
         eng = e.get("english") or e.get("meaning")
         if not w or not eng:
+            audit["dropped_missing_fields"].append({
+                "reason": "missing_woccon_or_english",
+                "woccon": str(w).strip() if w else None,
+                "english": str(eng).strip() if eng else None,
+            })
             continue
         normalized_lexicon.append({
             "woccon": str(w).strip(),
@@ -206,7 +234,7 @@ def _validate_extraction(raw: Dict[str, Any]) -> Tuple[bool, Dict[str, Any]]:
         "grammar_notes": normalized_grammar,
         "pronunciation_notes": normalized_pronunciation,
         "cultural_notes": normalized_cultural,
-    }
+    }, audit
 
 
 def _coerce_int(val: Any) -> Optional[int]:
@@ -338,8 +366,9 @@ def extract_from_chunk(
                     grammar_lineage=grammar_lineage,
                 )
             return {"lexicon_entries": [], "grammar_notes": [], "pronunciation_notes": [], "cultural_notes": []}
-        ok, normalized = _validate_extraction(data)
+        ok, normalized, validation_audit = _validate_extraction(data)
         normalized = _apply_extraction_focus(normalized, extraction_focus)
+        normalized["_validation_audit"] = validation_audit
         for e in normalized.get("lexicon_entries", []):
             e["source_chunk_index"] = chunk_index
             e["_chunk_page_start"] = chunk_page_start
@@ -397,18 +426,39 @@ def extract_one_file(
     file_grammar: List[Dict[str, Any]] = []
     file_pronunciation: List[Dict[str, Any]] = []
     file_cultural: List[Dict[str, Any]] = []
-    seen_woccon: set = set()
+    seen_lexicon: set = set()
     seen_notes: set = set()
+    file_audit = _empty_extraction_audit()
 
     def _note_key(n: Dict[str, Any]) -> str:
         return (n.get("text") or "").strip().lower()
 
+    def _accumulate_validation_audit(extracted: Dict[str, Any]) -> None:
+        chunk_audit = extracted.pop("_validation_audit", None)
+        if not chunk_audit:
+            return
+        file_audit["raw_lexicon_count"] += int(chunk_audit.get("raw_lexicon_count") or 0)
+        file_audit["dropped_missing_fields"].extend(chunk_audit.get("dropped_missing_fields") or [])
+        file_audit["dropped_non_dict"] = int(file_audit.get("dropped_non_dict") or 0) + int(
+            chunk_audit.get("dropped_non_dict") or 0
+        )
+
     def merge_extraction(extracted: Dict[str, Any]) -> None:
+        _accumulate_validation_audit(extracted)
         for e in extracted.get("lexicon_entries", []):
-            key = (e.get("woccon") or "").lower()
-            if not key or key in seen_woccon:
+            woccon = (e.get("woccon") or "").strip()
+            english = (e.get("english") or "").strip()
+            key = _lexicon_dedup_key(woccon, english)
+            if not woccon or not english:
                 continue
-            seen_woccon.add(key)
+            if key in seen_lexicon:
+                file_audit["dropped_duplicates"].append({
+                    "woccon": woccon,
+                    "english": english,
+                    "reason": "duplicate_woccon_and_english",
+                })
+                continue
+            seen_lexicon.add(key)
             e = dict(e)
             e["source"] = EXTRACTION_SOURCE
             file_lexicon.append(e)
@@ -494,6 +544,8 @@ def extract_one_file(
     file_pronunciation = list({n["text"]: n for n in file_pronunciation if n.get("text")}.values())
     file_cultural = list({n["text"]: n for n in file_cultural if n.get("text")}.values())
 
+    file_audit["kept_lexicon_count"] = len(file_lexicon)
+
     return {
         "source_path": path,
         "source_url": source_url or (_source_url(file_id) if file_id else None),
@@ -502,6 +554,7 @@ def extract_one_file(
         "pronunciation_notes": file_pronunciation,
         "cultural_notes": file_cultural,
         "meta": {"source": EXTRACTION_SOURCE},
+        "audit": file_audit,
     }
 
 
@@ -597,6 +650,8 @@ def _write_one_file_staging(file_data: Dict[str, Any], staging_dir: str) -> str:
         "pronunciation_notes": file_data.get("pronunciation_notes") or [],
         "cultural_notes": file_data.get("cultural_notes") or [],
     }
+    if file_data.get("audit"):
+        payload["audit"] = file_data["audit"]
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
     log.info("Wrote %s", file_path)
@@ -691,7 +746,8 @@ def extract_from_ingest_results(
     all_lexicon: List[Dict[str, Any]] = []
     all_grammar: List[str] = []
     all_pronunciation: List[str] = []
-    seen_woccon: set = set()
+    seen_lexicon: set = set()
+    merge_audit = _empty_extraction_audit()
     total_chunks = sum(max(1, len(chunk_text((r.get("text") or "").strip()))) for r in results if (r.get("text") or "").strip())
     chunk_num = 0
     for r in results:
@@ -704,26 +760,43 @@ def extract_from_ingest_results(
             chunk_num += 1
             log.info("Extraction %d/%d: %s (chunk %d)", chunk_num, total_chunks, path, i + 1)
             extracted = extract_from_chunk(chunk, path, model=model)
+            chunk_audit = extracted.pop("_validation_audit", None)
+            if chunk_audit:
+                merge_audit["raw_lexicon_count"] += int(chunk_audit.get("raw_lexicon_count") or 0)
+                merge_audit["dropped_missing_fields"].extend(chunk_audit.get("dropped_missing_fields") or [])
+                merge_audit["dropped_non_dict"] = int(merge_audit.get("dropped_non_dict") or 0) + int(
+                    chunk_audit.get("dropped_non_dict") or 0
+                )
             for e in extracted.get("lexicon_entries", []):
-                key = (e.get("woccon") or "").lower()
-                if not key:
+                woccon = (e.get("woccon") or "").strip()
+                english = (e.get("english") or "").strip()
+                key = _lexicon_dedup_key(woccon, english)
+                if not woccon or not english:
                     continue
-                if key not in seen_woccon:
-                    seen_woccon.add(key)
-                    e = dict(e)
-                    e["source"] = EXTRACTION_SOURCE
-                    all_lexicon.append(e)
+                if key in seen_lexicon:
+                    merge_audit["dropped_duplicates"].append({
+                        "woccon": woccon,
+                        "english": english,
+                        "reason": "duplicate_woccon_and_english",
+                    })
+                    continue
+                seen_lexicon.add(key)
+                e = dict(e)
+                e["source"] = EXTRACTION_SOURCE
+                all_lexicon.append(e)
             all_grammar.extend(extracted.get("grammar_notes") or [])
             all_pronunciation.extend(extracted.get("pronunciation_notes") or [])
 
     all_grammar = list(dict.fromkeys(g.strip() for g in all_grammar if g and g.strip()))
     all_pronunciation = list(dict.fromkeys(p.strip() for p in all_pronunciation if p and p.strip()))
+    merge_audit["kept_lexicon_count"] = len(all_lexicon)
 
     return {
         "lexicon_entries": all_lexicon,
         "grammar_notes": all_grammar,
         "pronunciation_notes": all_pronunciation,
         "meta": {"source": EXTRACTION_SOURCE},
+        "audit": merge_audit,
     }
 
 

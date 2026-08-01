@@ -1,6 +1,7 @@
 """
-Single LLM abstraction: Anthropic (ANTHROPIC_API_KEY set), local Ollama (LOCAL_LLM=true),
-or Microsoft Foundry (LOCAL_LLM=false). Returns Ollama-compatible shape so callers can use ["message"]["content"].
+Single LLM abstraction: local Ollama (LOCAL_LLM=true), Microsoft Foundry, or Anthropic
+(only when ALLOW_ANTHROPIC_FALLBACK=true). Returns Ollama-compatible shape so callers
+can use ["message"]["content"].
 """
 import base64
 import os
@@ -8,6 +9,17 @@ import logging
 from typing import Any, Dict, List, Optional
 
 log = logging.getLogger("llm_client")
+
+_LOCAL_UNREACHABLE_MSG = (
+    "Error: Local model unreachable and Anthropic fallback not enabled. "
+    "Set ALLOW_ANTHROPIC_FALLBACK=true to confirm using Claude (incurs API cost)."
+)
+_ANTHROPIC_DISABLED_MSG = (
+    "Error: Anthropic API key is set but ALLOW_ANTHROPIC_FALLBACK is not enabled. "
+    "Set ALLOW_ANTHROPIC_FALLBACK=true to confirm using Claude (incurs API cost)."
+)
+_ANTHROPIC_CREDITS_MSG = "Error: Anthropic API credits exhausted or billing issue."
+_NO_BACKEND_MSG = "Error: No LLM backend configured or reachable."
 
 
 def _is_local_llm() -> bool:
@@ -19,21 +31,77 @@ def _use_anthropic() -> bool:
     return bool((os.getenv("ANTHROPIC_API_KEY") or "").strip())
 
 
+def _allow_anthropic_fallback() -> bool:
+    v = os.getenv("ALLOW_ANTHROPIC_FALLBACK", "").strip().lower()
+    return v in ("true", "1", "yes")
+
+
+def _has_foundry_config() -> bool:
+    endpoint = (os.getenv("FOUNDRY_ENDPOINT") or os.getenv("AZURE_AI_ENDPOINT") or "").strip()
+    api_key = (os.getenv("FOUNDRY_API_KEY") or os.getenv("AZURE_INFERENCE_CREDENTIAL") or "").strip()
+    return bool(endpoint and api_key)
+
+
+def _is_llm_error(result: Dict[str, Any]) -> bool:
+    content = ((result.get("message") or {}).get("content") or "").strip()
+    return content.startswith("Error:")
+
+
+def _is_anthropic_billing_error(exc: Exception) -> bool:
+    msg = str(exc).lower()
+    needles = (
+        "credit",
+        "billing",
+        "balance",
+        "insufficient",
+        "payment",
+        "quota",
+        "overloaded",
+        "rate limit",
+    )
+    return any(n in msg for n in needles)
+
+
 def llm_chat(
     model: str,
     messages: List[Dict[str, str]],
     options: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
-    Send chat completion request. Backend: Anthropic if ANTHROPIC_API_KEY set, else
-    Ollama if LOCAL_LLM=true, else Foundry. Returns dict with "message" -> "content".
+    Send chat completion request. Backend order:
+    1. Local Ollama when LOCAL_LLM=true
+    2. Microsoft Foundry when configured
+    3. Anthropic only when ALLOW_ANTHROPIC_FALLBACK=true
+
+    Returns dict with "message" -> "content".
     """
     options = options or {}
-    if _use_anthropic():
-        return _anthropic_chat(model, messages, options)
+    last_error: Optional[Dict[str, Any]] = None
+
     if _is_local_llm():
-        return _local_ollama_chat(model, messages, options)
-    return _foundry_chat(model, messages, options)
+        result = _local_ollama_chat(model, messages, options)
+        if not _is_llm_error(result):
+            return result
+        last_error = result
+        log.warning("Local Ollama request failed; trying configured fallbacks")
+
+    if _has_foundry_config():
+        result = _foundry_chat(model, messages, options)
+        if not _is_llm_error(result):
+            return result
+        last_error = result
+        log.warning("Foundry request failed; checking Anthropic fallback")
+
+    if _allow_anthropic_fallback() and _use_anthropic():
+        return _anthropic_chat(model, messages, options)
+
+    if _is_local_llm():
+        return {"message": {"content": _LOCAL_UNREACHABLE_MSG}}
+    if _use_anthropic() and not _allow_anthropic_fallback():
+        return {"message": {"content": _ANTHROPIC_DISABLED_MSG}}
+    if last_error:
+        return last_error
+    return {"message": {"content": _NO_BACKEND_MSG}}
 
 
 def _anthropic_chat(
@@ -41,7 +109,7 @@ def _anthropic_chat(
     messages: List[Dict[str, str]],
     options: Dict[str, Any],
 ) -> Dict[str, Any]:
-    """Use Anthropic Messages API (Claude) via official SDK. Set ANTHROPIC_API_KEY in .env."""
+    """Use Anthropic Messages API (Claude) via official SDK with streaming."""
     try:
         from anthropic import Anthropic
     except ImportError:
@@ -64,18 +132,20 @@ def _anthropic_chat(
         return {"message": {"content": "Error: No messages."}}
     try:
         client = Anthropic(api_key=api_key)
-        resp = client.messages.create(
+        content = ""
+        with client.messages.stream(
             model=model_id,
             max_tokens=max_tokens,
             messages=anthropic_messages,
             temperature=options.get("temperature", 0.2),
-        )
-        content = ""
-        for block in resp.content:
-            if getattr(block, "type", None) == "text":
-                content += getattr(block, "text", "") or ""
+        ) as stream:
+            for text in stream.text_stream:
+                content += text
         return {"message": {"role": "assistant", "content": content.strip()}}
     except Exception as e:
+        if _is_anthropic_billing_error(e):
+            log.error("Anthropic billing/credit issue: %s", e)
+            return {"message": {"content": _ANTHROPIC_CREDITS_MSG}}
         log.error("Anthropic request failed: %s", e)
         return {"message": {"content": f"Error: Anthropic request failed. {e}"}}
 
@@ -88,8 +158,12 @@ def llm_vision_chat(
 ) -> Dict[str, Any]:
     """
     Anthropic vision request: one or more PNG/JPEG images plus a text prompt.
-    Requires ANTHROPIC_API_KEY (Anthropic-only).
+    Requires ANTHROPIC_API_KEY and ALLOW_ANTHROPIC_FALLBACK=true.
     """
+    if not _allow_anthropic_fallback():
+        raise RuntimeError(
+            "Scanned PDF detected; set ALLOW_ANTHROPIC_FALLBACK=true to use Claude vision OCR."
+        )
     if not _use_anthropic():
         raise RuntimeError(
             "Scanned PDF detected; set ANTHROPIC_API_KEY for vision OCR."
@@ -123,18 +197,20 @@ def llm_vision_chat(
     content.append({"type": "text", "text": text_prompt})
     try:
         client = Anthropic(api_key=api_key)
-        resp = client.messages.create(
+        text_out = ""
+        with client.messages.stream(
             model=model_id,
             max_tokens=max_tokens,
             messages=[{"role": "user", "content": content}],
             temperature=options.get("temperature", 0.0),
-        )
-        text_out = ""
-        for block in resp.content:
-            if getattr(block, "type", None) == "text":
-                text_out += getattr(block, "text", "") or ""
+        ) as stream:
+            for text in stream.text_stream:
+                text_out += text
         return {"message": {"role": "assistant", "content": text_out.strip()}}
     except Exception as e:
+        if _is_anthropic_billing_error(e):
+            log.error("Anthropic vision billing/credit issue: %s", e)
+            return {"message": {"content": _ANTHROPIC_CREDITS_MSG}}
         log.error("Anthropic vision request failed: %s", e)
         return {"message": {"content": f"Error: Anthropic vision request failed. {e}"}}
 
@@ -173,7 +249,7 @@ def _local_ollama_chat(
         # Ollama returns {"message": {"role": "assistant", "content": "..."}}
         return data
     except Exception as e:
-        log.error(f"Local Ollama request failed: {e}")
+        log.error("Local Ollama request failed: %s", e)
         return {"message": {"content": f"Error: Unable to connect to Ollama. {e}"}}
 
 
@@ -217,7 +293,7 @@ def _foundry_chat(
             content = (data.get("choices", [{}])[0].get("message", {}).get("content") or "").strip()
             return {"message": {"role": "assistant", "content": content}}
         except Exception as e:
-            log.error(f"Foundry inference request failed: {e}")
+            log.error("Foundry inference request failed: %s", e)
             return {"message": {"content": f"Error: Foundry request failed. {e}"}}
 
     # Azure OpenAI endpoint (.openai.azure.com): use SDK
@@ -244,5 +320,5 @@ def _foundry_chat(
         content = (resp.choices[0].message.content or "").strip()
         return {"message": {"role": "assistant", "content": content}}
     except Exception as e:
-        log.error(f"Foundry request failed: {e}")
+        log.error("Foundry request failed: %s", e)
         return {"message": {"content": f"Error: Foundry request failed. {e}"}}
