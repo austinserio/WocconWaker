@@ -26,6 +26,13 @@ def _ollama_http_session():
 def _ollama_keep_alive() -> str:
     return (os.getenv("OLLAMA_KEEP_ALIVE") or "30m").strip() or "30m"
 
+
+def _ollama_vision_timeout() -> int:
+    try:
+        return max(60, int(os.getenv("OLLAMA_VISION_TIMEOUT", "900")))
+    except ValueError:
+        return 900
+
 _LOCAL_UNREACHABLE_MSG = (
     "Error: Local model unreachable and Anthropic fallback not enabled. "
     "Set ALLOW_ANTHROPIC_FALLBACK=true to confirm using Claude (incurs API cost)."
@@ -297,7 +304,7 @@ def _local_ollama_vision_chat(
     }
     payload["options"] = {k: v for k, v in payload["options"].items() if v is not None}
     try:
-        r = _ollama_http_session().post(url, json=payload, timeout=300)
+        r = _ollama_http_session().post(url, json=payload, timeout=_ollama_vision_timeout())
         r.raise_for_status()
         data = r.json()
         return data
