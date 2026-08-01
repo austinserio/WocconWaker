@@ -35,90 +35,10 @@ try:
 except ImportError:
     pass
 
+from list_doc_parser import check_lexicon_completeness, iter_lexicon_candidates, lexicon_merge_key as lexicon_key
+
 DEFAULT_STAGING_DIR = ROOT / "woccon_language" / "drive_staging"
 SKIP_STAGING_FILES = {"manifest.json", "sync_state.json"}
-PAGE_MARKER_RE = re.compile(r"^\s*--\s*\d+\s+of\s+\d+\s*--\s*$", re.IGNORECASE)
-URL_RE = re.compile(r"https?://", re.IGNORECASE)
-LEXICON_LINE_RE = re.compile(r"^\s*(.+?)\s*([=:])\s*(.+?)\s*$")
-LEXICON_LINE_DASH_RE = re.compile(r"^\s*(.+?)\s*-\s*(.+?)\s*$")
-SKIP_ENGLISH = {
-    "i",
-    "e",
-    "a",
-    "u",
-    "i:",
-    "e:",
-    "a:",
-    "u:",
-}
-SKIP_WOCCON_FRAGMENTS = (
-    "same as above",
-    "living dictionary entry",
-)
-
-
-def normalize_woccon(w: str) -> str:
-    return re.sub(r"[^a-z0-9]", "", (w or "").strip().lower())
-
-
-def normalize_english(e: str) -> str:
-    return re.sub(r"\s+", " ", (e or "").strip().lower())
-
-
-def lexicon_key(woccon: str, english: str) -> str:
-    return f"{normalize_woccon(woccon)}\x00{normalize_english(english)}"
-
-
-def strip_woccon_right(right: str) -> str:
-    woccon = (right or "").strip()
-    for sep in [" (", " [", " -or-", "\t"]:
-        if sep in woccon:
-            woccon = woccon.split(sep)[0].strip()
-    return " ".join(woccon.split())
-
-
-def should_skip_candidate(english: str, woccon: str) -> bool:
-    eng = normalize_english(english)
-    w = woccon.strip().lower()
-    if not eng or not w:
-        return True
-    if eng in SKIP_ENGLISH:
-        return True
-    if any(skip in w for skip in SKIP_WOCCON_FRAGMENTS):
-        return True
-    if URL_RE.search(w) or URL_RE.search(english):
-        return True
-    if len(eng) > 120 or len(w) > 120:
-        return True
-    if eng.startswith("possible ") and "?" in english:
-        return False
-    return False
-
-
-def iter_lexicon_candidates(text: str) -> Iterable[Tuple[str, str, str]]:
-    """Yield (english, woccon, source_line) heuristic candidates from raw text."""
-    for raw_line in (text or "").splitlines():
-        line = raw_line.strip()
-        if not line or PAGE_MARKER_RE.match(line):
-            continue
-        if line.startswith("[[PAGE ") or line.startswith("#"):
-            continue
-
-        match = LEXICON_LINE_RE.match(line)
-        if match:
-            english, _delim, right = match.group(1), match.group(2), match.group(3)
-            woccon = strip_woccon_right(right)
-        else:
-            match = LEXICON_LINE_DASH_RE.match(line)
-            if not match:
-                continue
-            english, right = match.group(1), match.group(2)
-            woccon = strip_woccon_right(right)
-
-        english = english.strip().strip('"')
-        if should_skip_candidate(english, woccon):
-            continue
-        yield english, woccon, line
 
 
 def load_staging_lexicon(staging_path: Path) -> List[Dict[str, Any]]:
@@ -138,27 +58,8 @@ def staging_keys(entries: Iterable[Dict[str, Any]]) -> Set[str]:
 
 
 def compare_source_to_staging(source_text: str, staging_entries: List[Dict[str, Any]]) -> Dict[str, Any]:
-    candidates = list(iter_lexicon_candidates(source_text))
-    extracted_keys = staging_keys(staging_entries)
-    missing: List[Dict[str, str]] = []
-    matched = 0
-    for english, woccon, line in candidates:
-        key = lexicon_key(woccon, english)
-        if key in extracted_keys:
-            matched += 1
-        else:
-            missing.append({"english": english, "woccon": woccon, "source_line": line})
-
-    candidate_count = len(candidates)
-    pct = round(100.0 * matched / candidate_count, 1) if candidate_count else 100.0
-    return {
-        "candidate_count": candidate_count,
-        "staging_count": len(staging_entries),
-        "matched_count": matched,
-        "missing_count": len(missing),
-        "completeness_pct": pct,
-        "missing": missing,
-    }
+    report = check_lexicon_completeness(source_text, staging_entries)
+    return report
 
 
 def parse_drive_file_id(url: str) -> Optional[str]:
@@ -190,7 +91,15 @@ def fetch_drive_text(file_id: str) -> str:
 
 def load_source_text_for_staging(staging_path: Path, source_text: Optional[Path]) -> str:
     if source_text:
-        return source_text.read_text(encoding="utf-8", errors="replace")
+        raw = source_text.read_text(encoding="utf-8", errors="replace")
+        if source_text.suffix.lower() == ".json":
+            try:
+                payload = json.loads(raw)
+                if isinstance(payload, dict) and payload.get("text"):
+                    return str(payload["text"])
+            except json.JSONDecodeError:
+                pass
+        return raw
     with staging_path.open("r", encoding="utf-8") as f:
         staging = json.load(f)
     source_url = staging.get("source_url") or ""
@@ -211,6 +120,14 @@ def print_report(label: str, report: Dict[str, Any], *, show_missing: int = 20) 
     print(f"  Matched:              {report['matched_count']}")
     print(f"  Likely missing:       {report['missing_count']}")
     print(f"  Completeness:         {report['completeness_pct']}%")
+    by_section = report.get("by_section") or {}
+    if by_section:
+        print("  By section:")
+        for section, stats in sorted(by_section.items()):
+            print(
+                f"    {section}: matched={stats.get('matched', 0)} "
+                f"missing={stats.get('missing', 0)} candidates={stats.get('candidates', 0)}"
+            )
     if report["missing"]:
         print()
         print("Likely missing entries:")

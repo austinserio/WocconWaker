@@ -1,7 +1,6 @@
 """Import and sync definitive base vocabulary from Google Doc."""
 import json
 import logging
-import re
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -14,6 +13,8 @@ from panel_api.db import CanonicalLexicon, SourceDocument
 from panel_api.services.duplicates import normalize_text
 from panel_api.services.ingest import fetch_drive_text, parse_drive_file_id
 from panel_api.services.lexicon_classifier import apply_lexicon_classification
+from list_doc_parser import parse_pronunciation_text as _parse_pronunciation_text
+from list_doc_parser import parse_vocab_text as _parse_vocab_text
 from panel_api.services.pronunciation import normalize_pronunciation
 from panel_api.services.vocab_match import (
     base_woccon_match,
@@ -30,122 +31,25 @@ PRONUNCIATION_STAGING = Path("woccon_language/drive_staging/English-Woccon.json"
 MIN_PARSED_ENTRIES = 180
 MIN_PRONUNCIATION_ENTRIES = 150
 
-# english: woccon | english — woccon | english - woccon | numbered. english (pos): woccon
-_LINE_PATTERNS = [
-    re.compile(
-        r"^\s*(?:\d+[\.\)]\s*)?"
-        r"(?P<english>.+?)\s*[:—–\-]\s*(?P<woccon>[A-Za-z][\w\-']*)\s*$"
-    ),
-    re.compile(
-        r"^\s*(?:\d+[\.\)]\s*)?"
-        r"(?P<woccon>[A-Za-z][\w\-']*)\s*[:—–\-]\s*(?P<english>.+?)\s*$"
-    ),
-    re.compile(
-        r"^\s*(?:\d+[\.\)]\s*)?"
-        r"(?P<english>.+?)\s*\((?P<pos>[^)]+)\)\s*[:—–\-]\s*(?P<woccon>[A-Za-z][\w\-']*)\s*$"
-    ),
-]
-
-
-# english — woccon (pron) | woccon — english (pron)
-_PRONUNCIATION_LINE_PATTERNS = [
-    re.compile(
-        r"^\s*(?:\d+[\.\)]\s*)?"
-        r"(?P<english>.+?)\s*[:—–\-]\s*(?P<woccon>.+?)\s*\((?P<pronunciation>[^\)]+)\)\s*$"
-    ),
-    re.compile(
-        r"^\s*(?:\d+[\.\)]\s*)?"
-        r"(?P<woccon>.+?)\s*[:—–\-]\s*(?P<english>.+?)\s*\((?P<pronunciation>[^\)]+)\)\s*$"
-    ),
-]
-
-
 def _source_url(file_id: str) -> str:
     return f"https://drive.google.com/file/d/{file_id}/view"
 
 
-def _guess_pos(english: str) -> str:
-    e = english.lower()
-    if e.startswith("to "):
-        return "verb"
-    if any(w in e for w in ("the ", "a ", "an ")):
-        return "noun"
-    return "unknown"
-
-
 def parse_vocab_text(text: str) -> List[Dict[str, Any]]:
-    entries: List[Dict[str, Any]] = []
-    seen = set()
-    for line in (text or "").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or len(line) < 3:
-            continue
-        for pat in _LINE_PATTERNS:
-            m = pat.match(line)
-            if not m:
-                continue
-            gd = m.groupdict()
-            woccon = (gd.get("woccon") or "").strip()
-            english = (gd.get("english") or "").strip()
-            if not woccon or not english:
-                continue
-            key = normalize_woccon(woccon)
-            if key in seen:
-                break
-            dup = False
-            for prev in entries:
-                if normalize_text(prev["english"]) != normalize_text(english):
-                    continue
-                score, _ = base_woccon_match(woccon, prev["woccon"])
-                if score > 0:
-                    dup = True
-                    break
-            if dup:
-                break
-            seen.add(key)
-            entries.append(
-                {
-                    "woccon": woccon,
-                    "english": english,
-                    "pos": (gd.get("pos") or _guess_pos(english)).strip(),
-                    "pronunciation": None,
-                }
-            )
-            break
-    return entries
+    return _parse_vocab_text(text)
 
 
 def parse_pronunciation_text(text: str) -> List[Dict[str, Any]]:
     """Parse English-Woccon style lines that include (pronunciation) guides."""
-    entries: List[Dict[str, Any]] = []
-    seen = set()
-    for line in (text or "").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or len(line) < 5:
-            continue
-        for pat in _PRONUNCIATION_LINE_PATTERNS:
-            m = pat.match(line)
-            if not m:
-                continue
-            gd = m.groupdict()
-            woccon = (gd.get("woccon") or "").strip()
-            english = (gd.get("english") or "").strip()
-            pronunciation = (gd.get("pronunciation") or "").strip()
-            if not woccon or not english or not pronunciation:
-                continue
-            key = normalize_woccon(woccon)
-            if key in seen:
-                break
-            seen.add(key)
-            entries.append(
-                {
-                    "woccon": woccon,
-                    "english": english,
-                    "pronunciation": normalize_pronunciation(pronunciation),
-                }
-            )
-            break
-    return entries
+    entries = _parse_pronunciation_text(text)
+    return [
+        {
+            "woccon": e["woccon"],
+            "english": e["english"],
+            "pronunciation": normalize_pronunciation(e.get("pronunciation")),
+        }
+        for e in entries
+    ]
 
 
 def load_pronunciation_staging() -> List[Dict[str, Any]]:

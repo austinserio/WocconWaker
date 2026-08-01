@@ -1,0 +1,301 @@
+{
+  "source_path": "Possible teaching tools/Possible teaching tools",
+  "source_url": "https://drive.google.com/file/d/1R6R6zDDR9XZti94mouv1cobgRXdaMJme2pJCCt_kVfQ/view",
+  "lexicon_entries": [
+    {
+      "woccon": "Tonne",
+      "english": "Rock",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Num-perre",
+      "english": "Paper/Skins",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Nam-mee",
+      "english": "Scissors",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Mei",
+      "english": "Go",
+      "pos": "verb",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Mothei",
+      "english": "Win (give it to me)",
+      "pos": "verb",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "ya-",
+      "english": "Lose (yours)",
+      "pos": "prefix",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Atter",
+      "english": "Swan",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Monwittetau",
+      "english": "Alligator",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yauta",
+      "english": "Turkey",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wetkes",
+      "english": "Otter",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Nommewarraupau",
+      "english": "Swine/Pig",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Ounka",
+      "english": "Bear",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Tire Kiro",
+      "english": "Wolf",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Nappinjure",
+      "english": "Cow",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yehau",
+      "english": "Squirrel",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yau-hauk",
+      "english": "Snake",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wittau",
+      "english": "Rat",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Soccon",
+      "english": "Mink",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yenwetoa",
+      "english": "Horse",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Auhaun",
+      "english": "Goose",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Yacunne",
+      "english": "Fish",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Taus-se",
+      "english": "Dog",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    {
+      "text": "The prefix 'ya-' is used to indicate the action of losing, as in 'ya- (yours)' which means 'lose'. This can be applied to create new forms indicating loss.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "lose= ya- (yours)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "pronunciation_notes": [],
+  "cultural_notes": [
+    {
+      "text": "The game of Rock, Paper (Skins), Scissors is adapted from Dr. Roberts and uses Woccon terms for its components: 'itte terraugh' for rock, 'teep' for paper/skins, and 'toc koor' for scissors.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Rock: itte terraugh Paper/skins: teep Scissors: toc koor",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "audit": {
+    "raw_lexicon_count": 22,
+    "kept_lexicon_count": 22,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

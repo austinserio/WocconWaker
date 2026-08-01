@@ -118,7 +118,7 @@ ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indica
 ### LLM mode: local vs Microsoft Foundry
 - **Anthropic (optional)**: If `ANTHROPIC_API_KEY` is set, all LLM calls (including Drive extraction) use **Claude** via the Anthropic API. Set `ANTHROPIC_MODEL` (e.g. `claude-3-5-sonnet-20241022`) or the code defaults to Sonnet. Useful when Azure quota isn’t available or for better extraction accuracy.
 - **LOCAL_LLM**: When `true`, `1`, or `yes` (case-insensitive), the app uses **local Ollama** (e.g. RunPod/CUDA or CPU). When unset or false and no Anthropic key, the app uses **Microsoft Foundry** (Llama/equivalent via Azure API). No OpenAI models are used; Foundry serves Llama (or HF-equivalent) via an OpenAI-compatible API.
-- **Local (OLLAMA_URL, OLLAMA_MODEL)**: Used only when `LOCAL_LLM` is true.
+- **Local (OLLAMA_URL, OLLAMA_MODEL, OLLAMA_VISION_MODEL)**: Used only when `LOCAL_LLM` is true. On a single-GPU ingest host, set **the same** model for `OLLAMA_MODEL` and `OLLAMA_VISION_MODEL` (e.g. `qwen2.5vl:32b`) so OCR and extraction share one VRAM load. Set `OLLAMA_NUM_PARALLEL=3` in Ollama systemd to match `EXTRACT_PARALLEL_WORKERS`.
 - **Foundry (when LOCAL_LLM is false)**:
   - `FOUNDRY_ENDPOINT` or `AZURE_AI_ENDPOINT`: Base URL from the Azure account — either `https://<resource>.services.ai.azure.com` (Model Inference API) or `https://<resource>.openai.azure.com` (Azure OpenAI SDK path).
   - `FOUNDRY_API_KEY` or `AZURE_INFERENCE_CREDENTIAL`: API key from the Foundry resource.
@@ -137,6 +137,14 @@ ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indica
 python drive_ingest.py
 # Phase 2: schedule with cron (every 12h). See DRIVE_INGEST.md.
 ```
+
+**Hybrid list-doc extract** (`list_doc_parser.py` + `drive_extract.py`):
+- **English-Woccon**: deterministic parser (main list + **Possible Words** subsection + note lines) merged with LLM output (enrichment). Staging JSON includes `audit.hybrid`, `audit.completeness`, and per-entry `extraction_method` (`parser` | `llm` | `merged` | `carry_forward`).
+- **Documentation of Woccon Words**: parser runs on the Lawson list block only; LLM still handles citations and comparative notes.
+- Env: `HYBRID_LIST_EXTRACT=1` (default), `HYBRID_LIST_DOCS=...` (optional allowlist), `HYBRID_LLM_LEXICON=1` (set `0` for parser-only lexicon), `EXTRACT_COMPLETENESS_FAIL=1` (abort when parser rows missing).
+- On re-ingest, parser-backed rows from previous staging are carried forward if the LLM drops them; see `audit.hybrid.dropped_vs_previous`.
+- Completeness check: `python scripts/check_extraction_completeness.py --staging woccon_language/drive_staging/English-Woccon.json --source-text data/ingest_text_cache/<file>.json`
+- Unit tests: `python scripts/test_list_doc_parser.py`
 
 ## API Endpoints
 

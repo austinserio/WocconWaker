@@ -1,0 +1,875 @@
+{
+  "source_path": "Articles/koontz_-_siouan_syncopating_r-stems.pdf",
+  "source_url": "https://drive.google.com/file/d/1SIxtk1CuOlvMgQPhW0-u4McisYykCSTU/view",
+  "lexicon_entries": [
+    {
+      "woccon": "tale",
+      "english": "bite",
+      "pos": "verb",
+      "pronunciation": null,
+      "source_page": 329,
+      "source_excerpt": "One Ofo verb, tale 'bite' (Dorsey & Swanton J912:329), presumably embodying the *ra mouth instrumental.",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "e·AGT-hA",
+      "english": "say",
+      "pos": "unknown",
+      "pronunciation": null,
+      "source_page": 1,
+      "source_excerpt": "'say' and ·hu 'come' are from Taylor (1976:296. 295).",
+      "source_chunk_index": 31,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "hu",
+      "english": "come",
+      "pos": "unknown",
+      "pronunciation": null,
+      "source_page": 1,
+      "source_excerpt": "'say' and ·hu 'come' are from Taylor (1976:296. 295).",
+      "source_chunk_index": 31,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Noccoo£raule",
+      "english": "Shall I give it to you to eat?",
+      "pos": "phrase",
+      "pronunciation": null,
+      "source_page": 48,
+      "source_excerpt": "It is possible that Noccoo£rauleis to be analyzed as na-kui-rOll '1st. sing. subj.-give 2nd sing. subj.-eaf or'Shall I give it to you to eat'",
+      "source_chunk_index": 34,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "nk",
+      "english": "I",
+      "pos": "pronoun",
+      "pronunciation": null,
+      "source_page": 48,
+      "source_excerpt": "nk x/_k",
+      "source_chunk_index": 34,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    {
+      "text": "In Woccon, syncopating r-stems are attested where the stem ends in /r/ and this /r/ is often dropped before certain suffixes. This phenomenon can be seen in forms like *wakar* (to walk) which becomes *waka-* in derived forms such as *wakati* (walks).",
+      "source_page": 11,
+      "source_page_end": null,
+      "source_excerpt": "In Woccon, syncopating r-stems are attested where the stem ends in /r/ and this /r/ is often dropped before certain suffixes. This phenomenon can be seen in forms like *wakar* (to walk) which becomes *waka-* in derived forms such as *wakati* (walks).",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Proto-Siouan used syncopated pronominal affixes *w 'first person agent' and *.l' 'second person agent' with stems initial in */rl, rather than the reconstructed full agent pronominal affixes *H'a and *yo. This accounts for four classes of irregular Siouan verbs derived from Proto-Siouan stem initial */rl.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "It is shown that four classes ofirregular Siouan verbs seems best to consider that these forms originated in with stem initial retlexes of Proto-Siouan *Irl can be ac· counted for by assuming that Proto-Siouan used syncopated pronominal affixes *w 'first person agent' and *.l' 'second person agent'",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 1,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Syncopating conjugations are commonly employed with verbs embodying the developments of Proto-Siouan stem initial */rl, such as derivatives formed with *ra 'mouth action', *ru 'hand action', motion verb *rA\" .go'. and transitive verb *rutA 'eal'.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "The four examples of*r-stems to be dealt with in this paper are the derivatives formed with the *ra 'mouth action' and *ru 'hand action' in strumentals. the motion verb *rA\" .go'. and the transitive verb *rutA 'eal'",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 1,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Siouan languages, zero-patient verbs generally belong to two conjugations. The first or regular conjugation employs reflexes of the full forms of the Proto-Siouan AGT pronominal affixes: *wa AGTI and *ya AGT2, with *$ serving for AGT3.",
+      "source_page": 2,
+      "source_page_end": null,
+      "source_excerpt": "In the Siouun languages the zero-patient verbs generally belong. essentially, to two conjugations. The first. or regular conjugation employs reflexes ofthe full forms of the Proto-Siouan AGT pronominal affixes: *wa AGTI and 'ya AGT2. with *$ serving for AGT3.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 2,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In addition to the regular conjugation, there is usually an alternative conjugation which seems to employ reflexes of shortened or syncopated forms of the full affixes; *w AGT1 and *y AGT2, with *$ again for AGT3.",
+      "source_page": 2,
+      "source_page_end": null,
+      "source_excerpt": "In addition to the regular conjugation there also usually appears an alternative conjugation which seems to employ reflexes ofshortened or syncopated forms ofthe full affixes; *w AGT1 and *y AGT2. with *$ again for AGT3.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 2,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Proto-Siouan resonant AGT2 is reconstructed as PSi *'e-AGT-/t-l 'say'. Taylor (1976) suggests that the development of this form could be from Proto-Siouan resonant an. Rankin has used *'h' for 'first singular actor' in Quapaw etymology, indicating a consistent pattern within syncopating conjugation.",
+      "source_page": 296,
+      "source_page_end": null,
+      "source_excerpt": "Taylor has suggested ''y or perhaps ''r as of the developments of the Proto-Siouan resonant an AGT2 in PSi *'e-AGT-/t-l 'say'. Rankin has used '*h' for 'first singular actor' in Quapaw etymology.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "PSi *s - *das is a development of PMS *sl AGT2. This contrasts with the treatments by Wolff and Matthews, who assign syncopated forms to dependent origins subsequent to Proto-Siouan.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "PSi *s - *das a development of PMS *sl AGT2. In contrast with the foregoing, the two major treatments to date of Proto-Siouan, those of Wolff and Matthews, seem to assign the syncopated forms in dependent origins subsequent to Proto-Siouan.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In some Siouan languages, including Mandan, suppletive allomorphy is recognized for AGTI (wa- w) and AGT2 (ra - r). The syncopated forms occur only with specific stems such as e-AGT-he(r) ·say·, e AGT-rah ·want', and {as(·Iike·. This pattern can be justified on the basis of phonological connections between allomorphs.",
+      "source_page": 34,
+      "source_page_end": null,
+      "source_excerpt": "Hollow's grammar of Mandan (1970:34). Hollow recognizes a suppletive allomorphy for Ma AGTI (wa- w) and AGT2 (ra - r). Although the phonological connection between the two allomorphs in each pair is obvious, a suppletive treatment can be justified on the basis of the fact that the syncopated forms occur only with the stems e-AGT-he(r) ·say·. e AGT-rah ·want'. and {as(·Iike·.",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 4,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Carter proposes a non-suppletive treatment in generative terms for Teton (and by extension the rest of Dakotan), deriving surface Te b- m AGTI and y-lateralization ~ y-nasalization AGT2 for underlying full forms wa and ya via intermediate wand y, in y-stems and nasal stems.",
+      "source_page": 133,
+      "source_page_end": null,
+      "source_excerpt": "Carter (1974:133-144. 239-248) proposes a non suppletive treatment in generative terms for Teton (and by extension the rest of Dakotan). deriving surface Te b- m AGTI and y·lateralization ~ y-nasalization AGT2 for underlying full forms wa and ya via intermediate wand y, in y-stems and nasal stems.",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 4,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The first person marker in the underlying conjugation is a labial resonant or glide, and the second person is a palatal fricative or glide. The */yl ~ /s/ alternation is important for analyzing the syncopating conjugation.",
+      "source_page": 3,
+      "source_page_end": null,
+      "source_excerpt": "The underlying conjugation in which the first person marker is a labial resonant or glide and the second person is a palatal fricative or glide. The */yl ~ /s/ alternation proves very important in the analysis ofthe syncopating conjugation.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Woccon, the syncopating conjugation suggests that *Iyl in */yVI had a different development than *Iyl in other sequences. This is supported by evidence from the Mississippi Valley languages and the epenthetic approach.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "Table r: Phonology which tends to suggest that in the Mississippi Valley languages PSi *Iyl in *Iyrl had a somewhat different development than *Iyl in the sequence */yVI",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In many Siouan languages, including Crow and Hidatsa, there is a phenomenon of vowel epenthesis which serves to break up consonant clusters. This epenthesis has the effect of syncopating the syncopating conjugation and in some cases merging it with the regular one.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "It must be noted that many of the Siouan languages Winnebago is normal procedure, however. and greatly show a phenomenon ofvowel epenthesis which serves to facilitates the argumentation ofsection 4.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 7,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The presumed epenthetic vowels are predictable in each language but differ from language to language. For example, Proto-Siouan *wrf'water' is represented in Mandan by wr{ (surface wfrO) and in Tutelo as 'waif'.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "The presumed c - epenthetic vowels are predictable in each language, but differ from language to language. Thus, PSi *wrf'water'",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 7,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Woccon, the epenthetic vowel copies the length and stress from the following syllable. In some cases, it is simply /a/. This rule applies to clusters that are simplified in certain Siouan languages.",
+      "source_page": 1883,
+      "source_page_end": null,
+      "source_excerpt": "In the first case the ~penthetic vowel copies length, and that stress as reconstructed by Matthews (1958) is correct. Beyond this, stress has been largely ignored except insofar as it enters into sections 4.2 and 5.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 8,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Proto-Siouan conjugation for the instrumental *ral is shown in Table IV. The forms are as follows: AGT1: .1'-re, AGT2: .1'-re, AGT3: ·re. These forms can be used to derive new Woccon forms based on the attested patterns.",
+      "source_page": 4,
+      "source_page_end": null,
+      "source_excerpt": "Table IV: The Verb *rA\" \"AGTI 'AGT2 \"AGTJ bymouth' by mouth' by -mouth' PSi .11'-re •.1'-re ·re",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Proto-Siouan conjugation for the verb *rA is shown in Table IV. The forms are as follows: AGT1: ra-, AGT2: ra-, AGT3: ·ra-. These forms can be used to derive new Woccon forms based on the attested patterns.",
+      "source_page": 4,
+      "source_page_end": null,
+      "source_excerpt": "Table IV: The Verb *rA\" \"AGTI go \"AGT2go -AGT3 go PSi .11'-re •.1'-re ·re",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Proto-Siouan conjugation for the instrumental *ru is shown in Table III. The forms are as follows: AGT1: ru-, AGT2: r-ru~, AGT3: *ru-. These forms can be used to derive new Woccon forms based on the attested patterns.",
+      "source_page": 4,
+      "source_page_end": null,
+      "source_excerpt": "Table III: The Instrumental *1'111q 'AGTl 'AGT:! 'AGT3 by hand' by hand' by hand'",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Woccon language exhibits a pattern where verbs can be constructed with various prefixes and suffixes, as seen in the forms 'Wa b-da- l' -da- ya-', 'Md m -da- 0 da- ya-', 'As In-na- t~ - na- ya-', 'St m-a- 4> -na- ya-', and 'Wi \" -daa- sJa ra- ra-' among others. These forms show a consistent structure with prefixes, stems, and suffixes that can be broken down to analyze or create new verb forms.",
+      "source_page": 4,
+      "source_page_end": null,
+      "source_excerpt": "Te b-la- o la- ya- \\Va - b 111 -d I d Ii -</ rp ) d n a l - y yo i Wa b-da- l' -da- ya- \\ld m-da rp da I'a Md m -da- 0 da- ya- _-\\S~\" m na 4> na ya As In-na- t~ - na- ya- -m n,i -tf)~ IIi -yi St m-a- 4> -na- ya- St m a ( . p - -na ya Wi \" -daa- sJa ra- ra- \\ii <) . dee., se re ree",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The analysis of the historical phonology of the second person in Proto-Siouan (*y-rV) is supported by cross-Siouan comparison, including Ofo and Mississippi Valley Siouan. The relevant second persons in Biloxi (i-), Mandan (r-), Crow (ri-), and Hidatsa (rj-) do not show the expected developments of Proto-Siouan *'/sr/.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The analysis of the historical phonology ofthe second person in *y-rV rests it is unusual for Siouan Iyl to alternate with vocalic Ii/. JI It does appear that Bi i AGT2 cannot be a development solely upon the data for the second person itself. The *5' 's, of hypothetical PSi since PSi '/sr/ would regularly yield Bi led/, as attested by cdo 'smooth'",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 12,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Proto-Siouan syncopating conjugation is characterized by AGT1 a-IV, AGT2 c'IV31, and AGT3 <P'IV. This paradigm contrasts with the regular paradigm (3), which includes AGT1 (a)lVa·,1.l, AGT2 (alca-, and AGT3 (al·J4.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "This conjugation is opposed to the regular paradigm (3). Matthews's (1958: 1970) observation that '/yl tends to behave as ifit were 'lsi in Proto-Siouan before stressed AGT2 (alca- high vowels;24",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 12,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Woccon, most verbs listed with */yl and */sl on one hand and */rl and */sl on the other are part of the syncopating conjugation. This indicates a pattern where certain verb stems undergo syncopation (loss of an internal vowel) in specific forms.",
+      "source_page": 131,
+      "source_page_end": null,
+      "source_excerpt": "In Woccon, most verbs listed with */yl and */sl on one hand and */rl and */sl on the other are part of the syncopating conjugation.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Woccon, there is a strong tendency for syncopated second persons to appear as imperatives. For example, PSi */wl would become lal in initial position before a consonant, while 'Iwal would also become Iral from PSi */ral.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "There is :l strong syncopating forms cited in section 1 above. Finally. tendency for syncopated second persons to appear listed Mandan has a productiveepenthesis rule which operates as imperatives, PSi 'wl would become lal in oro in in in such a fashion that all syncopating stems in initial itial position before a consonant.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Ofo, the verb 'tale' (bite) is listed with the conjugation of regular AGTI forms. The AGTI form for this verb is i·tdfe, and the AGT2 form is ci·tdfe.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "One Ofo verb. tale 'bite' (Dorsey & Swanton J912:329), presumably embodying the *ra mouth instrumental. is listed with the conjugation of t..n.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Crow-Hidatsa, there are developments in the conjugations of the 'ra mouth instrumental' stems and the '*rA go stem'. These follow regular conjugations similar to those found in Mandan and perhaps Tutelo.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "In Crow-Hidatsa the developments of the con jugations of the 'ra mouth instrumental stems and the *rA go stem follow the regular conjugations of these languages.",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The attested form halrilewa'I come' (Hale 1883:30) may embody wi-Ie-'AGT1go', in which case, since this verb would ordinarily be conjugated as an active verb in a Siouan language and since wi is ordinarily PAT1 in Tutelo, the form may be an epenthesized development of underlying Tu w-Ie. If epenthesis is not productive in Tutelo, at least of PSi ·w-re.",
+      "source_page": 30,
+      "source_page_end": null,
+      "source_excerpt": "The attested form halrilewa'I come' (Hale 1883:30) may embody wi-Ie-'AGT1go', in which case, since this verb would ordinarily be conjugated as an active verb in a Siouan language and since wi is ordinarily PAT1 in Tutelo.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The examples of wa..la· 'AGTI by mouth action' and ya-Ia- 'AGT2 by mouth action' have a similar origin, even though in these cases the resulting forms are indistinguishable from the Tutelo regular conjugation.",
+      "source_page": 30,
+      "source_page_end": null,
+      "source_excerpt": "the examples of wa..la· 'AGTI by mouth action' and ya-Ia- 'AGT2 by mouth action' have a similarorigin,even though in these cases the resulting forms are indistinguishable from the Tutelo regular conjugation.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "(5) PCH PHi I PHi II Hi\nAGTI ·wu-rt/. *wu-ro- *wu-ru· (wa)-ru·\nAGT2 *r r/I. *If>. ro· ·(ra)· ro- (raJ- ru-\nAGT3 *rj) nt- 'If> .ru· .<p-ro !f> ro·",
+      "source_page": 16,
+      "source_page_end": null,
+      "source_excerpt": "(5) PCH PHi I PHi II Hi AGTI ·wu-rt/. *wu-ro- *wu-ru· (wa)-ru· AGT2 *r r/I. *If>. ro· ·(ra)· ro- (raJ- ru- AGT3 *rj) nt- 'If> .ru· .<p-ro !f> ro·",
+      "grammar_lineage": "proto_siouan_catawban",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The critical step is the reduction of PCH \"'r-ru to PHi I\n\"'<P-m, leaving the second and third persons identical.",
+      "source_page": 16,
+      "source_page_end": null,
+      "source_excerpt": "(5) PCH PHi I PHi II Hi AGTI ·wu-rt/. *wu-ro- *wu-ru· (wa)-ru· AGT2 *r r/I. *If>. ro· ·(ra)· ro- (raJ- ru- AGT3 *rj) nt- 'If> .ru· .<p-ro !f> ro·",
+      "grammar_lineage": "proto_siouan_catawban",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The syncopating conjugation of *r-stems is particularly clear and well-marked in the Mississippi Valley languages, with Proto-Dhegiha forms being those of (6). The AGT1 form changes from PSi */wrl to PDh */b6l. For example, Os ddbOhhree' (altered from LaFlesche 1932:344) and Os .potato' (altered from LaFlesche 1932:308).",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The syncopating conjugation of *r-stems is particularly clear and well-marked in the Mississippi Valley languages. The system exists there in its perhaps most conservative form in some of the Dhegiha languages.",
+      "grammar_lineage": "proto_siouan_catawban",
+      "source_chunk_index": 17,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "PSi */rl develops into PDa *:n/ IC_ and PDa *,'y/ elsewhere, with PDa */nl being a nasal tap before which PSi 'w AGT1 becomes PDa *m. This state of affairs has remained approximately constant in some of the languages.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The development of PSi */rl in Proto-Dakotan seems to have been that given in (8). PSi */r/-PDa *:n/ IC_, PDa *,'y/ elsewhere.",
+      "grammar_lineage": "proto_dakotan",
+      "source_chunk_index": 17,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Woccon, the second person pronominal affix shows progressive loss. In some dialects, denasalization before oral vowels has been complete, producing /bl/ and /ll/. In others, it may be less complete, with /dl/ realized as /ndl/ or /bdl/ as /mdl/. Denasalizing dialects generally preserve /mnl/ and /n!l/ before nasal vowels.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "In dialects other than n-dialects some degree of denasalization has taken place. In the I-dialects denasalization before oral vowels has been complete, producing /bl/ and /ll/. In some d-dialects the process has gone as far, producing /bdl/ and /d/. In others, it has been less complete, and /dl/ may be realized as /ndl/, or /bdl/ as /mdl/. The denasalizing dialects generally preserve /mnl/ and /n!l/ before nasal vowels.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 18,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Proto-Siouan */rl/ shows extreme variability in the orthography of Dhegiha developments. This variability is considered subphonemic.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The first of these is the extreme variability in the orthography of the Dhegiha developments of PSi */rl. It was felt that this variability was subphonemic, however real it might be.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 18,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Dakotan languages, there is a strong tendency to reduce /mnl/ to /ml/ in nasal stems.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "There is a strong tendency throughout Dakotan to reduce /mnl/ to /ml/ in nasal stems.",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 18,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon exhibits a tendency for /r/ reflexes to shift forward to /l/. This is evident in Tables II to V. The underlying vacillation between u and i may appear as lu! or Iii.",
+      "source_page": 17,
+      "source_page_end": null,
+      "source_excerpt": "reflexes of*/r/. This is obvious in Tables II to V and is not elaborated upon here. The second is a tendency to shift lui forward to lu! or Iii.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 19,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Proto-Siouan, the verb stem *rzltA 'eat' shows syncopation in some forms. In Crow-Hidatsa, the first person of this reflex lacks the initial /r/. This loss is paralleled in both the first and second persons of violent action instrumentals.",
+      "source_page": 18,
+      "source_page_end": null,
+      "source_excerpt": "In Proto-Siouan, the verb stem *rzltA 'eat' shows syncopation in some forms. In Crow-Hidatsa, the first person of this reflex lacks the initial /r/. This loss is paralleled in both the first and second persons of violent action instrumentals.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 20,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Dakotan transitive syncopating verbs always insert a supernumerary ya between the syncopated AGT2 form and any first person singular or plural PAT marker. For example, Teton ma-l'a-jV PATI-AGT2 (with 1'-induced mutation in the initial).",
+      "source_page": 18,
+      "source_page_end": null,
+      "source_excerpt": "Dakotan transitive syncopating verbs always insert a supernumerary ya between the syncopated AGT2 form and any first person singular or plural PAT marker. For example, Teton ma-l'a-jV PATI-AGT2 (with 1'-induced mutation in the initial).",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 20,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Proto-Siouan, the verb *rutA has conjugations as follows:\nAGT1 *\\'- uuti\nAGT2 *r- ruuti-\nAGT3 *¢- ruuti-\nThe second person shows ri in Crow (e.g., ri-ruusi 'eat'), which is likely not secondary. In Winnebago, PWC */dl is retained as ISVr!, while */5r/ becomes ISVr! due to epenthesis.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "AGTI *O·dV AGT2 *{.rV for AGT2 in ruusi 'eat'. Since ri is usually PAT2 in AGT3 '0-rV Crow, its presence in ri-ruusi is unlikely to be secondary. It seems likely that the explanation is an underlying form.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 21,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Proto-Winnebago-Chiwere (PWC), */dl is retained as ISVr! and */5r/ becomes ISVr! due to epenthesis. In Winnebago, ruutl for 'eat' has a regular second person ra AGT2.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "In Winnebago, PWC */dl is retained, though written ItI lying PCH *r-ruuti which has been altered by regular Winnebagoepenthesis, becomes ISVr! Compare ruutl for 'eat'.",
+      "grammar_lineage": "proto_siouan_catawban",
+      "source_chunk_index": 21,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Proto-Siouan *nitA shows eccentric developments in Mississippi Valley Siouan where Dakotan and Winnebago-Chiwere show loss of the initial syllable /rul/ in the first and second persons.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "The most eccentric developments of *nitA are encountered in Mississippi Valley Siouan, where Dakotan and Winnebago-Chiwere show loss ofthe initial syllable /rul/ in the first and second persons.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 21,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The shift of second person to 's' syllable occurs in the stem and is conjugated as a regular verb. The Iowa-Oto equivalents are generally stressed (not in Iowa-Oto), which is unusual for Mississippi Valley Siouan.",
+      "source_page": 18,
+      "source_page_end": null,
+      "source_excerpt": "The shift of second person to s syllable •ItAI ofthe stem is conjugated as a regular verb is regular. The Iowa-Oto equivalents to the Winnebago in these persons, except that the pronominal prefix is forms cited above are to 'potato' and sra 'bare' generally stressed (not in Iowa-Oto), a rather unusual circumstance in Mississippi Valley Siouan",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 22,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "(15) AGT1 \"Ini-IA\nAGT2 \"ra-IA\nAGT3 \"rlilA",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The Proto-Mississippi Valley conjugation as shown in (15).",
+      "grammar_lineage": "proto_siouan_catawban",
+      "source_chunk_index": 23,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "(16) AGT1 a-IA\nAGT2 ad-IA\nAGT3 rJ>. OlilA",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The auxiliary conjugates by initial mutation or changes in the stem initial consonant.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 23,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "(17) 1st sing. cvu-, 1st plur. I'l!-\n2nd sing. yu-, 2nd plur. yu-\n3rd sing. du-, 3rd plur. l'U-",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The auxiliary conjugates by initial mutation or changes in the stem initial consonant.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 23,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "(18) 1st sing. cu-na?, 1st plur. yu-ha?\n2nd sing. yu-ya I-, 2nd plur. yu-wa I-\n3rd sing. du-ra I', 3rd plur. yu-ra",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "When used together with a main verb, both the auxiliary and the main verb are conjugated separately.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 23,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The shared peculiarities of the reflexes of *nilA in Catawba and Woccon may represent a shared isogloss in the earlier Proto-Mississippi Valley dialect continuum. The form 'Noccoo Eraute?' (Lawson, 1709) glossed as 'Have you got anything to eat?' suggests that 'raute' might be cognate with PSi *rutA and 'e' could be a second person conjugational affix.",
+      "source_page": 177,
+      "source_page_end": null,
+      "source_excerpt": "Catawba, Carter (1980: 177) cites one for Woccon in a The differing situations in Dakotan and Winnebago form recorded by Lawson (1709): Noccoo Eraute?, glossed as 'Have you got anything toeat?'H Carter considers that raute (perhaps Iroti/?) is cognate with PSi *rutA.",
+      "grammar_lineage": "proto_siouan_catawban",
+      "source_chunk_index": 24,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The syncopating conjugation in Proto-Siouan seems justified by the existence of at least some syncopating stems in each language, although data for Tutelo are limited and those for Biloxi are ambiguous. In some cases, epenthesis has eliminated the syncopation but the origin is clear.",
+      "source_page": 5,
+      "source_page_end": null,
+      "source_excerpt": "Attributing the syncopating conjugation to Proto Siouan seems justified by three considerations. First there is the fact that at least some syncopating stems seem to exist in each language, although the data for Tutelo are admittedly limited, and those for Biloxi am biguous in some degree.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 24,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The syncopating conjugation in Woccon does not involve the instrumental form derived from *nitA. This is corroborated by data from Eastern Siouan languages, where ·rA 'go' and *rutA 'eat' do not follow this pattern.",
+      "source_page": 19,
+      "source_page_end": null,
+      "source_excerpt": "The conclusion that *nitA does not involve the ·ru core of the syncopating conjugation in each language: instrumental is corroborated tenuously by data of the *ru instrumental and ·ra instrumental derivatives, another sort, from Eastern Siouan, a group collateral to ·rA 'go', and *rutA 'eat'",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 25,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The syncopating conjugations show greater uniformity than those of the regular conjugation in Proto-Siouan languages. The forms *e-AGT-hA 'say' and *hu (come) are attested, suggesting that these forms may have been more stable across different Siouan languages.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The underlying forms of the syncopating conjugations show greater uniformity than those of the regular conjugations. In fact, to a fair extent the underlying forms of the syncopating conjugations show essentially similar forms in each case.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 26,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Proto-Siouan, the AGT1 and AGT2 affixes are reconstructed as *w and *v, rather than *wa and *ya. This suggests that an epenthesis rule may have operated to insert vowels in certain contexts.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Thus, even Mandan, which has eliminated the syncopating conjugation of *r stems, retains it for *e-AGT-hA. Conditioning of this form would perhaps make most sense if it were the case that *w and ·v were the underlying forms of the AGTI and AGT2 affixes.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 26,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The epenthetic theory proposes that the regular/syncopating opposition in Proto-Siouan may be accounted for by an epenthesis rule. This theory suggests that vowels are inserted to satisfy otherwise conflicting constraints on stress placement.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The epenthetic theory seems preferable to at least one of its alternatives, the metrical theory. The metrical theory would consider *wa and ·ya to be the underlying forms of Proto-Siouan.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 26,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Proto-Siouan, syncopating forms are more conservative than regular conjugations. This can be seen in the Mississippi Valley languages where second persons in AGT2 favor ·/y/ over ·/rI/. Additionally, initial b AGTI in Dhegiha syncopating conjugation aligns with the initial ·/w/ of Proto-Siouan first persons.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "In the Mississippi Valley languages. for example. it is the syncopating con jugation's AGT2 in which agrees with other Siouan data in favoring second persons in ·/y/ oversecond persons in ·/rI, which are supported by Dakotan ya and Dhegiha rIa: and, again, it is initial b AGTI in the Dhegiha syncopating conjugation which agrees with the initial ·/w/ of Proto-Siouan first persons",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 27,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The choice between Proto-Siouan regular AGT pronouns ·wa and ·ya and their syncopated counterparts ·w and .y was a phonologically conditioned alternation in Proto-Siouan. The exact conditioning is not yet clear.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "the Proto-Siouan regular AGT pronouns ·wa and ·ya and the equivalent syncopated pronouns ·w and .y suggest that the choice between these sets was a phonologically conditioned alternation in Proto·Siouan. Unfortunately, it is not possible so far to indicate what this conditioning was.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 27,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In the bulk of this paper, the term 'Siouan' is used in the sense of Core Siouan. Eastern Siouan is considered only when specifically relevant.",
+      "source_page": 20,
+      "source_page_end": null,
+      "source_excerpt": "In the Siouan ·r-stems may well have been syncopating, and the bulk ofthe present paper, the term Siouan is used in thesenseof CoreSiouan. Eastern Siouanisconsideredonly whenspecifically relevant.",
+      "grammar_lineage": "other_comparative",
+      "source_chunk_index": 28,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Proto-Siouan (PSi), r does not occur before the accented high nonnasal vowels i and u, and s replaces r based on Siouan cognates observed. However, exceptions exist in items 16 (.ruse) and 17 ('ruN) where reflexes of or are found instead of 's'.",
+      "source_page": 101,
+      "source_page_end": null,
+      "source_excerpt": "PSi r does not occur before the accented high nonnasal vowels i and u, and s replaces r based on Siouan cognates observed. However, exceptions exist in items 16 (.ruse) and 17 ('ruN)",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 29,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon has only a single series of pronominal affixes, indicating it is not an active-stative language. Stative verbs are rare in some Siouan languages.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": ".BiIOXi has only a single series of pronominal affixes. so that it is not an activelstative language, The same may be true ofCataw· I, ba. Stative verbs are rare in some Siouan languages.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 30,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The reflexes of Proto-Siouan '/rl and '/YI are only distinct in Dakotan, while Mississippi Valley languages favor 'ra' and Southeastern and Catawba favor 'ya'.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "that the reflexes ofPSi '!yl and ·/rlareonly distinct in Dakotan. Dhegihaand SoutheasternSiouan: perhapsalso inCatawba.The Mississippi Valley languages favor ·ra. while Southeastern and Catawba. favor 'ya.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 30,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The forms ·ru, ·ra, orA., and ·nltA come essentially from Thorud & Miner [976:166; Whitman [947:243, 246. These forms are attested in Woccon.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "The forms ·ru. ·ra. orA. and ·nltA come essentially from Thorud & Miner [976:166; Whitman [947:243, 246.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 31,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Matthews (1958) supplies forms such as ·rehi and \"ruti. The first of these has been modified following Taylor (1976); the last is based on the forms found in various languages.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "Matthews (1958:57. 78. 81, [11-2). For the last two. Matthews supplies ·rehi and \"ruti.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 31,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "'say' is represented by the form ·e·AGT-hA in Woccon.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "'say' and ·hu 'come' are from Taylor (1976:296. 295).",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 31,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "'come' is represented by the form ·hu in Woccon.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "'say' and ·hu 'come' are from Taylor (1976:296. 295).",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 31,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In syncopating R-stems, the reconstruction suggests that stressless vowels follow *lsi. However, in practice, these vowels are stressed. This pattern is observed in Crow where AGT2 was originally *r and became ri through epenthesis, and in Hidatsa where it coalesced with a stem-initial */r/. An alternative account would suggest PCH *i AGT2 in syncopating forms.",
+      "source_page": 109,
+      "source_page_end": null,
+      "source_excerpt": "Matthews reconstructs *.n/[SliJfrom Bi, Da, and Wi with cluster simplification in the first and epenthesis in the third. In these cases Matthews reconstructs * \\- .Stressshiftsininl1ected monosyllabic stems are an alternati:e explanation.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 33,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The reconstruction of AGT2 as *r in Crow, which became ri through epenthesis, and its coalescence with a stem-initial */r/ in Hidatsa suggests that the syncopating R-stems undergo specific phonological changes. This pattern is consistent across these languages.",
+      "source_page": 109,
+      "source_page_end": null,
+      "source_excerpt": "AGT2 was*r, which became riin Crow by epenthesis,and *4> , and second persons and epenthesis in the third.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 33,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The syncopated form *','ak is in better accord with the reflex H S I i a o m uan in Catawba and other forms. The irregular form appears as H'clal(a) in Woccon.",
+      "source_page": 48,
+      "source_page_end": null,
+      "source_excerpt": "I believe that *','ak is in better accord with the reflex H S I i a o m uan in Catawba and other forms. The irregular form appears as H'clal(a) in Woccon.",
+      "grammar_lineage": "proto_siouan_catawban",
+      "source_chunk_index": 34,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The syncopating conjugation for *r-stems has been reduced to initial mutation in Stoney, less extreme examples are the initial mutation.",
+      "source_page": 48,
+      "source_page_end": null,
+      "source_excerpt": "Within CoreSiouan, Stoney has effectively reduced the Dakotan version of the syncopating conjugation for *r-stems to a conjugation ofinitial mutation. Less extremeexamplesare the initial",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 34,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Ofo, [~] in alternations distinguishing the second and third persons of *r is an allophone of /Ci/, used before other consonants. This view is adopted here.",
+      "source_page": 13,
+      "source_page_end": null,
+      "source_excerpt": "Matthews (1958:13) and Kaufman (1965:7) consider that [~] in alternations distinguishing thesecond and third persons ofthe *r Ofo is an allophone of /Ci/. used before other consonants.",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 35,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Ofo, b represents /w/, which is written as w. This view is adopted here.",
+      "source_page": 13,
+      "source_page_end": null,
+      "source_excerpt": "Matthews (1958:13) and Kaufman (1965:7) consider that b in Ofoforms represents /w/, which Kaufman continues to write as b. This view is also adopted here, with w as the graph.",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 35,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The prefix a in Ofo may represent an indefinite third person morpheme PSi *wa.",
+      "source_page": 13,
+      "source_page_end": null,
+      "source_excerpt": "In at least some cases it must represent the unglossed inclusion of a morpheme a 'indefinite third person', the regular development in Ofo of PSi *wa 'indefinite third person'.",
+      "grammar_lineage": "proto_siouan",
+      "source_chunk_index": 35,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The usual development of PCH */s/ is /h/. As justification for this, compare Te sfa ·grease· (Buechel 1970:456).",
+      "source_page": 13,
+      "source_page_end": null,
+      "source_excerpt": "'Hi Ie! is the usual development of PCH */s/. Asjustillcation for PSi *sra 'grease', compare Te sfa ·grease. ..: (Buechel 1970:456)",
+      "grammar_lineage": "proto_siouan_catawban",
+      "source_chunk_index": 35,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Second persons of the mouth and hand instrumentals were originally triliteral syllables, with an initial 'c' having been dropped.",
+      "source_page": 46,
+      "source_page_end": null,
+      "source_excerpt": "second persons of the mouth and hand instrumentals. respectively - JEK] wereoriginally triliteral syllables, an initial \"c\" Its genetic affiliations and historical significance.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 36,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "pronunciation_notes": [
+    {
+      "text": "The phonological developments of Proto-Siouan (PSi) sounds are presented, where */w/, */yl, */S/, and */rl/ have specific developments.",
+      "source_page": 3,
+      "source_page_end": null,
+      "source_excerpt": "The basic developments of PSi */w/. */yl, */S/, and *Irl are presented in Table I. In each cell ofthe table the first line lists first the phoneme or putative phoneme which is the usual development of",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phonemic or possibly phonemic nasals are listed as alternates. Non-phonemic nasals are suppressed.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "Nasals generally agreed to be non-phonemic are suppressed.",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Kansa 11-11- is realized as [nn]', and Quapaw realization of earlier *'5 as ItI before the stem initial ItI (from */r/) amounts to reduction of*1 to a feature of length on the Stem initial.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The development of *r-ru as ri-ru.~I (p.c.) has reported that Kansa 11-11- is realized as [nn]', Plainly Quapaw realization ofearlier *'5 as ItI before the stem initial ItI (from */r/) amounts to redu",
+      "source_chunk_index": 17,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In the common transcription used for this paper, aspiration is marked consistently with Ih/, glottalization with ..., and the symbols lei., Ic/. and Ijl mark [is], [dz], [ts], and [dz] respectively.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The transcription marks aspiration with Ih/, glottalization with ..., and the symbols lei., Ic/. and Ijl mark [is], [dz], [ts], and [dz]",
+      "source_chunk_index": 29,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Rudes's use of·/sl and ·/rl suggests that his phonology owes a debt to Matthews(1970)(see section 3).",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "-Rudes's use of·/sl and ·/rl suggests that his phonology owes a debt to Matthews(1970)(see section 3).",
+      "source_chunk_index": 31,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The orthographic representation of /dl/ is normalized to /tl/ in this paper. Note that stressless vowels are actually stressed in syncopating R-stems.",
+      "source_page": 109,
+      "source_page_end": null,
+      "source_excerpt": "In these cases Matthews reconstructs * \\- .Stressshiftsininl1ected monosyllabic stems are an alternati:e explanation.",
+      "source_chunk_index": 33,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phonological developments peculiar to verbal morphology are fairly frequent in Siouan, examples include loss of*/wl in Winnebago·Chiwere and Dheglha AGTI forms.",
+      "source_page": 48,
+      "source_page_end": null,
+      "source_excerpt": "Phonologicai developments pecuitar to \\erbal morphology are. need not be standard Woccon: it could be a trade pidgin.",
+      "source_chunk_index": 34,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "cultural_notes": [
+    {
+      "text": "The paper assumes the validity of the epenthetic approach in understanding the history of Siouan languages, including Woccon.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "this paper assumes the validity of the epenthetic approach.",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "'daha' entry, suggests that fragment-pronoun may simply mean bound pronominal element.",
+      "source_page": 1,
+      "source_page_end": null,
+      "source_excerpt": "-Dorsey orSwanton's use in Dorsey & Swanton (1912:180), the daha entry, suggests that fragment-pronoun may simply mean",
+      "source_chunk_index": 31,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The construction 'Noccoo£raule' does not necessarily have to be standard Woccon; it could be part of a trade pidgin.",
+      "source_page": 48,
+      "source_page_end": null,
+      "source_excerpt": "This is at least plausible as aSiouan etymology, though it has an inversion ofthe persons over what Lawson thought he was recording, a not unlikely circumstance. The construction need not be standard ",
+      "source_chunk_index": 34,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "audit": {
+    "raw_lexicon_count": 8,
+    "kept_lexicon_count": 5,
+    "dropped_missing_fields": [
+      {
+        "reason": "missing_woccon_or_english",
+        "woccon": "ru",
+        "english": null
+      },
+      {
+        "reason": "missing_woccon_or_english",
+        "woccon": "rehi",
+        "english": null
+      },
+      {
+        "reason": "missing_woccon_or_english",
+        "woccon": "tufafha",
+        "english": null
+      }
+    ],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

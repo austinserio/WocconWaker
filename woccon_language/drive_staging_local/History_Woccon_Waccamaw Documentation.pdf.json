@@ -1,0 +1,475 @@
+{
+  "source_path": "History/Woccon_Waccamaw Documentation.pdf",
+  "source_url": "https://drive.google.com/file/d/1cvWz2FY-75QErh5uo9e2EHPOVPy63fK9/view",
+  "lexicon_entries": [
+    {
+      "woccon": "Woccon",
+      "english": "place name",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": "Just as an aside- Woccon is the start of the word, or but mau at the end is known to mean “place of”",
+      "source_chunk_index": 2,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "mau",
+      "english": "of place",
+      "pos": "suffix",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": "Just as an aside- Woccon is the start of the word, or but mau at the end is known to mean “place of”",
+      "source_chunk_index": 2,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    {
+      "text": "The suffix 'mau' can be added to a noun stem to indicate 'place of'. For example, if 'Woccon' means a place name, then 'Woccan-mau' would mean 'place of Woccon'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Just as an aside- Woccon is the start of the word, or but mau at the end is known to mean “place of”",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 2,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "pronunciation_notes": [],
+  "cultural_notes": [
+    {
+      "text": "The Woccon/Waccamaw people have been referred to by various names throughout history, including Guacaya (1521), Wococon (1606), and Wattomas (1714).",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Names we have been called: Guacaya (Francisco Gordillo, 1521) Wococon (Virginiae item et Floridae Americae Provinciarum, nova descriptio.1606) Wattomas (Barnwell (1714), 1908: 31)",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Woccon Indians primarily lived between Neuse River and one of its affluents, near present-day Goldsboro, Wayne County, North Carolina.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The Woccon primarily lived between Neuse River and one of its affluents, near present-day Goldsboro, Wayne County, North Carolina.",
+      "source_chunk_index": 1,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The first mention of the Woccon appears to be by Lawson writing about 1701, who recorded 150 words of their language.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The first mention of the Woccon appears to be by Lawson writing about 1701, who recorded 150 words of their language.",
+      "source_chunk_index": 1,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Lawson gives 120 warriors in 1701.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Lawson gives 120 warriors in 1701.",
+      "source_chunk_index": 1,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Spanish entrada in the 16th and 17th centuries impacted almost all eastern seaboard nations, causing disruption and mass migration. Many South Carolina tribes either moved into the interior or up the coastline into what is today North Carolina.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "***Almost no tribal nation is still in their exact same place. The Spanish entrada in the 16th and 17th centuries impacted almost all eastern seaboard nations, whether they physically interacted with ",
+      "source_chunk_index": 2,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Woccon/Waccamaw people have significant ties with the Cheraw/Saraw, Waccamaw of Nc, Lumbee, Cape Fear, and the Catawba (among others).",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "***Almost no tribal nation is still in their exact same place. The Spanish entrada in the 16th and 17th centuries impacted almost all eastern seaboard nations, whether they physically interacted with ",
+      "source_chunk_index": 2,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1683 Proprietors heard that settlers were making war on the Indians around Winyah Bay in order to obtain slaves. Although a 1703 law placed a duty of 20 shillings on each Indian slave exported.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "(Ind. Rep. Quarterly 1973, Vol. 7, No. 1)",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1695- Cape Fear are constantly attacked by natives allied with SC (Charleston) so they become “Tribute Indians” and start saving shipwreck victims. They save 52 passengers from a New England ship.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "(MIlling 1969:20)",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1699, September 23rd- Richard Traunter describes: “between us and the Sea A Nation of Indians called the Wacawn’s, being Caniballs, and Maneaters..",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "(Dahlberg)",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1701 John Lawson records 120 fighting men, and two towns “Yupwareremau and Tooptatmeer” plus 500 inhabitants. Records 150 words of the language and identifies them as “Siouan stock.” Also says that a group have broken away from the main settlement and relocated southward.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "(New Voyage to Carolina)",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1711-1713 Tuscarora War- we are asked to join the war effort by Barnwell (against the Tuscarora). Part of Capt. Bull’s Co. in Barnwell’s Army.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "(Barnwell 1908:31)",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "2 Woccon are arrested in VA and charged with leaving NC without permission. Woccon name disappears around the same time Waccamaw name appears.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "2 Woccon are arrested in VA and charged with leaving NC without permission. Woccon name disappears around the same time",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "P. 43 (Barnwell’s Second) “The Committee appointed to advise with Col. Barnwell about the ways & means further to assistance the people of North Carolina against the Tusquerora Indians, do report his opinion to be as follows.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "P. 43 (Barnwell’s Second) “The Committee appointed to advise with Col. Barnwell about the ways & means further to assist",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Pre-1707 Thomas Smith asks for a license to trade with tribes and establishes a trading fort on Cape Fear at either Smith or Cape Island.",
+      "source_page": 33,
+      "source_page_end": null,
+      "source_excerpt": "Pre-1707 Thomas Smith asks for a license to trade with tribes Refuses to go through SC- got one from NC, claimed the Cape Fear were a northern tribe, and not in jurisdiction of SC…. Established a trad",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In 1712, James Moore JR. asks the Waccamaw and Cape Fears (known to be with the Woccon often) to join him against the Tuscarora.",
+      "source_page": 33,
+      "source_page_end": null,
+      "source_excerpt": "1712- Waccamaw name is mentioned – James Moore JR. asks them and Cape Fears (known to be with the Woccon often) to join him against the Tuscarora.",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In 1715, during the Yamassee War, the Waccamaw joined the Yamassee and Cheraw in attacking South Carolina.",
+      "source_page": 33,
+      "source_page_end": null,
+      "source_excerpt": "-we join Yamassee and Cheraw -April 15, 1715 attack, along with a large number of other native nations, SC",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In 1715, the Waccamaw were attacked by Maurice Moore, defeated, and many were taken captive/enslaved.",
+      "source_page": 33,
+      "source_page_end": null,
+      "source_excerpt": "-Attacked by Maurice Moore in 1715, defeated, and many were taken captive/enslaved.",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Waccamaw people lived between the Black and Sampit Rivers at Winyah Bay with 100 fighting men.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "living between Black and Sampit Rivers at Winyah Bay with 100 fighting men.",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In 1716, William Watis (Waties) Sr. was appointed as a special agent for trade at Winyaw.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "1716 Charleston appointed special agent William Watis (Waties) Sr. as factor at Winyaw",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In 1718, the Waccamaw people had reportedly moved to the Black River.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Reported by trader Meredith Hughes that they have moved to the Black River",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Waccamaw town of several hundred people operated independently, having their own headman and fields. They cooperated with the Catawba nation.",
+      "source_page": 82,
+      "source_page_end": null,
+      "source_excerpt": "Waccamaw town of several hundred people operated independently- had own headman and fields Cooperated with Catawba nation",
+      "source_chunk_index": 7,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Due to raids and enslavement by Seneca, Cherokee, and other groups, some Woccon had confederated with the Catawba.",
+      "source_page": 83,
+      "source_page_end": null,
+      "source_excerpt": "Some had confederated with the Catawba due to raids and enslavement by Seneca, Cherokee, and other groups",
+      "source_chunk_index": 7,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In 1723, some Waccamaw sought refuge with the Winyaw and Pedee.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "1723 some seek refuge with Winyaw -some with the Pedee",
+      "source_chunk_index": 7,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "A Catawba leader visited Charleston in 1727 to explain crimes committed by Waccamaws and Cheraws living amongst them. The Waccamaw village was a half mile from that of the Catawba leaders.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "1727 Sept. “a Catawba leader and eight others visited Charleston to explain crimes committed by Waccamaws and Cheraws living amongst them",
+      "source_chunk_index": 7,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Mooney (1894: 77) believes that the Waccamaw were finally incorporated with the Catawba, a view echoed by Hodge (1910: 887) and mentioned by Swanton (1952:101). It is possible they allied themselves with the Catawba or were absorbed by English settlements.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Mooney (1894: 77) believes that the Waccamaw were finally incorporated with the Catawba, a view echoed by Hodge (1910: 887)",
+      "source_chunk_index": 7,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Waccamaw people are reported in the Low Country in 1728/1733.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "1728/1733 they are reported in Low Country",
+      "source_chunk_index": 8,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In 1749, a war broke out between the Waccommassus (Waccamaw) and South Carolina.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "1749- War broke out between Waccommassus (Waccamaw, Waccamaw-Siouan website) and SC",
+      "source_chunk_index": 8,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Waccamaw people are last referred to as 'Settlement Indians' in 1755.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "1755- being called “Settlement Indians”- last reference to the name “Waccamaw”",
+      "source_chunk_index": 8,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In 1810, John Dimery purchases 300 acres in 'Dog Bluff'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "1810- John Dimery purchases 300 acres “Dog Bluff”",
+      "source_chunk_index": 8,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Waccamaw people are listed as having hunting grounds up to the early 1750s.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "still listed as having “hunting grounds”",
+      "source_chunk_index": 8,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1905 Miscegenation case with Julius Hatcher and Martha Mishoe. Remembered as being an “Indian Doctor”",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Miscegenation case with Julius Hatcher and Martha Mishoe. Remembered as being an “Indian Doctor”",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1908 Daniel Alford Miscegenation case with Susie Dimery -Dimery School founded- “Pine Level School”",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Miscegenation case with Susie Dimery. Pine Level School",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1908 W.I. Hatcher miscegenation case with Manda Mishoe",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "W.I. Hatcher miscegenation case with Manda Mishoe",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1914- Dimery land up for auction- “lands formerly belonging to” him in Galivants Ferry township were bought by George J Holliday (Conway Newspaper Nov. 5, 1914)",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Dimery land up for auction. Lands bought by George J Holliday",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1921 Article in Horry Herald April 23rd about – “Indian Blood” in the Dimery Settlement.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Article in Horry Herald about Indian Blood in the Dimery Settlement.",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1921 Furman Hughes miscegenation case with Patty Dimery",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Furman Hughes miscegenation case with Patty Dimery",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1922-uproar over Pine Level being funded/classed as a “Negro Schol” -County agrees to classify it as an Indian/“Special” School",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Pine Level classified as an Indian/Special School",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1923 Oct. 18th article in Horry Herald “Dimery Pupils Seek a School”",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Dimery pupils seek a school",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1955-Pine Level is closed due to low enrollment",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Pine Level is closed due to low enrollment",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1983- Bethel Missionary Baptist Church burns",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Bethel Missionary Baptist Church burns",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "1992 Formation of the modern tribe. -Initial organizational meeting Oct. 17th",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Formation of the modern tribe, initial organizational meeting",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "2004 bought present tribal grounds land",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Bought present tribal grounds land",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "2005 received recognition",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Received recognition",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "2021 HR1942 signed",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "HR1942 signed",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Waccamaw territory was from Winyah Bay up the Waccamaw River to the Cape Fear, and somewhat to the Neuse River.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Waccamaw territory was from Winyah Bay up Waccamaw River to the Cape Fear, and somewhat to the NEuse River",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The Woccon language closely resembled Catawba, and was considered one of two Catawban languages, which are part of the Siouan language family.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Woccon is a dormant Eastern Siouan language. The Woccon language closely resembled Catawba",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Waccon was a subdivision of the Waccamaw",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Waccon was a subdivision of the Waccamaw",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "audit": {
+    "raw_lexicon_count": 2,
+    "kept_lexicon_count": 2,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

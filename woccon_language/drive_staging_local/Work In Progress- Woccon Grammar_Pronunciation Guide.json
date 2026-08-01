@@ -1,0 +1,128 @@
+{
+  "source_path": "Work In Progress- Woccon Grammar/Pronunciation Guide",
+  "source_url": "https://drive.google.com/file/d/12ayErZai_QDICFJcR80H5mGtkVQbr0uww76vUj5k7WY/view",
+  "lexicon_entries": [
+    {
+      "woccon": "Yupyupseunne",
+      "english": "heavily wooded river",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": "Reduplication- if a word shows reduplication then it is for emphasis on it being heavy or more of… Ie: Yupyupseunne= (yup=wood, seunne=river) heavily wooded river",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "Wawawa",
+      "english": "snow- heavily",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": "Reduplication- if a word shows reduplication then it is for emphasis on it being heavy or more of… Ie: Wawawa= snow- heavily",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    {
+      "text": "Subject-Object-Verb order",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Subject-Object-Verb order",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Reduplication is used for emphasis on a word being heavy or more of something. Example: Yupyupseunne (heavily wooded river) and Wawawa (heavy snow).",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Reduplication- if a word shows reduplication then it is for emphasis on it being heavy or more of… Ie: Yupyupseunne= (yup=wood, seunne=river) heavily wooded river Wawawa= snow- heavily",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "2nd person singular possessive prefix is 'ya-' or 'yi-', and 3rd person possessive suffix is 'wa'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "2nd person singular possessive= ya-/yi- 3rd person possessive= wa",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The questioning/interrogative mode marker is '-ne'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Questioning/interrogative mode marker= -ne",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Independent modal suffix is '-re'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Independent modal suffix= -re",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "pronunciation_notes": [
+    {
+      "text": "a= ah as in Father, ą́= (no pronunciation given), e=ay as in way, i=ee as in weep, o=oh as in Row, oo= elongated oh, u= oo as in choose",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Pronunciation: a= ah as in Father ą́= e=ay as in way i=ee as in weep o=oh as in Row oo= elongated oh u= oo as in choose",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "r&n are nasalized and trilled (probably not the right word), č=ch, J= ch",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Pronunciation: r&n are nasalized and trilled (probably not the right word) č=ch J= ch",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Glottal stop is represented as a pause between uh and oh in 'uhoh', written as uh--oh.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Pronunciation: Glottal stop- the pause between uh and oh in uhoh represented as= uh--oh",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Wa cahn- oo= u, o= ah, che= chi, Oh, ou= oo, au= aw, e=eh",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Pronunciation: Wa cahn- oo= u o= ah che= chi Oh ou= oo au= aw e=eh",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "cultural_notes": [],
+  "audit": {
+    "raw_lexicon_count": 2,
+    "kept_lexicon_count": 2,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

@@ -24,7 +24,13 @@ def _ollama_http_session():
 
 
 def _ollama_keep_alive() -> str:
-    return (os.getenv("OLLAMA_KEEP_ALIVE") or "30m").strip() or "30m"
+    # Default 0 = unload after each request. Batch ingest alternates text/vision models on
+    # one GPU; keeping a 32B model warm blocks the other. Set OLLAMA_KEEP_ALIVE=30m only
+    # for interactive chat where cold-start latency matters.
+    v = os.getenv("OLLAMA_KEEP_ALIVE")
+    if v is None or not str(v).strip():
+        return "0"
+    return str(v).strip()
 
 
 def _ollama_vision_timeout() -> int:
@@ -32,6 +38,58 @@ def _ollama_vision_timeout() -> int:
         return max(60, int(os.getenv("OLLAMA_VISION_TIMEOUT", "900")))
     except ValueError:
         return 900
+
+
+def _ollama_base_url() -> str:
+    base = os.getenv("OLLAMA_URL", "http://localhost:11434").rstrip("/")
+    if "/v1/chat" in base:
+        base = base.replace("/v1/chat", "").rstrip("/")
+    if "/api/chat" in base:
+        base = base.replace("/api/chat", "").rstrip("/")
+    return base
+
+
+def ollama_unload_model(model: str) -> bool:
+    """Free VRAM by unloading a model from Ollama (keep_alive=0). Returns True if request succeeded."""
+    model = (model or "").strip()
+    if not model:
+        return False
+    try:
+        r = _ollama_http_session().post(
+            f"{_ollama_base_url()}/api/generate",
+            json={"model": model, "prompt": "", "keep_alive": 0},
+            timeout=30,
+        )
+        r.raise_for_status()
+        log.info("Unloaded Ollama model: %s", model)
+        return True
+    except Exception as e:
+        log.warning("Failed to unload Ollama model %s: %s", model, e)
+        return False
+
+
+def ollama_unload_loaded_models() -> None:
+    """Unload all models currently resident in Ollama (/api/ps)."""
+    try:
+        r = _ollama_http_session().get(f"{_ollama_base_url()}/api/ps", timeout=15)
+        r.raise_for_status()
+        for entry in r.json().get("models") or []:
+            name = (entry.get("name") or entry.get("model") or "").strip()
+            if name:
+                ollama_unload_model(name)
+    except Exception as e:
+        log.warning("Could not list Ollama models for unload: %s", e)
+
+
+def ollama_models_unified() -> bool:
+    """True when text and vision env vars point at the same Ollama model (no VRAM swap needed)."""
+    text = (os.getenv("OLLAMA_MODEL") or "").strip()
+    vision = (
+        os.getenv("OLLAMA_VISION_MODEL")
+        or os.getenv("PDF_OCR_MODEL")
+        or "qwen2.5vl:32b"
+    ).strip()
+    return bool(text) and text == vision
 
 _LOCAL_UNREACHABLE_MSG = (
     "Error: Local model unreachable and Anthropic fallback not enabled. "
@@ -279,15 +337,8 @@ def _local_ollama_vision_chat(
     options: Dict[str, Any],
 ) -> Dict[str, Any]:
     """Use local Ollama vision API with base64 images on the user message."""
-    import requests
-
-    base = os.getenv("OLLAMA_URL", "http://localhost:11434").rstrip("/")
-    if "/v1/chat" in base:
-        base = base.replace("/v1/chat", "").rstrip("/")
-    if "/api/chat" in base:
-        base = base.replace("/api/chat", "").rstrip("/")
-    url = f"{base}/api/chat"
     images = [base64.standard_b64encode(img).decode("ascii") for img in image_bytes_list]
+    url = f"{_ollama_base_url()}/api/chat"
     payload = {
         "model": model,
         "messages": [{"role": "user", "content": text_prompt, "images": images}],
@@ -319,13 +370,7 @@ def _local_ollama_chat(
     options: Dict[str, Any],
 ) -> Dict[str, Any]:
     """Use local Ollama API (OLLAMA_URL)."""
-    import requests
-    base = os.getenv("OLLAMA_URL", "http://localhost:11434").rstrip("/")
-    if "/v1/chat" in base:
-        base = base.replace("/v1/chat", "").rstrip("/")
-    if "/api/chat" in base:
-        base = base.replace("/api/chat", "").rstrip("/")
-    url = f"{base}/api/chat"
+    url = f"{_ollama_base_url()}/api/chat"
     payload = {
         "model": model,
         "messages": messages,

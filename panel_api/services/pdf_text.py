@@ -2,8 +2,9 @@
 import io
 import logging
 import os
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Callable, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 
 log = logging.getLogger("pdf_text")
 
@@ -46,6 +47,25 @@ def _ocr_parallel_workers() -> int:
         return 1
 
 
+def _ocr_num_predict() -> int:
+    try:
+        return max(512, int(os.getenv("PDF_OCR_NUM_PREDICT", "2048")))
+    except ValueError:
+        return 2048
+
+
+def _free_vram_for_ocr() -> None:
+    """Unload other models before vision OCR when text/vision use different Ollama tags."""
+    from llm_client import ollama_models_unified, ollama_unload_loaded_models
+
+    if ollama_models_unified():
+        return
+    if os.getenv("PDF_OCR_UNLOAD_TEXT_MODEL", "true").strip().lower() not in ("true", "1", "yes"):
+        return
+    log.info("Freeing VRAM before vision OCR (unloading loaded Ollama models)")
+    ollama_unload_loaded_models()
+
+
 def extract_pages_with_pdfplumber(data: bytes) -> List[str]:
     import pdfplumber
 
@@ -75,13 +95,33 @@ def render_pdf_page_images(data: bytes, *, dpi: Optional[int] = None) -> List[by
     import fitz
 
     doc = fitz.open(stream=data, filetype="pdf")
+    page_numbers = list(range(1, len(doc) + 1))
+    doc.close()
+    rendered = render_pdf_pages(data, page_numbers, dpi=dpi)
+    return [rendered.get(n, b"") for n in page_numbers]
+
+
+def render_pdf_pages(
+    data: bytes,
+    page_numbers: List[int],
+    *,
+    dpi: Optional[int] = None,
+) -> Dict[int, bytes]:
+    """Render selected 1-based page numbers to PNG bytes."""
+    if not page_numbers:
+        return {}
+    import fitz
+
+    doc = fitz.open(stream=data, filetype="pdf")
     scale = (dpi or _ocr_dpi()) / 72.0
     matrix = fitz.Matrix(scale, scale)
-    images: List[bytes] = []
+    images: Dict[int, bytes] = {}
     try:
-        for page in doc:
-            pix = page.get_pixmap(matrix=matrix, alpha=False)
-            images.append(pix.tobytes("png"))
+        for page_num in page_numbers:
+            if page_num < 1 or page_num > len(doc):
+                continue
+            pix = doc[page_num - 1].get_pixmap(matrix=matrix, alpha=False)
+            images[page_num] = pix.tobytes("png")
     finally:
         doc.close()
     return images
@@ -103,7 +143,7 @@ def ocr_page_vision(png_bytes: bytes, page_num: int, model: Optional[str] = None
         model or "",
         prompt,
         [png_bytes],
-        options={"temperature": 0.0, "num_predict": 4096},
+        options={"temperature": 0.0, "num_predict": _ocr_num_predict()},
     )
     content = (out.get("message") or {}).get("content") or ""
     if content.startswith("Error:"):
@@ -155,22 +195,35 @@ def extract_pdf_text(
     if on_progress:
         on_progress(2, "Rendering PDF pages for OCR…")
 
-    page_images = render_pdf_page_images(data)
-    total = len(page_images)
-    if total != len(page_texts):
-        # Align counts if pdfplumber and pymupdf disagree (rare)
-        while len(page_texts) < total:
+    import fitz
+
+    with fitz.open(stream=data, filetype="pdf") as doc:
+        pdf_page_count = len(doc)
+
+    if pdf_page_count != len(page_texts):
+        while len(page_texts) < pdf_page_count:
             page_texts.append("")
-        while len(ocr_flags) < total:
+        while len(ocr_flags) < pdf_page_count:
             ocr_flags.append(True)
-        page_texts = page_texts[:total]
-        ocr_flags = ocr_flags[:total]
+        page_texts = page_texts[:pdf_page_count]
+        ocr_flags = ocr_flags[:pdf_page_count]
+
+    sparse_page_nums = [i for i, flag in enumerate(ocr_flags, start=1) if flag]
+    log.info(
+        "OCR %d sparse pages (of %d total) at %d DPI",
+        len(sparse_page_nums),
+        len(page_texts),
+        _ocr_dpi(),
+    )
+
+    _free_vram_for_ocr()
+    page_images = render_pdf_pages(data, sparse_page_nums)
 
     ocr_jobs: List[Tuple[int, bytes]] = []
-    for i, (needs_ocr, png) in enumerate(zip(ocr_flags, page_images), start=1):
-        if not needs_ocr:
-            continue
-        ocr_jobs.append((i, png))
+    for page_num in sparse_page_nums:
+        png = page_images.get(page_num)
+        if png:
+            ocr_jobs.append((page_num, png))
 
     workers = _ocr_parallel_workers()
     if ocr_jobs:
@@ -179,7 +232,16 @@ def extract_pdf_text(
 
             def _ocr_one(job: Tuple[int, bytes]) -> Tuple[int, str]:
                 page_num, png = job
-                return page_num, ocr_page_vision(png, page_num)
+                started = time.monotonic()
+                text = ocr_page_vision(png, page_num)
+                log.info(
+                    "OCR page %d/%d done in %.1fs (%d chars)",
+                    page_num,
+                    len(ocr_jobs),
+                    time.monotonic() - started,
+                    len(text),
+                )
+                return page_num, text
 
             completed = 0
             with ThreadPoolExecutor(max_workers=workers) as pool:
@@ -198,16 +260,36 @@ def extract_pdf_text(
                         if not (page_texts[page_num - 1] or "").strip():
                             raise
         else:
-            for page_num, png in ocr_jobs:
+            for idx, (page_num, png) in enumerate(ocr_jobs, start=1):
                 if on_progress:
-                    pct = int(20 * page_num / max(total, 1))
-                    on_progress(pct, f"OCR page {page_num}/{total}")
+                    pct = int(20 * idx / max(len(ocr_jobs), 1))
+                    on_progress(pct, f"OCR page {idx}/{len(ocr_jobs)}")
                 try:
+                    started = time.monotonic()
                     page_texts[page_num - 1] = ocr_page_vision(png, page_num)
+                    log.info(
+                        "OCR page %d/%d done in %.1fs (%d chars)",
+                        page_num,
+                        len(ocr_jobs),
+                        time.monotonic() - started,
+                        len(page_texts[page_num - 1]),
+                    )
                 except Exception as e:
                     log.warning("Vision OCR failed for page %d: %s", page_num, e)
                     if not (page_texts[page_num - 1] or "").strip():
                         raise
+
+    if ocr_jobs:
+        from llm_client import ollama_models_unified, ollama_unload_model
+
+        unload_vision = os.getenv("PDF_OCR_UNLOAD_VISION_MODEL", "true").strip().lower() in (
+            "true",
+            "1",
+            "yes",
+        )
+        if unload_vision and not ollama_models_unified():
+            vision_model = (os.getenv("OLLAMA_VISION_MODEL") or "qwen2.5vl:32b").strip()
+            ollama_unload_model(vision_model)
 
     marked = mark_text_with_pages(page_texts)
     if not marked.strip():

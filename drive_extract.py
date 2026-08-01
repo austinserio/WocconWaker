@@ -107,7 +107,34 @@ def _report_progress(
 
 
 def _normalize_lexicon_key(woccon: str, english: str) -> Tuple[str, str]:
-    return ((woccon or "").strip().lower(), (english or "").strip().lower())
+    from list_doc_parser import normalize_english_for_key, normalize_woccon_for_key
+
+    return (normalize_woccon_for_key(woccon), normalize_english_for_key(english))
+
+
+def _normalize_lexicon_woccon(value: Any) -> str:
+    from list_doc_parser import normalize_unicode_text
+
+    return normalize_unicode_text(str(value or "")).strip()
+
+
+def _repair_lexicon_fields(woccon: str, english: str) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+    """
+    Normalize and repair malformed woccon (e.g. 'Ten=soone noponne' with english 'Theirs').
+    Returns (woccon, english, repair_reason) or (None, None, drop_reason).
+    """
+    w = _normalize_lexicon_woccon(woccon)
+    e = _normalize_lexicon_woccon(english)
+    if not w or not e:
+        return None, None, "missing_woccon_or_english"
+    if "=" in w:
+        parts = w.split("=", 1)
+        if len(parts) == 2:
+            left, right = parts[0].strip(), parts[1].strip()
+            if left and right and not re.search(r"[=:]", right):
+                return right, left, "repaired_malformed_woccon"
+        return None, None, "woccon_contains_equals"
+    return w, e, None
 
 
 def _lexicon_dedup_key(woccon: str, english: str) -> str:
@@ -257,24 +284,42 @@ def _validate_extraction(raw: Dict[str, Any]) -> Tuple[bool, Dict[str, Any], Dic
         "raw_lexicon_count": len(lexicon),
         "dropped_missing_fields": [],
         "dropped_non_dict": 0,
+        "repaired_malformed_woccon": [],
+        "dropped_malformed_woccon": [],
+        "suspicious_woccon": [],
     }
     normalized_lexicon = []
     for e in lexicon:
         if not isinstance(e, dict):
             audit["dropped_non_dict"] = int(audit.get("dropped_non_dict") or 0) + 1
             continue
-        w = e.get("woccon") or e.get("woccon_word")
-        eng = e.get("english") or e.get("meaning")
-        if not w or not eng:
-            audit["dropped_missing_fields"].append({
-                "reason": "missing_woccon_or_english",
-                "woccon": str(w).strip() if w else None,
-                "english": str(eng).strip() if eng else None,
+        w_raw = e.get("woccon") or e.get("woccon_word")
+        eng_raw = e.get("english") or e.get("meaning")
+        w, eng, repair = _repair_lexicon_fields(str(w_raw or ""), str(eng_raw or ""))
+        if repair == "repaired_malformed_woccon":
+            audit["repaired_malformed_woccon"].append({
+                "original_woccon": str(w_raw).strip() if w_raw else None,
+                "original_english": str(eng_raw).strip() if eng_raw else None,
+                "woccon": w,
+                "english": eng,
             })
+        elif not w or not eng:
+            audit["dropped_missing_fields"].append({
+                "reason": repair or "missing_woccon_or_english",
+                "woccon": str(w_raw).strip() if w_raw else None,
+                "english": str(eng_raw).strip() if eng_raw else None,
+            })
+            if repair == "woccon_contains_equals":
+                audit["dropped_malformed_woccon"].append({
+                    "woccon": str(w_raw).strip() if w_raw else None,
+                    "english": str(eng_raw).strip() if eng_raw else None,
+                })
             continue
+        if len(w.split()) > 3 and not re.search(r"[\u0105\u0107\u0119\u0127\u0129\u0142\u0144\u00f3\u00f4\u015b\u0161\u017a\u017c\u0294'-]", w, re.I):
+            audit["suspicious_woccon"].append({"woccon": w, "english": eng})
         normalized_lexicon.append({
-            "woccon": str(w).strip(),
-            "english": str(eng).strip(),
+            "woccon": w,
+            "english": eng,
             "pos": str(e.get("pos") or e.get("part_of_speech") or "").strip() or "unknown",
             "pronunciation": str(e.get("pronunciation") or "").strip() or None,
             "source_page": _coerce_int(e.get("source_page")),
@@ -485,6 +530,7 @@ def extract_one_file(
     on_progress: Optional[Callable[[int, str], None]] = None,
     extraction_focus: str = "general",
     grammar_lineage: Optional[str] = None,
+    previous_lexicon: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     """
     Run extraction on a single file's text. When the file fits in MAX_WHOLE_FILE_CHARS,
@@ -668,6 +714,66 @@ def extract_one_file(
     file_pronunciation = list({n["text"]: n for n in file_pronunciation if n.get("text")}.values())
     file_cultural = list({n["text"]: n for n in file_cultural if n.get("text")}.values())
 
+    # Hybrid list-doc merge: parser recall + LLM enrichment
+    try:
+        from list_doc_parser import (
+            audit_dropped_vs_previous,
+            check_lexicon_completeness,
+            collect_parser_candidate_keys,
+            hybrid_enabled_for_path,
+            list_doc_profile,
+            merge_carry_forward,
+            merge_parser_and_llm_lexicon,
+            parse_list_document,
+        )
+
+        if hybrid_enabled_for_path(path):
+            profile = list_doc_profile(path)
+            section = "english_woccon" if profile == "english_woccon" else "lawson"
+            parser_entries = parse_list_document(text, section=section)
+            llm_lexicon = file_lexicon
+            if os.environ.get("HYBRID_LLM_LEXICON", "1").strip().lower() in ("0", "false", "no"):
+                llm_lexicon = []
+            merged_lexicon, hybrid_audit = merge_parser_and_llm_lexicon(parser_entries, llm_lexicon)
+            parser_keys = collect_parser_candidate_keys(text, section=section)
+            if previous_lexicon:
+                merged_lexicon, carry_audit = merge_carry_forward(merged_lexicon, previous_lexicon, parser_keys)
+                hybrid_audit["carry_forward"] = carry_audit
+                hybrid_audit["dropped_vs_previous"] = audit_dropped_vs_previous(merged_lexicon, previous_lexicon)
+                hybrid_audit["merged_count"] = len(merged_lexicon)
+            for row in merged_lexicon:
+                row["source"] = EXTRACTION_SOURCE
+            file_lexicon = merged_lexicon
+            completeness = check_lexicon_completeness(text, file_lexicon)
+            file_audit["completeness"] = completeness
+            file_audit["hybrid"] = {
+                "profile": profile,
+                "section": section,
+                **hybrid_audit,
+            }
+            log.info(
+                "Hybrid extract %s: parser=%d llm=%d merged=%d completeness=%s%%",
+                path,
+                hybrid_audit.get("parser_count", 0),
+                hybrid_audit.get("llm_count", 0),
+                hybrid_audit.get("merged_count", 0),
+                completeness.get("completeness_pct", "?"),
+            )
+            if completeness.get("missing_count", 0) > 0:
+                log.warning(
+                    "Completeness gap for %s: %d parser candidates missing from staging",
+                    path,
+                    completeness["missing_count"],
+                )
+                for item in (completeness.get("missing") or [])[:8]:
+                    log.warning("  missing: %s = %s (%s)", item.get("english"), item.get("woccon"), item.get("section"))
+                if os.environ.get("EXTRACT_COMPLETENESS_FAIL", "").strip().lower() in ("1", "true", "yes"):
+                    raise RuntimeError(
+                        f"Completeness check failed for {path}: {completeness['missing_count']} missing parser rows"
+                    )
+    except Exception as exc:
+        log.warning("Hybrid list extract failed for %s: %s", path, exc)
+
     file_audit["kept_lexicon_count"] = len(file_lexicon)
 
     return {
@@ -743,6 +849,15 @@ def extract_per_file(
             file_id = r.get("file_id")
             modified_time = r.get("modified_time")
             num_chunks = len(chunk_text(text))
+            previous_lexicon: Optional[List[Dict[str, Any]]] = None
+            safe = _safe_filename(path)
+            existing_path = os.path.join(staging_dir, safe)
+            if os.path.isfile(existing_path):
+                try:
+                    with open(existing_path, "r", encoding="utf-8") as f:
+                        previous_lexicon = json.load(f).get("lexicon_entries") or []
+                except Exception as exc:
+                    log.warning("Could not load previous staging for carry-forward %s: %s", path, exc)
             file_data = extract_one_file(
                 text, path, model=model,
                 file_id=file_id,
@@ -750,6 +865,7 @@ def extract_per_file(
                 total_files=total_extract,
                 chunk_start=chunk_so_far,
                 total_chunks=total_chunks,
+                previous_lexicon=previous_lexicon,
             )
             chunk_so_far += num_chunks
             file_data["file_id"] = file_id

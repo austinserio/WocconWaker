@@ -1,0 +1,99 @@
+{
+  "source_path": "Meeting Notes/7/27/25 Language Meeting Notes",
+  "source_url": "https://drive.google.com/file/d/1MFDw5ICjPmpN1qU_hh4rWcA1fstoaSlOnEmQYibbGDw/view",
+  "lexicon_entries": [
+    {
+      "woccon": "he",
+      "english": "marker for animacy/sentient",
+      "pos": "marker",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": "he could be a marker for animacy/sentient It occurs in brother, dog, and indian",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "tauh-he",
+      "english": "dog",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": "Dog- tauh-he",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    {
+      "text": "The marker 'he' can indicate animacy or sentience in Woccon. It appears in words like brother, dog, and Indian.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "he could be a marker for animacy/sentient It occurs in brother, dog, and indian",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Proto-Siouan and Proto-Catawban are distinct reconstructions. Proto-Siouan is considered to be below the level of Proto-Siouan Catawba.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Relationship between shared ancestor between proto-siouan and catawba, there is also proto-siouan and proto-catawba. Lots of comparison in proto-siouan.",
+      "grammar_lineage": "proto_siouan_catawban",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "pronunciation_notes": [
+    {
+      "text": "The glottal stop is represented by '?'",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "? is a glottal stop",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Nasality tends to disappear over time in Woccon.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Au work= one of the first sounds to go away over time is nasality.",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "cultural_notes": [
+    {
+      "text": "The community is working on revitalizing Woccon language and culture through meetings and homework.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Working with our homework",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Grant funds are being used for the long house project, including figuring out roofing.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Grant funds from our long house project… we are trying to figure out roofing.",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "audit": {
+    "raw_lexicon_count": 2,
+    "kept_lexicon_count": 2,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

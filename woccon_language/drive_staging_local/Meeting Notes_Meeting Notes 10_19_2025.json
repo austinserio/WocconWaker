@@ -1,0 +1,38 @@
+{
+  "source_path": "Meeting Notes/Meeting Notes 10/19/2025",
+  "source_url": "https://drive.google.com/file/d/1vfL6M0rQMiab8rrcOawgEEsRXe224sfsg4Lat8UpqrE/view",
+  "lexicon_entries": [
+    {
+      "woccon": "kill",
+      "english": "kettle",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": "Kettle= kill",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [],
+  "pronunciation_notes": [
+    {
+      "text": "Michelle needs to practice rolling her R’s. Though she did get it right once tonight.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Michelle needs to practice rolling her R’s Though she did get it right once tonight",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "cultural_notes": [],
+  "audit": {
+    "raw_lexicon_count": 1,
+    "kept_lexicon_count": 1,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

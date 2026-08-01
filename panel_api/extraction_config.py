@@ -65,6 +65,14 @@ GRAMMAR_LINEAGES = [
 EXTRACTION_FOCUS_IDS = {f["id"] for f in EXTRACTION_FOCUSES}
 GRAMMAR_LINEAGE_IDS = {g["id"] for g in GRAMMAR_LINEAGES}
 
+LEXICON_GUARDRAILS = """
+LEXICON RULES (strict):
+- The woccon field must contain ONLY the Woccon form — never the English gloss and never an "=" sign.
+- When the source line is one vocabulary item (e.g. Got anything to eat?= noccoo eraute), output ONE entry; do not split into separate rows unless the source lists them separately.
+- Preserve multi-word Woccon forms (e.g. yup se, noccoo eraute, ejau itte) and multi-word English glosses exactly as in the source line.
+- Extract every line matching English= woccon or English: woccon patterns, including lines at the document end.
+"""
+
 
 def validate_extraction_config(
     focus: Optional[str], lineage: Optional[str]
@@ -123,9 +131,9 @@ def build_extraction_prompt(
     header = context_header or "Extract from the following source text."
 
     if focus == "vocabulary":
-        task_block = """From the following text, extract ONLY:
+        task_block = f"""From the following text, extract ONLY:
 1. lexicon_entries: Woccon vocabulary. Each item: woccon, english, pos (e.g. noun, verb), optionally pronunciation, and when possible source_page and source_excerpt (exact substring from the text, max 200 chars).
-
+{LEXICON_GUARDRAILS}
 Do NOT extract grammar_notes, pronunciation_notes, or cultural_notes — return those as empty arrays.
 
 Output ONLY a single JSON object with keys: "lexicon_entries", "grammar_notes", "pronunciation_notes", "cultural_notes". No markdown."""
@@ -171,6 +179,9 @@ Output ONLY a single JSON object with keys: "lexicon_entries", "grammar_notes", 
         task_block = (
             """From the following text, extract:
 1. lexicon_entries: Woccon vocabulary. Each item: woccon, english, pos, optionally pronunciation, source_page, source_excerpt (max 200 chars).
+"""
+            + LEXICON_GUARDRAILS
+            + """
 2. grammar_notes: self-contained rule PACKETS. Each object: "text", "grammar_lineage" (one of: """
             + ", ".join(sorted(GRAMMAR_LINEAGE_IDS))
             + """), and when possible source_page, source_page_end, source_excerpt (max 800 chars).

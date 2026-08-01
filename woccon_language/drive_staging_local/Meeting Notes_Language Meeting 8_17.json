@@ -1,0 +1,81 @@
+{
+  "source_path": "Meeting Notes/Language Meeting 8/17",
+  "source_url": "https://drive.google.com/file/d/1ijdZUu28whU5w-IzaPUTCyx2hA1dBmnaLqRiJWsTGUY/view",
+  "lexicon_entries": [
+    {
+      "woccon": "yecauau",
+      "english": "wife",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    },
+    {
+      "woccon": "yicau",
+      "english": "old woman",
+      "pos": "noun",
+      "pronunciation": null,
+      "source_page": null,
+      "source_excerpt": null,
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null,
+      "source": "community_drive"
+    }
+  ],
+  "grammar_notes": [
+    {
+      "text": "Reduplication in Woccon, as in other Siouan languages, can indicate emphasis or plurality. This pattern is attested and may be applied to coin new forms.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Reduplication happens often in Siouan languages. Indicates emphasis or plurality.",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The use of 'ye' and 'yi' followed by reduplication could indicate an idiolectual difference or dialectal variation.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "If you find ones with ye and yi and then reduplication could be an indicator of something.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Gender in Woccon is not marked on nouns but rather indicated by the verb, reflecting who (man or woman) is speaking.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Gendered Siouan- based on who is the speaker. It is not the noun, but the verb that shows the gender of the man or woman speaking.",
+      "grammar_lineage": "siouan_comparative",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "pronunciation_notes": [],
+  "cultural_notes": [
+    {
+      "text": "The article 'Who Were the Waccamaw/Wachesaw?' was found to be biased and problematic. It is neither linguistically based nor historically accurate.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Biased, problematic. Not linguistically based, or historically.",
+      "source_chunk_index": 0,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "audit": {
+    "raw_lexicon_count": 2,
+    "kept_lexicon_count": 2,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}
