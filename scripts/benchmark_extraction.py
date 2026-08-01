@@ -77,14 +77,36 @@ def _run_ingest(doc_filter: str, workers: int, ocr_workers: int, label: str) -> 
     return summary
 
 
-def _lexicon_count(doc_filter: str) -> int:
+def _find_staging_file(doc_filter: str) -> Path | None:
+    needle = doc_filter.lower().replace("_", " ")
+    best: Path | None = None
+    best_len = -1
     for p in STAGING_BENCH.glob("*.json"):
         if p.name in ("manifest.json", "sync_state.json"):
             continue
-        if doc_filter.lower() in p.stem.lower():
-            data = json.loads(p.read_text(encoding="utf-8"))
-            return len(data.get("lexicon_entries") or [])
-    return 0
+        stem = p.stem.lower().replace("_", " ")
+        if needle in stem and len(stem) > best_len:
+            best = p
+            best_len = len(stem)
+    return best
+
+
+def _lexicon_count(doc_filter: str) -> int:
+    p = _find_staging_file(doc_filter)
+    if not p:
+        return 0
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except UnicodeDecodeError:
+        data = json.loads(p.read_text(encoding="utf-8", errors="replace"))
+    return len(data.get("lexicon_entries") or [])
+
+
+def _lexicon_count_from_summary(summary: dict, doc_filter: str) -> int:
+    count = summary.get("extraction_lexicon_count")
+    if isinstance(count, int) and count >= 0:
+        return count
+    return _lexicon_count(doc_filter)
 
 
 def _run_diff(doc_filter: str) -> str:
@@ -140,8 +162,8 @@ def main() -> int:
         parallel = _run_ingest(
             doc, workers=args.parallel_workers, ocr_workers=args.ocr_workers, label="parallel"
         )
-        serial_count = _lexicon_count(doc)
-        parallel_count = _lexicon_count(doc)
+        serial_count = _lexicon_count_from_summary(serial, doc) if not serial.get("skipped") else 0
+        parallel_count = _lexicon_count_from_summary(parallel, doc)
         speedup = (
             round(serial["wall_seconds"] / parallel["wall_seconds"], 2)
             if parallel["wall_seconds"] > 0
@@ -155,6 +177,11 @@ def main() -> int:
             "diff_vs_opus": _run_diff(doc),
         }
         results.append(row)
+        try:
+            args.json_out.parent.mkdir(parents=True, exist_ok=True)
+            args.json_out.write_text(json.dumps(results, indent=2), encoding="utf-8")
+        except OSError:
+            pass
         print(
             f"  serial:   {serial['wall_seconds']}s, {serial_count} lexicon entries "
             f"(rc={serial.get('returncode')})"
