@@ -168,11 +168,12 @@ Do NOT extract lexicon_entries, grammar_notes, or cultural_notes — return thos
 Output ONLY a single JSON object with keys: "lexicon_entries", "grammar_notes", "pronunciation_notes", "cultural_notes". No markdown."""
 
     else:
-        task_block = """From the following text, extract:
+        task_block = (
+            """From the following text, extract:
 1. lexicon_entries: Woccon vocabulary. Each item: woccon, english, pos, optionally pronunciation, source_page, source_excerpt (max 200 chars).
 2. grammar_notes: self-contained rule PACKETS. Each object: "text", "grammar_lineage" (one of: """
-        + ", ".join(sorted(GRAMMAR_LINEAGE_IDS))
-        + """), and when possible source_page, source_page_end, source_excerpt (max 800 chars).
+            + ", ".join(sorted(GRAMMAR_LINEAGE_IDS))
+            + """), and when possible source_page, source_page_end, source_excerpt (max 800 chars).
 3. pronunciation_notes: phonology/pronunciation (same object shape; grammar_lineage not required).
 4. cultural_notes: cultural usage (same object shape; grammar_lineage not required).
 
@@ -183,6 +184,7 @@ For EVERY grammar_notes item, set grammar_lineage based on the primary claim:
 - other_comparative: Yuchi, Biloxi-only, or other comparative framing
 
 Output ONLY a single JSON object with keys: "lexicon_entries", "grammar_notes", "pronunciation_notes", "cultural_notes". No markdown."""
+        )
 
     revitalization = """
 GOAL — LANGUAGE REVITALIZATION:

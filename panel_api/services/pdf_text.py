@@ -2,6 +2,7 @@
 import io
 import logging
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Callable, List, Optional, Tuple
 
 log = logging.getLogger("pdf_text")
@@ -36,6 +37,13 @@ def _ocr_dpi() -> int:
         return max(72, int(os.getenv("PDF_OCR_DPI", "200")))
     except ValueError:
         return 200
+
+
+def _ocr_parallel_workers() -> int:
+    try:
+        return max(1, int(os.environ.get("PDF_OCR_PARALLEL_WORKERS", "1")))
+    except ValueError:
+        return 1
 
 
 def extract_pages_with_pdfplumber(data: bytes) -> List[str]:
@@ -136,11 +144,12 @@ def extract_pdf_text(
         log.warning("PDF has sparse pages but PDF_OCR_ENABLED=false; using pdfplumber text only")
         return mark_text_with_pages(page_texts), "text"
 
-    from llm_client import _allow_anthropic_fallback, _use_anthropic
+    from llm_client import _allow_anthropic_fallback, _is_local_llm, _use_anthropic
 
-    if not _allow_anthropic_fallback() or not _use_anthropic():
+    if not _is_local_llm() and (not _allow_anthropic_fallback() or not _use_anthropic()):
         raise ScannedPdfOcrRequiredError(
-            "Scanned PDF detected; set ANTHROPIC_API_KEY and ALLOW_ANTHROPIC_FALLBACK=true for vision OCR."
+            "Scanned PDF detected; set LOCAL_LLM=true with OLLAMA_VISION_MODEL, "
+            "or set ANTHROPIC_API_KEY and ALLOW_ANTHROPIC_FALLBACK=true for vision OCR."
         )
 
     if on_progress:
@@ -157,18 +166,48 @@ def extract_pdf_text(
         page_texts = page_texts[:total]
         ocr_flags = ocr_flags[:total]
 
+    ocr_jobs: List[Tuple[int, bytes]] = []
     for i, (needs_ocr, png) in enumerate(zip(ocr_flags, page_images), start=1):
         if not needs_ocr:
             continue
-        if on_progress:
-            pct = int(20 * i / max(total, 1))
-            on_progress(pct, f"OCR page {i}/{total}")
-        try:
-            page_texts[i - 1] = ocr_page_vision(png, i)
-        except Exception as e:
-            log.warning("Vision OCR failed for page %d: %s", i, e)
-            if not (page_texts[i - 1] or "").strip():
-                raise
+        ocr_jobs.append((i, png))
+
+    workers = _ocr_parallel_workers()
+    if ocr_jobs:
+        if workers > 1 and len(ocr_jobs) > 1:
+            log.info("OCR %d sparse pages with %d parallel workers", len(ocr_jobs), workers)
+
+            def _ocr_one(job: Tuple[int, bytes]) -> Tuple[int, str]:
+                page_num, png = job
+                return page_num, ocr_page_vision(png, page_num)
+
+            completed = 0
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                futures = {pool.submit(_ocr_one, job): job[0] for job in ocr_jobs}
+                for fut in as_completed(futures):
+                    page_num = futures[fut]
+                    completed += 1
+                    if on_progress:
+                        pct = int(20 * completed / max(len(ocr_jobs), 1))
+                        on_progress(pct, f"OCR page {completed}/{len(ocr_jobs)}")
+                    try:
+                        _, text = fut.result()
+                        page_texts[page_num - 1] = text
+                    except Exception as e:
+                        log.warning("Vision OCR failed for page %d: %s", page_num, e)
+                        if not (page_texts[page_num - 1] or "").strip():
+                            raise
+        else:
+            for page_num, png in ocr_jobs:
+                if on_progress:
+                    pct = int(20 * page_num / max(total, 1))
+                    on_progress(pct, f"OCR page {page_num}/{total}")
+                try:
+                    page_texts[page_num - 1] = ocr_page_vision(png, page_num)
+                except Exception as e:
+                    log.warning("Vision OCR failed for page %d: %s", page_num, e)
+                    if not (page_texts[page_num - 1] or "").strip():
+                        raise
 
     marked = mark_text_with_pages(page_texts)
     if not marked.strip():

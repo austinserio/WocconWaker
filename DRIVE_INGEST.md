@@ -33,6 +33,44 @@ This lists all files in the folder and fetches text from every Google Doc and PD
 
 Other types (e.g. Sheets) are skipped and only listed.
 
+### Source archive and text cache
+
+Bulk ingest persists sources under `data/` (gitignored):
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| **INGEST_SOURCES_DIR** | `data/ingest_sources` | Raw PDF bytes and exported Google Doc `.txt` files plus `manifest.json` |
+| **INGEST_TEXT_CACHE_DIR** | `data/ingest_text_cache` | Post-OCR extracted text keyed by Drive `file_id` + `modifiedTime` |
+
+On each fetch, the pipeline checks the text cache first, then the source archive, then Google Drive. Unchanged files skip re-download when `sync_state.json` matches (unless `DRIVE_INGEST_FORCE_FULL=1`).
+
+**Fetch-only archive (no LLM):**
+
+```bash
+SKIP_EXTRACTION=1 DRIVE_INGEST_FORCE_FULL=1 python drive_ingest.py
+```
+
+**Parallel workers** (local Ollama on UIC server recommended):
+
+```bash
+EXTRACT_PARALLEL_WORKERS=2 PDF_OCR_PARALLEL_WORKERS=2 python drive_ingest.py
+```
+
+**Benchmark two docs (serial vs parallel):**
+
+```bash
+python scripts/benchmark_extraction.py
+```
+
+**Pull archive from UIC server to Mac:**
+
+```bash
+chmod +x scripts/sync_ingest_archive.sh
+./scripts/sync_ingest_archive.sh
+```
+
+On **Azure Container Apps**, mount **Azure Files** on `data/ingest_sources`, `data/ingest_text_cache`, and `WOCCON_UPLOAD_DIR` so archives survive restarts. Set `INGEST_SOURCES_DIR` and `INGEST_TEXT_CACHE_DIR` in `scripts/sync-azure-container-env.sh`.
+
 ---
 
 ## Phase 2: Schedule (cron) and on-demand

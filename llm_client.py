@@ -10,6 +10,22 @@ from typing import Any, Dict, List, Optional
 
 log = logging.getLogger("llm_client")
 
+_ollama_session: Optional[Any] = None
+
+
+def _ollama_http_session():
+    """Reuse TCP connections to Ollama (helps when parallel workers hit the same host)."""
+    global _ollama_session
+    if _ollama_session is None:
+        import requests
+
+        _ollama_session = requests.Session()
+    return _ollama_session
+
+
+def _ollama_keep_alive() -> str:
+    return (os.getenv("OLLAMA_KEEP_ALIVE") or "30m").strip() or "30m"
+
 _LOCAL_UNREACHABLE_MSG = (
     "Error: Local model unreachable and Anthropic fallback not enabled. "
     "Set ALLOW_ANTHROPIC_FALLBACK=true to confirm using Claude (incurs API cost)."
@@ -157,30 +173,64 @@ def llm_vision_chat(
     options: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
-    Anthropic vision request: one or more PNG/JPEG images plus a text prompt.
-    Requires ANTHROPIC_API_KEY and ALLOW_ANTHROPIC_FALLBACK=true.
+    Vision request: one or more PNG/JPEG images plus a text prompt.
+    Backend order:
+    1. Local Ollama when LOCAL_LLM=true (OLLAMA_VISION_MODEL)
+    2. Anthropic only when ALLOW_ANTHROPIC_FALLBACK=true
     """
-    if not _allow_anthropic_fallback():
-        raise RuntimeError(
-            "Scanned PDF detected; set ALLOW_ANTHROPIC_FALLBACK=true to use Claude vision OCR."
-        )
-    if not _use_anthropic():
-        raise RuntimeError(
-            "Scanned PDF detected; set ANTHROPIC_API_KEY for vision OCR."
-        )
+    options = options or {}
+    vision_model = (
+        os.getenv("OLLAMA_VISION_MODEL")
+        or os.getenv("PDF_OCR_MODEL")
+        or model
+        or "qwen2.5vl:32b"
+    ).strip()
+
+    if _is_local_llm():
+        result = _local_ollama_vision_chat(vision_model, text_prompt, image_bytes_list, options)
+        if not _is_llm_error(result):
+            return result
+        log.warning("Local Ollama vision request failed; checking Anthropic fallback")
+
+    if _allow_anthropic_fallback() and _use_anthropic():
+        return _anthropic_vision_chat(model, text_prompt, image_bytes_list, options)
+
+    if _is_local_llm():
+        return {"message": {"content": _LOCAL_UNREACHABLE_MSG}}
+    if _use_anthropic() and not _allow_anthropic_fallback():
+        return {"message": {"content": _ANTHROPIC_DISABLED_MSG}}
+    return {
+        "message": {
+            "content": (
+                "Error: Scanned PDF detected; configure LOCAL_LLM=true with OLLAMA_VISION_MODEL, "
+                "or set ALLOW_ANTHROPIC_FALLBACK=true for Claude vision OCR."
+            )
+        }
+    }
+
+
+def _anthropic_vision_chat(
+    model: str,
+    text_prompt: str,
+    image_bytes_list: List[bytes],
+    options: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Anthropic vision request via official SDK with streaming."""
     try:
         from anthropic import Anthropic
     except ImportError:
         log.error("anthropic package required. pip install anthropic")
         return {"message": {"content": "Error: pip install anthropic"}}
     api_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
+    if not api_key:
+        log.error("ANTHROPIC_API_KEY not set")
+        return {"message": {"content": "Error: ANTHROPIC_API_KEY not set."}}
     model_id = (
         os.getenv("PDF_OCR_MODEL")
         or os.getenv("ANTHROPIC_MODEL")
         or model
         or "claude-sonnet-4-20250514"
     ).strip()
-    options = options or {}
     max_tokens = options.get("num_predict", 4096)
     content: List[Dict[str, Any]] = []
     for img in image_bytes_list:
@@ -215,6 +265,47 @@ def llm_vision_chat(
         return {"message": {"content": f"Error: Anthropic vision request failed. {e}"}}
 
 
+def _local_ollama_vision_chat(
+    model: str,
+    text_prompt: str,
+    image_bytes_list: List[bytes],
+    options: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Use local Ollama vision API with base64 images on the user message."""
+    import requests
+
+    base = os.getenv("OLLAMA_URL", "http://localhost:11434").rstrip("/")
+    if "/v1/chat" in base:
+        base = base.replace("/v1/chat", "").rstrip("/")
+    if "/api/chat" in base:
+        base = base.replace("/api/chat", "").rstrip("/")
+    url = f"{base}/api/chat"
+    images = [base64.standard_b64encode(img).decode("ascii") for img in image_bytes_list]
+    payload = {
+        "model": model,
+        "messages": [{"role": "user", "content": text_prompt, "images": images}],
+        "stream": False,
+        "keep_alive": _ollama_keep_alive(),
+        "options": {
+            "temperature": options.get("temperature", 0.0),
+            "top_p": options.get("top_p", 0.9),
+            "repeat_penalty": options.get("repeat_penalty", 1.1),
+            "num_predict": options.get("num_predict", 4096),
+            "stop": options.get("stop"),
+            "seed": options.get("seed"),
+        },
+    }
+    payload["options"] = {k: v for k, v in payload["options"].items() if v is not None}
+    try:
+        r = _ollama_http_session().post(url, json=payload, timeout=300)
+        r.raise_for_status()
+        data = r.json()
+        return data
+    except Exception as e:
+        log.error("Local Ollama vision request failed: %s", e)
+        return {"message": {"content": f"Error: Unable to connect to Ollama vision. {e}"}}
+
+
 def _local_ollama_chat(
     model: str,
     messages: List[Dict[str, str]],
@@ -231,6 +322,8 @@ def _local_ollama_chat(
     payload = {
         "model": model,
         "messages": messages,
+        "stream": False,
+        "keep_alive": _ollama_keep_alive(),
         "options": {
             "temperature": options.get("temperature", 0.3),
             "top_p": options.get("top_p", 0.9),
@@ -243,7 +336,7 @@ def _local_ollama_chat(
     # Drop None values
     payload["options"] = {k: v for k, v in payload["options"].items() if v is not None}
     try:
-        r = requests.post(url, json=payload, timeout=180)
+        r = _ollama_http_session().post(url, json=payload, timeout=600)
         r.raise_for_status()
         data = r.json()
         # Ollama returns {"message": {"role": "assistant", "content": "..."}}

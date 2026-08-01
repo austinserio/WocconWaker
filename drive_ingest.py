@@ -180,15 +180,91 @@ def fetch_doc_text(service: Any, file_id: str) -> str:
     return str(data)
 
 
-def fetch_pdf_text(service: Any, file_id: str) -> str:
-    """Download a PDF and extract text (pdfplumber + optional vision OCR)."""
-    from panel_api.services.pdf_text import extract_pdf_plain
+def fetch_doc_bytes(service: Any, file_id: str) -> bytes:
+    return fetch_doc_text(service, file_id).encode("utf-8")
 
+
+def fetch_pdf_bytes(service: Any, file_id: str) -> bytes:
     data = service.files().get_media(fileId=file_id).execute()
     if not isinstance(data, bytes):
         data = bytes(data) if data else b""
+    return data
+
+
+def _source_url(file_id: str) -> str:
+    return f"https://drive.google.com/file/d/{file_id}/view"
+
+
+def _text_from_pdf_bytes(data: bytes) -> tuple:
+    import re
+
+    from panel_api.services.pdf_text import extract_pdf_text
+
+    marked, method = extract_pdf_text(data)
+    plain = re.sub(r"\[\[PAGE\s+\d+\]\]\s*", "", marked).strip()
+    return plain, method
+
+
+def _text_from_doc_bytes(data: bytes) -> tuple:
+    text = data.decode("utf-8", errors="replace")
+    return text, "google_doc"
+
+
+def resolve_file_text(
+    service: Any,
+    file_id: str,
+    mime: str,
+    modified: str,
+    path: str,
+) -> tuple:
+    """Return (text, text_method). Prefers text cache, then archived source, then Drive."""
+    import drive_ingest_archive as archive
+
+    cached = archive.load_text_cache(file_id, modified)
+    if cached and (cached.get("text") or "").strip():
+        log.info("Using cached text for %s", path)
+        return cached["text"], cached.get("text_method") or "cached"
+
+    source_url = _source_url(file_id)
+    raw = archive.read_archived_bytes(file_id, modified)
+    if raw is not None:
+        log.info("Using archived source for %s", path)
+    else:
+        log.info("Fetching from Drive: %s", path)
+        if mime == GOOGLE_DOCS_MIME:
+            raw = fetch_doc_bytes(service, file_id)
+        else:
+            raw = fetch_pdf_bytes(service, file_id)
+        archive.archive_source(
+            file_id=file_id,
+            modified_time=modified,
+            path=path,
+            mime_type=mime,
+            data=raw,
+            source_url=source_url,
+        )
+
+    if mime == GOOGLE_DOCS_MIME:
+        text, method = _text_from_doc_bytes(raw)
+    else:
+        text, method = _text_from_pdf_bytes(raw)
+
+    if (text or "").strip():
+        archive.save_text_cache(
+            file_id=file_id,
+            modified_time=modified,
+            path=path,
+            text=text,
+            text_method=method,
+        )
+    return text, method
+
+
+def fetch_pdf_text(service: Any, file_id: str) -> str:
+    """Download a PDF and extract text (pdfplumber + optional vision OCR)."""
     try:
-        return extract_pdf_plain(data)
+        text, _ = _text_from_pdf_bytes(fetch_pdf_bytes(service, file_id))
+        return text
     except Exception as e:
         log.warning("PDF text extraction failed for %s: %s", file_id, e)
         return ""
@@ -275,11 +351,15 @@ def ingest_folder(
                 entry["use_existing_staging"] = False
                 try:
                     if mime == GOOGLE_DOCS_MIME:
-                        entry["text"] = fetch_doc_text(service, fid)
-                        content_count += 1
+                        log.info("Fetching Google Doc: %s", path)
                     else:
-                        entry["text"] = fetch_pdf_text(service, fid)
-                        content_count += 1
+                        log.info("Fetching PDF: %s", path)
+                    text, text_method = resolve_file_text(service, fid, mime, modified, path)
+                    entry["text"] = text
+                    entry["text_method"] = text_method
+                    if mime == PDF_MIME:
+                        log.info("Fetched PDF: %s (%d chars, %s)", path, len(entry["text"] or ""), text_method)
+                    content_count += 1
                 except Exception as e:
                     log.exception("Failed to fetch %s (%s): %s", name, fid, e)
                     entry["error"] = str(e)
@@ -357,6 +437,9 @@ def run_phase1_verify(skip_extraction: bool = False) -> Dict[str, Any]:
         skip_extraction = True
     if not skip_extraction and any((r.get("text") or "").strip() for r in results):
         try:
+            import ingest_progress
+
+            ingest_progress.write(phase="starting", percent=0, message="Starting extraction")
             import drive_extract
             staging = drive_extract.extract_from_ingest_results(results, per_file=True)
             if staging.get("per_file"):

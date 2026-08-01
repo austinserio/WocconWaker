@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -45,8 +46,64 @@ class ChunkMeta:
 
 
 def _max_whole_file_chars() -> int:
-    """Whole-file threshold; Anthropic streaming in llm_client supports long single-pass requests."""
+    """Whole-file threshold; disable for local Ollama (context/output limits). Anthropic streaming supports long single-pass."""
+    if os.getenv("LOCAL_LLM", "").strip().lower() in ("true", "1", "yes"):
+        return 0
     return MAX_WHOLE_FILE_CHARS_DEFAULT
+
+
+def _extract_parallel_workers() -> int:
+    raw = os.environ.get("EXTRACT_PARALLEL_WORKERS")
+    if raw is not None and str(raw).strip():
+        try:
+            return max(1, int(str(raw).strip()))
+        except ValueError:
+            pass
+    if os.getenv("LOCAL_LLM", "").strip().lower() in ("true", "1", "yes"):
+        return 2
+    return 1
+
+
+def _extract_num_predict() -> int:
+    try:
+        return max(512, int(os.environ.get("EXTRACT_NUM_PREDICT", "4096")))
+    except ValueError:
+        return 4096
+
+
+def _report_progress(
+    *,
+    path: str,
+    file_index: int,
+    total_files: int,
+    chunk_index: Optional[int],
+    chunk_total: Optional[int],
+    overall_chunk: Optional[int],
+    overall_chunks: Optional[int],
+    percent: int,
+    message: str,
+    on_progress: Optional[Callable[[int, str], None]],
+) -> None:
+    if on_progress:
+        on_progress(percent, message)
+    try:
+        import ingest_progress
+
+        ingest_progress.write(
+            phase="extract",
+            document=path,
+            document_index=file_index,
+            document_total=total_files,
+            chunk_index=chunk_index,
+            chunk_total=chunk_total,
+            overall_chunk=overall_chunk,
+            overall_chunks=overall_chunks,
+            percent=percent,
+            message=message,
+            workers=_extract_parallel_workers(),
+        )
+    except Exception:
+        pass
 
 
 def _normalize_lexicon_key(woccon: str, english: str) -> Tuple[str, str]:
@@ -331,7 +388,19 @@ def extract_from_chunk(
     from llm_client import llm_chat
     from panel_api.extraction_config import build_extraction_prompt
 
-    model = model or os.getenv("REEXTRACT_MODEL") or os.getenv("ANTHROPIC_MODEL") or os.getenv("FOUNDRY_DEPLOYMENT") or os.getenv("OLLAMA_MODEL", "llama3:8b")
+    if model:
+        resolved_model = model
+    elif os.getenv("REEXTRACT_MODEL"):
+        resolved_model = os.getenv("REEXTRACT_MODEL", "").strip()
+    elif os.getenv("LOCAL_LLM", "").strip().lower() in ("true", "1", "yes"):
+        resolved_model = os.getenv("OLLAMA_MODEL", "llama3:8b").strip()
+    else:
+        resolved_model = (
+            os.getenv("ANTHROPIC_MODEL")
+            or os.getenv("FOUNDRY_DEPLOYMENT")
+            or os.getenv("OLLAMA_MODEL", "llama3:8b")
+        ).strip()
+    model = resolved_model
     text_slice = chunk[:max_text_chars] if max_text_chars else chunk
     header = context_header or "Extract from the following source text."
     prompt = build_extraction_prompt(
@@ -495,6 +564,11 @@ def extract_one_file(
         )
         if on_progress:
             on_progress(5, "Extracting document (single pass)")
+        _report_progress(
+            path=path, file_index=file_index, total_files=total_files,
+            chunk_index=1, chunk_total=1, overall_chunk=chunk_start + 1, overall_chunks=total_chunks,
+            percent=5, message="Extracting document (single pass)", on_progress=None,
+        )
         meta = ChunkMeta(text=text, chunk_index=0, page_start=chunk_page_range(text)[0], page_end=chunk_page_range(text)[1])
         extracted = extract_from_chunk(
             text,
@@ -515,30 +589,80 @@ def extract_one_file(
     else:
         chunks = chunk_text_with_meta(text)
         total = len(chunks) or 1
-        for i, meta in enumerate(chunks):
-            current_chunk = chunk_start + i + 1
-            pct = int(100 * (i + 1) / total)
-            if on_progress:
-                on_progress(min(pct, 90), f"Extracting chunk {i + 1}/{total}")
-            pct_log = int(100 * current_chunk / total_chunks) if total_chunks else 0
+        workers = _extract_parallel_workers()
+        if workers > 1 and len(chunks) > 1:
             log.info(
-                "Document %d/%d (%s) | chunk %d/%d of file | overall %d/%d (%d%%)",
-                file_index, total_files, path, i + 1, len(chunks), current_chunk, total_chunks, pct_log,
+                "Document %d/%d (%s) | %d chunks with %d parallel workers",
+                file_index, total_files, path, len(chunks), workers,
             )
-            extracted = extract_from_chunk(
-                meta.text,
-                path,
-                model=model,
-                max_text_chars=MAX_CHUNK_CHARS,
-                num_predict=4096,
-                context_header=_context_header(meta),
-                chunk_index=meta.chunk_index,
-                chunk_page_start=meta.page_start,
-                chunk_page_end=meta.page_end,
-                extraction_focus=extraction_focus,
-                grammar_lineage=grammar_lineage,
-            )
-            merge_extraction(extracted)
+
+            def _run_chunk(i: int, meta: ChunkMeta) -> Tuple[int, Dict[str, Any]]:
+                current_chunk = chunk_start + i + 1
+                pct_log = int(100 * current_chunk / total_chunks) if total_chunks else 0
+                log.info(
+                    "Document %d/%d (%s) | chunk %d/%d of file | overall %d/%d (%d%%)",
+                    file_index, total_files, path, i + 1, len(chunks), current_chunk, total_chunks, pct_log,
+                )
+                extracted = extract_from_chunk(
+                    meta.text,
+                    path,
+                    model=model,
+                    max_text_chars=MAX_CHUNK_CHARS,
+                    num_predict=_extract_num_predict(),
+                    context_header=_context_header(meta),
+                    chunk_index=meta.chunk_index,
+                    chunk_page_start=meta.page_start,
+                    chunk_page_end=meta.page_end,
+                    extraction_focus=extraction_focus,
+                    grammar_lineage=grammar_lineage,
+                )
+                return i, extracted
+
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                futures = [pool.submit(_run_chunk, i, meta) for i, meta in enumerate(chunks)]
+                completed = 0
+                for fut in as_completed(futures):
+                    i, extracted = fut.result()
+                    merge_extraction(extracted)
+                    completed += 1
+                    pct = int(100 * completed / total)
+                    msg = f"Extracting chunk {completed}/{total}"
+                    _report_progress(
+                        path=path, file_index=file_index, total_files=total_files,
+                        chunk_index=completed, chunk_total=total,
+                        overall_chunk=chunk_start + completed, overall_chunks=total_chunks,
+                        percent=min(pct, 90), message=msg, on_progress=on_progress,
+                    )
+        else:
+            for i, meta in enumerate(chunks):
+                current_chunk = chunk_start + i + 1
+                pct = int(100 * (i + 1) / total)
+                msg = f"Extracting chunk {i + 1}/{total}"
+                _report_progress(
+                    path=path, file_index=file_index, total_files=total_files,
+                    chunk_index=i + 1, chunk_total=total,
+                    overall_chunk=current_chunk, overall_chunks=total_chunks,
+                    percent=min(pct, 90), message=msg, on_progress=on_progress,
+                )
+                pct_log = int(100 * current_chunk / total_chunks) if total_chunks else 0
+                log.info(
+                    "Document %d/%d (%s) | chunk %d/%d of file | overall %d/%d (%d%%)",
+                    file_index, total_files, path, i + 1, len(chunks), current_chunk, total_chunks, pct_log,
+                )
+                extracted = extract_from_chunk(
+                    meta.text,
+                    path,
+                    model=model,
+                    max_text_chars=MAX_CHUNK_CHARS,
+                    num_predict=_extract_num_predict(),
+                    context_header=_context_header(meta),
+                    chunk_index=meta.chunk_index,
+                    chunk_page_start=meta.page_start,
+                    chunk_page_end=meta.page_end,
+                    extraction_focus=extraction_focus,
+                    grammar_lineage=grammar_lineage,
+                )
+                merge_extraction(extracted)
 
     file_grammar = list({n["text"]: n for n in file_grammar if n.get("text")}.values())
     file_pronunciation = list({n["text"]: n for n in file_pronunciation if n.get("text")}.values())
