@@ -1,0 +1,22 @@
+{
+  "cache_file": "data/ingest_text_cache/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg_2025-10-19T22_50_58_027Z.json",
+  "source_path": "Articles/Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language",
+  "appendices": {
+    "1": {
+      "path": "woccon_language/cognate_sets/_raw/app1.txt",
+      "chars": 8334
+    },
+    "2": {
+      "path": "woccon_language/cognate_sets/_raw/app2.txt",
+      "chars": 883
+    },
+    "3": {
+      "path": "woccon_language/cognate_sets/_raw/app3.txt",
+      "chars": 713
+    },
+    "4": {
+      "path": "woccon_language/cognate_sets/_raw/app4.txt",
+      "chars": 1102
+    }
+  }
+}

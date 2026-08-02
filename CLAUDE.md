@@ -117,8 +117,10 @@ ENABLE_TYPING_INDICATORS="true|false"  # Optional: Enable Facebook typing indica
 
 ### LLM mode: local vs Microsoft Foundry
 - **Anthropic (optional)**: If `ANTHROPIC_API_KEY` is set, all LLM calls (including Drive extraction) use **Claude** via the Anthropic API. Set `ANTHROPIC_MODEL` (e.g. `claude-3-5-sonnet-20241022`) or the code defaults to Sonnet. Useful when Azure quota isn’t available or for better extraction accuracy.
-- **LOCAL_LLM**: When `true`, `1`, or `yes` (case-insensitive), the app uses **local Ollama** (e.g. RunPod/CUDA or CPU). When unset or false and no Anthropic key, the app uses **Microsoft Foundry** (Llama/equivalent via Azure API). No OpenAI models are used; Foundry serves Llama (or HF-equivalent) via an OpenAI-compatible API.
-- **Local (OLLAMA_URL, OLLAMA_MODEL, OLLAMA_VISION_MODEL)**: Used only when `LOCAL_LLM` is true. On a single-GPU ingest host, set **the same** model for `OLLAMA_MODEL` and `OLLAMA_VISION_MODEL` (e.g. `qwen2.5vl:32b`) so OCR and extraction share one VRAM load. Set `OLLAMA_NUM_PARALLEL=3` in Ollama systemd to match `EXTRACT_PARALLEL_WORKERS`.
+- **LOCAL_LLM**: When `true`, `1`, or `yes` (case-insensitive), the app uses a **local LLM** backend. When unset or false and no Anthropic key, the app uses **Microsoft Foundry** (Llama/equivalent via Azure API).
+- **Local backends (when LOCAL_LLM=true)**:
+  - **llama-server (recommended on UIC)**: `OLLAMA_URL=http://100.71.124.8:8080/v1` — Qwen3.6-27B Q8 multimodal via OpenAI-compatible `/v1` (same setup as Policy Tracker `deploy/qwen36-llama-server.service`). Set **the same** model for `OLLAMA_MODEL` and `OLLAMA_VISION_MODEL` (`Qwen3.6-27B-Q8_0.gguf`). Optional: `LLM_REASONING=off`.
+  - **Native Ollama (legacy)**: `OLLAMA_URL=http://127.0.0.1:11434` — uses Ollama `/api/chat`. For single-GPU ingest, set the same model for text and vision (e.g. `qwen2.5vl:32b`). Set `OLLAMA_NUM_PARALLEL=3` in Ollama systemd to match `EXTRACT_PARALLEL_WORKERS`.
 - **Foundry (when LOCAL_LLM is false)**:
   - `FOUNDRY_ENDPOINT` or `AZURE_AI_ENDPOINT`: Base URL from the Azure account — either `https://<resource>.services.ai.azure.com` (Model Inference API) or `https://<resource>.openai.azure.com` (Azure OpenAI SDK path).
   - `FOUNDRY_API_KEY` or `AZURE_INFERENCE_CREDENTIAL`: API key from the Foundry resource.
@@ -146,6 +148,17 @@ python drive_ingest.py
 - Completeness check: `python scripts/check_extraction_completeness.py --staging woccon_language/drive_staging/English-Woccon.json --source-text data/ingest_text_cache/<file>.json`
 - Unit tests: `python scripts/test_list_doc_parser.py`
 
+**Diacritic-stripped scans:** scanned journal PDFs embed an OCR text layer that reads as dense
+clean English while having dropped every phonetic character, so a character-count check scores
+them as good text. `pages_with_lossy_text_layer()` also routes image-backed pages with no
+phonetic characters to vision OCR (`PDF_OCR_RECHECK_ASCII_SCANS`, `PDF_OCR_SCAN_IMAGE_COVERAGE`).
+
+```bash
+python scripts/reocr_lossy_pdf.py --pdf data/ingest_sources/<file>.pdf --dry-run   # list pages
+python scripts/reocr_lossy_pdf.py --pdf data/ingest_sources/<file>.pdf --dpi 300 --out data/<name>.json --write
+python scripts/parse_carter_sets.py --write    # link Carter 1980 sets into the cognate seed
+```
+
 ## API Endpoints
 
 - `GET /webhook` - Facebook webhook verification
@@ -158,7 +171,8 @@ python drive_ingest.py
 - `POST /admin/reload-language` - Reload dictionary/rules and rebuild RAG (same auth as ingest; optional body: `dict_path`, `rules_path`)
 - `POST /admin/extract-document` - Extract one document (same auth as ingest). JSON or multipart `.txt`.
 - **Control panel** (`panel_api`, JWT): `POST /api/auth/login/json`, `POST /api/documents`, `GET /api/pending/*`, `GET /api/rules`, `PATCH /api/rules/reorder`, `GET /api/lexicon`, `POST /api/admin/commit`. See [docs/CONTROL_PANEL.md](docs/CONTROL_PANEL.md). Env: `DATABASE_URL`, `JWT_SECRET`, `PANEL_ADMIN_EMAIL`, `PANEL_ADMIN_PASSWORD`, `PANEL_CORS_ORIGINS`, `WOCCON_UPLOAD_DIR`, `DUPLICATE_THRESHOLD`.
-- **Reconstruction roadmap:** [docs/RECONSTRUCTION_ROADMAP.md](docs/RECONSTRUCTION_ROADMAP.md) — comparative pipeline, hybrid model stack, grammar tiers, phased DoD.
+- **Reconstruction methodology:** [docs/RECONSTRUCTION_METHODOLOGY.md](docs/RECONSTRUCTION_METHODOLOGY.md) — Rudes/Carter method, Catawba vs PSC roles, rule kinds, next steps.
+- **Reconstruction engineering roadmap:** [docs/RECONSTRUCTION_ROADMAP.md](docs/RECONSTRUCTION_ROADMAP.md) — comparative pipeline, hybrid model stack, grammar tiers, phased DoD.
 
 ## Notes
 

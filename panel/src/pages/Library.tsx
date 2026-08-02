@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { api, getToken, LexiconEntry, LexiconListResponse, MergedSource, SourceDocument } from "../api";
+import { api, getToken, LexiconEntry, LexiconListResponse, MergedSource, RulesCaptureAudit, SourceDocument } from "../api";
 import { ExtractionFocusPicker, ExtractionFocusValue } from "../components/ExtractionFocusPicker";
 import { ExtractionBadges } from "../components/ExtractionBadges";
 import { LexiconEntryCard } from "../components/LexiconEntryCard";
@@ -416,16 +416,67 @@ function MergedSourceRow({
   );
 }
 
+function RuleCaptureBadge({
+  doc,
+  audit,
+}: {
+  doc: SourceDocument;
+  audit: RulesCaptureAudit | null;
+}) {
+  if (!audit?.documents) return null;
+  const title = (doc.title || "").toLowerCase();
+  const short = (doc.short_title || "").toLowerCase();
+  let match: { key: string; block: NonNullable<RulesCaptureAudit["documents"]>[string] } | null = null;
+  for (const [key, block] of Object.entries(audit.documents)) {
+    if (title.includes(key.toLowerCase()) || short.includes(key.toLowerCase())) {
+      match = { key, block };
+      break;
+    }
+    if (key === "Resurrecting" && (title.includes("resurrecting") || title.includes("catawban"))) {
+      match = { key, block };
+      break;
+    }
+    if (key === "Grammar_Pronunciation Guide" && title.includes("pronunciation guide")) {
+      match = { key, block };
+      break;
+    }
+  }
+  if (!match?.block?.live?.tier_a) return null;
+  const ta = match.block.live.tier_a;
+  const gaps = ta.gaps?.length ?? 0;
+  const unknowns = match.block.unknowns?.length ?? 0;
+  const ok = gaps === 0 && unknowns === 0;
+  return (
+    <span
+      className={`badge border text-xs ${
+        ok
+          ? "bg-emerald-500/15 text-emerald-200 border-emerald-500/25"
+          : "bg-amber-500/15 text-amber-200 border-amber-500/25"
+      }`}
+      title={
+        ok
+          ? `Tier A checklist: ${ta.covered}/${ta.total}`
+          : `Tier A ${ta.covered}/${ta.total}; gaps: ${(ta.gaps || []).join(", ") || "none"}; unknowns: ${unknowns}`
+      }
+    >
+      Rules audit {ta.covered}/{ta.total}
+      {!ok && (gaps > 0 || unknowns > 0) ? " · gaps" : ""}
+    </span>
+  );
+}
+
 function RegularDocCard({
   doc,
   onSaved,
   onDeleted,
   pronunciationGuide = false,
+  audit = null,
 }: {
   doc: SourceDocument;
   onSaved: () => void;
   onDeleted: () => void;
   pronunciationGuide?: boolean;
+  audit?: RulesCaptureAudit | null;
 }) {
   const { canWrite } = useAuth();
   const [deleting, setDeleting] = useState(false);
@@ -463,6 +514,7 @@ function RegularDocCard({
                 Pronunciation guide
               </span>
             )}
+            <RuleCaptureBadge doc={doc} audit={audit} />
           </div>
           <p className="text-xs text-render-muted mt-1">
             {doc.work_group_label ||
@@ -570,9 +622,11 @@ function RegularDocCard({
 
 export default function Library() {
   const [docs, setDocs] = useState<SourceDocument[]>([]);
+  const [audit, setAudit] = useState<RulesCaptureAudit | null>(null);
 
   const load = () => {
     api<SourceDocument[]>("/documents").then(setDocs);
+    api<RulesCaptureAudit>("/admin/rules-capture-audit").then(setAudit).catch(() => setAudit(null));
   };
 
   useEffect(() => {
@@ -608,10 +662,10 @@ export default function Library() {
             <VocabBaseCard key={d.id} doc={d} onSaved={load} />
           ))}
           {pronunciationGuides.map((d) => (
-            <RegularDocCard key={d.id} doc={d} pronunciationGuide onSaved={load} onDeleted={load} />
+            <RegularDocCard key={d.id} doc={d} pronunciationGuide onSaved={load} onDeleted={load} audit={audit} />
           ))}
           {otherDocs.map((d) => (
-            <RegularDocCard key={d.id} doc={d} onSaved={load} onDeleted={load} />
+            <RegularDocCard key={d.id} doc={d} onSaved={load} onDeleted={load} audit={audit} />
           ))}
         </ul>
       )}

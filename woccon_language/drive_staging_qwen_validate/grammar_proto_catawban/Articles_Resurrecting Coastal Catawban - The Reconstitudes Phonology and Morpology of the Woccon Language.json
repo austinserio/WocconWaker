@@ -1,0 +1,356 @@
+{
+  "source_path": "Articles/Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language",
+  "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+  "lexicon_entries": [],
+  "grammar_notes": [
+    {
+      "text": "CLAIM: Proto-Catawban possessed a vowel system with three series: short oral, long oral, and nasal. A key diagnostic feature distinguishing Woccon from Catawba (and internal Catawba dialects like Esaw/Saraw) is the correspondence between nasal vowels in Catawba and long oral vowels in Woccon.\n\nEVIDENCE & STRUCTURE:\n1. Catawba Dialect Variation: Saraw often exhibits nasal vowels where Esaw exhibits long oral vowels.\n   - Esaw 'kaya' (terrapin) vs. Saraw 'kaya' (terrapin) [Note: Text implies nasalization difference, likely /kaya/ vs /kaya/ or similar, though orthography in text is identical, context implies phonemic distinction].\n   - Esaw 'ki' (the) vs. Saraw 'ki' (the).\n   - Esaw 'na nakitá·re' (I might have seen it) vs. Saraw 'na nakįštáre' (I might have seen it).\n\n2. Woccon vs. Catawban Correspondence: Woccon typically shows long oral vowels where Catawba shows nasal vowels.\n   - *iktá·? 'bread': Woccon 'Ikettau' (long oral /a:/ or /au/) vs. Catawba 'iktúre' (nasal /u:/ or /į/).\n   - *tást 'dog': Woccon 'Tauh-he' (long oral /au/) vs. Catawba 'tást' (nasal /a:/).\n   - *wita ? 'rat': Woccon 'Wittau' (long oral /au/) vs. Catawba 'wita?' (nasal /a:/).\n   - *ni ku•?rá te· 'give me something to eat': Woccon 'Noccoo Eraute' vs. Catawba 'ni ku-?-ra- de-' (nasal vowels in root/affixes).\n\nUSE: When reconstructing Proto-Catawban forms or analyzing Woccon data, treat Woccon long oral vowels (especially /a:/, /u:/, /i:/) as potential reflexes of Proto-Catawban nasal vowels. Conversely, Catawba nasal vowels may correspond to Woccon long orals. This pattern is consistent across multiple lexical items.\n\nCAVEATS: John Lawson, the primary source for Woccon, was an explorer, not a linguist. English orthography lacks distinctive markers for nasal vowels, particularly before fricatives. Therefore, some Woccon forms recorded as long oral vowels may have actually been nasal vowels that Lawson failed to hear or record. Caution is required when treating Woccon long orals as definitive evidence against nasalization in Proto-Catawban.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The data indicate that the Woccon language shared the same inventory of vowels as the Catawba language... Typically, Saraw exhibits a nasal vowel where Esaw exhibits a long oral vowel... A similar difference in the distribution of long oral vowels and nasal vowels is seen in many correspondence sets between Catawba and Woccon. In most cases, it is Woccon that shows a long oral vowel where Catawba shows a nasal vowel... Therefore, some cases of what appear to be long oral vowels in Lawson's vocabulary may actually have been nasal vowels...",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Proto-Catawban possessed a phoneme *7 (likely a lateral fricative or similar sound) which corresponds to initial /r/ in Woccon and initial /y/ in Catawba. This reconstruction is based on regular sound correspondences between the two languages.\n\nEVIDENCE & MORPHEME BREAKDOWN:\n1. *rúmq? 'ronoak'\n   - Woccon: (Rummaer) [copyist error for (Rummaen)] 'Ronoak'\n   - Catawba: yú?mq? 'bead' [Saraw dialect]\n   - Analysis: Initial *r- in Woccon corresponds to initial y- in Catawba, deriving from earlier *7.\n\n2. *ruhiya ? kítha? 'breeches'\n   - Woccon: (Rooeyaukitte) 'Breeches'\n   - Catawba: Cyúhiyą? 'dress' [Saraw dialect]\n   - Analysis: The first part of the compound shows the same correspondence (Woccon r- vs Catawba y-).\n\nUSE: When analyzing Woccon words with initial /r/ that correspond to Catawba words with initial /y/, reconstruct the Proto-Catawban form with *7. This rule helps identify cognates across the Coastal Catawban branch.\n\nCAVEATS: The text notes that \"at least some cases\" of initial y in Catawba derive from *7. Not all initial y in Catawba may follow this pattern, so cross-linguistic comparison is required for verification.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "correspondence with initial (r) in Woccon, it appears that at least some cases of initial y in Catawba derive from an earlier *7, as illustrated by the initial correspondences seen in the following set: *rúmq? 'ronoak' (W (Rummaer) [copyist error for (Rummaen)] 'Ronoak': C yú?mq? 'bead' [Saraw dialect]). Another example is the first part of Woccon *ruhiya ? kítha? 'breeches' (W (Rooeyaukitte) 'Breeches · Cyúhiyą? 'dress' [Saraw dialect]).",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Proto-Catawban possessed the phoneme /h/, which is preserved in both Woccon and Catawba. The text provides examples of words containing /h/ to illustrate this phoneme's existence and stability in the proto-language.\n\nEVIDENCE & MORPHEME BREAKDOWN:\n1. *ty há‍ksa'? 'eleven'\n   - Woccon: (Tonne hauk pea) [copyist error for (Tonne hauk sea)] 'Eleven'\n   - Catawba: dapiné há‍ksa-? 'eleven'\n   - Analysis: The element há‍ksa-? appears in both, showing retention of /h/.\n\n2. *á·hq? 'goose'\n   - Woccon: (Auhaun) 'A Goose'\n   - Catawba: Cá·ha ? 'goose'\n   - Analysis: The root á·hq? / Cá·ha? shows correspondence of the /h/ phoneme.\n\nUSE: Identify /h/ as a valid phoneme in Proto-Catawban reconstructions. When Woccon and Catawba forms share an /h/ in corresponding positions, it is likely a retention from Proto-Catawban rather than an innovation.\n\nCAVEATS: The text lists these as examples illustrating the phoneme, implying its regularity, but does not provide exhaustive rules for its distribution or allophonic variations.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Examples illustrating the phoneme h are *ty há‍ksa'? ́eleven' (W (Tonne hauk pea) [copyist error for (Tonne hauk sea)] 'Eleven': C dapiné há‍ksa-? 'eleven'), *á·hq? 'goose' (W (Auhaun) 'A Goose' . Cá·ha ?'goose').",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Proto-Catawban possessed glide phonemes /w/ and /y/, which are attested in both Woccon and Catawba. These glides appear in various lexical items, demonstrating their stability in the proto-language.\n\nEVIDENCE & MORPHEME BREAKDOWN:\n1. *wiya 'paint'\n   - Woccon: (Whooyeonne) 'Paint'\n   - Catawba: wıyaka ? 'blue, green'\n   - Analysis: Initial /w/ and medial /y/ are preserved.\n\n2. *wa awa 'snow'\n   - Woccon: (Wawawa) 'Snow'\n   - Catawba: war? 'snow' [Esaw dialect], wá ?wa 'snow' [Saraw dialect]\n   - Analysis: Initial /w/ is preserved. The Woccon form shows reduplication or compound structure (wa-awa), while Catawba shows variation but retains the root.\n\n3. *yą 'wood'\n   - Woccon: (Yonne) 'Wood'\n   - Catawba: Cyápi 'log', yası 'river birch', yápa? 'yaupon'\n   - Analysis: Initial /y/ is preserved in Woccon and appears in multiple Catawba cognates related to wood/plants.\n\nUSE: Reconstruct Proto-Catawban forms with /w/ and /y/ when Woccon and Catawba cognates exhibit these glides in corresponding positions. These are stable phonemes in the proto-language.\n\nCAVEATS: The text presents these as illustrative examples. The Catawba forms for 'snow' show dialectal variation (Esaw vs Saraw), suggesting potential phonological shifts in daughter languages, but the proto-form *wa awa is reconstructed based on the Woccon evidence and general Catawban patterns.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The glides w and y appear in the following examples: *wiya paint (W (Whooyeonne) 'Paint': C wıyaka ? 'blue, green), *wa awa 'snow' (W (Wawawa) 'Snow: C war? 'snow' [Esaw dia- lect], wá ?wa 'snow' [Saraw dialect]), *yą 'wood' (W (Yonne) 'Wood' . Cyápi 'log', yası 'river birch', yápa? 'yaupon').",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Proto-Catawban morphology allowed for both simple (single morpheme) and complex (two or more morphemes) words. Morphemic composition was nearly always transparent with little phonological fusion of adjacent morphemes.\n\nEVIDENCE & MORPHEME BREAKDOWN:\n1. Simple Words:\n   - *kus 'corn'\n     - Woccon: (Cose) 'Com'\n     - Catawba: kus 'corn'\n   - *wita ? 'rat'\n     - Woccon: (Wittau) ‘A Rat'\n     - Catawba: witą? 'rat'\n\n2. Complex Words:\n   - *yehu 'wind'\n     - Woccon: (Yun-cor) [error for (Yuh-hor)] 'Wind'\n     - Catawba: yehu 'wind is blowing' [from ye 'air' and hu 'come']\n     - Analysis: The word is composed of two morphemes (ye + hu) with transparent boundaries.\n\nUSE: When analyzing Woccon or Proto-Catawban words, assume that morpheme boundaries are phonologically transparent. Complex words can be segmented into constituent morphemes without significant sound changes at the junctions. This aids in identifying roots and affixes.\n\nCAVEATS: The text states that Woccon morphology was \"quite similar\" to Catawba, but details may differ due to limited data. The transparency of morphemes is a general characteristic, but exceptions may exist.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "As in Catawba, Woccon words could be simple, .e. composed of a single morpheme (e.g. *kus 'corn' [W (Cose) 'Com': C kus 'corn'], *wita ? 'rat' [W (Wittau) ‘A Rat' · C witą? 'rat']) or complex. 1.e. com- posed of two or more morphemes (e.g. *yehu 'wind' (W (Yun-cor) (error for (Yuh-hor))] 'Wind' : C yehu 'wind is blowing' [from ye 'air' and hu 'come']). As in Catawba, there is little phonological fusion of adjacent morphemes, and as a result, the morphemic composition of words is nearly always transparent.",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Proto-Catawban exhibited compound lexemes composed of two or more words. The order of terms in such compounds was head noun followed by modifier. This structure suggests an Object-Verb syntax characteristic shared with Catawba.\n\nEVIDENCE & MORPHEME BREAKDOWN:\n1. *fti tirú 'boulder'\n   - Woccon: (Itte teraugh) 'Hard or heavy'\n   - Catawba: iti tirú 'big stone, boulder'\n   - Analysis: Head noun (stone/boulder) + modifier (big/hard). Note: The text says \"head noun followed by modifier\", but the example 'big stone' usually implies modifier-head in English. However, the text explicitly states \"head noun followed by modifier\" and links it to Object-Verb syntax. In Siouan languages, post-positional modifiers are common. The Catawba form 'iti tirú' likely means 'stone big' (Head-Modifier).\n\n2. *ruisap píswa? 'stockings'\n   - Woccon: (Rooesoo possoo) 'Stockings'\n   - Catawba: ísap 'leggings, trousers' plus pis 'skin' with the third person possessive suffix |-wa?]\n   - Analysis: Head noun (leggings) + modifier (skin). The modifier 'skin' takes a possessive suffix, indicating it modifies the head.\n\nUSE: When constructing or analyzing compound nouns in Proto-Catawban, place the head noun first, followed by the modifier. This is the reverse of typical English noun-noun compounds. For example, 'big stone' would be structured as 'stone big'.\n\nCAVEATS: The text suggests this pattern \"suggests that Woccon may have shared with Catawba the characteristics of an Object-Verb syntax.\" This is a syntactic inference based on noun compound order. The limited data means this rule should be applied with caution, but it is the attested pattern for compounds.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Both Woccon and Catawba also exhibit lexemes composed of two or more words, e.g. *fti tirú 'boulder (W (Itte teraugh) 'Hard or heavy', Citi tirú 'big stone, boulder'), *ruisap píswa? 'stockings' (W (Rooesoo possoo) 'Stockings': C ísap 'leggings, trousers' plus pis 'skin' with the third person possessive suffix |-wa?]). The order of terms in such com- pounds is head noun followed by modifier, the same pattern found in Catawba, suggesting that Woccon may have shared with Catawba the characteristics of an Object-Verb syntax.",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The Woccon imperative marker |-de-| is a reflex of the Proto-Catawban imperative suffix, exhibiting intervocalic voicing from an underlying voiceless stop (cf. Catawba |-de-| vs potential underlying *-t- or similar). Evidence: Woccon *ni kuráte* ('give me something to eat') compared to Catawba *mi ku-7-ra-de-* ('first singular object + give-participial-eat-imperative'). The Woccon form suggests the voiced consonant results from intervocalic voicing, a process attested in Catawba. Structure: Verb stem + Imperative Suffix |-de-|. Use: Forming imperative commands. Caveats: The text notes spelling variations and potential copyist errors in other forms (e.g., *kú·wate·* vs *kú-wade*), but the *-de-* suffix in *kuráte* is treated as evidence for the voiced imperative marker.",
+      "source_page": 235,
+      "source_page_end": 235,
+      "source_excerpt": "The imperative mode appears to occur in two Woccon constructions... In *ni kuráte ‘give me something to eat... the Woccon form suggests that the voiced consonant of the Catawba imperative marker |-de-| results from intervocalic voicing...",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The Proto-Catawban interrogative suffix *-ne* is attested in Woccon as |-ne|. Evidence: Woccon *katé-ne* ('is that all?') compared to Catawba *katé* ('indeed, good-bye') and *katé se* ('the last'). The suffix *-ne* marks the interrogative mode. Structure: Stem + Interrogative Suffix |-ne|. Use: Forming questions or interrogative statements. Caveats: Only one clear attested example is provided in the source text.",
+      "source_page": 235,
+      "source_page_end": 235,
+      "source_excerpt": "The fourth mode, the interrogative, which has the form -ne in Catawba, is attested in one word: *katé-ne is that all?' (W (Cuttaune) \"That's all': C katé indeed, good-bye', katé se 'the last').",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Proto-Catawban alienable possession is marked by a suffix on the possessed noun, while inalienable possession is marked by a prefix. Evidence: Woccon *ruísap píswa?* ('stocking') compared to Catawba *Cisap* ('leggings, trousers') plus *pis* ('skin') with the third person possessive suffix |-wa?]. The Woccon data shows alienable possession marked by a suffix (specifically |-wa?| for 3rd person plural). Structure: Noun Stem + Possessive Suffix (for alienable nouns). Use: Marking possession of alienable nouns. Caveats: No clear examples of inalienably possessed nouns are present in the Woccon data, but the pattern is assumed to parallel Catawba (prefix for inalienable, suffix for alienable).",
+      "source_page": 235,
+      "source_page_end": 235,
+      "source_excerpt": "In Catawba, the possessor of an inalienably possessed noun is marked by a prefix, whereas the possessor of an alienably possessed noun is marked by a suffix... The same pattern of marking possessor apparently prevailed in Woccon... *ruísap píswa? ́stocking\" (W (Rooesoo possoo) 'Stockings'; Cisap 'leggings, trousers' plus pis 'skin' with the third person possessive suffix |-wa?]).",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: In Proto-Catawban (and attested in Woccon), third person singular subjects are unmarked on the verb. EVIDENCE: Woccon *kuwá·re' ('Dead') corresponds to Catawba kuwa·re' ('he kills it'), where the stem |-k(u)wa--| 'kill' appears without a subject prefix. Similarly, Woccon *wárapha? ('one's fever' / 'I am sick') relates to Catawba warápha? ('he is hot'), showing the stem for 'hot/fever' without a 3sg subject marker. STRUCTURE: Verb Stem (no 3sg subject prefix). USE: When constructing or analyzing Woccon verbs with a third person singular subject, do not add a subject prefix; the subject is implied by the lack of marking. CAVEATS: Data is meager; this pattern is inferred from Catawba parallels and limited Woccon examples.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "subject. There are very few analyzable verb forms with subject marking in the Woccon data. A couple of forms, however, indicate that third per- son singular subjects were unmarked in Woccon, e.g. *kuwá·re' (W (Caure) 'Dead' · C kuwa·re' 'he kills it' [stem: |-k(u)wa--| 'kill']), *wárapha? ́one's fever (W (Waurepa) 'I am sick' [error for one's fever']: C wárap 'hot', warápha? 'he is hot, hakwaráphire 'he has a fever').",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: In Proto-Catawban (and attested in Woccon), singular imperative verbs are unmarked for pronominal subject. EVIDENCE: Woccon *kú wate ('come along!') corresponds to Catawba kuwade ('come along!'), derived from stem -ku-wa- 'come along' with no subject prefix. Woccon ni ku Práte ('give me something to eat') corresponds to Catawba ni ku-?-ra-de- ('first singular object + give-gerundive-eat-imperative'), where the imperative 'give' lacks a subject marker. STRUCTURE: Imperative Verb Stem (no subject prefix). USE: When forming singular imperatives in Woccon, do not mark the subject pronoun on the verb. CAVEATS: This applies to singular imperatives; other moods may differ.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "In Catawba, singular imperative verbs are unmarked for pronominal subject. Examples from the Woccon data illustrating the same pattern are *kú wate come along!' (W (Quauke) [error for Quaute] 'Will you go along with me?', C kuwade 'come along!' [stem -ku-wa- 'come along']) and ni ku Práte 'give me something to eat' (W (Noccoo Eraute) 'Have you got anything to eat · C [ni ku-?-ra-de- 'first singular object + give-gerundive-eat-imperative').",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: In Proto-Catawban (and attested in Woccon), third person plural subjects are marked by the prefix |-i-|. EVIDENCE: Woccon *íktą? ('bread', lit. 'their baking') corresponds to Catawba iktáre- ('they bake it'), analyzed as [i-kta-re- | *third plural subject-bake-independent mode]. STRUCTURE: Prefix |-i-| + Verb Stem. USE: To mark a third person plural subject on a Woccon verb, prefix the stem with |-i-|. CAVEATS: Only one clear example is attested in the Woccon data; reliance on Catawba parallel is strong.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "There is also one example that ap- pears to show a third person plural prefix |-| in Woccon, as in Catawba *íktą? 'bread' (W (Ikettau) 'Bread' [lit. 'their baking'] : Ciktáre- 'they bake it' [i.e. [i-kta-re- | *third plural subject-bake-independent mode]]).",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: In Proto-Catawban (and attested in Woccon), pronominal objects are marked by proclitics, with the exception of third person singular objects which are unmarked. EVIDENCE: Woccon *ni ku frá te· ('give me something to eat') corresponds to Catawba ni ku-2-ra-de ('first singular object + give- participial-eat-imperative'). The element 'ni' marks the first singular object. STRUCTURE: Object Proclitic + Verb Complex. USE: When a Woccon verb has a pronominal object (other than 3sg), attach the appropriate object proclitic (e.g., 'ni' for 1sg) before the verb complex. CAVEATS: Third person singular objects remain unmarked.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "In Catawba, pronominal objects are marked by proclitics, with the exception of third person singular objects, which are unmarked. There is at least one example from the Woccon data that indicates that pronomi- nal objects were marked in the same way in this language, specifically, *ni ku frá te· 'give me something to eat' (W (Noccoo Eraute) 'Have you got anything to eat C ni ku-2-ra-de 'first singular object + give- participial-eat-imperative'),",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The Proto-Catawban suffix *-se denotes 'end' or 'point'. Evidence: The Woccon form Wonsh-shee ('Awl or Needle') is analyzed as a compound of the stem for 'arrow' (cognate with Catawba wą) and the suffix -se. Morpheme Breakdown: *wase < *wa- (arrow/stem) + *-se (end/point). Use: This suffix can be applied to stems denoting linear objects or tools to specify the terminal or pointed part. Caveats: The source notes that Lawson used unusual grapheme combinations for medial sounds, but the morphological segmentation is clear in the cognate analysis.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "1. Awi *wase: W (Wonsh-shee) 'Awl or Needle': C wą arrow plus -se end, point",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The Proto-Catawban suffix *-ku- functions as a verb root or stem meaning 'give'. Evidence: In the Woccon phrase Noccoo Eraute ('Have you got anything to eat'), the element corresponding to 'give' is identified as *-ku-. This is cognate with Catawba |-ku- 'give'. Morpheme Breakdown: *-ku- (give). Use: This stem is used in interrogative or imperative contexts involving the transfer of items. Caveats: The source refers to a detailed analysis in the main text for the full syntactic structure of the question, but isolates *-ku- as the specific morpheme for 'give'.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "19. Give *|-ku-]: W (Noccoo Eraute) 'Have you got anything to eat'; C│-ku- 'give'. (See analysis in text.)",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The Proto-Catawban verb stem *-ra- means 'eat'. Evidence: In the Woccon phrase Noccoo Eraute ('Have you got anything to eat'), the element corresponding to 'eat' is identified as *-ra-. This is cognate with Catawba -ra- 'eat'. Morpheme Breakdown: *-ra- (eat). Use: This stem is used in questions or statements regarding consumption. Caveats: Like the 'give' stem, this appears in a complex interrogative structure in Woccon, but the root is isolable via Catawba comparison.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "12. Eat *|-ra- | . In W (Noccoo Eraute) 'Have you got anything to eat'; C-ra- cat (See analysis in text.)",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon exhibits nasalization of lateral/liquid consonants (r) to nasals (n) due to medial nasal vowels, a feature relevant to reconstructing Proto-Catawban phonotactics. Evidence: The Woccon word for 'Four' is Punnum-punne, whereas the Catawba cognate is párapari. The source explicitly attributes the Woccon 'n' sounds to nasalization of 'r's caused by a medial nasal vowel. Morpheme Breakdown: *páraparı (Proto-Catawban) > Punnum-punne (Woccon). Use: When analyzing Woccon forms with 'n' where Catawba has 'r', consider nasal vowel influence. Caveats: This is a phonological rule affecting the surface form of the numeral 'four' and potentially other stems with medial nasal vowels.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "18. Four *páraparı: W (Punnum-punne) 'Four': C párapari 'four'. (The Woccon words shows nasalization of the r's to n's due to the medial nasal vowel.)",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon medial *dy clusters were affricated to [dz], a phonological process attested in both Woccon and Catawba. Evidence: The Woccon word for 'Fawn [meat]' is Wisto (error for Witso), derived from Proto-Catawban *widyu. The source notes that the medial dy cluster was affricated ([dz]). Morpheme Breakdown: *widyu (Proto-Catawban) > Witso/Wisto (Woccon). Use: When reconstructing or analyzing Woccon forms with underlying *dy, expect affrication to [dz] or similar stops. Caveats: This applies to medial clusters; the source notes this pronunciation is also recorded for Catawba, suggesting it may be a retained Coastal Catawban feature.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "15. Fawn [meat] *widyu W (Wisto) (error for (Witso)) 'Fawn-skin', C wirdyu 'meat'. (In Woccon the medial dy cluster was apparently affricated ([dz]), a pronunciation also recorded for Catawba.)",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Proto-Catawban first person singular object proclitics attach to the verb stem. In Woccon, this proclitic may be omitted, contracted with the verb, or reflected via nasalization of the initial vowel/consonant of the verb stem. Evidence: Woccon 'witite' (give it to me) vs Catawba 'ni wĺtide' (give it to me). The Woccon form lacks the explicit 'ni' proclitic found in Catawba. Structure: [1SG.OBJ.Proclitic] + [Verb Stem]. In Woccon, the proclitic 'ni' is either absent or fused, causing nasalization (e.g., initial (m) for w reflecting following nasal vowel). Use: When constructing transitive verbs with a first person singular object in Woccon, apply the proclitic 'ni' or account for its potential fusion/nasalization effects on the verb stem. Caveats: The exact realization in Woccon is uncertain due to potential copyist errors or contraction; the Catawba form provides the clearer structural template.",
+      "source_page": 239,
+      "source_page_end": 239,
+      "source_excerpt": "20. Give it to me *(ni) witite• 'give it to (me)': W (Mothei) 'Give it to me'; C ni wĺtide 'give it to me. (The first person singular object proclitic has either been omitted from the Woccon form or. due to misinterepretation of Lawson's handwriting, has been contracted with the following verb; the initial (m) for w reflects the following nasal vowel.",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Proto-Catawban numerals can take an independent modal suffix to indicate existence or presence ('there are X'). Evidence: Woccon 'Weihere' (Nine) contains the independent modal suffix, literally meaning 'there are nine'. Catawba 'wáča' is the base numeral 'nine'. Structure: [Numeral Stem] + [Independent Modal Suffix]. Use: To express the existence of a quantity rather than just the number itself, attach the independent modal suffix to the numeral stem. Caveats: The specific form of the suffix in Woccon is reconstructed from the attested form 'Weihere' compared to the Catawba base 'wáča'.",
+      "source_page": 239,
+      "source_page_end": 239,
+      "source_excerpt": "31. Nine *wa?čare·· W (Weihere) (error for (Wechere)) 'Nine'. C wáča 'nine. (The Woccon word contains the independent modal suffix, and thus literally means 'there are nine')",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Proto-Catawban frequentive aspect is marked by reduplication of the verb root. Evidence: Catawba 'pé-?pe ?' (from root 'pe-2-step') uses frequentive reduplication to form the concept of a mat (implied repetitive stepping/covering). Woccon 'Soppepepor' (A Mat) reflects this structure. Structure: [Root] + [Reduplicated Root/Aspect Marker]. Use: To indicate repetitive or habitual action, reduplicate the verb root. Caveats: The Woccon form 'Soppepepor' is complex and may involve additional morphemes, but the core frequentive mechanism is identified via Catawba comparison.",
+      "source_page": 239,
+      "source_page_end": 239,
+      "source_excerpt": "30. Mat *sapí pé·?pe ?: W (Soppepepor} ‘A Mat'. C supí ́on top' plus pé-?pe ?, from the root pe-2-step' with frequentive reduplication.",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Proto-Catawban locative/directional phrases combine a noun with a locative particle. Evidence: Woccon 'Yupwauremau' (Loblolly Pine Place) corresponds to Catawba 'yap wari' (loblolly pine) + 'ma' (there). Structure: [Noun Phrase] + [Locative Particle 'ma']. Use: To specify a location associated with a noun, append the locative particle 'ma' (meaning 'there') to the noun phrase. Caveats: The Woccon form shows phonological changes (Yupwauremau) compared to the Catawba components, but the syntactic structure of Noun + Locative is preserved.",
+      "source_page": 239,
+      "source_page_end": 239,
+      "source_excerpt": "28. Loblolly Pine Place *Pyap wári ma: W (Yupwauremau) (one of the two Woccon towns listed in Lawson [1967 (1709): 242]); C yap wari 'loblolly pine' (lit. \"spear-tree\"), ma 'there'",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The suffix |-re- functions as an independent modal suffix in Woccon, attested in the word for 'Sun or Moon'. Evidence: Woccon 'Wittapare' (Sun/Moon) ends in -re. The author notes this corresponds to the independent modal suffix |-re-]. This distinguishes it from Catawba 'wárpit' (sky) and suggests a morphological difference in how celestial bodies are categorized or modally marked in Woccon compared to Catawba.",
+      "source_page": 241,
+      "source_page_end": null,
+      "source_excerpt": "49. Sun *witá-pire: W (Wittapare) 'Sun or Moon'. C wárpit 'sky', wapídnu 'star' (Either Woccon or Catawba has metathesized the first two syllables of this word. The Catawba word for star is a compound with -nu egg, small roundish object. The Woccon word ends with the independent modal suffix |-re-].)",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The suffix |-ne- may function as an interrogative mode marker in Woccon, derived from Catawba. Evidence: Woccon 'Cuttaune' glossed as 'That's all' is analyzed as potentially containing the interrogative mode marker |-ne-], identical to Catawba |-ne]. If this analysis holds, the gloss shifts to 'That's all?'. This suggests that Woccon retained or adapted the Catawban interrogative suffix for modal questioning.",
+      "source_page": 241,
+      "source_page_end": null,
+      "source_excerpt": "51. That's all *katé1ne: W (Cuttaune) \"That's all': C katé indeed, good- bye', katé se 'the last. (The ending on the Woccon form may be the interrogative mode marker, C |-ne]. If so, the gloss is \"That's all?').",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The suffix |-wa?| functions as a third-person possessive suffix in Woccon, cognate with Catawba. Evidence: In the compound for 'Hat' (Woccon 'Intome-posswa'), the element 'posswa' is derived from Catawba 'pis' (skin/shell) plus the third-person possessive suffix '-wa?'. This indicates that Woccon utilized the same possessive morphology as Catawba for third-person possession on nominal roots.",
+      "source_page": 241,
+      "source_page_end": null,
+      "source_excerpt": "3. Hat *temá píswa?: W (Intome-posswa) 'Hat'. W (Tomme) 'Hair' (see 1.23) plus C pis skin, shell' with the third person possessive suffix -wa?.",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon forms numerical compounds for higher numbers by combining lower number stems with specific endings. Evidence: The word for 'Seven' (Woccon 'Nommis-sau') is constructed from 'Nam-mee' (Three) plus an ending seen in 'Nupsau' (Eight). This suggests a derivational pattern for numbers 7 and 8 involving a base stem (likely related to 3 or 4) and a specific suffixal marker distinct from the simple cardinal numbers 2 and 3.",
+      "source_page": 241,
+      "source_page_end": null,
+      "source_excerpt": "6. Seven *ná misa W (Nommis-sau) 'Seven'. W (Nam-mee) 'Three' plus the ending seen in Woccon (Nupsau) 'Eight'",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The Woccon language utilizes a third person singular affix *-h-* and an independent mode marker *-re-* to form nominal predicates or descriptive statements meaning 'he/she is [Noun/Adjective]'. Evidence: The word for 'Englishman' is reconstructed as *witsuhire* (Woccon: Wintsohore). This form is derived from the root *Windsor* (likely referring to the surname/origin), with the addition of the 3rd person singular affix *-h-* and the independent mode marker *-re-*. Morpheme Breakdown: *Windsor* (root) + *-h-* (3rd person singular affix) + *-re-* (independent mode marker). Use: This construction allows for the creation of predicative forms from nouns or proper names, effectively stating identity or attribute ('he is a Windsor', 'he is English'). Caveats: This analysis is suggested by Ralf Thiede. The root is likely a loanword or proper name adaptation.",
+      "source_page": 243,
+      "source_page_end": 243,
+      "source_excerpt": "3. Englishman *witsuhire W (Wintsohore) 'Englishman, English Windsor. (As suggested by Ralf Thiede, the Woccon word is perhaps derived from the surname Windsor, which later became the surname of the British royal family, with the addition of the third person singular affix -h- and the independent mode marker |-re-, giving the meaning 'he is (a) Windsor, he is English'.)",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 18,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Proto-Siouan initial *wi- functions as a pronominal element marking non-human animates. This prefix is retained in reconstructed Proto-Catawban forms for specific animal nouns. Evidence: The text reconstructs *húka 'bear' (from Woccon Ourka/Ounka 'Bear-skin') and *hanatúkare 'fox' (from Woccon Hanatockore 'Fox-skin') and *a hé 'raccoon' (from Woccon Auher 'Raccoon-skin'). These are compared to Proto-Siouan *wihú'te 'bear', *wihtóxka 'fox', and *wihé(-ka) 'raccoon'. The author notes that the Proto-Siouan initial *wi- is a pronominal element marking non-human animates (citing Rankin 1998). Use: When reconstructing or analyzing animal nouns in the Catawban branch, check for the presence of the *wi- prefix as a marker of non-human animacy. Caveats: The Woccon attested forms often include a suffix indicating 'skin' (e.g., -ka in Ounka, -ore in Hanatockore), suggesting the base noun might be distinct from the 'skin' derivative, but the *wi- prefix is identified on the root level in the Proto-Siouan comparison.",
+      "source_page": 242,
+      "source_page_end": 242,
+      "source_excerpt": "1. Bear *húka : W (Ourka) (error for (Ounka)) 'Bear-skin', PS *wihú'te 'bear'. (Proto-Siouan initial *|wi- is a pronominal element that marks non-human animates [Rankin 1998]). ... 3. Fox *hanatúkare W (Hanatockore) 'Fox-skin', PS *wihtóxka 'fox' (Proto-Siouan initial * wi- is a pronominal element that marks non- human animates [Rankin 1998]). ... 9. Raccoon *a hé: W (Auher) \"Roccoon-skin', PS *wihé(-ka) *raccoon' (Proto-Siouan initial * wi- is a pronominal element that marks non- human animates [Rankin 1998]).",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 17,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The Woccon form Yicau 'Old Woman' represents a possessed form with a second person singular prefix. Evidence: The text reconstructs Proto-Catawban *yíku 'old woman' based on Woccon Yicau. It compares this to Proto-Siouan *ihkú 'grandmother'. The author explicitly states: 'The Woccon form appears to be the possessed form 'your old woman' with the second person singular prefix [yı-].' Use: This suggests that the stem for 'old woman' may be *yku or similar, and that Yicau is not the bare noun but a possessed form (your old woman). When analyzing Woccon kinship or social terms, consider that forms beginning with yi- may indicate second person possession. Caveats: The reconstruction *yíku is labeled as Catawban but not in Catawba, implying it is a specific Woccon or early Catawban retention. The identification of the prefix as second person singular is an authorial interpretation of the morphological structure.",
+      "source_page": 242,
+      "source_page_end": 242,
+      "source_excerpt": "6. Old Woman *yíku: W Yicau 'Old Woman', PS *ihkú 'grandmother' (The Woccon form appears to be the possessed form 'your old wom- an' with the second person singular prefix [yı-]).",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 17,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: In Proto-Catawban, the prefix *dapa- is used in compounds to denote 'wild animal' or 'something/some'. While Catawba retains this meaning primarily in compounds (e.g., dapadá·re· 'he hunts'), Woccon attests to a broader or retained meaning of '(wild) animal' in isolation or specific contexts.\n\nEVIDENCE:\n- Woccon: Teep 'Raw-skin undrest' (reconstructed *dápa)\n- Catawba: dápa 'something, some'; dapadá·re· 'he hunts' (compare dáre· 'he goes'); dapa- 'prefix on animal names'.\n\nSTRUCTURE:\n- Stem: *dápa\n- Function: Nominal prefix or independent noun meaning 'wild animal' or 'something'.\n- Usage: In Catawba, it appears as a prefix on animal names. In Woccon, it appears as a standalone term for 'raw-skin' (likely referring to a wild animal hide or the animal itself).\n\nCAVEATS: The author suggests *dápa may have meant '(wild) animal' in Proto-Catawban, a meaning retained in Woccon but restricted to compounds in Catawba.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "40. Raw-skin [wild animal] *dápa: W (Teep) 'Raw-skin undrest' C dápa 'something, some', dapadá·re· ‘he hunts (compare dáre· ‘he goes'), dapa- \"prefix on animal names\". (It seems that dápa may have meant (wild) animal in Proto-Catawban, a meaning retained in Woccon but only in compounds in Catawba.)",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Proto-Catawban utilizes intensive reduplication to indicate abundance or density. Specifically, reduplicating the word for 'tree' indicates a place heavily grown over with trees.\n\nEVIDENCE:\n- Woccon: Ynpyupseunne (error for Yupyupseunne) 'A Rundlet' (reconstructed *?yáp?yap ísuwa)\n- Catawba: yap 'tree'; i suwq? 'river'\n\nSTRUCTURE:\n- Base: *yap 'tree'\n- Reduplication: *?yáp?yap (intensive reduplication of 'tree')\n- Compound: *?yáp?yap + *ísuwa 'river'\n- Meaning: 'River heavily grown over with trees' (Rundlet)\n\nCAVEATS: The Catawba word for river is typically pronounced [i-swa?] with syncope of the second vowel. The Woccon construction explicitly shows the reduplication mechanism.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "42. Rundlet *?yáp?yap ísuwa: W (Ynpyupseunne) (error for (Yupyupseunne)) 'A Rundlet': C yap tree' plus i suwq? 'river' (The Woccon construction shows intensive reduplication of the word for tree indicating that a rundlet is a river heavily grown over with trees. Note that the Catawba word for river is typically pronounced [i-swa?] with syncope of the second vowel.",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: In Proto-Catawban, the initial syllable of the word for 'grass' (*sirá-k) is typically dropped when forming compounds.\n\nEVIDENCE:\n- Woccon: Yau-hauk 'A Snake' (reconstructed *yá Park)\n- Catawba: ya ? 'snake'; sirá-k 'grass'\n\nSTRUCTURE:\n- Base 1: *ya? 'snake'\n- Base 2: *sirá-k 'grass'\n- Compound Formation: *ya? + *sirá-k -> *yá Park (initial syllable 'si-' of 'grass' is dropped)\n- Meaning: 'Snake' (literally 'snake-grass' or similar compound)\n\nCAVEATS: This pattern of dropping the initial syllable of 'grass' in compounds is noted as typical (cf. 1.36).",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "45. Snake *yá Park: W (Yau-hauk) 'A Snake': C ya ? 'snake plus sirá-k 'grass'. (The initial syllable of the word for grass is typically dropped in compounds [cf. 1.36].)",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Proto-Catawban uses the prefix *ru- to indicate 'by hand' or manual action/formation.\n\nEVIDENCE:\n- Woccon: Roosomme 'Soft' (reconstructed *rusami)\n- Catawba: [ru-] 'by hand'; samí- 'fine, finely formed or made'\n\nSTRUCTURE:\n- Prefix: *ru- 'by hand'\n- Stem: *sami 'fine, finely formed'\n- Compound: *ru-sami\n- Meaning: 'Soft' (literally 'finely formed by hand' or similar)\n\nCAVEATS: The Catawba form shows the prefix [ru-] combined with the stem samí-.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "47. Soft *rusami. W (Roosomme) 'Soft, C [ru-] 'by hand' plus samí- *fine, finely formed or made'",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Proto-Catawban forms possessive compounds using the third person possessive suffix *-wa? on the possessed noun, which can combine with other nominal elements.\n\nEVIDENCE:\n- Woccon: Rooesoo possoo 'Stockings' (reconstructed *ru?ísap píswa?)\n- Catawba: ísap 'leggings, trousers'; pis 'skin'; -wa? 'third person possessive suffix'\n\nSTRUCTURE:\n- Stem 1: *ísap 'leggings/trousers'\n- Stem 2: *pis 'skin'\n- Suffix: *-wa? (3rd person possessive)\n- Compound: *ru?ísap + *píswa? (Note: The reconstruction *ru?ísap píswa? suggests a complex possessive or compound structure where 'skin' is possessed or modified. The text links 'Stockings' to 'leggings' + 'skin' with the 3rd person possessive suffix.)\n\nCAVEATS: The exact morphological breakdown in Woccon *ru?ísap píswa? involves the Catawba elements ísap and pis with the suffix -wa?.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "48. Stockings *ru?ísap píswa?: W (Rooesoo possoo) 'Stockings': C ísap 'leggings, trousers' plus pis 'skin' with the third person possessive suffix-wa?]",
+      "grammar_lineage": "proto_catawban",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "pronunciation_notes": [],
+  "cultural_notes": [],
+  "audit": {
+    "raw_lexicon_count": 0,
+    "kept_lexicon_count": 0,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

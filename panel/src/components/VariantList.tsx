@@ -43,7 +43,13 @@ export function VariantList({ baseEntryId }: { baseEntryId: string }) {
               </span>
             )}
           </div>
-          {v.pronunciation && <PronunciationGuide pronunciation={v.pronunciation} className="text-xs mt-1" />}
+          {v.pronunciation && (
+            <PronunciationGuide
+              pronunciation={v.pronunciation}
+              pronunciationAudioUrl={v.pronunciation_audio_url}
+              className="text-xs mt-1"
+            />
+          )}
           <SourceCitation citation={v.citation} />
         </li>
       ))}

@@ -1,6 +1,8 @@
-ca# Woccon Reconstruction Roadmap
+# Woccon Reconstruction Roadmap
 
 This document maps the **long-term reconstruction vision** (comparative database → scored candidates → community-gated teaching materials) to what exists in the repo today and what to build next.
+
+**Scholarly method & next steps:** [RECONSTRUCTION_METHODOLOGY.md](RECONSTRUCTION_METHODOLOGY.md) — Rudes/Carter pipeline, Catawba vs PSC roles, rule kinds, cognate/correspondence shapes, ordered next steps.
 
 Related docs: [CONTROL_PANEL.md](CONTROL_PANEL.md), [PLAN.md](../PLAN.md) (ingest/panel history), [CLAUDE.md](../CLAUDE.md).
 
@@ -149,7 +151,7 @@ flowchart TB
 | Phase | Work | DoD |
 |-------|------|-----|
 | **R6-a** | Tier-aware lessons | `lesson_manager` / `grammar_lesson_manager` pull only approved Tier 1 (configurable Tier 2) |
-| **R6-b** | Pronunciation layer | Merge pronunciation guide onto approved entries; audio hooks (future) |
+| **R6-b** | Pronunciation layer | Merge pronunciation guide onto approved entries; Kokoro CPU batch → MP3 clips served at `/api/pronunciation-audio/` |
 | **R6-c** | Export bundles | Generate phrasebook / printable lesson JSON from approved subset |
 | **R6-d** | Public dictionary | Read-only `/panel` or static site: official lexicon + “reconstruction” section clearly separated |
 | **R6-e** | Tutor guardrails | RAG + validation: assistant cites chunk IDs; refuses to coin new forms without “speculative” label |
@@ -276,4 +278,4 @@ Record choices when the committee or lead linguist decides:
 
 ---
 
-*Last updated: 2026-06-02. Revise when R0–R6 phases ship or priorities change.*
+*Last updated: 2026-08-01. Revise when R0–R6 phases ship or priorities change. Linguistic method detail lives in RECONSTRUCTION_METHODOLOGY.md.*

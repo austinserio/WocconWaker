@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Full Drive corpus ingest on UIC (unified qwen2.5vl:32b, parallel workers, text cache).
+# Full Drive corpus ingest on UIC (Qwen3.6-27b extraction + qwen2.5vl OCR, parallel workers, text cache).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"

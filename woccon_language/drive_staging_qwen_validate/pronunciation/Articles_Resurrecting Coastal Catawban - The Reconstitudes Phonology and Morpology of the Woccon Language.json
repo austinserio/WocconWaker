@@ -1,0 +1,223 @@
+{
+  "source_path": "Articles/Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language",
+  "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+  "lexicon_entries": [],
+  "grammar_notes": [],
+  "pronunciation_notes": [
+    {
+      "text": "The Woccon phoneme inventory can be reconstituted by examining Woccon words that have certain cognates in the Catawba language. While the Woccon inventory is similar to that of Catawba, a number of Catawba phonemes are entirely lacking in Woccon. This absence, combined with internal evidence from Catawba, suggests that these phonological innovations occurred after the separation of the two languages. The text specifically introduces the section on Vocalic Phonemes as part of this reconstruction.",
+      "source_page": 230,
+      "source_page_end": 230,
+      "source_excerpt": "By examining the Woccon words that have certain Catawba cognates, it is possible to reconstitute the phoneme inventory of Woccon. While this inventory is similar to that of Catawba, a number of Catawb",
+      "source_chunk_index": 2,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon vowel inventory includes short oral vowels, long oral vowels, and nasal vowels. Short oral vowels are illustrated by forms such as *wátupi 'bottle', *kus 'corn', *atusi 'smoke', and *yéhiya 'water'. Long oral vowels are illustrated by *kuwate 'come along!', *kuware 'he kills it', and *rusami 'soft'. Nasal vowels are illustrated by *įtu 'pipe', *nimé? warápha:? 'swine', *wiya 'paint', and *wy 'button'. There are cases where Woccon has a nasal vowel corresponding to a long oral vowel in Catawba, such as *áha? 'goose' (Catawba áha?) and *ipa 'tobacco' (Catawba ipa).",
+      "source_page": 231,
+      "source_page_end": 231,
+      "source_excerpt": "Examples illustrating the short oral vowels are: *wátupi 'bottle'... Words illustrating Woccon long vowel phonemes include: *kuwate 'come along!'... Examples illustrating the nasal vowels are: *įtu 'p",
+      "source_chunk_index": 4,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon consonantal phonemes are essentially the same as Catawba: p, t, k, ʔ (represented as 2 in source), b, d, č, s, š, h, m, n, r, w, y. The phoneme s is extremely rare, and b is not very frequent.",
+      "source_page": 231,
+      "source_page_end": 231,
+      "source_excerpt": "2.2. Consonantal Phonemes Woccon appears to have had essentially the same inventory of consonantal phonemes as Catawba. The phonemes of Catawba are p, t, k, 2, b, d, č, s, š, h, m, n, r, w, y (Rudes, ",
+      "source_chunk_index": 4,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon initial *r corresponds to Catawba initial *y in certain cases, suggesting that Catawba *y derives from an earlier *r (or *7). This is illustrated by the correspondence between Woccon *rúmq? ('ronoak', attested as 'Rummaer' or 'Rummaen') and Catawba yú?mq? ('bead', Saraw dialect). Another example is the first element of Woccon *ruhiya ? kítha? ('breeches', attested as 'Rooeyaukitte'), which corresponds to Catawba Cyúhiyą? ('dress', Saraw dialect).",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "correspondence with initial (r) in Woccon, it appears that at least some cases of initial y in Catawba derive from an earlier *7, as illustrated by the initial correspondences seen in the following se",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The phoneme *h is attested in Woccon. Examples include *ty há‍ksa'? ('eleven', attested as 'Tonne hauk pea' or 'Tonne hauk sea'), corresponding to Catawba dapiné há‍ksa-? ('eleven'). Another example is *á·hq? ('goose', attested as 'Auhaun'), corresponding to Catawba Cá·ha ? ('goose').",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Examples illustrating the phoneme h are *ty há‍ksa'? ́eleven' (W (Tonne hauk pea) [copyist error for (Tonne hauk sea)] 'Eleven': C dapiné há‍ksa-? 'eleven'), *á·hq? 'goose' (W (Auhaun) 'A Goose' . Cá·",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "The glides *w and *y are attested in Woccon. Examples include *wiya ('paint', attested as 'Whooyeonne'), corresponding to Catawba wıyaka ? ('blue, green'); *wa awa ('snow', attested as 'Wawawa'), corresponding to Catawba war? ('snow', Esaw dialect) and wá ?wa ('snow', Saraw dialect); and *yą ('wood', attested as 'Yonne'), corresponding to Catawba Cyápi ('log'), yası ('river birch'), and yápa? ('yaupon').",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The glides w and y appear in the following examples: *wiya paint (W (Whooyeonne) 'Paint': C wıyaka ? 'blue, green), *wa awa 'snow' (W (Wawawa) 'Snow: C war? 'snow' [Esaw dia- lect], wá ?wa 'snow' [Sar",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Intervocalic Voicing in Woccon: The text argues that the voiced consonant in the Woccon imperative marker |-de-| (as seen in *kuráte*) results from intervocalic voicing, a phonological process attested in Catawba. This explains the difference between the Woccon form and the Catawba form *ku-7-ra-de-*, where the underlying consonant is voiced due to its position between vowels. This rule suggests that underlying voiceless stops may become voiced when occurring between vowels in Woccon.",
+      "source_page": 235,
+      "source_page_end": 235,
+      "source_excerpt": "In *ni kuráte ‘give me something to eat... the Woccon form suggests that the voiced consonant of the Catawba imperative marker |-de-| results from intervocalic voicing, a process attested elsewhere in",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Orthographic/Copyist Error Note: The text identifies a likely copyist error in the Woccon word *kú·wate·* ('come along!'), noting it is an error for *(Quaute)*. The author assumes the written '(t)' was misread as '(k)'. This implies that the underlying form likely contained a /t/ or similar stop, and the 'k' in the historical record is a transcription artifact rather than a phonological feature of the language.",
+      "source_page": 235,
+      "source_page_end": 235,
+      "source_excerpt": "In the second example (1.e. *kú·wate· ́come along!' [W (Quauke) {error for (Quaute)} 'Will you go along with me?' · C kú-wade 'come along!']) I assume a copyist error in reading a written (t) as a (k)",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon phonology is characterized by a longstanding vacillation in the pronunciation of long oral vowels and nasal vowels, where one replaces the other in various words across different Catawban languages and dialects. This suggests that the distinction between long oral and nasal vowels was not strictly phonemic or stable in the same way as in later Catawba. Additionally, Woccon data confirms that certain sound changes found in Catawba were late developments, implying Woccon retained earlier phonological states. Specifically, Woccon likely lacked the voiced obstruent phonemes /b/ and /d/ as distinct phonemes derived from denasalization of /m/ and /n/, as these are identified as late Catawba-internal developments. Similarly, the elimination of /r/ from word-initial position (via nasalization to /n/ before nasal vowels or obstuentization to /d/ before oral vowels) is a late Catawba change, suggesting Woccon may have preserved initial /r/ or had different reflexes.",
+      "source_page": 236,
+      "source_page_end": 236,
+      "source_excerpt": "Internal reconstruction within Catawba and comparison of data from the two major dialects (Esaw and Saraw) suggest that the following changes were relatively late developments in Catawba: (1) the crea",
+      "source_chunk_index": 11,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Orthographic Convention: Elongated 's' (long s, ſ) replacement. In citing Woccon words, the author follows Carter (1980) by replacing the elongated 's' (ſ) with the standard non-elongated 's'. This is a transcription convention for modernizing historical texts rather than a phonological rule of the spoken language itself.",
+      "source_page": 237,
+      "source_page_end": 237,
+      "source_excerpt": "2 In citing Woccon words, I follow the practice of Carter (1980) in re- placing the elongated \"s\" (i.e. f) with non-elongated “s”.",
+      "source_chunk_index": 12,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phonological Process: Syncope in Catawba 'river'. The Catawba word for river is typically pronounced [iswa], exhibiting syncope (the loss of an unstressed vowel) of the second vowel. The text notes that either Woccon or Catawba has metathesized the first two syllables of this word, implying a historical phonological divergence or alternation between the two languages regarding syllable order and vowel retention.",
+      "source_page": 237,
+      "source_page_end": 237,
+      "source_excerpt": "3 The Catawba word for river is typically pronounced [iswa] with syn- cope of the second vowel. Either Woccon or Catawba has metathesized the first two syllables of this word.",
+      "source_chunk_index": 12,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Woccon, the medial consonant cluster 'dy' was apparently affricated to [dz]. This pronunciation is also recorded for Catawba. Example: The Woccon form for 'Fawn [meat]' is reconstructed as *widyu, but Lawson recorded it as 'Wisto' (with a noted error for 'Witso'). The Catawba cognate is wirdyu 'meat'.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "15. Fawn [meat] *widyu W (Wisto) (error for (Witso)) 'Fawn-skin', C wirdyu 'meat'. (In Woccon the medial dy cluster was apparently affricated ([dz]), a pronunciation also recorded for Catawba.)",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon exhibits nasalization of rhotics (/r/) to nasals (/n/) when influenced by a medial nasal vowel. Example: The Woccon word for 'Four' is reconstructed as *páraparı, but Lawson recorded it as 'Punnum-punne'. The Catawba cognate is párapari 'four'.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "18. Four *páraparı: W (Punnum-punne) 'Four': C párapari 'four'. (The Woccon words shows nasalization of the r's to n's due to the medial nasal vowel.)",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Lawson used a wide variety of different grapheme combinations to render the medial /l/ sound for both Woccon and Tuscarora. The orthography used for the word 'Black' (*yá če, recorded as 'Yah-testea') is cited as one of the more unusual examples of this variation.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "2. Black *yá če: W (Yah-testea) 'Black or Blue, idem.'; C yá-če 'ashes' (Lawson used a wide variety of different grapheme combinations to render medial & for both Woccon and Tuscarora. The orthography",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Regressive nasal assimilation is attested in Catawba dialects (Esaw and Saraw), affecting the form of words like 'bead'. The Esaw form nú?mą? and Saraw form yu?mą? demonstrate this phonological process, where a nasal feature spreads regressively to a preceding consonant or vowel context.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "41. Ronoak *rú?ma?: W (Rummaer) (error for (Rummaen)) 'Ronoak'; Cnú?mą? 'bead' (Esaw dialect), yu?mą? 'bead' (Saraw dialect). (The Esaw and Saraw forms show regressive nasal assimilation.)",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Syncope of the second vowel occurs in the Catawba word for 'river'. The underlying form i suwq? is typically pronounced [i-swa?], dropping the second vowel in rapid speech or standard pronunciation.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "42. Rundlet *?yáp?yap ísuwa: W (Ynpyupseunne) (error for (Yupyupseunne)) 'A Rundlet': C yap tree' plus i suwq? 'river' ... Note that the Catawba word for river is typically pronounced [i-swa?] with sy",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Catawba compounds, the initial syllable of the word for 'grass' (sirá-k) is typically dropped. This is observed in the compound for 'snake' (yá Park), which combines ya ? 'snake' and sirá-k 'grass', resulting in the loss of the initial 'si-' syllable.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "45. Snake *yá Park: W (Yau-hauk) 'A Snake': C ya ? 'snake plus sirá-k 'grass'. (The initial syllable of the word for grass is typically dropped in compounds [cf. 1.36].)",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Vowel Weakening and Deletion in Unstressed Syllables: In Woccon, unstressed vowels in non-initial syllables may weaken to [a] and subsequently be deleted, a pattern attested in Catawba. This is observed in the form for 'give it to me' (Woccon: witite• / Catawba: ni wĺtide). The author assumes the unstressed vowel in the second syllable weakened and was deleted, resulting in the contraction or omission of the first-person singular object proclitic.",
+      "source_page": 239,
+      "source_page_end": 239,
+      "source_excerpt": "20. Give it to me *(ni) witite• 'give it to (me)': W (Mothei) 'Give it to me'; C ni wĺtide 'give it to me. (The first person singular object proclitic has either been omitted from the Woccon form or. ",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Nasal Vowel Influence on Consonants: The presence of a nasal vowel can cause the preceding consonant to reflect nasality. In the Woccon form for 'give it to me' (recorded as Mothei, reconstructed as witite•), the initial (m) for w is interpreted as reflecting the following nasal vowel.",
+      "source_page": 239,
+      "source_page_end": 239,
+      "source_excerpt": "20. Give it to me *(ni) witite• 'give it to (me)': W (Mothei) 'Give it to me'; C ni wĺtide 'give it to me. (The first person singular object proclitic has either been omitted from the Woccon form or. ",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Vowel Correspondence: Woccon occasionally shows 'a' where Catawba has 'i'. This is attested in the word for 'Indians' (Woccon: Yauh-he / *yárye vs. Catawba: yiye). Both constructions mean 'person-genuine'.",
+      "source_page": 239,
+      "source_page_end": 239,
+      "source_excerpt": "26. Indians *yárye: W (Yauh-he) 'Indians'; C yiye 'Indians'. (Woccon occasionally shows a where Catawba hasį. The constructions in both languages mean \"person-genuine\".)",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phonological Adaptation in Loanwords: Labial Stop Substitution\nClaim: When Woccon words are borrowed into Iroquoian languages (specifically Tuscarora), labial stops are substituted due to phonological constraints in the borrowing language.\nAttested Forms:\n- Woccon: *warapha? (White)\n- Tuscarora: uhwarya ke? (White)\nMorpheme Breakdown/Analysis:\n- The Woccon stem contains the labial stop /p/ (warapha?).\n- Tuscarora, like other Iroquoian languages, lacks labial stops (/p/, /b/, /m/ are not native phonemes in the same distribution or are absent).\n- Consequently, the /p/ in the source word is replaced by /k/ in the Tuscarora borrowing.\nUse: This rule applies when analyzing cognates or loanwords between Coastal Catawban (Woccon) and Iroquoian languages. If a Woccon form contains a labial stop and the cognate in an Iroquoian language contains a velar stop (k/g), this substitution is likely the cause.\nAuthor Caveats: The Woccon word *warapha? is described as a metaphoric extension from 'white hot'. The Tuscarora form is cited from Rudes (1999:34).\nSource Excerpt: \"Since Tuscarora, like other Iroquoian languages, lacks labial stops, the p of the source word becomes a k.\"",
+      "source_page": 241,
+      "source_page_end": 241,
+      "source_excerpt": "56. White *warapha?: W (Waurraupa) 'White'; C warápha? 'it is hot (The Woccon word is apparently a metaphoric extension from 'white hot'; the Woccon word is probably the source of the Tuscarora word f",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Orthographic Conventions and Historical Errors\nClaim: The provided Woccon orthography includes historical spellings that contain errors or non-standard representations. Revitalization efforts should correct these based on phonological analysis.\nAttested Forms & Corrections:\n1. Tobacco:\n   - Historical/Erroneous: W (Uu-coone)\n   - Corrected Form: *pa (derived from Catawba *ipa)\n   - Note: The text explicitly marks (Uu-coone) as an error for (Un-poone), but the reconstructed form is given as *pa.\n2. Wind:\n   - Historical/Erroneous: W (Yuncor)\n   - Corrected Form: *yéhu\n   - Note: The text explicitly marks (Yuncor) as an error for (Yuh-hor). The reconstructed form aligns with Catawba yéhu.\nUse: When encountering historical Woccon spellings in primary sources, check for these specific errors. 'Yuncor' should be analyzed as *yéhu, and 'Uu-coone' should be disregarded in favor of the reconstructed *pa or Catawba cognate *ipa.\nAuthor Caveats: The text identifies these as errors in the historical record.\nSource Excerpt: \"53. Tobacco *[pa: W (Uu-coone) (error for (Un-poone)) 'Tobacco'. Cipa 'tobacco'. ... 57. Wind *yéhu: W (Yuncor} (error for (Yuh-hor)) 'Wind'. C yéhu 'wind is blowing'.\"",
+      "source_page": 241,
+      "source_page_end": 241,
+      "source_excerpt": "53. Tobacco *[pa: W (Uu-coone) (error for (Un-poone)) 'Tobacco'. Cipa 'tobacco'. ... 57. Wind *yéhu: W (Yuncor} (error for (Yuh-hor)) 'Wind'. C yéhu 'wind is blowing'.",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Orthography and Pronunciation Guide: The text provides parenthetical English-style pronunciation guides for Woccon forms to aid in phonological reconstruction. These guides indicate vowel length and stress patterns. Examples include: 'Englishman' (Wintsohore), 'Shoes' (Wee-kessoo), 'Belt' (Wee-kau), 'Axe' (Tau-unta winnik), 'Acorns' (Roosomme), 'Alligator' (Monwittetau), 'Angry' (Roocheha), 'Basket' (Rookeppa), 'Buckskin' (Rookau), 'Coat' (Rummissau), 'Crab' (Wunneau), 'Cubit length' (Ishewounaup), 'Day' (Waukhaway), 'Drunk' (Nonnupper), 'Duck' (Welka), 'Fart' (Pautyau), 'Feathers' (Soppe), 'Fishgig' (Weetipsa), 'Five' (Webtau), 'Flints' (Matt-teer), 'Go you' (Yuppa me), 'Gun' (Wittape), 'Gun-Lock' (Noonkosso), 'Hickory Nuts' (Nimma), 'Hominy' (Roocauwa), 'Horse' (Yenwetoa), 'How many' (Tontarinte), 'Jew's-Harp' (Wottiyau), 'Lazy Fellow' (Tontaunete), 'Let it alone' (Sauhau), 'Lightwood' (Sek), 'Mad' (Rockcumme), 'Mink' (Soccon), 'Moss' (Itto), 'Night' (Yantoha), 'Otter' (Wetkes), 'Peaches' (Yonne), 'Pestle' (Miyau), 'Rain' (Yawowa), 'Reed' (Weekwonne).",
+      "source_page": 243,
+      "source_page_end": 243,
+      "source_excerpt": "3. Englishman *witsuhire W (Wintsohore) 'Englishman, English Windsor... APPENDIX 6. BLEND (1) 1. Shoes *wikésu W (Wee-kessoo) 'Shoes'... APPENDIX 7. UNKNOWN ETYMOLOGIES (54) 1. Acorns: W (Roosomme) 'A",
+      "source_chunk_index": 18,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "cultural_notes": [],
+  "audit": {
+    "raw_lexicon_count": 0,
+    "kept_lexicon_count": 0,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

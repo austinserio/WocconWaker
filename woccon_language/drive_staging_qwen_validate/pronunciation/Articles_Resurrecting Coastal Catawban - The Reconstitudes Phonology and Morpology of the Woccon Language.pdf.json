@@ -1,0 +1,223 @@
+{
+  "source_path": "Articles/Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language.pdf",
+  "source_url": "https://drive.google.com/file/d/1fhPtPinqxgPpGO7cvjrMCMj0XueEu3t3/view",
+  "lexicon_entries": [],
+  "grammar_notes": [],
+  "pronunciation_notes": [
+    {
+      "text": "The Woccon phoneme inventory can be reconstituted by examining Woccon words that have Catawba cognates. While the inventory is similar to Catawba, Woccon lacks a number of Catawba phonemes. This divergence, combined with internal evidence from Catawba, suggests that these phonological innovations occurred after the separation of the two languages.",
+      "source_page": 2,
+      "source_page_end": 2,
+      "source_excerpt": "By examining the Woccon words that have certain Catawba cognates, it is possible to reconstitute the phoneme inventory of Woccon. While this inventory is similar to that of Catawba, a number of Catawb",
+      "source_chunk_index": 2,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon vowel inventory includes short oral vowels, long oral vowels, and nasal vowels. Short oral vowels are illustrated by forms such as *wátapi ‘bottle’, *kus ‘corn’, *atusí ‘smoke’, and *yéhiya· ‘water’. Long oral vowels are illustrated by *kú·wate· ‘come along!’, *kuwá·re· ‘he kills it’, and *rusamí- ‘soft’. Nasal vowels are illustrated by *itu ‘pipe’, *niméʔ waráphaʔ ‘swine’, *wiyá ‘paint’, and *wu̓ ‘button/knot’. There are cases where Woccon has a nasal vowel corresponding to a Catawba long oral vowel, such as *á·haʔ? ‘goose’ (Catawba á̓ha·) and *ípa ‘tobacco’ (Catawba ípa·).",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Examples illustrating the short oral vowels are: *wátapi ‘bottle’... Words illustrating Woccon long vowel phonemes include: *kú·wate· ‘come along!’... Examples illustrating the nasal vowels are: *itu ",
+      "source_chunk_index": 4,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon consonantal phonemes are essentially the same as Catawba: p, t, k, ?, b, d, č, s, š, h, m, n, r, w, y. The phoneme š is extremely rare, and b is not very frequent.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "2.2. Consonantal Phonemes Woccon appears to have had essentially the same inventory of consonantal phonemes as Catawba. The phonemes of Catawba are p, t, k, ?, b, d, č, s, š, h, m, n, r, w, y (Rudes, ",
+      "source_chunk_index": 4,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon shared the same vowel inventory as Catawba, consisting of twelve vowel phonemes divided into three series: four short oral vowels (i, e, a, u), four long oral vowels (ī, ē, ō, ū), and four nasal vowels (ĩ, ẽ, ã, ũ). A key phonological distinction between Woccon and Catawba involves the distribution of long oral vowels versus nasal vowels. In most correspondence sets, Woccon exhibits a long oral vowel where Catawba exhibits a nasal vowel. Specific attested correspondence sets include: ã vs ā (6 examples), i̓ vs r̄ (5 examples), and ũ vs u̓ (2 examples). Examples include: *iktá? ‘bread’ (Woccon <Ikettau> vs Catawba iktáre· ‘they bake it’); *tá·si ‘dog’ (Woccon <Tauh-he> [error for Taus-se] vs Catawba tásı̓ ‘dog’); *wí·ta? ‘rat’ (Woccon <Wittau> vs Catawba wíta? ‘rat’); and *ni ku-ʔrá-te· ‘give me something to eat’ (Woccon <Nocoo Eraute> vs Catawba ni kụ?-ʔra-de·). Caution is advised regarding Lawson’s orthography: English orthography lacks distinctive means for writing nasal vowels, particularly before fricatives. Therefore, some forms recorded as long oral vowels in Lawson’s vocabulary may have actually been nasal vowels that were either not heard or not recorded by Lawson.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The data indicate that the Woccon language shared the same inventory of vowels as the Catawba language, specifically, twelve vowel phonemes divided into three series: four short oral vowels (i, e, a, ",
+      "source_chunk_index": 3,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon Consonant Inventory and Phonemic Distinctions: The attested consonantal phonemes of Woccon are p, t, k, č, s, h, m, n, r̄, w, y. The glottal stop (?) is assumed to exist in Woccon due to its frequency in Catawba and limitations of early English orthography, though not directly attested in Lawson's vocabulary. Crucially, Woccon lacks the phonemes b, d, and š. These sounds developed in Catawba through specific historical changes (denasalization of m/n before oral vowels, voicing of p/t before voiced consonants, intervocalic voicing, and onomatopoeic introduction) that did not occur in Woccon. For example, Woccon retains *m* and *n* where Catawba has *b* and *d* (e.g., Woccon *nápusa·* 'eight' vs. Catawba *dábusa·*; Woccon *napiné* 'one' vs. Catawba *dapiné*). The phoneme š in Catawba derives from underlying |sy| or Proto-Siouan-Catawban retention, but these changes/retentions are absent in Woccon.",
+      "source_page": 232,
+      "source_page_end": 232,
+      "source_excerpt": "Based on the available evidence, the consonantal phonemes of Woccon were p, t, k, (?), č, s, h, m, n, r̄, w, y; there is no evidence in Lawson’s vocabulary for assuming the phonemes b, d, š for Woccon",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Distribution of r̄ (Lateral R): The phoneme r̄ exists in Woccon but exhibits different distributional constraints compared to Catawba. In Catawba, r̄ is defective and cannot occur in word-initial position; initial |r| surfaces as d before oral vowels and n before nasal vowels. The text implies Woccon allows r̄ in positions where Catawba does not, or at least that the specific Catawba restrictions do not apply in the same way, citing Woccon *rúʔmaʔ?* 'ronoak' (where Catawba has *níʔmaʔ?* or *yíʔmaʔ?*).",
+      "source_page": 232,
+      "source_page_end": 232,
+      "source_excerpt": "The phoneme r̄ is defective in Catawba, since it cannot occur in word-initial position. In modern Catawba, initial |r| appears as d before an oral vowel and n before a nasal vowel... *rúʔmaʔ? ‘ronoak’",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Intervocalic Voicing in Woccon: The Woccon imperative marker appears as a voiced consonant (e.g., -te- in ni ku·ʔrá-te-) where the corresponding Catawba form has a voiceless consonant (|-de-|). This suggests that intervocalic voicing is a phonological process in Woccon, consistent with attested patterns in Catawba. Example: Woccon ni ku·ʔrá-te- 'give me something to eat' vs. Catawba ni ku-ʔ-ra-de- 'first singular object + give-participial-eat-imperative'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "In *ni ku·ʔrá-te- ‘give me something to eat’ (W (Noccoo Eraute) ‘Have you got anything to eat’ : C | ni ku-ʔ-ra-de-| ‘first singular object + give-participial-eat-imperative’), the Woccon form suggest",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phonological Correspondence: Initial *r in Woccon corresponds to initial y in Catawba (Saraw dialect). This suggests that at least some cases of initial y in Catawba derive from an earlier *r. Attested examples include: Woccon *rú?maʔ? ‘ronoak’ (orthographic form [Rummaer], noted as a copyist error for ⟨Rummaen⟩) corresponding to Catawba yú?maʔ? ‘bead’. Another example is the first part of the Woccon compound *ruhiyaʔ? kíthaʔ? ‘breeches’ (orthographic form [Rooeyaukitte]), corresponding to Catawba yúhiyaʔ? ‘dress’.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "correspondence with initial ⟨r⟩ in Woccon, it appears that at least some cases of initial y in Catawba derive from an earlier *r, as illustrated by the initial correspondences seen in the following se",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phoneme Inventory and Examples: The text provides attested examples for specific phonemes in Woccon. The phoneme h is illustrated by *tú há:ksaʔ? ‘eleven’ (orthographic form [Tonne hauk pea], noted as a copyist error for ⟨Tonne hauk sea⟩) and *á:háʔ? ‘goose’ (orthographic form [Auhauŋ]). The glides w and y are illustrated by *wíyaʔ ‘paint’ (orthographic form ⟨Whooyeonne⟩), *wá:?wawa ‘snow’ (orthographic form [Wawawa]), and *yq ‘wood’ (orthographic form ⟨Yonne⟩).",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "Examples illustrating the phoneme h are *tú há:ksaʔ? ‘eleven’ (W [Tonne hauk pea] [copyist error for ⟨Tonne hauk sea⟩] ‘Eleven’: C dapiné há:ksaʔ? ‘eleven’), *á:háʔ? ‘goose’ (W [Auhauŋ] ‘A Goose’: C á",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Woccon phonology is characterized by a longstanding vacillation in the pronunciation of long oral vowels and nasal vowels, where one replaces the other in various words across different Catawban languages and dialects. This suggests that the distinction between long oral and nasal vowels was not rigidly phonemic in the same way as in later Catawba, or that they were in free variation/complementary distribution depending on the specific lexical item and dialect. Additionally, Woccon data confirms that certain sound changes found in Catawba (such as the creation of voiced obstruents b and d from denasalization of m and n, and the elimination of word-initial r) were late, Catawba-internal developments, implying Woccon retained older phonological states regarding these segments.",
+      "source_page": 236,
+      "source_page_end": 236,
+      "source_excerpt": "The Woccon data also confirm that there was a longstanding vacillation in the pronunciation of long oral vowels and nasal vowels, with the one replacing the other in various words in different Catawba",
+      "source_chunk_index": 11,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Orthographic Convention: Elongated 's' (ʃ) replaced with 's'. In citing Woccon words, the author follows Carter (1980) by replacing the elongated 's' character (phonetically /ʃ/) with the standard non-elongated 's'. This is an orthographic standardization for the Woccon data presented in this work.",
+      "source_page": 237,
+      "source_page_end": 237,
+      "source_excerpt": "2 In citing Woccon words, I follow the practice of Carter (1980) in replacing the elongated \"s\" (i.e. ʃ) with non-elongated \"s\".",
+      "source_chunk_index": 12,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phonological Process: Syncope in Catawba 'river'. The Catawba word for 'river' is typically pronounced [íswa], exhibiting syncope (elision) of the second vowel. This serves as a comparative phonological note for the Coastal Catawban family.",
+      "source_page": 237,
+      "source_page_end": 237,
+      "source_excerpt": "3 The Catawba word for *river* is typically pronounced [íswa] with syncope of the second vowel.",
+      "source_chunk_index": 12,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phonological Process: Metathesis in Woccon/Catawba. The text notes that either Woccon or Catawba has metathesized (swapped the order of) the first two syllables of a specific word (context implies a comparison with Proto-Siouan or related forms). This indicates a historical sound change involving syllable reordering in the language lineage.",
+      "source_page": 237,
+      "source_page_end": 237,
+      "source_excerpt": "4 Either Woccon or Catawba has metathesized the first two syllables of this word.",
+      "source_chunk_index": 12,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phonological Rule: Affrication of medial /dy/ cluster. In Woccon, the medial consonant cluster /dy/ is realized as an affricate [dz]. This pronunciation is also attested in Catawba. Example: The Woccon form <Wisto> (error for <Witso>) corresponds to Proto-Siouan *wí·dyu· ('meat', specifically 'fawn-skin'). The medial /dy/ in the proto-form is reflected as the affricate sound in the Woccon orthography.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "15. Fawn [meat] *wí·dyu·: W <Wisto> (error for <Witso>) ‘Fawn-skin’, C wí·dyu- ‘meat’. (In Woccon the medial dy cluster was apparently affricated ([dz]), a pronunciation also recorded for Catawba.)",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Phonological Rule: Nasalization of /r/ to /n/ due to medial nasal vowels. In Woccon, the lateral approximant /r/ can undergo nasalization to become /n/ when influenced by a medial nasal vowel. Example: The Woccon form <Punnum-punne> ('Four') corresponds to Proto-Siouan *párapari and Catawba párapari. The shift from /r/ to /n/ in the Woccon form is attributed to the presence of a medial nasal vowel.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "18. Four *párapari: W <Punnum-punne> ‘Four’; C párapari ‘four’. (The Woccon words shows nasalization of the r’s to n’s due to the medial nasal vowel.)",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Orthographic Note: Variable grapheme combinations for medial /č/. The historical orthography used by Lawson for Woccon and Tuscarora exhibits significant variation in rendering the medial affricate /č/. The word for 'Black' (<Yah-testea>) is cited as an example of one of the more unusual grapheme combinations used to represent this sound.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "2. Black *yá·če: W <Yah-testea> ‘Black or Blue, idem.’; C yá·če ‘ashes’. (Lawson used a wide variety of different grapheme combinations to render medial č for both Woccon and Tuscarora. The orthograph",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Iroquoian languages, such as Tuscarora, lack labial stops. When borrowing words from Woccon (a Siouan/Catawban language) that contain labial stops (like /p/), the /p/ is substituted with a velar stop /k/. Example: The Woccon word for 'white' is *warápha? (containing /p/). The Tuscarora borrowing is uhwaryákʔ? (where /p/ becomes /k/).",
+      "source_page": 241,
+      "source_page_end": 241,
+      "source_excerpt": "Since Tuscarora, like other Iroquoian languages, lacks labial stops, the p of the source word becomes a k.",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Vowel Weakening and Deletion in Unstressed Syllables: In Woccon, unstressed vowels in non-initial syllables may weaken to [ə] and subsequently be deleted, a pattern attested in Catawba. Example: The Woccon form for 'give it to me' is reconstructed as *ni wítte·. The author notes that the unstressed vowel in the second syllable of the verb stem weakened to [ə] and was deleted. This contrasts with the Catawba form *ni wítte- where the vowel remains.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "20. Give it to me *(ni) wítte·: give it to (me): W <Mothei> ‘Give it to me’; C ni wítte- ‘give it to me’. (The first person singular object proclitic has either been omitted from the Woccon form or, d",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Nasal Vowel Influence on Consonants: The presence of a nasal vowel can cause the preceding consonant to be realized or transcribed as a nasal. Example: In the Woccon form <Mothei> for 'Give it to me', the initial ⟨m⟩ is interpreted as reflecting the following nasal vowel, rather than being an independent consonant stem. The underlying form is reconstructed with a bilabial stop or glide (w) influenced by the nasalization.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "20. Give it to me *(ni) wítte·: give it to (me): W <Mothei> ‘Give it to me’; C ni wítte- ‘give it to me’. (The first person singular object proclitic has either been omitted from the Woccon form or, d",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Vowel Alternation (a/i): Woccon occasionally exhibits an 'a' vowel where Catawba exhibits an 'i' vowel in cognate forms. Example: The Woccon word for 'Indians' is *yá·ye (from <Yauh-he>), whereas the Catawba cognate is *yíye. The author notes this variation while confirming that the construction in both languages means 'person-genuine'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "26. Indians *yá·ye: W <Yauh-he> ‘Indians’; C yíye ‘Indians’. (Woccon occasionally shows a- where Catawba has i-. The constructions in both languages mean “person-genuine”.)",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Catawba, the word for 'river' (í·suwq?) is typically pronounced [f:swa?] due to the syncope (elision) of the second vowel. This phonological process is noted in the analysis of the Woccon compound for 'Rundlet' (*ʔyápʔyap í·suwa), where the Catawba component reflects this reduced pronunciation.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "Note that the Catawba word for river is typically pronounced [f:swa?] with syncope of the second vowel.",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Catawba exhibits regressive nasal assimilation in certain dialects. This is evidenced by the variation in the word for 'bead': the Esaw dialect form is ný?mq? while the Saraw dialect form is yú?mq?. This phonological rule affects the initial consonant based on the following nasal sound.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "(The Esaw and Saraw forms show regressive nasal assimilation.)",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "In Catawba compounds, the initial syllable of the word for 'grass' (sirák) is typically dropped. This is observed in the formation of the word for 'snake' (*yáʔ?a·k), which combines yaʔ? ('snake') and sirák ('grass'), resulting in the loss of the initial 'si-' syllable.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "(The initial syllable of the word for grass is typically dropped in compounds [cf. 1.36].)",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "cultural_notes": [],
+  "audit": {
+    "raw_lexicon_count": 0,
+    "kept_lexicon_count": 0,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

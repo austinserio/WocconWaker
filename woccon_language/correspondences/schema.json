@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wocconwaker.local/correspondences/envelope.json",
+  "title": "Woccon correspondence registry envelope",
+  "type": "object",
+  "required": ["version", "source", "rules"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "schema_version": { "type": "integer", "minimum": 1 },
+    "source": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string" },
+    "generator": { "type": "string" },
+    "rules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/correspondenceRule" }
+    }
+  },
+  "$defs": {
+    "correspondenceRule": {
+      "type": "object",
+      "required": ["id", "rule_kind", "correspondence_status", "source"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "rule_kind": {
+          "type": "string",
+          "enum": [
+            "orthographic",
+            "sister_wc",
+            "diachronic_psc",
+            "diachronic_ps"
+          ]
+        },
+        "lhs": { "type": ["string", "null"] },
+        "rhs": { "type": ["string", "null"] },
+        "environment": { "type": ["string", "null"] },
+        "direction": {
+          "type": ["string", "null"],
+          "enum": [
+            "w_to_c",
+            "c_to_w",
+            "psc_to_w",
+            "ps_to_w",
+            "lawson_to_w",
+            "bidirectional",
+            null
+          ]
+        },
+        "correspondence_status": {
+          "type": "string",
+          "enum": ["established", "tentative", "singleton"]
+        },
+        "example_cognate_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "grammar_lineage": { "type": ["string", "null"] },
+        "source": { "type": "string", "minLength": 1 },
+        "notes": { "type": ["string", "null"] },
+        "provenance_text": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

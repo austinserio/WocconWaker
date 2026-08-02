@@ -2,6 +2,7 @@
 import io
 import logging
 import os
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Callable, Dict, List, Optional, Tuple
@@ -31,6 +32,18 @@ def _min_chars_per_page() -> int:
         return max(1, int(os.getenv("PDF_OCR_MIN_CHARS_PER_PAGE", "50")))
     except ValueError:
         return 50
+
+
+def _lossy_layer_recheck_enabled() -> bool:
+    v = os.getenv("PDF_OCR_RECHECK_ASCII_SCANS", "true").strip().lower()
+    return v in ("true", "1", "yes")
+
+
+def _min_image_coverage() -> float:
+    try:
+        return min(1.0, max(0.0, float(os.getenv("PDF_OCR_SCAN_IMAGE_COVERAGE", "0.5"))))
+    except ValueError:
+        return 0.5
 
 
 def _ocr_dpi() -> int:
@@ -89,6 +102,67 @@ def needs_any_vision_ocr(page_texts: List[str], *, min_chars_per_page: Optional[
     if sum(len((t or "").strip()) for t in page_texts) == 0:
         return True
     return any(flags)
+
+
+# Accented Latin, IPA extensions, modifier letters and combining marks. Deliberately
+# excludes curly quotes and other typographic non-ASCII, which say nothing about phonetics.
+_PHONETIC_CHAR = re.compile(r"[\u00C0-\u024F\u0250-\u02FF\u0300-\u036F]")
+
+
+def _page_image_coverage(page) -> float:
+    """Largest single embedded image as a fraction of page area."""
+    try:
+        rect = page.rect
+        page_area = float(rect.width) * float(rect.height)
+        if page_area <= 0:
+            return 0.0
+        best = 0.0
+        for info in page.get_image_info():
+            bbox = info.get("bbox")
+            if not bbox:
+                continue
+            x0, y0, x1, y1 = bbox
+            area = abs((x1 - x0) * (y1 - y0))
+            best = max(best, area / page_area)
+        return best
+    except Exception:
+        return 0.0
+
+
+def pages_with_lossy_text_layer(data: bytes, page_texts: List[str]) -> List[bool]:
+    """Flag image-backed pages whose embedded text layer carries no phonetic characters.
+
+    Scanned journal PDFs ship an OCR text layer that reads as dense, clean English while
+    having silently dropped every diacritic. Character-count thresholds score those pages
+    as good text, so the phonetic notation the comparative pipeline depends on is lost
+    without any error. Requiring a full-page image keeps born-digital English documents,
+    which legitimately contain no diacritics, from being re-OCRed.
+    """
+    if not _lossy_layer_recheck_enabled() or not page_texts:
+        return [False] * len(page_texts)
+
+    try:
+        import fitz
+    except ImportError:
+        return [False] * len(page_texts)
+
+    min_coverage = _min_image_coverage()
+    threshold = _min_chars_per_page()
+    flags = [False] * len(page_texts)
+    try:
+        with fitz.open(stream=data, filetype="pdf") as doc:
+            for i, text in enumerate(page_texts):
+                if i >= len(doc):
+                    break
+                body = (text or "").strip()
+                if len(body) < threshold or _PHONETIC_CHAR.search(body):
+                    continue
+                if _page_image_coverage(doc[i]) >= min_coverage:
+                    flags[i] = True
+    except Exception as e:
+        log.warning("Could not inspect PDF pages for a lossy text layer: %s", e)
+        return [False] * len(page_texts)
+    return flags
 
 
 def render_pdf_page_images(data: bytes, *, dpi: Optional[int] = None) -> List[bytes]:
@@ -167,21 +241,30 @@ def extract_pdf_text(
     on_progress: ProgressCallback = None,
 ) -> Tuple[str, str]:
     """
-    Extract marked text from PDF bytes. Uses pdfplumber first; OCRs sparse pages via Claude vision.
+    Extract marked text from PDF bytes. Uses pdfplumber first; sends pages that are sparse
+    or backed by a diacritic-free scan text layer to vision OCR.
     Returns (marked_text, method) where method is text | vision | hybrid.
     """
     page_texts = extract_pages_with_pdfplumber(data)
     if not page_texts:
         page_texts = [""]
 
-    ocr_flags = pages_needing_ocr(page_texts)
+    sparse_flags = pages_needing_ocr(page_texts)
+    lossy_flags = pages_with_lossy_text_layer(data, page_texts)
+    if any(lossy_flags):
+        log.info(
+            "%d page(s) have a dense but diacritic-free text layer over a full-page scan; "
+            "re-OCRing them to recover phonetic characters",
+            sum(lossy_flags),
+        )
+    ocr_flags = [s or l for s, l in zip(sparse_flags, lossy_flags)]
     method = _extraction_method(ocr_flags)
 
     if not any(ocr_flags):
         return mark_text_with_pages(page_texts), "text"
 
     if not _ocr_enabled():
-        log.warning("PDF has sparse pages but PDF_OCR_ENABLED=false; using pdfplumber text only")
+        log.warning("PDF has pages needing OCR but PDF_OCR_ENABLED=false; using pdfplumber text only")
         return mark_text_with_pages(page_texts), "text"
 
     from llm_client import _allow_anthropic_fallback, _is_local_llm, _use_anthropic
@@ -208,19 +291,19 @@ def extract_pdf_text(
         page_texts = page_texts[:pdf_page_count]
         ocr_flags = ocr_flags[:pdf_page_count]
 
-    sparse_page_nums = [i for i, flag in enumerate(ocr_flags, start=1) if flag]
+    ocr_page_nums = [i for i, flag in enumerate(ocr_flags, start=1) if flag]
     log.info(
-        "OCR %d sparse pages (of %d total) at %d DPI",
-        len(sparse_page_nums),
+        "OCR %d pages (of %d total) at %d DPI",
+        len(ocr_page_nums),
         len(page_texts),
         _ocr_dpi(),
     )
 
     _free_vram_for_ocr()
-    page_images = render_pdf_pages(data, sparse_page_nums)
+    page_images = render_pdf_pages(data, ocr_page_nums)
 
     ocr_jobs: List[Tuple[int, bytes]] = []
-    for page_num in sparse_page_nums:
+    for page_num in ocr_page_nums:
         png = page_images.get(page_num)
         if png:
             ocr_jobs.append((page_num, png))
@@ -228,7 +311,7 @@ def extract_pdf_text(
     workers = _ocr_parallel_workers()
     if ocr_jobs:
         if workers > 1 and len(ocr_jobs) > 1:
-            log.info("OCR %d sparse pages with %d parallel workers", len(ocr_jobs), workers)
+            log.info("OCR %d pages with %d parallel workers", len(ocr_jobs), workers)
 
             def _ocr_one(job: Tuple[int, bytes]) -> Tuple[int, str]:
                 page_num, png = job

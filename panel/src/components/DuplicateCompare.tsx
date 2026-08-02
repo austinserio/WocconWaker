@@ -77,7 +77,12 @@ export function LexiconDuplicateCompare({
                 <span className="text-render-subtle text-xs ml-1">({entry.pos})</span>
               )}
             </p>
-            {entry.pronunciation && <PronunciationGuide pronunciation={entry.pronunciation} />}
+            {entry.pronunciation && (
+              <PronunciationGuide
+                pronunciation={entry.pronunciation}
+                pronunciationAudioUrl={entry.pronunciation_audio_url}
+              />
+            )}
             {taxonomy && (
               <LexiconBadges
                 taxonomy={taxonomy}
@@ -100,7 +105,10 @@ export function LexiconDuplicateCompare({
               )}
             </p>
             {duplicateMatch.pronunciation && (
-              <PronunciationGuide pronunciation={duplicateMatch.pronunciation} />
+              <PronunciationGuide
+                pronunciation={duplicateMatch.pronunciation}
+                pronunciationAudioUrl={duplicateMatch.pronunciation_audio_url}
+              />
             )}
             {taxonomy && (
               <LexiconBadges

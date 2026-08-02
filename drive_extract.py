@@ -12,6 +12,14 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 log = logging.getLogger("drive_extract")
 
+
+def _extraction_focus_from_env() -> Tuple[str, Optional[str]]:
+    """Optional CLI/ingest overrides: EXTRACTION_FOCUS, GRAMMAR_LINEAGE."""
+    focus = (os.environ.get("EXTRACTION_FOCUS") or "general").strip().lower()
+    lineage = (os.environ.get("GRAMMAR_LINEAGE") or "").strip() or None
+    return focus, lineage
+
+
 # Per-file staging directory; one JSON per source file for review-before-merge
 DEFAULT_STAGING_DIR = "woccon_language/drive_staging"
 # When using Haiku model, write here so Sonnet output in drive_staging is not overwritten (compare accuracy).
@@ -816,6 +824,13 @@ def extract_per_file(
     """
     staging_dir = _staging_dir_for_model(model)
     os.makedirs(staging_dir, exist_ok=True)
+    extraction_focus, grammar_lineage = _extraction_focus_from_env()
+    if extraction_focus != "general" or grammar_lineage:
+        log.info(
+            "Extraction config from env: focus=%s lineage=%s",
+            extraction_focus,
+            grammar_lineage or "(none)",
+        )
     log.info("Staging dir: %s", staging_dir)
     files_to_extract = [
         {"path": r.get("path") or r.get("name") or "unknown", "text": (r.get("text") or "").strip(), "file_id": r.get("file_id"), "modified_time": r.get("modified_time"), "result": r}
@@ -866,6 +881,8 @@ def extract_per_file(
                 chunk_start=chunk_so_far,
                 total_chunks=total_chunks,
                 previous_lexicon=previous_lexicon,
+                extraction_focus=extraction_focus,
+                grammar_lineage=grammar_lineage,
             )
             chunk_so_far += num_chunks
             file_data["file_id"] = file_id

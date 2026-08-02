@@ -1,0 +1,1611 @@
+{
+  "version": 1,
+  "source": "App. 1 certain cognate alignments (Phase 3)",
+  "generated_at": "2026-08-02T03:54:17+00:00",
+  "generator": "align_cognate_pairs",
+  "alignments": [
+    {
+      "cognate_id": "rudes2000_app1_001",
+      "gloss": "awi",
+      "woccon_reconstituted": "wase",
+      "catawba_form": "wą",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_002",
+      "gloss": "black",
+      "woccon_reconstituted": "yá če",
+      "catawba_form": "yá-če",
+      "alignments": [
+        {
+          "w_span": "y",
+          "c_span": "y",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_y_y"
+        },
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_003",
+      "gloss": "blankets",
+      "woccon_reconstituted": "ruyú·ne·?",
+      "catawba_form": "nú",
+      "alignments": [],
+      "ruled_count": 0
+    },
+    {
+      "cognate_id": "rudes2000_app1_004",
+      "gloss": "bottle",
+      "woccon_reconstituted": "wátapi",
+      "catawba_form": "wátapi",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        },
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "t",
+          "c_span": "t",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_t_t"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        },
+        {
+          "w_span": "p",
+          "c_span": "p",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_p_p"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 5,
+          "w_end": 6,
+          "c_start": 5,
+          "c_end": 6,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 3
+    },
+    {
+      "cognate_id": "rudes2000_app1_005",
+      "gloss": "boulder",
+      "woccon_reconstituted": "fti trú",
+      "catawba_form": "iti",
+      "alignments": [
+        {
+          "w_span": "t",
+          "c_span": "t",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": "legacy_wc_t_t"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_006",
+      "gloss": "bread",
+      "woccon_reconstituted": "iktá·?",
+      "catawba_form": "iktare",
+      "alignments": [
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": null
+        },
+        {
+          "w_span": "k",
+          "c_span": "k",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": "legacy_wc_k_k"
+        },
+        {
+          "w_span": "t",
+          "c_span": "t",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_t_t"
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_007",
+      "gloss": "breeches",
+      "woccon_reconstituted": "ruhiya'? kítha?",
+      "catawba_form": "úhiya?",
+      "alignments": [],
+      "ruled_count": 0
+    },
+    {
+      "cognate_id": "rudes2000_app1_008",
+      "gloss": "come along",
+      "woccon_reconstituted": "kú wate⋅",
+      "catawba_form": "kuwade",
+      "alignments": [
+        {
+          "w_span": "k",
+          "c_span": "k",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_k_k"
+        },
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_w_w"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        },
+        {
+          "w_span": "e",
+          "c_span": "e",
+          "w_start": 6,
+          "w_end": 7,
+          "c_start": 5,
+          "c_end": 6,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_009",
+      "gloss": "corn",
+      "woccon_reconstituted": "kus",
+      "catawba_form": "kus",
+      "alignments": [
+        {
+          "w_span": "k",
+          "c_span": "k",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_k_k"
+        },
+        {
+          "w_span": "u",
+          "c_span": "u",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "s",
+          "c_span": "s",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_s_s"
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_010",
+      "gloss": "dead",
+      "woccon_reconstituted": "kuwáre",
+      "catawba_form": "kuwá",
+      "alignments": [
+        {
+          "w_span": "k",
+          "c_span": "k",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_k_k"
+        },
+        {
+          "w_span": "u",
+          "c_span": "u",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_w_w"
+        },
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_011",
+      "gloss": "dog",
+      "woccon_reconstituted": "tá si",
+      "catawba_form": "tási",
+      "alignments": [
+        {
+          "w_span": "t",
+          "c_span": "t",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_t_t"
+        },
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "s",
+          "c_span": "s",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_s_s"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_013",
+      "gloss": "eight",
+      "woccon_reconstituted": "nápusa‹",
+      "catawba_form": "dábusa-",
+      "alignments": [
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "u",
+          "c_span": "u",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        },
+        {
+          "w_span": "s",
+          "c_span": "s",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_s_s"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 5,
+          "w_end": 6,
+          "c_start": 5,
+          "c_end": 6,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_014",
+      "gloss": "eleven",
+      "woccon_reconstituted": "tu hárksa 2",
+      "catawba_form": "dapině",
+      "alignments": [
+        {
+          "w_span": "r",
+          "c_span": "n",
+          "w_start": 5,
+          "w_end": 6,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_r_n"
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_015",
+      "gloss": "fawn meat",
+      "woccon_reconstituted": "widyu",
+      "catawba_form": "wirdyu",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_016",
+      "gloss": "fire",
+      "woccon_reconstituted": "ya--",
+      "catawba_form": "yaču",
+      "alignments": [
+        {
+          "w_span": "y",
+          "c_span": "y",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_y_y"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_017",
+      "gloss": "flap Dress",
+      "woccon_reconstituted": "rúhiya ?",
+      "catawba_form": "úhiya?",
+      "alignments": [],
+      "ruled_count": 0
+    },
+    {
+      "cognate_id": "rudes2000_app1_018",
+      "gloss": "four",
+      "woccon_reconstituted": "páraparı",
+      "catawba_form": "párapari",
+      "alignments": [
+        {
+          "w_span": "p",
+          "c_span": "p",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_p_p"
+        },
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "r",
+          "c_span": "r",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_r_r"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        },
+        {
+          "w_span": "p",
+          "c_span": "p",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_p_p"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 5,
+          "w_end": 6,
+          "c_start": 5,
+          "c_end": 6,
+          "rule_id": null
+        },
+        {
+          "w_span": "r",
+          "c_span": "r",
+          "w_start": 6,
+          "w_end": 7,
+          "c_start": 6,
+          "c_end": 7,
+          "rule_id": "legacy_wc_r_r"
+        }
+      ],
+      "ruled_count": 4
+    },
+    {
+      "cognate_id": "rudes2000_app1_020",
+      "gloss": "give it to me",
+      "woccon_reconstituted": "(ni) witite•",
+      "catawba_form": "ni",
+      "alignments": [
+        {
+          "w_span": "n",
+          "c_span": "n",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_n_n"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_021",
+      "gloss": "goose",
+      "woccon_reconstituted": "á hq?",
+      "catawba_form": "á·ha-?",
+      "alignments": [
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 0
+    },
+    {
+      "cognate_id": "rudes2000_app1_023",
+      "gloss": "hair",
+      "woccon_reconstituted": "temą",
+      "catawba_form": "temá·",
+      "alignments": [
+        {
+          "w_span": "t",
+          "c_span": "t",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_t_t"
+        },
+        {
+          "w_span": "e",
+          "c_span": "e",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "m",
+          "c_span": "m",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_m_m"
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_025",
+      "gloss": "house",
+      "woccon_reconstituted": "suk",
+      "catawba_form": "suk",
+      "alignments": [
+        {
+          "w_span": "s",
+          "c_span": "s",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_s_s"
+        },
+        {
+          "w_span": "u",
+          "c_span": "u",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "k",
+          "c_span": "k",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_k_k"
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_026",
+      "gloss": "indians",
+      "woccon_reconstituted": "yárye",
+      "catawba_form": "yiye",
+      "alignments": [
+        {
+          "w_span": "y",
+          "c_span": "y",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_y_y"
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_027",
+      "gloss": "king",
+      "woccon_reconstituted": "rumíra?",
+      "catawba_form": "ɩ",
+      "alignments": [],
+      "ruled_count": 0
+    },
+    {
+      "cognate_id": "rudes2000_app1_028",
+      "gloss": "loblolly Pine Place",
+      "woccon_reconstituted": "Pyap wári ma",
+      "catawba_form": "yap",
+      "alignments": [],
+      "ruled_count": 0
+    },
+    {
+      "cognate_id": "rudes2000_app1_029",
+      "gloss": "mortar",
+      "woccon_reconstituted": "wársa·?",
+      "catawba_form": "wá",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        },
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_030",
+      "gloss": "mat",
+      "woccon_reconstituted": "sapí pé·?pe ?",
+      "catawba_form": "supí",
+      "alignments": [
+        {
+          "w_span": "s",
+          "c_span": "s",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_s_s"
+        },
+        {
+          "w_span": "p",
+          "c_span": "p",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_p_p"
+        },
+        {
+          "w_span": "í",
+          "c_span": "í",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_031",
+      "gloss": "nine",
+      "woccon_reconstituted": "wa?čare··",
+      "catawba_form": "wáča",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_033",
+      "gloss": "one",
+      "woccon_reconstituted": "napiné",
+      "catawba_form": "dapiné",
+      "alignments": [
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "p",
+          "c_span": "p",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_p_p"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        },
+        {
+          "w_span": "n",
+          "c_span": "n",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_n_n"
+        },
+        {
+          "w_span": "é",
+          "c_span": "é",
+          "w_start": 5,
+          "w_end": 6,
+          "c_start": 5,
+          "c_end": 6,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_036",
+      "gloss": "pease Pea",
+      "woccon_reconstituted": "kusák",
+      "catawba_form": "kusák",
+      "alignments": [
+        {
+          "w_span": "k",
+          "c_span": "k",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_k_k"
+        },
+        {
+          "w_span": "u",
+          "c_span": "u",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "s",
+          "c_span": "s",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_s_s"
+        },
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        },
+        {
+          "w_span": "k",
+          "c_span": "k",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_k_k"
+        }
+      ],
+      "ruled_count": 3
+    },
+    {
+      "cognate_id": "rudes2000_app1_037",
+      "gloss": "pipe",
+      "woccon_reconstituted": "itu",
+      "catawba_form": "itu",
+      "alignments": [
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": null
+        },
+        {
+          "w_span": "t",
+          "c_span": "t",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": "legacy_wc_t_t"
+        },
+        {
+          "w_span": "u",
+          "c_span": "u",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_038",
+      "gloss": "potato",
+      "woccon_reconstituted": "wá-ti",
+      "catawba_form": "with",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_039",
+      "gloss": "rat",
+      "woccon_reconstituted": "wi-ta-7",
+      "catawba_form": "wita?",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_040",
+      "gloss": "raw-skin wild animal",
+      "woccon_reconstituted": "dápa",
+      "catawba_form": "dápa",
+      "alignments": [
+        {
+          "w_span": "d",
+          "c_span": "d",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": null
+        },
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "p",
+          "c_span": "p",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_p_p"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_041",
+      "gloss": "ronoak",
+      "woccon_reconstituted": "rú?ma?",
+      "catawba_form": "nú?mą?",
+      "alignments": [
+        {
+          "w_span": "ú",
+          "c_span": "ú",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "?",
+          "c_span": "?",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": null
+        },
+        {
+          "w_span": "m",
+          "c_span": "m",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": "legacy_wc_m_m"
+        },
+        {
+          "w_span": "?",
+          "c_span": "?",
+          "w_start": 5,
+          "w_end": 6,
+          "c_start": 5,
+          "c_end": 6,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_042",
+      "gloss": "rundlet",
+      "woccon_reconstituted": "?yáp?yap ísuwa",
+      "catawba_form": "yap",
+      "alignments": [],
+      "ruled_count": 0
+    },
+    {
+      "cognate_id": "rudes2000_app1_043",
+      "gloss": "sick",
+      "woccon_reconstituted": "warápha?",
+      "catawba_form": "wárap",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        },
+        {
+          "w_span": "r",
+          "c_span": "r",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_r_r"
+        },
+        {
+          "w_span": "p",
+          "c_span": "p",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_p_p"
+        }
+      ],
+      "ruled_count": 3
+    },
+    {
+      "cognate_id": "rudes2000_app1_044",
+      "gloss": "smoak smoke",
+      "woccon_reconstituted": "atusí",
+      "catawba_form": "atusi",
+      "alignments": [
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": null
+        },
+        {
+          "w_span": "t",
+          "c_span": "t",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": "legacy_wc_t_t"
+        },
+        {
+          "w_span": "u",
+          "c_span": "u",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": null
+        },
+        {
+          "w_span": "s",
+          "c_span": "s",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": "legacy_wc_s_s"
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_045",
+      "gloss": "snake",
+      "woccon_reconstituted": "yá Park",
+      "catawba_form": "ya",
+      "alignments": [
+        {
+          "w_span": "y",
+          "c_span": "y",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_y_y"
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_046",
+      "gloss": "snow",
+      "woccon_reconstituted": "wá ?wawa",
+      "catawba_form": "wa?",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        },
+        {
+          "w_span": "?",
+          "c_span": "?",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_047",
+      "gloss": "soft",
+      "woccon_reconstituted": "rusami.",
+      "catawba_form": "[ru-]",
+      "alignments": [
+        {
+          "w_span": "r",
+          "c_span": "r",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "u",
+          "c_span": "u",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 0
+    },
+    {
+      "cognate_id": "rudes2000_app1_048",
+      "gloss": "stockings",
+      "woccon_reconstituted": "ru?ísap píswa?",
+      "catawba_form": "ísap",
+      "alignments": [],
+      "ruled_count": 0
+    },
+    {
+      "cognate_id": "rudes2000_app1_049",
+      "gloss": "sun",
+      "woccon_reconstituted": "witá-pire",
+      "catawba_form": "wárpit",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_050",
+      "gloss": "swine",
+      "woccon_reconstituted": "nimé? waráphẩ?",
+      "catawba_form": "nimé?",
+      "alignments": [
+        {
+          "w_span": "n",
+          "c_span": "n",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_n_n"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "m",
+          "c_span": "m",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_m_m"
+        },
+        {
+          "w_span": "é",
+          "c_span": "é",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        },
+        {
+          "w_span": "?",
+          "c_span": "?",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_051",
+      "gloss": "that's all",
+      "woccon_reconstituted": "katé1ne",
+      "catawba_form": "katé",
+      "alignments": [
+        {
+          "w_span": "k",
+          "c_span": "k",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_k_k"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "t",
+          "c_span": "t",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_t_t"
+        },
+        {
+          "w_span": "é",
+          "c_span": "é",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_052",
+      "gloss": "three",
+      "woccon_reconstituted": "ná mi",
+      "catawba_form": "ná-mina",
+      "alignments": [
+        {
+          "w_span": "n",
+          "c_span": "n",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_n_n"
+        },
+        {
+          "w_span": "á",
+          "c_span": "á",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 1
+    },
+    {
+      "cognate_id": "rudes2000_app1_054",
+      "gloss": "two",
+      "woccon_reconstituted": "napari",
+      "catawba_form": "nápari",
+      "alignments": [
+        {
+          "w_span": "n",
+          "c_span": "n",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_n_n"
+        },
+        {
+          "w_span": "p",
+          "c_span": "p",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_p_p"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        },
+        {
+          "w_span": "r",
+          "c_span": "r",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_r_r"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 5,
+          "w_end": 6,
+          "c_start": 5,
+          "c_end": 6,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 3
+    },
+    {
+      "cognate_id": "rudes2000_app1_055",
+      "gloss": "water",
+      "woccon_reconstituted": "yéhiya",
+      "catawba_form": "yehiye",
+      "alignments": [
+        {
+          "w_span": "y",
+          "c_span": "y",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_y_y"
+        },
+        {
+          "w_span": "h",
+          "c_span": "h",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_h_h"
+        },
+        {
+          "w_span": "i",
+          "c_span": "i",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        },
+        {
+          "w_span": "y",
+          "c_span": "y",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_y_y"
+        }
+      ],
+      "ruled_count": 3
+    },
+    {
+      "cognate_id": "rudes2000_app1_056",
+      "gloss": "white",
+      "woccon_reconstituted": "warapha?",
+      "catawba_form": "warápha?",
+      "alignments": [
+        {
+          "w_span": "w",
+          "c_span": "w",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_w_w"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "r",
+          "c_span": "r",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_r_r"
+        },
+        {
+          "w_span": "p",
+          "c_span": "p",
+          "w_start": 4,
+          "w_end": 5,
+          "c_start": 4,
+          "c_end": 5,
+          "rule_id": "legacy_wc_p_p"
+        },
+        {
+          "w_span": "h",
+          "c_span": "h",
+          "w_start": 5,
+          "w_end": 6,
+          "c_start": 5,
+          "c_end": 6,
+          "rule_id": "legacy_wc_h_h"
+        },
+        {
+          "w_span": "a",
+          "c_span": "a",
+          "w_start": 6,
+          "w_end": 7,
+          "c_start": 6,
+          "c_end": 7,
+          "rule_id": null
+        },
+        {
+          "w_span": "?",
+          "c_span": "?",
+          "w_start": 7,
+          "w_end": 8,
+          "c_start": 7,
+          "c_end": 8,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 4
+    },
+    {
+      "cognate_id": "rudes2000_app1_057",
+      "gloss": "wind",
+      "woccon_reconstituted": "yéhu",
+      "catawba_form": "yéhu",
+      "alignments": [
+        {
+          "w_span": "y",
+          "c_span": "y",
+          "w_start": 0,
+          "w_end": 1,
+          "c_start": 0,
+          "c_end": 1,
+          "rule_id": "legacy_wc_y_y"
+        },
+        {
+          "w_span": "é",
+          "c_span": "é",
+          "w_start": 1,
+          "w_end": 2,
+          "c_start": 1,
+          "c_end": 2,
+          "rule_id": null
+        },
+        {
+          "w_span": "h",
+          "c_span": "h",
+          "w_start": 2,
+          "w_end": 3,
+          "c_start": 2,
+          "c_end": 3,
+          "rule_id": "legacy_wc_h_h"
+        },
+        {
+          "w_span": "u",
+          "c_span": "u",
+          "w_start": 3,
+          "w_end": 4,
+          "c_start": 3,
+          "c_end": 4,
+          "rule_id": null
+        }
+      ],
+      "ruled_count": 2
+    },
+    {
+      "cognate_id": "rudes2000_app1_058",
+      "gloss": "wood",
+      "woccon_reconstituted": "ya",
+      "catawba_form": "dpi",
+      "alignments": [],
+      "ruled_count": 0
+    }
+  ]
+}

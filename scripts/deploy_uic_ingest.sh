@@ -39,14 +39,20 @@ if [[ -d "$ROOT/data/ingest_text_cache" ]]; then
     | $RSYNC_SSH "${SSH_USER}@${SSH_HOST}" "wsl -e bash -lc \"tar xf - -C ${REMOTE_DIR}/data\""
 fi
 
-echo "=== Write server .env (OLLAMA_URL=127.0.0.1) ==="
+echo "=== Write server .env (local LLM URL) ==="
 if [[ ! -f "$ROOT/.env" ]]; then
   echo "Missing .env on Mac" >&2
   exit 1
 fi
+MAC_OLLAMA_URL="$(grep '^OLLAMA_URL=' "$ROOT/.env" | cut -d= -f2- | tr -d '"' || true)"
+if [[ "$MAC_OLLAMA_URL" == *":8080"* || "$MAC_OLLAMA_URL" == */v1* ]]; then
+  REMOTE_LLM_URL="http://127.0.0.1:8080/v1"
+else
+  REMOTE_LLM_URL="http://127.0.0.1:11434"
+fi
 # shellcheck disable=SC2016
 grep -v '^OLLAMA_URL=' "$ROOT/.env" | $RSYNC_SSH "${SSH_USER}@${SSH_HOST}" "wsl -e bash -lc \"cat > ${REMOTE_DIR}/.env\""
-remote "if grep -q '^OLLAMA_URL=' ${REMOTE_DIR}/.env; then sed -i 's|^OLLAMA_URL=.*|OLLAMA_URL=http://127.0.0.1:11434|' ${REMOTE_DIR}/.env; else echo OLLAMA_URL=http://127.0.0.1:11434 >> ${REMOTE_DIR}/.env; fi"
+remote "if grep -q '^OLLAMA_URL=' ${REMOTE_DIR}/.env; then sed -i 's|^OLLAMA_URL=.*|OLLAMA_URL=${REMOTE_LLM_URL}|' ${REMOTE_DIR}/.env; else echo OLLAMA_URL=${REMOTE_LLM_URL} >> ${REMOTE_DIR}/.env; fi"
 
 CREDS=$(grep '^GOOGLE_APPLICATION_CREDENTIALS=' "$ROOT/.env" | cut -d= -f2- | tr -d '"')
 if [[ -n "$CREDS" && -f "$CREDS" ]]; then

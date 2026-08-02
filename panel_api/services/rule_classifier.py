@@ -1,6 +1,6 @@
-"""Heuristic classification of grammar rules by domain, POS, and construction."""
+"""Heuristic classification of grammar rules by domain, POS, construction, and rule kind."""
 import re
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 # (pattern, domain, pos, construction) — first match wins per dimension
 _DOMAIN_RULES = [
@@ -73,6 +73,90 @@ def classify_grammar_lineage(content: str) -> Optional[str]:
     return _first_match(content, _LINEAGE_RULES)
 
 
+# Rule kind — order matters (specific diachronic before generic sister)
+_RULE_KIND_RULES = [
+    (
+        r"\b(lawson|copyist|grapheme|handwriting|elongated|orthograph|printer error|explorer orthography|misinterpretation of lawson)\b",
+        "orthographic",
+    ),
+    (
+        r"\b(proto.?siouan.?catawban|proto-siouan-catawban|\*psc\b|siouan.?catawban)\b",
+        "diachronic_psc",
+    ),
+    (
+        r"\b(proto.?siouan|proto-siouan|\*ps\b|pan-siouan|proto-macro-siouan|proto-siouan initial)\b",
+        "diachronic_ps",
+    ),
+    (
+        r"\b(correspondence|catawba.*woccon|woccon.*catawba|nasal vowel|long oral|defective|\*r\b|\*r̄|woccon r|catawba n|sound correspond|denasal|woccon_to_catawba|eliminated r|word-initial)\b",
+        "sister_wc",
+    ),
+]
+
+_CORRESPONDENCE_NOTE_KEYWORDS = [
+    "correspondence",
+    "catawba",
+    "woccon",
+    "nasal vowel",
+    "long oral",
+    "defective",
+    "*r",
+    "lawson",
+    "proto-siouan",
+    "proto siouan",
+    "sound correspond",
+]
+
+
+def is_correspondence_like(content: str) -> bool:
+    """True when prose likely describes a correspondence rule (not general grammar)."""
+    lower = (content or "").lower()
+    return any(k in lower for k in _CORRESPONDENCE_NOTE_KEYWORDS)
+
+
+def classify_rule_kind(content: str) -> Optional[str]:
+    """Classify rule_kind for correspondence registry rows; None if not a correspondence rule."""
+    if not (content or "").strip():
+        return None
+    return _first_match(content, _RULE_KIND_RULES)
+
+
+def classify_correspondence_status(
+    rule_kind: str,
+    lhs: Optional[str],
+    rhs: Optional[str],
+    example_cognate_ids: Optional[List[str]] = None,
+) -> str:
+    """Demote singletons; promote identity pairs with broad cognate support."""
+    examples = example_cognate_ids or []
+    n = len(examples)
+    if rule_kind != "sister_wc":
+        return "established" if n >= 2 else "tentative"
+    if lhs and rhs and lhs == rhs:
+        if n >= 5:
+            return "established"
+        if n >= 2:
+            return "tentative"
+        return "singleton"
+    if n >= 3:
+        return "established"
+    if n >= 2:
+        return "tentative"
+    return "singleton"
+
+
+def infer_direction(rule_kind: str) -> Optional[str]:
+    if rule_kind == "orthographic":
+        return "lawson_to_w"
+    if rule_kind == "sister_wc":
+        return "w_to_c"
+    if rule_kind == "diachronic_psc":
+        return "psc_to_w"
+    if rule_kind == "diachronic_ps":
+        return "ps_to_w"
+    return None
+
+
 def classify_grammar_rule(content: str) -> Dict[str, str]:
     """Return grammar_domain, pos_tag, construction_type for a rule string."""
     domain = _first_match(content, _DOMAIN_RULES) or "other"
@@ -103,6 +187,10 @@ def apply_classification_to_rule(
         row.pos_tag = None
         row.construction_type = None
         row.grammar_lineage = None
+        if hasattr(row, "rule_kind"):
+            row.rule_kind = None
+        if hasattr(row, "correspondence_status"):
+            row.correspondence_status = None
         return
     tags = classify_grammar_rule(content)
     row.grammar_domain = tags["grammar_domain"]
@@ -110,3 +198,10 @@ def apply_classification_to_rule(
     row.construction_type = tags["construction_type"]
     gl = (grammar_lineage or "").strip() or classify_grammar_lineage(content)
     row.grammar_lineage = gl
+    rk = classify_rule_kind(content)
+    if hasattr(row, "rule_kind"):
+        row.rule_kind = rk
+    if hasattr(row, "correspondence_status"):
+        row.correspondence_status = (
+            classify_correspondence_status(rk, None, None) if rk else None
+        )

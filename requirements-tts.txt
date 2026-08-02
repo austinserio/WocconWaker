@@ -1,0 +1,9 @@
+# Isolated venv for Kokoro pronunciation batch generation (CPU-friendly).
+# Requires Python 3.10–3.12 (kokoro 0.9.x does not support 3.13+ yet).
+# Setup:
+#   python3.12 -m venv .venv-tts && source .venv-tts/bin/activate
+#   pip install -r requirements-tts.txt
+# System deps: espeak-ng, ffmpeg
+kokoro>=0.9.4
+soundfile>=0.12.0
+numpy>=1.24.0

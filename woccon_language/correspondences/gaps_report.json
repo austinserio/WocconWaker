@@ -1,0 +1,332 @@
+{
+  "version": 1,
+  "generated_at": "2026-08-02T03:54:17+00:00",
+  "low_coverage_pairs": [
+    {
+      "cognate_id": "rudes2000_app1_003",
+      "gloss": "blankets",
+      "note": "no registry rule matched alignment segments"
+    },
+    {
+      "cognate_id": "rudes2000_app1_007",
+      "gloss": "breeches",
+      "note": "no registry rule matched alignment segments"
+    },
+    {
+      "cognate_id": "rudes2000_app1_017",
+      "gloss": "flap Dress",
+      "note": "no registry rule matched alignment segments"
+    },
+    {
+      "cognate_id": "rudes2000_app1_021",
+      "gloss": "goose",
+      "note": "no registry rule matched alignment segments"
+    },
+    {
+      "cognate_id": "rudes2000_app1_027",
+      "gloss": "king",
+      "note": "no registry rule matched alignment segments"
+    },
+    {
+      "cognate_id": "rudes2000_app1_028",
+      "gloss": "loblolly Pine Place",
+      "note": "no registry rule matched alignment segments"
+    },
+    {
+      "cognate_id": "rudes2000_app1_042",
+      "gloss": "rundlet",
+      "note": "no registry rule matched alignment segments"
+    },
+    {
+      "cognate_id": "rudes2000_app1_047",
+      "gloss": "soft",
+      "note": "no registry rule matched alignment segments"
+    },
+    {
+      "cognate_id": "rudes2000_app1_048",
+      "gloss": "stockings",
+      "note": "no registry rule matched alignment segments"
+    },
+    {
+      "cognate_id": "rudes2000_app1_058",
+      "gloss": "wood",
+      "note": "no registry rule matched alignment segments"
+    }
+  ],
+  "singleton_sister_rules": [
+    {
+      "id": "grammar_06df8001",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_140c7ead",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_19cc5e86",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_1eea4fe3",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_36b6df6c",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_37c69fe1",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_3cbbca20",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_501578d4",
+      "lhs": null,
+      "rhs": null,
+      "environment": "word-initial",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_613bc180",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_61fd7835",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_6597cc91",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_6dee0791",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_79934a5d",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_7f1c2813",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_8ae24b04",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_90b77c7d",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_90d31531",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_963f343e",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_a74e0459",
+      "lhs": null,
+      "rhs": null,
+      "environment": "vowel_correspondence",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_a913ade6",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_b20a0e79",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_bb3f7ae5",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_c7483b61",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_ce86f12f",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_d06ee9eb",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_d531f39c",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_d5db8a3b",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_e8d41d74",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_ef7cb926",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_fcbd5705",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_fe916316",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "grammar_ff091228",
+      "lhs": null,
+      "rhs": null,
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "legacy_wc_h_s",
+      "lhs": "h",
+      "rhs": "s",
+      "environment": "default",
+      "example_count": 0
+    },
+    {
+      "id": "legacy_wc_m_mn",
+      "lhs": "m",
+      "rhs": "mn",
+      "environment": "word-medial",
+      "example_count": 0
+    },
+    {
+      "id": "legacy_wc_n_r",
+      "lhs": "n",
+      "rhs": "r",
+      "environment": "word-medial",
+      "example_count": 1
+    },
+    {
+      "id": "legacy_wc_u015b_s",
+      "lhs": "ś",
+      "rhs": "s",
+      "environment": "default",
+      "example_count": 0
+    }
+  ],
+  "unused_established_rules": [
+    "legacy_wc_u010d_u010d",
+    "legacy_wc_u0161_u0161"
+  ],
+  "rule_usage_counts": {
+    "legacy_wc_w_w": 13,
+    "legacy_wc_p_p": 9,
+    "legacy_wc_t_t": 8,
+    "legacy_wc_k_k": 8,
+    "legacy_wc_y_y": 7,
+    "legacy_wc_s_s": 7,
+    "legacy_wc_r_r": 5,
+    "legacy_wc_n_n": 5,
+    "legacy_wc_m_m": 3,
+    "legacy_wc_h_h": 3,
+    "legacy_wc_r_n": 1
+  },
+  "summary": {
+    "low_coverage_count": 10,
+    "singleton_count": 36,
+    "unused_established_count": 2
+  }
+}

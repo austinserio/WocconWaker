@@ -11,6 +11,7 @@ import Dictionary from "./pages/Dictionary";
 import Pending from "./pages/Pending";
 import Upload from "./pages/Upload";
 import Library from "./pages/Library";
+import Comparative from "./pages/Comparative";
 import Commit from "./pages/Commit";
 import Audit from "./pages/Audit";
 import Users from "./pages/Users";
@@ -56,6 +57,7 @@ export default function App() {
           }
         />
         <Route path="library" element={<Library />} />
+        <Route path="comparative" element={<Comparative />} />
         <Route
           path="commit"
           element={

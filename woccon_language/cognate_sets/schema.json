@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wocconwaker.local/cognate_sets/envelope.json",
+  "title": "Woccon cognate set seed envelope",
+  "type": "object",
+  "required": ["version", "source", "sets"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "source": { "type": "string", "minLength": 1 },
+    "ocr_cache_file": { "type": "string" },
+    "generated_at": { "type": "string" },
+    "generator": { "type": "string" },
+    "sets": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/cognateSet" }
+    }
+  },
+  "$defs": {
+    "cognateSet": {
+      "type": "object",
+      "required": [
+        "id",
+        "gloss",
+        "evidence_tier",
+        "rudes_appendix",
+        "rudes_item",
+        "citation_short",
+        "source_path"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^rudes2000_app[1-7]_[0-9]{3}$"
+        },
+        "gloss": { "type": "string", "minLength": 1 },
+        "lawson_form": { "type": ["string", "null"] },
+        "lawson_form_corrected": { "type": ["string", "null"] },
+        "lawson_gloss": { "type": ["string", "null"] },
+        "woccon_reconstituted": { "type": ["string", "null"] },
+        "catawba_form": { "type": ["string", "null"] },
+        "catawba_dialect": {
+          "type": ["string", "null"],
+          "enum": ["esaw", "saraw", "unknown", null]
+        },
+        "proto_siouan": { "type": ["string", "null"] },
+        "evidence_tier": {
+          "type": "string",
+          "enum": ["certain", "partial", "possible", "ps_only", "loan", "unknown", "blend"]
+        },
+        "rudes_appendix": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "rudes_item": { "type": "integer", "minimum": 1 },
+        "carter_set_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": { "type": ["string", "null"] },
+        "citation_short": { "type": "string", "minLength": 1 },
+        "source_path": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

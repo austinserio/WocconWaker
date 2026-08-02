@@ -10,6 +10,7 @@ const nav = [
   { to: "/pending", label: "Pending review", minAccess: "worker" as const },
   { to: "/upload", label: "Upload", minAccess: "worker" as const },
   { to: "/library", label: "Library", minAccess: "member" as const },
+  { to: "/comparative", label: "Comparative", minAccess: "member" as const },
   { to: "/commit", label: "Commit", minAccess: "admin" as const },
   { to: "/audit", label: "Audit log", minAccess: "admin" as const },
   { to: "/users", label: "Team", minAccess: "admin" as const },

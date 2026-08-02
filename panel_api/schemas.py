@@ -198,6 +198,7 @@ class DuplicateMatchPreview(BaseModel):
     english: Optional[str] = None
     pos: Optional[str] = None
     pronunciation: Optional[str] = None
+    pronunciation_audio_url: Optional[str] = None
     teaching_unit: Optional[str] = None
     word_class: Optional[str] = None
     lesson_band: Optional[str] = None
@@ -219,6 +220,7 @@ class PendingLexiconOut(BaseModel):
     english: str
     pos: str
     pronunciation: Optional[str] = None
+    pronunciation_audio_url: Optional[str] = None
     source_url: Optional[str] = None
     status: str
     reviewer_notes: Optional[str] = None
@@ -298,6 +300,8 @@ class PendingRuleOut(BaseModel):
     pos_tag: Optional[str] = None
     construction_type: Optional[str] = None
     grammar_lineage: Optional[str] = None
+    rule_kind: Optional[str] = None
+    correspondence_status: Optional[str] = None
     source_page: Optional[int] = None
     source_page_end: Optional[int] = None
     source_excerpt: Optional[str] = None
@@ -367,6 +371,8 @@ class CanonicalRuleOut(BaseModel):
     pos_tag: Optional[str] = None
     construction_type: Optional[str] = None
     grammar_lineage: Optional[str] = None
+    rule_kind: Optional[str] = None
+    correspondence_status: Optional[str] = None
     source_page: Optional[int] = None
     source_page_end: Optional[int] = None
     source_excerpt: Optional[str] = None
@@ -396,6 +402,9 @@ class CanonicalRulePatch(BaseModel):
     grammar_domain: Optional[str] = None
     pos_tag: Optional[str] = None
     construction_type: Optional[str] = None
+    grammar_lineage: Optional[str] = None
+    rule_kind: Optional[str] = None
+    correspondence_status: Optional[str] = None
     source_page: Optional[int] = None
     source_page_end: Optional[int] = None
     source_excerpt: Optional[str] = None
@@ -412,6 +421,7 @@ class CanonicalLexiconOut(BaseModel):
     english: str
     pos: str
     pronunciation: Optional[str] = None
+    pronunciation_audio_url: Optional[str] = None
     source: Optional[str] = None
     source_url: Optional[str] = None
     source_document_id: Optional[str] = None
@@ -516,3 +526,70 @@ class AuditLogOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class CognateRuleExampleOut(BaseModel):
+    id: str
+    correspondence_rule_id: str
+    alignment: Optional[list] = None
+
+
+class CognateSetOut(BaseModel):
+    id: str
+    gloss: str
+    lawson_form: Optional[str] = None
+    lawson_form_corrected: Optional[str] = None
+    lawson_gloss: Optional[str] = None
+    woccon_reconstituted: Optional[str] = None
+    catawba_form: Optional[str] = None
+    catawba_dialect: Optional[str] = None
+    proto_siouan: Optional[str] = None
+    evidence_tier: str
+    rudes_appendix: int
+    rudes_item: int
+    citation_short: Optional[str] = None
+    source_path: Optional[str] = None
+    source_url: Optional[str] = None
+    notes: Optional[str] = None
+    canonical_lexicon_id: Optional[str] = None
+    rule_examples: List[CognateRuleExampleOut] = []
+
+    class Config:
+        from_attributes = True
+
+
+class CognateSetListResponse(BaseModel):
+    items: List[CognateSetOut]
+    total: int
+    page: int
+    page_size: int
+
+
+class CorrespondenceRuleOut(BaseModel):
+    id: str
+    rule_kind: str
+    lhs: Optional[str] = None
+    rhs: Optional[str] = None
+    environment: Optional[str] = None
+    direction: Optional[str] = None
+    correspondence_status: str
+    grammar_lineage: Optional[str] = None
+    source: str
+    notes: Optional[str] = None
+    provenance_text: Optional[str] = None
+    example_cognate_ids: List[str] = []
+
+    class Config:
+        from_attributes = True
+
+
+class CorrespondenceRuleListResponse(BaseModel):
+    items: List[CorrespondenceRuleOut]
+    total: int
+    page: int
+    page_size: int
+
+
+class ComparativeImportResponse(BaseModel):
+    correspondences: dict
+    cognates: dict

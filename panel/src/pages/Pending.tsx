@@ -303,7 +303,12 @@ export default function Pending() {
                         <span className="text-render-subtle text-xs ml-1">({r.pos})</span>
                       )}
                     </p>
-                    {r.pronunciation && <PronunciationGuide pronunciation={r.pronunciation} />}
+                    {r.pronunciation && (
+                      <PronunciationGuide
+                        pronunciation={r.pronunciation}
+                        pronunciationAudioUrl={r.pronunciation_audio_url}
+                      />
+                    )}
                     {lexTaxonomy && (
                       <LexiconBadges
                         taxonomy={lexTaxonomy}

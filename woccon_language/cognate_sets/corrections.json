@@ -1,0 +1,293 @@
+{
+  "version": 2,
+  "source": "Hand-verified OCR corrections (Reconstruction Accuracy Correction)",
+  "corrections": [
+    {
+      "cognate_id": "rudes2000_app1_005",
+      "field": "woccon_reconstituted",
+      "corrected_value": "íti trú",
+      "verified_by": "raw app1.txt #5",
+      "note": "OCR f -> í in word-initial position"
+    },
+    {
+      "cognate_id": "rudes2000_app1_005",
+      "field": "catawba_form",
+      "corrected_value": "iti tirú",
+      "verified_by": "raw app1.txt #5 Citi tirú",
+      "note": "Compound Catawba boulder form"
+    },
+    {
+      "cognate_id": "rudes2000_app1_010",
+      "field": "catawba_form",
+      "corrected_value": "kuwá're",
+      "verified_by": "raw app1.txt #10",
+      "note": "Apostrophe in Catawba kills-it form"
+    },
+    {
+      "cognate_id": "rudes2000_app1_013",
+      "field": "woccon_reconstituted",
+      "corrected_value": "nápusa",
+      "verified_by": "raw app1.txt #13",
+      "note": "Stray guillemet OCR"
+    },
+    {
+      "cognate_id": "rudes2000_app1_014",
+      "field": "woccon_reconstituted",
+      "corrected_value": "tu hárksa",
+      "verified_by": "raw app1.txt #14",
+      "note": "Stray digit 2 from OCR"
+    },
+    {
+      "cognate_id": "rudes2000_app1_014",
+      "field": "catawba_form",
+      "corrected_value": "dapiné há·ksa?",
+      "verified_by": "raw app1.txt #14",
+      "note": "Eleven compound Catawba"
+    },
+    {
+      "cognate_id": "rudes2000_app1_018",
+      "field": "woccon_reconstituted",
+      "corrected_value": "párapari",
+      "verified_by": "raw app1.txt #18",
+      "note": "Turkish dotless i OCR artifact"
+    },
+    {
+      "cognate_id": "rudes2000_app1_021",
+      "field": "woccon_reconstituted",
+      "corrected_value": "á·hą?",
+      "verified_by": "raw app1.txt #21",
+      "note": "hq -> hą OCR pattern"
+    },
+    {
+      "cognate_id": "rudes2000_app1_022",
+      "field": "woccon_reconstituted",
+      "corrected_value": "ruhiyu",
+      "verified_by": "raw app1.txt #22",
+      "note": "Entry lacks leading star; gunpowder form"
+    },
+    {
+      "cognate_id": "rudes2000_app1_023",
+      "field": "catawba_form",
+      "corrected_value": "temá·",
+      "verified_by": "raw app1.txt #23",
+      "note": "Stop at Catawba gloss, not English brains"
+    },
+    {
+      "cognate_id": "rudes2000_app1_025",
+      "field": "catawba_form",
+      "corrected_value": "suk",
+      "verified_by": "raw app1.txt #25",
+      "note": "OCR curly quote leaked into form"
+    },
+    {
+      "cognate_id": "rudes2000_app1_027",
+      "field": "catawba_form",
+      "corrected_value": "yɩ míra?",
+      "verified_by": "raw app1.txt #27 Cyɩ míra?",
+      "note": "Glued Cy label; yɩ = man/person"
+    },
+    {
+      "cognate_id": "rudes2000_app1_029",
+      "field": "catawba_form",
+      "corrected_value": "wá sa ?",
+      "verified_by": "raw app1.txt #29",
+      "note": "Mortar pestle compound C side"
+    },
+    {
+      "cognate_id": "rudes2000_app1_030",
+      "field": "catawba_form",
+      "corrected_value": "supí",
+      "verified_by": "raw app1.txt #30",
+      "note": "Mat entry; compound head only for simple track"
+    },
+    {
+      "cognate_id": "rudes2000_app1_031",
+      "field": "catawba_form",
+      "corrected_value": "wáča",
+      "verified_by": "raw app1.txt #31",
+      "note": "Nine cognate"
+    },
+    {
+      "cognate_id": "rudes2000_app1_032",
+      "field": "catawba_form",
+      "corrected_value": "ty",
+      "verified_by": "raw app1.txt #32 Cty",
+      "note": "Glued C label for one/little"
+    },
+    {
+      "cognate_id": "rudes2000_app1_033",
+      "field": "catawba_form",
+      "corrected_value": "dapiné",
+      "verified_by": "raw app1.txt #33",
+      "note": "One (Esaw dialect)"
+    },
+    {
+      "cognate_id": "rudes2000_app1_034",
+      "field": "catawba_form",
+      "corrected_value": "wydka ?",
+      "verified_by": "raw app1.txt #34 Cwydka",
+      "note": "Paint; glued C label"
+    },
+    {
+      "cognate_id": "rudes2000_app1_035",
+      "field": "catawba_form",
+      "corrected_value": "itá kče",
+      "verified_by": "raw app1.txt #35 Cutá kče",
+      "note": "Peak/wampum; glued C label"
+    },
+    {
+      "cognate_id": "rudes2000_app1_037",
+      "field": "catawba_form",
+      "corrected_value": "itu",
+      "verified_by": "raw app1.txt #37 Citu",
+      "note": "Pipe; glued C label"
+    },
+    {
+      "cognate_id": "rudes2000_app1_038",
+      "field": "catawba_form",
+      "corrected_value": "wá-ti",
+      "verified_by": "raw app1.txt #38 footnote 1.26",
+      "note": "OCR with -> wá-ti per Rudes; pending PDF if disputed"
+    },
+    {
+      "cognate_id": "rudes2000_app1_039",
+      "field": "woccon_reconstituted",
+      "corrected_value": "wi-ta-?",
+      "verified_by": "raw app1.txt #39",
+      "note": "7 -> glottal stop"
+    },
+    {
+      "cognate_id": "rudes2000_app1_040",
+      "field": "catawba_form",
+      "corrected_value": "dápa",
+      "verified_by": "raw app1.txt #40",
+      "note": "Raw-skin prefix cognate"
+    },
+    {
+      "cognate_id": "rudes2000_app1_041",
+      "field": "catawba_form",
+      "corrected_value": "nú?mą?",
+      "verified_by": "raw app1.txt #41 Cnú?mą?",
+      "note": "Ronoak bead; Esaw dialect"
+    },
+    {
+      "cognate_id": "rudes2000_app1_045",
+      "field": "woccon_reconstituted",
+      "corrected_value": "yá ?",
+      "verified_by": "raw app1.txt #45",
+      "note": "Park is OCR noise in snake compound"
+    },
+    {
+      "cognate_id": "rudes2000_app1_049",
+      "field": "catawba_form",
+      "corrected_value": "wárpit",
+      "verified_by": "raw app1.txt #49",
+      "note": "Tobacco pipe cognate"
+    },
+    {
+      "cognate_id": "rudes2000_app1_051",
+      "field": "catawba_form",
+      "corrected_value": "katé",
+      "verified_by": "raw app1.txt #51",
+      "note": "Stop before English indeed/good-bye gloss leak"
+    },
+    {
+      "cognate_id": "rudes2000_app1_053",
+      "field": "catawba_form",
+      "corrected_value": "pa",
+      "verified_by": "raw app1.txt #53",
+      "note": "Wood/beam cognate head"
+    },
+    {
+      "cognate_id": "rudes2000_app1_055",
+      "field": "catawba_form",
+      "corrected_value": "yehiye",
+      "verified_by": "raw app1.txt #55",
+      "note": "Water cognate; stop before English water gloss"
+    },
+    {
+      "cognate_id": "rudes2000_app1_057",
+      "field": "catawba_form",
+      "corrected_value": "yéhu",
+      "verified_by": "raw app1.txt #57",
+      "note": "Yes cognate"
+    },
+    {
+      "cognate_id": "rudes2000_app1_012",
+      "field": "catawba_form",
+      "corrected_value": "|-ra-|",
+      "verified_by": "raw app1.txt #12",
+      "note": "Morpheme-only eat construction"
+    },
+    {
+      "cognate_id": "rudes2000_app1_003",
+      "field": "catawba_form",
+      "corrected_value": "nú ne ?",
+      "verified_by": "raw app1.txt #3",
+      "note": "Blankets multi-token Catawba"
+    },
+    {
+      "cognate_id": "rudes2000_app1_008",
+      "field": "lawson_form",
+      "corrected_value": "Quaute",
+      "verified_by": "raw app1.txt #8 error for Quaute",
+      "note": "Rudes correction honored"
+    },
+    {
+      "cognate_id": "rudes2000_app1_011",
+      "field": "lawson_form",
+      "corrected_value": "Taus-se",
+      "verified_by": "raw app1.txt #11 error for Taus-se",
+      "note": "Rudes correction; dictionary has Tauh-he OCR"
+    },
+    {
+      "cognate_id": "rudes2000_app1_014",
+      "field": "lawson_form",
+      "corrected_value": "Tonne hauk sea",
+      "verified_by": "raw app1.txt #14",
+      "note": "Rudes correction for eleven Lawson spelling"
+    },
+    {
+      "cognate_id": "rudes2000_app1_015",
+      "field": "lawson_form",
+      "corrected_value": "Witso",
+      "verified_by": "raw app1.txt #15 error for Witso",
+      "note": "Fawn-skin Lawson correction"
+    },
+    {
+      "cognate_id": "rudes2000_app1_025",
+      "field": "lawson_form",
+      "corrected_value": "Suke",
+      "verified_by": "raw app1.txt #25 error for Suke",
+      "note": "House Lawson correction"
+    },
+    {
+      "cognate_id": "rudes2000_app1_031",
+      "field": "lawson_form",
+      "corrected_value": "Wechere",
+      "verified_by": "raw app1.txt #31 error for Wechere",
+      "note": "Nine Lawson correction"
+    },
+    {
+      "cognate_id": "rudes2000_app1_035",
+      "field": "lawson_form",
+      "corrected_value": "Ettoco",
+      "verified_by": "raw app1.txt #35 error for Ettoco",
+      "note": "Peak Lawson correction; residue expected vs dictionary Erroco"
+    },
+    {
+      "cognate_id": "rudes2000_app1_038",
+      "field": "lawson_form",
+      "corrected_value": "Wauti",
+      "verified_by": "raw app1.txt #38 error for Wauti",
+      "note": "Potato Lawson correction"
+    },
+    {
+      "cognate_id": "rudes2000_app1_041",
+      "field": "lawson_form",
+      "corrected_value": "Rummaen",
+      "verified_by": "raw app1.txt #41 error for Rummaen",
+      "note": "Ronoak Lawson correction"
+    }
+  ]
+}

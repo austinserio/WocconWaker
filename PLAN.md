@@ -1,8 +1,10 @@
 # Woccon Waker — Project plan
 
-**Reconstruction & product roadmap:** see **[docs/RECONSTRUCTION_ROADMAP.md](docs/RECONSTRUCTION_ROADMAP.md)** for the full pipeline (digitize → correspondences → candidates → committee publish → learner products), model architecture, grammar tiers, and phased DoD.
+**Reconstruction:**
+- **Method & next steps:** [docs/RECONSTRUCTION_METHODOLOGY.md](docs/RECONSTRUCTION_METHODOLOGY.md) — Lawson↔Catawba first, selective PSC, rule kinds, cognate/correspondence shapes.
+- **Engineering roadmap:** [docs/RECONSTRUCTION_ROADMAP.md](docs/RECONSTRUCTION_ROADMAP.md) — digitize → correspondences → candidates → committee publish → learner products (R0–R6).
 
-This file tracks **platform / ingest / panel** history; the roadmap doc tracks **linguistic reconstruction** goals.
+This file tracks **platform / ingest / panel** history.
 
 ---
 
@@ -15,7 +17,7 @@ This file tracks **platform / ingest / panel** history; the roadmap doc tracks *
 | 3. Structured extraction | **Done** | LLM + merge + verification; source_url in output |
 | 4. RAG & dictionary | **Done** | `POST /admin/reload-language`; `[Community]` RAG precedence; `panel_db` default |
 | 5. Control panel UI | **Done** | `panel/` + `panel_api/` — [docs/CONTROL_PANEL.md](docs/CONTROL_PANEL.md) |
-| 6. Reconstruction engine | **Not started** | See roadmap R0–R6 |
+| 6. Reconstruction engine | **Not started** | Method: [RECONSTRUCTION_METHODOLOGY.md](docs/RECONSTRUCTION_METHODOLOGY.md); eng: roadmap R0–R6 |
 | 7. Committee publish gate | **Not started** | See roadmap R5 |
 | 8. Learner products | **Partial** | Messenger + lessons; tier-gated curriculum TBD |
 
@@ -41,7 +43,7 @@ Maintenance and near-term platform work:
 | Postgres / prod sync | Ongoing | `scripts/pull_panel_db_from_postgres.sh`, migrate scripts |
 | Panel polish | Low | Per user feedback; see CONTROL_PANEL.md |
 
-Linguistic/product work is sequenced in **RECONSTRUCTION_ROADMAP.md** (cognate schema → correspondences → candidates → committee gate → tier-aware lessons).
+Linguistic method and ordered next steps: **RECONSTRUCTION_METHODOLOGY.md**. Engineering phases: **RECONSTRUCTION_ROADMAP.md** (cognate schema → correspondences → candidates → committee gate → tier-aware lessons).
 
 ---
 

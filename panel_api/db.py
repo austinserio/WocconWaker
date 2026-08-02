@@ -153,6 +153,8 @@ class PendingRule(Base):
     pos_tag: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
     construction_type: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
     grammar_lineage: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    rule_kind: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    correspondence_status: Mapped[str | None] = mapped_column(String(16), nullable=True, index=True)
     source_page: Mapped[int | None] = mapped_column(Integer, nullable=True)
     source_page_end: Mapped[int | None] = mapped_column(Integer, nullable=True)
     source_excerpt: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -207,11 +209,80 @@ class CanonicalRule(Base):
     pos_tag: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
     construction_type: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
     grammar_lineage: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    rule_kind: Mapped[str | None] = mapped_column(String(32), nullable=True, index=True)
+    correspondence_status: Mapped[str | None] = mapped_column(String(16), nullable=True, index=True)
     source_page: Mapped[int | None] = mapped_column(Integer, nullable=True)
     source_page_end: Mapped[int | None] = mapped_column(Integer, nullable=True)
     source_excerpt: Mapped[str | None] = mapped_column(Text, nullable=True)
     source_chunk_index: Mapped[int | None] = mapped_column(Integer, nullable=True)
     provenance_status: Mapped[str | None] = mapped_column(String(16), nullable=True)
+
+
+class CognateSet(Base):
+    __tablename__ = "cognate_sets"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    gloss: Mapped[str] = mapped_column(String(512), index=True)
+    lawson_form: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    lawson_form_corrected: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    lawson_gloss: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    woccon_reconstituted: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    catawba_form: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    catawba_dialect: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    proto_siouan: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    evidence_tier: Mapped[str] = mapped_column(String(32), index=True)
+    rudes_appendix: Mapped[int] = mapped_column(Integer, index=True)
+    rudes_item: Mapped[int] = mapped_column(Integer)
+    citation_short: Mapped[str | None] = mapped_column(String(256), nullable=True)
+    source_path: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    source_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    canonical_lexicon_id: Mapped[str | None] = mapped_column(
+        String(36), ForeignKey("canonical_lexicon.id"), nullable=True, index=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow)
+
+    canonical_lexicon: Mapped["CanonicalLexicon | None"] = relationship("CanonicalLexicon")
+    rule_examples: Mapped[list["CognateRuleExample"]] = relationship(
+        back_populates="cognate_set", cascade="all, delete-orphan"
+    )
+
+
+class CorrespondenceRule(Base):
+    __tablename__ = "correspondence_rules"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    rule_kind: Mapped[str] = mapped_column(String(32), index=True)
+    lhs: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    rhs: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    environment: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    direction: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    correspondence_status: Mapped[str] = mapped_column(String(16), index=True)
+    grammar_lineage: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    source: Mapped[str] = mapped_column(String(256))
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    provenance_text: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, onupdate=_utcnow)
+
+    examples: Mapped[list["CognateRuleExample"]] = relationship(
+        back_populates="correspondence_rule", cascade="all, delete-orphan"
+    )
+
+
+class CognateRuleExample(Base):
+    __tablename__ = "cognate_rule_examples"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=_new_id)
+    cognate_set_id: Mapped[str] = mapped_column(String(64), ForeignKey("cognate_sets.id"), index=True)
+    correspondence_rule_id: Mapped[str] = mapped_column(
+        String(64), ForeignKey("correspondence_rules.id"), index=True
+    )
+    alignment_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    cognate_set: Mapped["CognateSet"] = relationship(back_populates="rule_examples")
+    correspondence_rule: Mapped["CorrespondenceRule"] = relationship(back_populates="examples")
 
 
 class AuditLog(Base):
@@ -494,6 +565,39 @@ def _ensure_users_auth_schema() -> None:
         conn.commit()
 
 
+def _ensure_rule_kind_columns() -> None:
+    """Add rule_kind / correspondence_status to rules tables."""
+    from sqlalchemy import inspect, text
+
+    engine = get_engine()
+    insp = inspect(engine)
+    cols = [
+        ("rule_kind", "VARCHAR(32)"),
+        ("correspondence_status", "VARCHAR(16)"),
+    ]
+    with engine.connect() as conn:
+        for table in ("pending_rules", "canonical_rules"):
+            if table not in insp.get_table_names():
+                continue
+            existing = {c["name"] for c in insp.get_columns(table)}
+            for col, typ in cols:
+                if col not in existing:
+                    conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {col} {typ}"))
+        conn.commit()
+
+
+def _ensure_comparative_tables() -> None:
+    """Create comparative tables on existing DBs (Phase 5)."""
+    Base.metadata.create_all(
+        bind=get_engine(),
+        tables=[
+            CognateSet.__table__,
+            CorrespondenceRule.__table__,
+            CognateRuleExample.__table__,
+        ],
+    )
+
+
 def init_db() -> None:
     """Create tables if missing."""
     settings = get_settings()
@@ -512,7 +616,9 @@ def init_db() -> None:
     _ensure_vocab_base_columns()
     _ensure_extraction_config_columns()
     _ensure_content_hash_column()
+    _ensure_rule_kind_columns()
     _ensure_users_auth_schema()
+    _ensure_comparative_tables()
 
 
 def get_db():

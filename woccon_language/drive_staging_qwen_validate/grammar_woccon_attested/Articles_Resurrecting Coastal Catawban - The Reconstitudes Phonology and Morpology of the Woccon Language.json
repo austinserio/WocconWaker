@@ -1,0 +1,376 @@
+{
+  "source_path": "Articles/Resurrecting Coastal Catawban - The Reconstitudes Phonology and Morpology of the Woccon Language",
+  "source_url": "https://drive.google.com/file/d/1PpCKcTWtZU6mIQT2zSULaYFddZ8mCqLIvdDtgb-fgfg/view",
+  "lexicon_entries": [],
+  "grammar_notes": [
+    {
+      "text": "CLAIM: Woccon exhibits transparent lexical morphology with minimal phonological fusion between adjacent morphemes, similar to Catawba. Words can be simple (single morpheme) or complex (two or more morphemes), and the internal structure is nearly always transparent.\n\nEVIDENCE & STRUCTURE:\n1. Simple Lexemes: Composed of a single morpheme.\n   - *kus 'corn' (Woccon: (Cose) 'Com'; Catawba: kus 'corn')\n   - *wita? 'rat' (Woccon: (Wittau) 'A Rat'; Catawba: witą? 'rat')\n\n2. Complex Lexemes: Composed of two or more morphemes with clear boundaries.\n   - *yehu 'wind' (Woccon: (Yun-cor) [error for (Yuh-hor)] 'Wind'; Catawba: yehu 'wind is blowing').\n     - Breakdown: ye 'air' + hu 'come'.\n     - Note: The Woccon form shows the compound nature despite orthographic variation/errors in the source.\n\nUSE: When analyzing or coining Woccon words, assume that morpheme boundaries are preserved phonologically. Do not expect significant sound changes at the junction of roots and affixes or within compounds. This transparency aids in identifying stems and affixes in attested forms.\n\nCAVEATS: The data is meager. While the pattern is similar to Catawba, specific details of Woccon morphophonology may differ but are unattested.",
+      "source_page": 3,
+      "source_page_end": 3,
+      "source_excerpt": "As in Catawba, Woccon words could be simple, .e. composed of a single morpheme (e.g. *kus 'corn' [W (Cose) 'Com': C kus 'corn'], *wita ? 'rat' [W (Wittau) ‘A Rat' · C witą? 'rat']) or complex. 1.e. com- posed of two or more morphemes (e.g. *yehu 'wind' (W (Yun-cor) (error for (Yuh-hor))] 'Wind' : C yehu 'wind is blowing' [from ye 'air' and hu 'come']). As in Catawba, there is little phonological fusion of adjacent morphemes, and as a result, the morphemic composition of words is nearly always transparent.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon forms complex nouns via compounding, following a Head-Noun + Modifier order. This structure suggests an Object-Verb syntax characteristic shared with Catawba.\n\nEVIDENCE & STRUCTURE:\n1. *fti tirú 'boulder'\n   - Woccon: (Itte teraugh) 'Hard or heavy'\n   - Catawba: iti tirú 'big stone, boulder'\n   - Structure: Head (stone/boulder concept) + Modifier (hard/heavy/big).\n\n2. *ruisap píswa? 'stockings'\n   - Woccon: (Rooesoo possoo) 'Stockings'\n   - Catawba: ísap 'leggings, trousers' + pis 'skin' + |-wa? (3rd person possessive suffix).\n   - Structure: Head (leggings) + Modifier (skin/covering).\n\nUSE: When creating new compound nouns in Woccon, place the primary noun (head) first, followed by the descriptive or modifying noun/element. This order is consistent with the attested examples.\n\nCAVEATS: The syntax implication (Object-Verb) is a suggestion based on noun compounding order. Further syntactic evidence is needed to confirm general word order rules.",
+      "source_page": 3,
+      "source_page_end": 3,
+      "source_excerpt": "Both Woccon and Catawba also exhibit lexemes composed of two or more words, e.g. *fti tirú 'boulder (W (Itte teraugh) 'Hard or heavy', Citi tirú 'big stone, boulder'), *ruisap píswa? 'stockings' (W (Rooesoo possoo) 'Stockings': C ísap 'leggings, trousers' plus pis 'skin' with the third person possessive suffix |-wa?]). The order of terms in such com- pounds is head noun followed by modifier, the same pattern found in Catawba, suggesting that Woccon may have shared with Catawba the characteristics of an Object-Verb syntax.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 6,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon preserves Proto-Siouan-Catawban nasals /m/ and /n/ in word-initial and medial positions before oral vowels, whereas Catawba underwent denasalization to /b/ and /d/ in these environments.\n\nEVIDENCE & STRUCTURE:\nThe text states that the phonemes b and d in Catawba developed from the denasalization of m and n before oral vowels. This change did not occur in Woccon. Therefore, Woccon retains the original nasal consonants where Catawba has stops.\n\nAttested Woccon Forms vs. Catawba:\n1. 'eight': Woccon *nápusa (attested as W (Nupsau)) vs. Catawba dábusa. Here, Woccon initial /n/ corresponds to Catawba initial /d/.\n2. 'one': Woccon *napiné (attested as W (noponne)) vs. Catawba dapiné. Here, Woccon initial /n/ corresponds to Catawba initial /d/.\n3. 'bead': Woccon *ru?mą? (attested as W (Rummaer/Rummaen)) vs. Catawba nú?mą? (Esaw) or yu?mq? (Saraw). The Woccon form retains /m/ and /n/ (or nasalized vowels/consonants) where Catawba shows /d/ or /y/ (from /n/ before nasal vowel) or /b/ (from /m/).\n\nUSE: When reconstructing or analyzing Woccon forms, do not apply Catawba's rule of denasalizing /m/ to /b/ or /n/ to /d/ before oral vowels. Retain /m/ and /n/.\n\nCAVEATS: The text notes that Catawba's /r/ is defective in initial position (becoming /d/ before oral vowels, /n/ before nasal vowels), but Woccon allows initial /r/ (e.g., *ru?mą?). This further distinguishes the phonotactics.",
+      "source_page": 232,
+      "source_page_end": 232,
+      "source_excerpt": "Although Catawba and Woccon both exhibit the phonemes m, n, r, the distribution of these three consonants is quite different in the two languages. As noted earlier, many instances of m and n became b and d, respectively, in Catawba before oral vowels, a change that did not occur in Woccon. This phenomenon is illustrated by the following examples: *nápusa 'eight' (W (Nupsau) 'Eight': C dábusa 'eight'), *napiné \"one' (W (noponne)... C dapiné 'one'...), *ru?mą? ronoak' (W (Rummaer)... Cnú?mą? 'bead'...",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon lacks the phonemes /b/ and /d/, which are present in Catawba due to historical sound changes (denasalization, voicing) that did not affect Woccon.\n\nEVIDENCE & STRUCTURE:\nThe text explicitly states there is no evidence in Lawson's vocabulary for assuming the phonemes b, d, & for Woccon. These phonemes in Catawba derive from:\n1. Denasalization of m and n before oral vowels.\n2. Voicing of p and t before voiced consonants.\n3. Onomatopoeic vocabulary.\n4. Sporadic intervocalic voicing of p and t.\n\nSince these changes 'did not occur in Woccon', Woccon phonology is characterized by the absence of voiced stops /b/ and /d/ in native roots, retaining voiceless stops /p/ and /t/ and nasals /m/ and /n/.\n\nAttested Woccon Forms:\n- *wátapı 'bottle' (W (Wattape)): Retains /p/ and /t/, unlike Catawba wátum (which has /m/ from /n/ or similar shift, but notably lacks /b/ or /d/ in this specific root comparison, though the main point is the absence of b/d in Woccon inventory).\n- *kus 'corn' (W (Cose)): Retains /k/ and /s/.\n- *wá?čare 'nine' (W (Weihere)): Retains /č/.\n- *atusí 'smoke' (W (Too-she)): Retains /t/ and /s/.\n\nUSE: Do not coin Woccon forms with initial or medial /b/ or /d/ unless they are loanwords or onomatopoeia explicitly marked as such. Use /p/, /t/, /m/, /n/ instead.\n\nCAVEATS: The text assumes the glottal stop /?/ exists in Woccon (e.g., *wá?čare, *ru?mą?) despite not being explicitly marked in Lawson's orthography, based on Catawba frequency and phonological gaps.",
+      "source_page": 232,
+      "source_page_end": 232,
+      "source_excerpt": "Based on the available evidence, the consonantal phonemes of Woccon were p, t, k, (2), č, s, h, m, n, r, w, y; there is no evidence in Lawson's vocabulary for assuming the phonemes b, d, & for Woccon. The phonemes b and d developed within Catawba from the denasaliza- tion of m and ʼn before oral vowels... These changes and retentions ap- parently did not occur in Woccon.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 5,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon utilizes reduplication of the entire root to signal frequency (frequentive) or intensity (intensive), a feature shared with Catawba but attested in Woccon data.\n\nEVIDENCE & STRUCTURE:\n1. Frequentive Reduplication:\n   - Woccon Form: *sapí pé·?pe ? (attested as W (Soppepepor))\n   - Gloss: 'mat'\n   - Morphology: Root |pe-?- 'step' + frequentive reduplication (pé·?pe).\n   - Analysis: The repetition of the root indicates the action of stepping repeatedly or the object resulting from such action (a mat made by stepping/treading).\n\n2. Intensive Reduplication:\n   - Woccon Form: Zyáp?yap i suwą (attested as W (Ynpyupseunne), corrected to Yupyupseunne)\n   - Gloss: 'rundlet' (a small river/stream)\n   - Morphology: Root Pyap 'tree' (Catawba cognate) + intensive reduplication (Zyáp?yap) + í'suwą 'river'.\n   - Analysis: The reduplication intensifies the root meaning, likely implying a river characterized by trees or a specific type of tree-lined waterway.\n\nUSE: To derive new forms indicating repeated action or intensified quality, repeat the entire verb or noun root. \n\nCAVEATS: The Woccon examples are limited to these two instances in the source. The phonological realization of the reduplicated form may vary (e.g., Soppepepor vs. sapí pé·?pe ?), suggesting potential phonetic adjustments or dialectal variation in Lawson's recording.",
+      "source_page": 233,
+      "source_page_end": 233,
+      "source_excerpt": "There are two examples that show that reduplication was also used in Woccon: *sapí pé·?pe ? 'mat' (W (Soppepepor) 'A Mat : C sapi 'on top plus pé ?pe 2, from the root |pe-?- 'step' with frequentive reduplication) and Zyáp?yap i suwą 'rundlet' (W (Ynpyupseunne) [error for (Yupyupseunne)] \"A Rundlet' : C Pyap 'tree', with intensive reduplication, plus í'suwą 'river').",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 7,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon uses an initial element spelled (Roo) or (Ru) to form names for manufactured items, functioning similarly to the Catawba root [dapa-] but using a distinct morpheme.\n\nEVIDENCE & STRUCTURE:\n1. Woccon Form: *ruyű·ne•? (attested as W (Roo-tune))\n   - Gloss: 'blanket'\n   - Morphology: Prefix (Roo/Ru) + nú ne ? 'blanket' (Catawba cognate).\n   - Analysis: The initial element marks the noun as a manufactured item.\n\n2. Woccon Form: *rupa (attested as W (Rooe-pu))\n   - Gloss: 'hoe'\n   - Morphology: Prefix (Roo/Ru) + |-ipa 'foot' (Catawba cognate).\n   - Analysis: The initial element marks the noun as a manufactured item (a tool used with the foot).\n\nUSE: To coin new terms for manufactured objects, prefix the root (often identifiable via Catawba cognates) with *ru- or *roo-. \n\nCAVEATS: The source suggests this element may be cognate with the Catawba pronominal stem ru- (as in duwé 'what'), but its function in Woccon is specifically to mark manufactured items. This pattern is distinct from the Catawba [dapa-] prefix, though the functional parallel is noted.",
+      "source_page": 233,
+      "source_page_end": 233,
+      "source_excerpt": "Many of the words that refer to manufactured items in Lawson's list begin with an element spelled (Roo) or (Ru). In most cases the part of the word that follows this initial element can be identified with a Catawba cognate lacking the initial element. Examples include *ruyű·ne•? 'blanket' (W (Roo-tune) 'Blankets C nú ne ? blanket') and *rupa 'hoe' (W (Rooe-pu) 'Hoe C |-ipa 'foot').",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 7,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The Woccon imperative mode is marked by the suffix |-de-| (or |-te-| in specific contexts), which corresponds to the Catawba imperative marker |-de-|. Evidence: The form *ni kuráte* ('give me something to eat') contains the segment -te- at the end of the verb complex. The author argues this voiced consonant results from intervocalic voicing of the underlying /d/, a process attested in Catawba. Structure: Verb stem + Imperative Suffix |-de-| (realized as |-te-| intervocalically). Use: To form commands or requests. Caveats: The author notes a second example, *kú·wate·* ('come along!'), but suggests the final -te- might be a copyist error for -ke- or related to Catawba *kú-wade*. The primary attested Woccon evidence for the imperative suffix is in *kuráte*. The form *ni* is identified as the first singular object marker ('me'), showing that the imperative can co-occur with object prefixes.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The imperative mode appears to occur in two Woccon constructions... In *ni kuráte ‘give me something to eat (W (Noccoo Eraute) 'Have you got anything to cat' Cmi ku-7-ra-de- 'first singular object + give-participial-eat-impera- tive'), the Woccon form suggests that the voiced consonant of the Ca- tawba imperative marker |-de- results from intervocalic voicing...",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: The Woccon interrogative mode is marked by the suffix |-ne-|. Evidence: The word *katé-ne* ('is that all?') is the sole attested example of this mode in the provided text. Structure: Verb/Adjective stem + Interrogative Suffix |-ne-|. Use: To form questions. Caveats: This is based on a single attested form. The author compares it to the Catawba interrogative form -ne. The stem *katé* means 'indeed' or 'the last' in Catawba, suggesting *katé-ne* functions as a question meaning 'is that all?' or 'is that the end?'",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "The fourth mode, the interrogative, which has the form -ne in Catawba, is attested in one word: *katé-ne is that all?' (W (Cuttaune) \"That's all': C katé indeed, good-bye', katé se 'the last').",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: In Woccon, alienably possessed nouns mark the possessor with a suffix. Evidence: The form *ruísap píswa?* ('stockings') demonstrates this pattern. The noun *pís* ('skin') takes the third person plural possessive suffix |-wa?|. Structure: Noun Stem + Possessive Suffix (e.g., |-wa?| for 3rd person plural). Use: To indicate possession of alienable items. Caveats: The text states there are no clear examples of inalienably possessed nouns in the Woccon data, though the pattern likely parallels Catawba (where inalienable possession uses prefixes). The example *ruísap píswa?* is glossed as 'stockings', derived from *cisap* ('leggings') plus *pis* ('skin') with the possessive suffix. The suffix |-wa?| specifically marks third person plural possession.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "While there are no clear examples of inalienably possessed nouns in the Woccon data, the three examples of alienably possessed nouns mark the possessor with a suffix. All of these examples involve the same word, marked for third person plural possession. An example is *ruísap píswa? ́stocking\" (W (Rooesoo possoo) 'Stockings'; Cisap 'leggings, trousers' plus pis 'skin' with the third person possessive suffix |-wa?]).",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 9,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: The independent (or indicative) modal suffix in Woccon is *-re*, used to form predicates from roots of various categories (verbs, nouns, adverbs, adjectives, particles). This aligns with Catawba cognate *-re'*. \n\nEVIDENCE & STRUCTURE: \n1. Verb root: *kuwá* 'kill' + *-re* -> *kuwá're* 'he kills it'. Source form: W (Caure) 'Dead' (interpreted as predicate 'he kills it'). Catawba cognate: *kuwáre*.\n2. Numeral root: *wa?čá* 'nine' + *-re* -> *wa?čá·re* 'there are nine'. Source form: W (Weihere) [copyist error for Wechere] 'Nine'. Catawba cognate: *wą?ča*.\n3. Noun/Particle root: *witá'pa* 'sky' + *-re* -> *witá'pare* 'sun, moon' (lit. 'it is sky'). Source form: W (Wittapare) 'Sun or Moon'. Catawba cognate: *wárpit*.\n\nUSE: Attach *-re* to a stem to create a declarative predicate statement. \n\nCAVEATS: The source notes that while Catawba has over twelve modal suffixes, only four are attested in Woccon data. The Woccon forms provided by Lawson often require reconstruction (e.g., correcting copyist errors like Weihere to Wechere) to reveal the underlying *-re* suffix. The suffix functions similarly to the Catawba independent mode, marking the clause as a standard statement.",
+      "source_page": 234,
+      "source_page_end": 234,
+      "source_excerpt": "By far the most frequent mode in Catawba is the independent or indicative mode. This morpheme, which has the form -re'], may be added to verbs, nouns, adverbs, adjectives, and particles to form a predicate... Examples that appear to show the independent modal suffix in Woccon are *kuwá're 'he kills it (W (Caure) 'Dead' C kuwáre 'he kills it'), *wa?čá·re› 'there are nine' : (W (Weihere) [copyist error for (Wechere)] 'Nine'... and *witá'pare 'sun, moon' (W (Wittapare) 'Sun or Moon' [lit., 'it is sky'] : C wárpit 'sky'",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 8,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: The participial modal suffix in Woccon is *-(a)?*, functioning as a nominalizer or as an ending in compound verbal constructions. It often follows the third person singular affix *-h-*. \n\nEVIDENCE & STRUCTURE: \n1. Nominalizer: *ikt* 'bake' + *-a?* -> *iktą?* 'bread' (lit. 'that which is baked'). Source form: W (Ikettau) 'Bread'. Catawba cognate: *iktáre* 'they bake it' (participial form *iktá?* implied).\n2. Nominalizer: *wárap* 'hot/fever' + *-a?* -> *wárapha?* 'one's fever' (lit. 'one's hot-ness'). Source form: W (Waurepa) 'I am sick'. Catawba cognate: *warápha?* 'he is hot'.\n3. Compound/Nominalizer: *rúhiya* 'dress' + *kítha?* 'broken in two' -> *rúhiya? kítha?* 'breeches' (lit. 'split dress'). Source form: W (Rooeyaukitte) 'Breeches'. Catawba cognate: *yûhiyq?* 'dress' + *kítha?* 'broken in two'.\n4. Verbal Compound: *ni* (1st sg obj) + *ku* (give) + *-ra-* (participial) + *de* (eat) + *-?* (imperative/participial mix) -> *ni kuráte* 'give me something to eat'. Source form: W (Noccoo Eraute) 'Have you got anything to eat'. Catawba analysis: *ni ku-3-ra-de-*. \n\nUSE: Use *-(a)?* to turn a verb into a noun (nominalization) or to link verbs in a complex predicate. \n\nCAVEATS: The source indicates this suffix is frequent in Catawba as both a nominalizer and a compound verb marker. In Woccon, the form appears as *-a?* or *-?*. The example *ni kuráte* shows a complex interaction with imperative and object markers, suggesting the participial *-ra-* or *-a?* serves as a linker in serial verb constructions.",
+      "source_page": 234,
+      "source_page_end": 234,
+      "source_excerpt": "Another frequent modal marker in Catawba is the participial, which has the form --(a)?). It is used both as an ending on one of the several verbs in a compound verbal construction and as a nominalizer... Woccon examples illustrating the participial mode are *iktą? 'bread' (W (Ikettau) 'Bread' · Ciktáre 'they bake it'), *wárapha? 'one's fever' (W (Waurepa) 'I am sick' [lit. 'one's fever']: C wárap 'hot', warápha? 'he is hot'), *rúhiya ? kítha? 'breeches' (W (Rooeyaukitte) 'Breeches' [lit. 'split dress']... and *ni kuráte give me something to eat' (W (Noccoo Eraute) 'Have you got anything to eat' ·C | ni ku-3-ra-de- | 'first singular object + give-participial-eat-imperative').",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 8,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: In Woccon, third-person singular subjects are unmarked on the verb. Evidence: The form *kuwá·re' (Woccon: 'Dead', glossed as 'he kills it' in Catawba comparison) shows no subject prefix for the 3rd person singular agent. Similarly, *wárapha? (Woccon: 'I am sick', derived from 'one's fever') aligns with Catawba *warápha? ('he is hot'), where the 3rd person singular subject is zero-marked. Structure: Verb Stem + [Zero Marking for 3SG Subject]. Use: When constructing or analyzing Woccon verbs with a 3rd person singular subject (he/she/it), do not add a subject prefix. Caveats: Data is sparse; this pattern is inferred from limited attested forms and supported by Catawba comparison.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "There are very few analyzable verb forms with subject marking in the Woccon data. A couple of forms, however, indicate that third person singular subjects were unmarked in Woccon, e.g. *kuwá·re' (W (Caure) 'Dead' · C kuwa·re' 'he kills it' [stem: |-k(u)wa--| 'kill']), *wárapha? one's fever (W (Waurepa) 'I am sick' [error for one's fever']: C wárap 'hot', warápha? 'he is hot, hakwaráphire 'he has a fever').",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Singular imperative verbs in Woccon are unmarked for pronominal subject. Evidence: The form *kú wate (Woccon: 'Will you go along with me?', corrected from 'Quauke') corresponds to Catawba *kuwade ('come along!'). The stem is -ku-wa- ('come along'). There is no prefix indicating the 2nd person singular subject ('you'). Structure: Verb Stem + [Zero Marking for 2SG Imperative Subject]. Use: When forming singular imperatives (commands to 'you'), use the bare verb stem without subject prefixes. Caveats: Based on limited examples; pattern mirrors Catawba.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "In Catawba, singular imperative verbs are unmarked for pronominal subject. Examples from the Woccon data illustrating the same pattern are *kú wate come along!' (W (Quauke) [error for Quaute] 'Will you go along with me?', C kuwade 'come along!' [stem -ku-wa- 'come along'])",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon marks pronominal objects using proclitics, specifically for first-person singular objects. Evidence: The form *ni ku frá te (Woccon: 'Have you got anything to eat?', from 'Noccoo Eraute') contains the proclitic *ni- marking the first-person singular object ('me'). The breakdown is *ni- (1SG object) + *ku- (give) + *-ra- (participial/gerundive) + *-de (imperative/eat). This mirrors Catawba *ni ku-?-ra-de. Structure: [1SG Object Proclitic] + Verb Complex. Use: To indicate 'me' as the object of a verb, prefix *ni- to the verb complex. Caveats: Only one clear example of object marking is provided; 3rd person singular objects are likely unmarked (as in Catawba), but this is not explicitly attested in Woccon data.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "There is at least one example from the Woccon data that indicates that pronominal objects were marked in the same way in this language, specifically, *ni ku frá te· 'give me something to eat' (W (Noccoo Eraute) 'Have you got anything to eat C ni ku-2-ra-de 'first singular object + give- participial-eat-imperative')",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon uses a third-person plural subject prefix *i- on verbs. Evidence: The form *íktą? (Woccon: 'Bread', from 'Ikettau', glossed as 'their baking') contains the prefix *i- marking the third-person plural subject ('they'). This corresponds to Catawba *iktáre- ('they bake it'), analyzed as [i- (3PL subject) + kta- (bake) + re- (independent mode)]. Structure: [3PL Subject Prefix *i-] + Verb Stem + Mode Suffix. Use: To indicate a 3rd person plural subject ('they') acting on a verb, prefix *i- to the verb stem. Caveats: This is the only example of 3PL subject marking provided in the text.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "There is also one example that appears to show a third person plural prefix |-| in Woccon, as in Catawba *íktą? 'bread' (W (Ikettau) 'Bread' [lit. 'their baking'] : Ciktáre- 'they bake it' [i.e. [i-kta-re- | *third plural subject-bake-independent mode]]).",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 10,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon utilizes a first-person singular object proclitic, likely identical to or cognate with the Catawba form 'ni'. Evidence: The Woccon form 'witite' (Mothei) meaning 'give it to me' is analyzed as a contraction or omission of the proclitic 'ni' before the verb stem. The author notes that the initial '(m)' in the transcription 'Mothei' reflects the following nasal vowel, suggesting the underlying form was 'ni witite'. Morpheme Breakdown: ni (1SG.OBJ) + witite (give). Use: To mark the recipient of a transitive action as the speaker. Caveats: The attestation relies on interpreting Lawson's handwriting; the proclitic may have been omitted entirely or contracted with the verb. The 'h' in some transcriptions is considered a copyist error for 't'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "20. Give it to me *(ni) witite• 'give it to (me)': W (Mothei) 'Give it to me'; C ni wĺtide 'give it to me. (The first person singular object proclitic has either been omitted from the Woccon form or. due to misinterepretation of Lawson's handwriting, has been contracted with the following verb; the initial (m) for w reflects the following nasal vowel.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon numerals can incorporate an independent modal suffix to indicate existence or presence ('there are X'). Evidence: The Woccon word for 'Nine' is 'Weihere' (corrected from 'Wechere'), which corresponds to Catawba 'wáča'. The author states that the Woccon form contains an independent modal suffix, making the literal meaning 'there are nine'. Morpheme Breakdown: wa?čare· (nine) + [modal suffix]. Use: To express the existence of a quantity rather than just the abstract number. Caveats: The specific phonological form of the modal suffix in Woccon is inferred from the difference between the Woccon 'Weihere' and the Catawba root 'wáča'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "31. Nine *wa?čare·· W (Weihere) (error for (Wechere)) 'Nine'. C wáča 'nine. (The Woccon word contains the independent modal suffix, and thus literally means 'there are nine')",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon exhibits vowel alternation where 'a' appears in positions where Catawba has 'i' (specifically in the word for 'Indians'). Evidence: The Woccon form 'Yauh-he' (Indians) is compared to Catawba 'yiye'. The author notes that 'Woccon occasionally shows a where Catawba has i'. Both constructions mean 'person-genuine'. Morpheme Breakdown: yárye (person-genuine/Indian). Use: Lexical item for 'Indians' or 'people'. Caveats: This is noted as an occasional variation rather than a strict phonological rule, and the etymology is linked to the concept of 'genuine person'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "26. Indians *yárye: W (Yauh-he) 'Indians'; C yiye 'Indians'. (Woccon occasionally shows a where Catawba hasį. The constructions in both languages mean \"person-genuine\".)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 14,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon forms participles or nominalized verbal forms using the suffix *-tau* (orthographically rendered as -tau, -taugh, or similar in Lawson's texts), derived from the proto-Catawban verbal suffix *-ta* 'he/she/it does it' or related nominalizing morphology. \n\nEVIDENCE: The Woccon word for 'Bread' is attested as *Ikettau*. The author notes that this form is \"apparently a participle.\" This is compared to the Catawba verb *iktare* meaning 'they bake it'. The stem *ikt-* corresponds to 'bake'. The Woccon form *Ikettau* represents a nominalized or participial form of the action 'baking', resulting in the noun 'bread' (the baked thing). \n\nSTRUCTURE: Stem + Participial/Nominalizing Suffix. \n- Stem: *ikt-* (bake) \n- Suffix: *-tau* (participle/nominalizer) \n- Result: *Ikettau* (bread/baked thing) \n\nUSE: To derive nouns from verbs, specifically indicating the result of an action or a state of being (participle). This allows for the creation of new lexical items by nominalizing verbal stems. \n\nCAVEATS: The exact phonological shape of the suffix may vary due to Lawson's orthographic inconsistencies (e.g., -tau vs -taugh). The Catawba comparative *iktare* shows a different plural/agentive suffix *-re*, whereas Woccon uses *-tau* for this specific nominalization. This pattern is specific to the attested Woccon form *Ikettau* and distinguishes it from the simple verbal citation form in Catawba.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "6. Bread *iktá·?: W (Ikettau) 'Bread'; C iktare 'they bake it'. (The Woccon form is apparently a participle.)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon exhibits phonological assimilation where medial /r/ sounds are nasalized to /n/ in the presence of medial nasal vowels, specifically attested in the numeral for 'four'. \n\nEVIDENCE: The Woccon word for 'Four' is attested as *Punnum-punne*. The author explicitly states: \"The Woccon words shows nasalization of the r's to n's due to the medial nasal vowel.\" This is compared to the Catawba form *párapari* 'four', which retains the /r/ sounds. \n\nSTRUCTURE: Phonological Rule: /r/ -> [n] / _ V[nasal]. \n- Proto/Catawba Form: *párapari* \n- Woccon Form: *Punnum-punne* \n- Analysis: The /r/ in the first and second syllables assimilates to the nasal quality of the adjacent vowels, becoming /n/. \n\nUSE: When reconstructing or analyzing Woccon forms containing /r/ adjacent to nasal vowels, one must expect potential nasalization of the /r/ to /n/. This rule helps explain discrepancies between Woccon and Catawba cognates. \n\nCAVEATS: This is a specific phonological observation based on the single attested example of 'four'. It may not apply universally to all /r/ contexts in Woccon, but it is a documented feature for this specific morphological environment.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "18. Four *páraparı: W (Punnum-punne) 'Four': C párapari 'four'. (The Woccon words shows nasalization of the r's to n's due to the medial nasal vowel.)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon affricates the medial consonant cluster *dy* to [dz] (or similar affricate), a phonological process also recorded in Catawba but specifically attested in Woccon orthography. \n\nEVIDENCE: The Woccon word for 'Fawn [meat]' is attested as *Wisto* (noted as an error for *Witso*). The author states: \"In Woccon the medial dy cluster was apparently affricated ([dz]), a pronunciation also recorded for Catawba.\" The Catawba cognate is *wirdyu* 'meat'. \n\nSTRUCTURE: Phonological Rule: /dy/ -> [dz] / _ V. \n- Proto/Catawba Form: *wirdyu* (with /dy/ cluster) \n- Woccon Form: *Witso* (representing the affricated output) \n- Analysis: The sequence /dy/ simplifies or affricates to a single affricate sound, transcribed as 'ts' or 'dz' in the orthography. \n\nUSE: When analyzing Woccon stems containing the sequence /dy/, expect affrication to [dz] or [ts]. This aids in identifying cognates with Catawba forms containing /dy/. \n\nCAVEATS: The orthography 'Wisto' is noted as an error for 'Witso', suggesting the affricate is likely [ts] or [dz]. The rule is grounded in this specific attestation of the 'fawn/meat' term.",
+      "source_page": 238,
+      "source_page_end": 238,
+      "source_excerpt": "15. Fawn [meat] *widyu W (Wisto) (error for (Witso)) 'Fawn-skin', C wirdyu 'meat'. (In Woccon the medial dy cluster was apparently affricated ([dz]), a pronunciation also recorded for Catawba.)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 13,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon utilizes a second-person singular possessive prefix *yi-* (orthographically rendered as 'Yi-' or 'Y-') to indicate possession by 'you' (singular). Evidence: The Woccon form W (Yicau) 'Old Woman' is analyzed as the possessed form of the root *yíku* (PS *ihkú* 'grandmother'). The text explicitly states: 'The Woccon form appears to be the possessed form 'your old woman' with the second person singular prefix [yı-].' Structure: [2SG.POSS.Prefix] + [Noun Root]. Use: To form possessed nouns referring to the addressee. Caveats: The analysis relies on comparative reconstruction with Proto-Siouan; the specific phonological realization of the prefix in Woccon is inferred from this single attested example.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "6. Old Woman *yíku: W Yicau 'Old Woman', PS *ihkú 'grandmother' (The Woccon form appears to be the possessed form 'your old wom- an' with the second person singular prefix [yı-]).",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 17,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon employs a pronominal prefix *wi-* (orthographically 'W-') to mark non-human animate nouns, consistent with Proto-Siouan patterns. Evidence: Multiple Woccon forms for animals or animal skins begin with 'W-', corresponding to Proto-Siouan *wi-: W (Ourka/Ounka) 'Bear-skin' (PS *wihú'te), W (Hanatockore) 'Fox-skin' (PS *wihtóxka), W (Wattau) 'Panther-skin' (PS *wihtá), and W (Auher) 'Raccoon-skin' (PS *wihé). The text notes: 'Proto-Siouan initial * wi- is a pronominal element that marks non- human animates.' Structure: [Non-Human.Animate.Prefix] + [Noun Root]. Use: To classify nouns as non-human animates. Caveats: While the prefix is attested in Woccon forms, the text attributes the grammatical function to Proto-Siouan reconstruction. The Woccon forms often refer to 'skins' rather than the live animals, suggesting potential semantic shift or specific lexicalization in Woccon.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "1. Bear *húka : W (Ourka) (error for (Ounka)) 'Bear-skin', PS *wihú'te 'bear'. (Proto-Siouan initial *|wi- is a pronominal element that marks non-human animates [Rankin 1998]). ... 3. Fox *hanatúkare W (Hanatockore) 'Fox-skin', PS *wihtóxka 'fox' ... 7. Panther *witá: W (Wattau) 'Panther-skin', PS *wihtá 'wildcat'. ... 9. Raccoon *a hé: W (Auher) \"Roccoon-skin', PS *wihé(-ka) *raccoon' (Proto-Siouan initial * wi- is a pronominal element that marks non- human animates [Rankin 1998]).",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 17,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon utilizes intensive reduplication to modify nouns, specifically to indicate abundance or density of the referent.\n\nEVIDENCE & STRUCTURE:\n- Attested Woccon form: *?yáp?yap ísuwa* (orthographically recorded as W (Ynpyupseunne) / (Yupyupseunne)).\n- Morpheme breakdown: *?yap* (tree) + intensive reduplication (*?yáp?yap*) + *ísuwa* (river).\n- Gloss: 'A Rundlet' (defined in text as 'a river heavily grown over with trees').\n- Comparative Catawba: *yap* 'tree' + *i suwq?* 'river'.\n\nUSE:\nTo coin new forms indicating a location or object characterized by an abundance of a specific natural element, apply full or partial reduplication to the stem denoting that element before the noun it modifies. For example, if *X* is a noun for a plant, *X-X Y* might mean 'Y covered in X'.\n\nCAVEATS:\nThe text notes that the Catawba word for river typically undergoes syncope ([i-swa?]), but the Woccon form preserves the vowels in the compound structure. The reduplication is identified specifically as 'intensive'.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "42. Rundlet *?yáp?yap ísuwa: W (Ynpyupseunne) (error for (Yupyupseunne)) 'A Rundlet': C yap tree' plus i suwq? 'river' (The Woccon construction shows intensive reduplication of the word for tree indicating that a rundlet is a river heavily grown over with trees. Note that the Catawba word for river is typically pronounced [i-swa?] with syncope of the second vowel.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon forms compounds where the initial syllable of the second element (specifically the word for 'grass/weed') is dropped.\n\nEVIDENCE & STRUCTURE:\n- Attested Woccon form: *yá Park* (orthographically recorded as W (Yau-hauk)).\n- Morpheme breakdown: *ya?* (snake) + *sirá-k* (grass/weed) -> *yá Park*.\n- Gloss: 'A Snake'.\n- Comparative Catawba: *ya?* 'snake' + *sirá-k* 'grass'.\n\nUSE:\nWhen forming compounds involving the stem for 'grass' or 'weed' (*sirá-k*), drop the initial syllable *si-* in Woccon. The resulting form attaches the remaining part of the stem to the head noun. This pattern may apply to other compound formations where the second element begins with a syllable that is elided in Woccon compounding.\n\nCAVEATS:\nThe text explicitly states: 'The initial syllable of the word for grass is typically dropped in compounds'. This is a specific phonological rule for this lexical item in Woccon.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "45. Snake *yá Park: W (Yau-hauk) 'A Snake': C ya ? 'snake plus sirá-k 'grass'. (The initial syllable of the word for grass is typically dropped in compounds [cf. 1.36].)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon uses the prefix *dápa-* to denote 'wild animal' or 'something/some', a meaning retained from Proto-Catawban but restricted to compounds in modern Catawba.\n\nEVIDENCE & STRUCTURE:\n- Attested Woccon form: *dápa* (orthographically recorded as W (Teep)).\n- Gloss: 'Raw-skin undrest' (interpreted as 'wild animal' based on context and Catawba comparison).\n- Comparative Catawba: *dápa* 'something, some'; *dapadá·re·* 'he hunts'; *dapa-* 'prefix on animal names'.\n\nUSE:\nTo coin terms for wild animals or unspecified entities, use *dápa-* as a prefix or standalone noun. In Woccon, this root appears to carry the semantic weight of 'wild animal' or 'raw skin' (metonymy for wild game), whereas in Catawba it is primarily a prefix on animal names or a general quantifier.\n\nCAVEATS:\nThe author suggests *dápa* meant '(wild) animal in Proto-Catawban'. In Woccon, this meaning is retained in the standalone form *Teep* (*dápa*), whereas in Catawba it is only found in compounds. Workers should treat *dápa* as a valid stem for 'wild animal' in Woccon.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "40. Raw-skin [wild animal] *dápa: W (Teep) 'Raw-skin undrest' C dápa 'something, some', dapadá·re· ‘he hunts (compare dáre· ‘he goes'), dapa- \"prefix on animal names\". (It seems that dápa may have meant (wild) animal in Proto-Catawban, a meaning retained in Woccon but only in compounds in Catawba.)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "CLAIM: Woccon forms possessive compounds using the third person possessive suffix *-wa?* on the possessed noun, following the possessor.\n\nEVIDENCE & STRUCTURE:\n- Attested Woccon form: *ru?ísap píswa?* (orthographically recorded as W (Rooesoo possoo)).\n- Morpheme breakdown: *ru?* (by hand/leggings context) + *ísap* (leggings/trousers) + *pis* (skin) + *-wa?* (3rd person possessive suffix).\n- Gloss: 'Stockings'.\n- Comparative Catawba: *ísap* 'leggings, trousers' + *pis* 'skin' with the third person possessive suffix *-wa?*.\n\nUSE:\nTo indicate possession in compound nouns (e.g., 'skin of the leggings' or 'stockings'), attach the suffix *-wa?* to the possessed noun (*pis* -> *píswa?*). The structure appears to be [Modifier/Possessor] [Possessed-Noun + Possessive Suffix].\n\nCAVEATS:\nThe text identifies *-wa?* as the third person possessive suffix. The Woccon form *Rooesoo possoo* reflects the phonological realization of *ru?ísap píswa?*. Note that the Catawba comparison confirms the morphological structure.",
+      "source_page": 240,
+      "source_page_end": 240,
+      "source_excerpt": "48. Stockings *ru?ísap píswa?: W (Rooesoo possoo) 'Stockings': C ísap 'leggings, trousers' plus pis 'skin' with the third person possessive suffix-wa?]",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 15,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon forms nominal predicates or descriptive statements using a third-person singular affix -h- combined with the independent mode marker |-re-. This construction translates to 'he/she is [Noun/Adjective]'.\n\nEvidence: The Woccon word for 'Englishman' is *witsuhire* (also spelled Wintsohore). The root is derived from 'Windsor' (referring to the British royal family/surname). \n\nMorpheme Breakdown:\n- Root: *witsuh-* (from Windsor)\n- Affix: *-h-* (third person singular marker)\n- Suffix: *-re* (independent mode marker)\n\nStructure: [Root] + [-h-] + [-re]\n\nUse: To state that a specific individual possesses the quality or identity of the root noun. In this case, 'he is a Windsor' implies 'he is English'.\n\nCaveats: This analysis is suggested by Ralf Thiede. The specific etymology links the term to the surname Windsor rather than a generic term for English people, but the grammatical structure (3sg + indep. mode) is the key reusable pattern for forming nominal predicates in Woccon.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "3. Englishman *witsuhire W (Wintsohore) 'Englishman, English Windsor. (As suggested by Ralf Thiede, the Woccon word is perhaps derived from the surname Windsor, which later became the surname of the British royal family, with the addition of the third person singular affix -h- and the independent mode marker |-re-, giving the meaning 'he is (a) Windsor, he is English'.)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 18,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon utilizes an independent modal suffix |-re-| to mark specific modal states or nominalizations, distinct from Catawba forms.\nEvidence: The Woccon word for 'Sun or Moon' is recorded as Wittapare. The text notes that while Catawba has wárpit ('sky') and wapídnu ('star'), the Woccon form ends with the independent modal suffix |-re-|. This distinguishes it from the Catawba root, suggesting a morphological process unique to or preserved in Woccon for this lexical item.\nStructure: Root (witá-pire) + |-re-| (independent modal suffix).\nUse: To form nouns denoting celestial bodies or potentially marking a specific modal aspect of the root concept.\nCaveats: The text suggests either Woccon or Catawba may have metathesized the first two syllables, but the presence of |-re-| is explicitly attributed to the Woccon form.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "49. Sun *witá-pire: W (Wittapare) 'Sun or Moon'. C wárpit 'sky', wapídnu 'star' (Either Woccon or Catawba has metathesized the first two syllables of this word. The Catawba word for star is a compound with -nu egg, small roundish object. The Woccon word ends with the independent modal suffix |-re-].)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon may utilize the suffix |-ne| as an interrogative mode marker, which can alter the pragmatic function of a phrase from declarative to interrogative.\nEvidence: The Woccon phrase Cuttaune is glossed as 'That's all'. The text compares this to Catawba katé ('indeed, goodbye') and katé se ('the last'). The author posits that the ending on the Woccon form may be the interrogative mode marker, corresponding to Catawba |-ne|. If this analysis holds, the gloss shifts to 'That's all?'.\nStructure: Root (katé) + |-ne| (interrogative mode marker).\nUse: To convert a statement into a question, specifically checking for completeness or finality.\nCaveats: This is a hypothesis ('may be') based on comparative evidence with Catawba. The primary gloss remains 'That's all', but the interrogative reading is a viable alternative analysis for revitalization workers to consider.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "51. That's all *katé1ne: W (Cuttaune) \"That's all': C katé indeed, good- bye', katé se 'the last. (The ending on the Woccon form may be the interrogative mode marker, C |-ne]. If so, the gloss is \"That's all?').",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon forms compound nouns by combining a base noun with a descriptive adjective or color term, where the adjective follows the noun.\nEvidence: The Woccon word for 'Swine' is Nommewarraupau. This is analyzed as a compound of Nommewarraupau (derived from Nimé? 'bear' in Catawba/Woccon context) and Waraupau 'White'. The text explicitly breaks this down as 'bear' plus 'White'.\nStructure: Noun (nimé? 'bear') + Adjective (waráphẩ? 'white').\nUse: To create specific lexical items for animals or objects by combining a generic category with a distinguishing feature (color).\nCaveats: The text notes the Catawba cognate for bear is nimé?, and the Woccon form for white is Waraupau. The exact phonological integration (Nommewarraupau) shows specific Woccon phonotactics.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "50. Swine *nimé? waráphẩ?: W (Nommewarraupau) 'Swine', C nimé? 'bear' plus W (Waraupau) 'White'.",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon forms compound nouns by combining a loanword or base noun with a native noun indicating a specific part or feature, often using Catawba cognates for the second element.\nEvidence: The Woccon word for 'Button' is Rummissauwonne. This is analyzed as Rummissau ('Coat') plus Wonne (derived from Catawba ww 'knot, burl; fist'). The text identifies this as a compound structure.\nStructure: Noun (Rummissau 'Coat') + Noun (ww 'knot/burl/fist').\nUse: To describe an object (button) by its function or appearance relative to a larger object (coat) and its physical nature (knot/burl).\nCaveats: The first element 'Rummissau' appears to be a loanword or specific term for 'Coat', while the second element relies on Catawba cognates for meaning.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "1. Button (Rummissau) *wy: W (Rummissauwonne) 'A Button' W (Rummissau) 'Coat' plus C ww 'knot, burl; fist'",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon forms compound nouns using a locative or positional prefix/root combined with a base noun, potentially indicating the object's position or use.\nEvidence: The Woccon word for 'Comb' is Sacketoome posswa. This is analyzed as Saki ('on, on top of' in Catawba) plus Intome-posswa ('Hat' in Woccon). The text links this to the formation of 'Hat' (Intome-posswa) which itself is a compound of Tomme ('Hair') and pis ('skin/shell') with a possessive suffix.\nStructure: Locative/Prepositional Root (saki 'on top of') + Noun (Intome-posswa 'Hat').\nUse: To describe an object (comb) by its relationship to another object (hat) or its position (on top of).\nCaveats: The analysis relies on Catawba saki for the first element. The second element is a complex Woccon compound for 'Hat'.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "2. Comb *saki temá píswa?: W (Sacketoome posswa) 'A Comb C saki 'on, on top of' plus W (Intome-posswa) 'Hat'. (See 2.3.)",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon forms nouns for artifacts by combining a root for the material or function with a root for the content or associated element, often using Catawba cognates.\nEvidence: The Woccon word for 'Kettle' is Tooseawau. This is analyzed as Toosea (derived from Catawba itus 'pot') plus Wau (derived from Woccon Ejau 'Water').\nStructure: Noun (itus 'pot') + Noun (yéhiya 'water').\nUse: To describe a container by its primary function (holding water).\nCaveats: The text explicitly links the first part to Catawba itus and the second to Woccon Ejau. This demonstrates a pattern of compounding where the container and its typical content are fused.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "4. Kettle *itus yehiya: W (Tooseawau) 'Kettle'. Citus 'pot' plus W (Ejau) 'Water' (see 1.55).",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon forms nouns for small creatures or parasites by combining a root for 'skin' with a root for 'snake' or similar serpentine imagery.\nEvidence: The Woccon word for 'Louse' is Eppesyau. This is analyzed as Eppes (derived from Catawba pis 'skin') plus Syau (derived from ya? 'snake').\nStructure: Noun (pis 'skin') + Noun (ya? 'snake').\nUse: To describe a louse as a 'skin-snake' or creature associated with the skin.\nCaveats: The analysis relies on Catawba pis for 'skin' and a root ya? for 'snake'. This metaphorical compounding is a specific Woccon lexical strategy.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "5. Louse *písya ?: W (Eppesyau) ‘A Louse', Cpis 'skin' plus ya? 'snake'",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    },
+    {
+      "text": "Claim: Woccon forms higher numerals by compounding a base numeral with a specific suffix or ending, distinct from simple additive compounds.\nEvidence: The Woccon word for 'Seven' is Nommis-sau. This is analyzed as Nam-mee ('Three') plus the ending seen in Nupsau ('Eight'). The text implies that 'Seven' is not simply 'three plus four' but uses a specific morphological ending associated with the number eight or a higher series.\nStructure: Numeral Root (ná mi 'three') + Suffix/Ending (-sau, seen in 'eight').\nUse: To form the numeral seven.\nCaveats: The text notes the ending is 'seen in Woccon (Nupsau) 'Eight''. This suggests a morphological pattern for numerals 7-9 that differs from 1-6. The exact semantic value of -sau is not fully defined but is linked to the number eight.",
+      "source_page": null,
+      "source_page_end": null,
+      "source_excerpt": "6. Seven *ná misa W (Nommis-sau) 'Seven'. W (Nam-mee) 'Three' plus the ending seen in Woccon (Nupsau) 'Eight'",
+      "grammar_lineage": "woccon_attested",
+      "source_chunk_index": 16,
+      "_chunk_page_start": null,
+      "_chunk_page_end": null
+    }
+  ],
+  "pronunciation_notes": [],
+  "cultural_notes": [],
+  "audit": {
+    "raw_lexicon_count": 0,
+    "kept_lexicon_count": 0,
+    "dropped_missing_fields": [],
+    "dropped_duplicates": [],
+    "dropped_non_dict": 0
+  }
+}

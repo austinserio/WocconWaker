@@ -13,6 +13,7 @@ from panel_api.schemas import (
 from panel_api.services.citation import citation_for_entry
 from panel_api.services.duplicates import resolve_lexicon_duplicate, resolve_rule_duplicate
 from panel_api.services.pronunciation import normalize_pronunciation
+from panel_api.services.pronunciation_audio import pronunciation_audio_url
 from panel_api.services.vocab_match import (
     attestation_citation_count,
     base_entry_preview,
@@ -39,7 +40,9 @@ def _attach_citation(db, row, out_cls, extra: dict | None = None, doc=None):
     payload = out.model_dump()
     payload["citation"] = citation
     if "pronunciation" in payload:
-        payload["pronunciation"] = normalize_pronunciation(payload.get("pronunciation"))
+        normalized = normalize_pronunciation(payload.get("pronunciation"))
+        payload["pronunciation"] = normalized
+        payload["pronunciation_audio_url"] = pronunciation_audio_url(normalized)
     if extra:
         payload.update(extra)
     return out_cls.model_validate(payload)
@@ -63,6 +66,9 @@ def _duplicate_match_preview(db, match_row, match_type: str) -> DuplicateMatchPr
         english=getattr(match_row, "english", None),
         pos=getattr(match_row, "pos", None),
         pronunciation=normalize_pronunciation(getattr(match_row, "pronunciation", None)),
+        pronunciation_audio_url=pronunciation_audio_url(
+            normalize_pronunciation(getattr(match_row, "pronunciation", None))
+        ),
         teaching_unit=getattr(match_row, "teaching_unit", None),
         word_class=getattr(match_row, "word_class", None),
         lesson_band=getattr(match_row, "lesson_band", None),

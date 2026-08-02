@@ -89,7 +89,9 @@ export function AttestationList({ baseEntry }: { baseEntry: LexiconEntry }) {
     );
   }
 
-  const altPronunciation = alternateSpellings.find((e) => e.pronunciation)?.pronunciation;
+  const altEntry = alternateSpellings.find((e) => e.pronunciation);
+  const altPronunciation = altEntry?.pronunciation;
+  const altAudioUrl = altEntry?.pronunciation_audio_url;
 
   return (
     <div className="mt-3 ml-4 border-l border-render-border pl-4 space-y-3">
@@ -110,7 +112,11 @@ export function AttestationList({ baseEntry }: { baseEntry: LexiconEntry }) {
             )}
           </p>
           {altPronunciation && (
-            <PronunciationGuide pronunciation={altPronunciation} className="text-xs mt-1" />
+            <PronunciationGuide
+              pronunciation={altPronunciation}
+              pronunciationAudioUrl={altAudioUrl}
+              className="text-xs mt-1"
+            />
           )}
         </div>
       )}

@@ -131,6 +131,12 @@ def build_language_snapshot(db: Session) -> Tuple[Dict[str, Any], Dict[str, Any]
                     note["pos_tag"] = row.pos_tag
                 if row.construction_type:
                     note["construction_type"] = row.construction_type
+                if row.grammar_lineage:
+                    note["grammar_lineage"] = row.grammar_lineage
+                if getattr(row, "rule_kind", None):
+                    note["rule_kind"] = row.rule_kind
+                if getattr(row, "correspondence_status", None):
+                    note["correspondence_status"] = row.correspondence_status
             notes.append(note)
         unified_rules[key] = notes
     unified_rules["source_note"] = (

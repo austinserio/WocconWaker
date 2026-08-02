@@ -41,7 +41,9 @@ def _ollama_vision_timeout() -> int:
 
 
 def _ollama_base_url() -> str:
-    base = os.getenv("OLLAMA_URL", "http://localhost:11434").rstrip("/")
+    base = (os.getenv("OLLAMA_URL") or os.getenv("LLM_BASE_URL") or "http://localhost:11434").rstrip("/")
+    if base.endswith("/v1"):
+        base = base[:-3].rstrip("/")
     if "/v1/chat" in base:
         base = base.replace("/v1/chat", "").rstrip("/")
     if "/api/chat" in base:
@@ -49,8 +51,53 @@ def _ollama_base_url() -> str:
     return base
 
 
+def _uses_llama_server() -> bool:
+    """True when local LLM is llama-server (OpenAI /v1 on :8080), not native Ollama."""
+    url = (os.getenv("LLM_BASE_URL") or os.getenv("OLLAMA_URL") or "").strip()
+    if ":8080" in url or url.rstrip("/").endswith("/v1"):
+        return True
+    if os.getenv("LLM_REASONING", "").strip().lower() == "off":
+        return True
+    return False
+
+
+def _openai_compat_base_url() -> str:
+    base = (os.getenv("LLM_BASE_URL") or os.getenv("OLLAMA_URL") or "http://localhost:8080").rstrip("/")
+    if not base.endswith("/v1"):
+        base = f"{base}/v1"
+    return base
+
+
+def _openai_compat_api_key() -> str:
+    return (os.getenv("LLM_API_KEY") or os.getenv("OLLAMA_API_KEY") or "ollama").strip()
+
+
+def _llama_server_extra_body() -> Dict[str, Any]:
+    return {
+        "reasoning": False,
+        "chat_template_kwargs": {"enable_thinking": False},
+    }
+
+
+_openai_client: Optional[Any] = None
+
+
+def _openai_compat_client():
+    global _openai_client
+    if _openai_client is None:
+        from openai import OpenAI
+
+        _openai_client = OpenAI(
+            base_url=_openai_compat_base_url(),
+            api_key=_openai_compat_api_key(),
+        )
+    return _openai_client
+
+
 def ollama_unload_model(model: str) -> bool:
     """Free VRAM by unloading a model from Ollama (keep_alive=0). Returns True if request succeeded."""
+    if _uses_llama_server():
+        return True
     model = (model or "").strip()
     if not model:
         return False
@@ -70,6 +117,8 @@ def ollama_unload_model(model: str) -> bool:
 
 def ollama_unload_loaded_models() -> None:
     """Unload all models currently resident in Ollama (/api/ps)."""
+    if _uses_llama_server():
+        return
     try:
         r = _ollama_http_session().get(f"{_ollama_base_url()}/api/ps", timeout=15)
         r.raise_for_status()
@@ -330,6 +379,58 @@ def _anthropic_vision_chat(
         return {"message": {"content": f"Error: Anthropic vision request failed. {e}"}}
 
 
+def _local_openai_compat_vision_chat(
+    model: str,
+    text_prompt: str,
+    image_bytes_list: List[bytes],
+    options: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Vision via llama-server OpenAI-compatible API (Qwen3.6 + mmproj)."""
+    content: List[Dict[str, Any]] = [{"type": "text", "text": text_prompt}]
+    for img in image_bytes_list:
+        b64 = base64.standard_b64encode(img).decode("ascii")
+        content.append(
+            {
+                "type": "image_url",
+                "image_url": {"url": f"data:image/png;base64,{b64}"},
+            }
+        )
+    try:
+        resp = _openai_compat_client().chat.completions.create(
+            model=model,
+            messages=[{"role": "user", "content": content}],
+            temperature=options.get("temperature", 0.0),
+            max_tokens=options.get("num_predict", 4096),
+            extra_body=_llama_server_extra_body(),
+        )
+        text_out = (resp.choices[0].message.content or "").strip()
+        return {"message": {"role": "assistant", "content": text_out}}
+    except Exception as e:
+        log.error("Local llama-server vision request failed: %s", e)
+        return {"message": {"content": f"Error: Unable to connect to llama-server vision. {e}"}}
+
+
+def _local_openai_compat_chat(
+    model: str,
+    messages: List[Dict[str, str]],
+    options: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Text chat via llama-server OpenAI-compatible API."""
+    try:
+        resp = _openai_compat_client().chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=options.get("temperature", 0.3),
+            max_tokens=options.get("num_predict", 1000),
+            extra_body=_llama_server_extra_body(),
+        )
+        content = (resp.choices[0].message.content or "").strip()
+        return {"message": {"role": "assistant", "content": content}}
+    except Exception as e:
+        log.error("Local llama-server request failed: %s", e)
+        return {"message": {"content": f"Error: Unable to connect to llama-server. {e}"}}
+
+
 def _local_ollama_vision_chat(
     model: str,
     text_prompt: str,
@@ -337,6 +438,8 @@ def _local_ollama_vision_chat(
     options: Dict[str, Any],
 ) -> Dict[str, Any]:
     """Use local Ollama vision API with base64 images on the user message."""
+    if _uses_llama_server():
+        return _local_openai_compat_vision_chat(model, text_prompt, image_bytes_list, options)
     images = [base64.standard_b64encode(img).decode("ascii") for img in image_bytes_list]
     url = f"{_ollama_base_url()}/api/chat"
     payload = {
@@ -369,7 +472,9 @@ def _local_ollama_chat(
     messages: List[Dict[str, str]],
     options: Dict[str, Any],
 ) -> Dict[str, Any]:
-    """Use local Ollama API (OLLAMA_URL)."""
+    """Use local Ollama API (OLLAMA_URL) or llama-server OpenAI /v1 when configured."""
+    if _uses_llama_server():
+        return _local_openai_compat_chat(model, messages, options)
     url = f"{_ollama_base_url()}/api/chat"
     payload = {
         "model": model,

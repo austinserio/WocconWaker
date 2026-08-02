@@ -85,6 +85,7 @@ export interface LexiconEntry {
   english: string;
   pos: string;
   pronunciation?: string;
+  pronunciation_audio_url?: string | null;
   source?: string;
   source_url?: string;
   source_page?: number | null;
@@ -126,6 +127,7 @@ export interface DuplicateMatchPreview {
   english?: string | null;
   pos?: string | null;
   pronunciation?: string | null;
+  pronunciation_audio_url?: string | null;
   teaching_unit?: string | null;
   word_class?: string | null;
   lesson_band?: string | null;
@@ -146,6 +148,7 @@ export interface PendingLexicon {
   english: string;
   pos: string;
   pronunciation?: string;
+  pronunciation_audio_url?: string | null;
   status: string;
   reviewer_notes?: string;
   duplicate_of_id?: string;
@@ -193,6 +196,7 @@ export interface PendingLexiconCreate {
   english: string;
   pos?: string;
   pronunciation?: string | null;
+  pronunciation_audio_url?: string | null;
   teaching_unit?: string | null;
   word_class?: string | null;
   lesson_band?: string | null;
@@ -272,4 +276,81 @@ export interface SourceDocument {
   work_group_key?: string | null;
   work_group_label?: string | null;
   merged_sources?: MergedSource[];
+}
+
+export interface RuleTopicTierSummary {
+  covered: number;
+  total: number;
+  gaps: string[];
+  covered_ids?: string[];
+}
+
+export interface RulesCaptureDocAudit {
+  live?: {
+    tier_a?: RuleTopicTierSummary;
+    tier_b?: RuleTopicTierSummary;
+    tier_c?: RuleTopicTierSummary;
+  };
+  unknowns?: string[];
+}
+
+export interface RulesCaptureAudit {
+  generated_at?: string;
+  documents?: Record<string, RulesCaptureDocAudit>;
+}
+
+export interface CognateRuleExample {
+  id: string;
+  correspondence_rule_id: string;
+  alignment?: Array<{ w_span?: string; c_span?: string; rule_id?: string }> | null;
+}
+
+export interface CognateSet {
+  id: string;
+  gloss: string;
+  lawson_form?: string | null;
+  lawson_form_corrected?: string | null;
+  lawson_gloss?: string | null;
+  woccon_reconstituted?: string | null;
+  catawba_form?: string | null;
+  catawba_dialect?: string | null;
+  proto_siouan?: string | null;
+  evidence_tier: string;
+  rudes_appendix: number;
+  rudes_item: number;
+  citation_short?: string | null;
+  source_path?: string | null;
+  source_url?: string | null;
+  notes?: string | null;
+  canonical_lexicon_id?: string | null;
+  rule_examples: CognateRuleExample[];
+}
+
+export interface CognateSetListResponse {
+  items: CognateSet[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+
+export interface CorrespondenceRule {
+  id: string;
+  rule_kind: string;
+  lhs?: string | null;
+  rhs?: string | null;
+  environment?: string | null;
+  direction?: string | null;
+  correspondence_status: string;
+  grammar_lineage?: string | null;
+  source: string;
+  notes?: string | null;
+  provenance_text?: string | null;
+  example_cognate_ids: string[];
+}
+
+export interface CorrespondenceRuleListResponse {
+  items: CorrespondenceRule[];
+  total: number;
+  page: number;
+  page_size: number;
 }

@@ -130,6 +130,11 @@ All panel routes are under `/api` with `Authorization: Bearer <token>` except lo
 - `GET /api/lexicon?q=...` — paginated list with `teaching_unit`, `word_class`, `lesson_band` filters
 - `PATCH /api/lexicon/{id}`, `DELETE /api/lexicon/{id}`
 - `GET /api/lexicon/taxonomy`, `/grouped`, `/stats`, `POST /api/lexicon/reclassify`
+- `GET /api/cognate-sets` — filter by `gloss`, `evidence_tier`, `rudes_appendix` (comparative; read-only)
+- `GET /api/cognate-sets/{id}` — detail + alignment-linked correspondence examples
+- `GET /api/correspondence-rules` — filter by `rule_kind`, `correspondence_status`, `environment`
+- `GET /api/correspondence-rules/{id}` — detail + example cognate IDs
+- `POST /api/admin/import-comparative` — admin; wholesale re-import from JSON seeds (cognates + registry + alignments)
 - `POST /api/admin/commit` — admin only; exports JSON + reloads assistant
 
 ## Azure Container Apps

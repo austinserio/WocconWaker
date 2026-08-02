@@ -56,7 +56,12 @@ export function LexiconEntryCard({
               </span>
             )}
           </div>
-          {entry.pronunciation && <PronunciationGuide pronunciation={entry.pronunciation} />}
+          {entry.pronunciation && (
+            <PronunciationGuide
+              pronunciation={entry.pronunciation}
+              pronunciationAudioUrl={entry.pronunciation_audio_url}
+            />
+          )}
           {taxonomy && (
             <LexiconBadges
               taxonomy={taxonomy}
