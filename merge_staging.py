@@ -28,7 +28,15 @@ def _normalize_woccon(w: str) -> str:
 
 
 def load_staging_files(staging_dir: str) -> List[Dict[str, Any]]:
-    """Load all staging JSONs that have lexicon_entries (skip manifest)."""
+    """Load all staging JSONs that have lexicon_entries (skip manifest).
+
+    Refuses any file that is not Woccon-language material. Comparative sources such as the
+    Catawba corpus stage separately, but a stray file in the Woccon staging dir must not be
+    able to reach the unified dictionary. Files predating the content_language field are
+    treated as Woccon, which matches how they were extracted.
+    """
+    from content_language import allows_woccon_lexicon, classify_path
+
     staging_path = Path(staging_dir)
     if not staging_path.exists():
         log.warning("Staging dir %s does not exist", staging_dir)
@@ -41,6 +49,13 @@ def load_staging_files(staging_dir: str) -> List[Dict[str, Any]]:
             with open(p, "r", encoding="utf-8") as f:
                 data = json.load(f)
             if not isinstance(data, dict) or "lexicon_entries" not in data:
+                continue
+            language = data.get("content_language") or classify_path(data.get("source_path"))
+            if not allows_woccon_lexicon(language):
+                log.warning(
+                    "Refusing %s: content_language=%s is not Woccon (%d lexicon_entries skipped)",
+                    p.name, language, len(data.get("lexicon_entries") or []),
+                )
                 continue
             files_data.append(data)
         except Exception as e:

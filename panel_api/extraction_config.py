@@ -27,6 +27,11 @@ EXTRACTION_FOCUSES = [
         "label": "Culture only",
         "description": "Cultural usage and community context only",
     },
+    {
+        "id": "catawba_lexicon",
+        "label": "Catawba (comparative source)",
+        "description": "Catawba-language vocabulary from Speck/Lieber/Gatschet — comparative evidence, never Woccon lexicon",
+    },
 ]
 
 GRAMMAR_LINEAGES = [
@@ -120,6 +125,48 @@ _LINEAGE_PROMPTS = {
 }
 
 
+def _build_catawba_prompt(header: str, text: str) -> str:
+    """Prompt for Catawba-language sources (Speck 1934, Lieber 1858, Gatschet 1900).
+
+    Catawba forms are comparative evidence for reconstructing Woccon, never Woccon vocabulary.
+    Output uses "catawba_entries" rather than "lexicon_entries" so that no Woccon consumer can
+    pick these rows up structurally, and "lexicon_entries" is pinned empty as a second guard.
+    """
+    return f"""You are extracting CATAWBA language data from a historical source document.
+
+{header}
+
+IMPORTANT — LANGUAGE IDENTITY:
+This document is in CATAWBA, a distinct language related to Woccon. It is comparative evidence
+for reconstructing Woccon. Do NOT output Woccon forms, do NOT translate Catawba into Woccon,
+and do NOT guess Woccon equivalents. If the source itself cites a Woccon form alongside a
+Catawba one, put the Woccon form in "woccon_cited" on that entry — never in the Catawba field.
+
+Extract:
+1. catawba_entries: Catawba vocabulary. Each item: catawba, english, pos (noun/verb/etc. or
+   "unknown"), optionally source_page, source_excerpt (exact substring, max 200 chars), and
+   woccon_cited only when the source explicitly gives a Woccon comparison.
+2. grammar_notes: self-contained Catawba grammar rule packets. Each object: "text", and when
+   possible source_page, source_page_end, source_excerpt (max 800 chars).
+3. pronunciation_notes: Catawba phonology, orthography conventions, sound inventories.
+
+TRANSCRIPTION FIDELITY (critical):
+Reproduce every diacritic and special character exactly as printed: acute and grave accents,
+macrons, breves, ogoneks/hooks, raised dots for length, glottal stops, barred and hooked
+letters, and superscripts. These sources use Americanist phonetic notation and the diacritics
+carry the phonological information the comparison depends on. Never substitute a plain ASCII
+letter for an accented one, and never normalize or modernize a spelling.
+
+Set "lexicon_entries" to an empty array. It exists only to keep the output shape stable.
+
+Output ONLY a single JSON object with keys: "catawba_entries", "lexicon_entries",
+"grammar_notes", "pronunciation_notes", "cultural_notes". No markdown.
+
+SOURCE TEXT:
+{text}
+"""
+
+
 def build_extraction_prompt(
     *,
     context_header: str,
@@ -129,6 +176,9 @@ def build_extraction_prompt(
 ) -> str:
     focus = focus if focus in EXTRACTION_FOCUS_IDS else "general"
     header = context_header or "Extract from the following source text."
+
+    if focus == "catawba_lexicon":
+        return _build_catawba_prompt(header, text)
 
     if focus == "vocabulary":
         task_block = f"""From the following text, extract ONLY:

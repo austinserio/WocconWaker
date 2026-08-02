@@ -96,6 +96,9 @@ class SourceDocument(Base):
     extraction_focus: Mapped[str] = mapped_column(String(32), default="general")
     grammar_lineage: Mapped[str | None] = mapped_column(String(32), nullable=True)
     content_hash: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    # woccon | catawba | context. Only Woccon documents may produce Woccon lexicon rows;
+    # Catawba sources are comparative evidence and must never enter the lexicon.
+    content_language: Mapped[str] = mapped_column(String(16), default="woccon")
 
     uploader: Mapped["User | None"] = relationship("User")
     pending_lexicon: Mapped[list["PendingLexicon"]] = relationship(back_populates="source_document")

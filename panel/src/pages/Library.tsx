@@ -643,9 +643,18 @@ export default function Library() {
     return () => window.clearInterval(timer);
   }, [hasProcessing]);
 
-  const vocabBase = docs.filter((d) => d.is_vocab_base);
-  const pronunciationGuides = docs.filter((d) => d.source_type === "pronunciation_guide" && !d.is_vocab_base);
-  const otherDocs = docs.filter((d) => !d.is_vocab_base && d.source_type !== "pronunciation_guide");
+  const isWoccon = (d: SourceDocument) => (d.content_language ?? "woccon") === "woccon";
+  const wocconDocs = docs.filter(isWoccon);
+  const comparativeDocs = docs.filter((d) => d.content_language === "catawba");
+  const contextDocs = docs.filter((d) => d.content_language === "context");
+
+  const vocabBase = wocconDocs.filter((d) => d.is_vocab_base);
+  const pronunciationGuides = wocconDocs.filter(
+    (d) => d.source_type === "pronunciation_guide" && !d.is_vocab_base
+  );
+  const otherDocs = wocconDocs.filter(
+    (d) => !d.is_vocab_base && d.source_type !== "pronunciation_guide"
+  );
 
   return (
     <div>
@@ -657,17 +666,49 @@ export default function Library() {
       {docs.length === 0 ? (
         <EmptyState message="No documents yet. Upload from the Upload page." />
       ) : (
-        <ul className="space-y-3">
-          {vocabBase.map((d) => (
-            <VocabBaseCard key={d.id} doc={d} onSaved={load} />
-          ))}
-          {pronunciationGuides.map((d) => (
-            <RegularDocCard key={d.id} doc={d} pronunciationGuide onSaved={load} onDeleted={load} audit={audit} />
-          ))}
-          {otherDocs.map((d) => (
-            <RegularDocCard key={d.id} doc={d} onSaved={load} onDeleted={load} audit={audit} />
-          ))}
-        </ul>
+        <>
+          <ul className="space-y-3">
+            {vocabBase.map((d) => (
+              <VocabBaseCard key={d.id} doc={d} onSaved={load} />
+            ))}
+            {pronunciationGuides.map((d) => (
+              <RegularDocCard key={d.id} doc={d} pronunciationGuide onSaved={load} onDeleted={load} audit={audit} />
+            ))}
+            {otherDocs.map((d) => (
+              <RegularDocCard key={d.id} doc={d} onSaved={load} onDeleted={load} audit={audit} />
+            ))}
+          </ul>
+
+          {comparativeDocs.length > 0 && (
+            <section className="mt-10">
+              <h2 className="text-lg font-semibold text-slate-800">Catawba comparative sources</h2>
+              <p className="mt-1 mb-3 text-sm text-slate-600">
+                Catawba-language material. Used as comparative evidence for reconstruction only —
+                these never contribute entries to the Woccon lexicon.
+              </p>
+              <ul className="space-y-3">
+                {comparativeDocs.map((d) => (
+                  <RegularDocCard key={d.id} doc={d} onSaved={load} onDeleted={load} audit={audit} />
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {contextDocs.length > 0 && (
+            <section className="mt-10">
+              <h2 className="text-lg font-semibold text-slate-800">Non-linguistic context</h2>
+              <p className="mt-1 mb-3 text-sm text-slate-600">
+                Tribal history, governance, and community material. No vocabulary is extracted
+                from these documents.
+              </p>
+              <ul className="space-y-3">
+                {contextDocs.map((d) => (
+                  <RegularDocCard key={d.id} doc={d} onSaved={load} onDeleted={load} audit={audit} />
+                ))}
+              </ul>
+            </section>
+          )}
+        </>
       )}
     </div>
   );

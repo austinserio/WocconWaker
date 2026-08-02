@@ -273,6 +273,8 @@ export interface SourceDocument {
   text_extraction_method?: string | null;
   extraction_focus?: string | null;
   grammar_lineage?: string | null;
+  /** woccon | catawba | context. Catawba sources are comparative evidence, not Woccon vocabulary. */
+  content_language?: string | null;
   work_group_key?: string | null;
   work_group_label?: string | null;
   merged_sources?: MergedSource[];

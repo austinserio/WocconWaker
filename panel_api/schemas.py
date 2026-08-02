@@ -128,6 +128,7 @@ class SourceDocumentOut(BaseModel):
     text_extraction_method: Optional[str] = None
     extraction_focus: Optional[str] = "general"
     grammar_lineage: Optional[str] = None
+    content_language: Optional[str] = "woccon"
     work_group_key: Optional[str] = None
     work_group_label: Optional[str] = None
     merged_sources: Optional[List["MergedSourceOut"]] = None

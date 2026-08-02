@@ -148,10 +148,37 @@ python drive_ingest.py
 - Completeness check: `python scripts/check_extraction_completeness.py --staging woccon_language/drive_staging/English-Woccon.json --source-text data/ingest_text_cache/<file>.json`
 - Unit tests: `python scripts/test_list_doc_parser.py`
 
+### Catawba vs Woccon separation
+
+The Drive corpus holds Catawba comparative sources next to Woccon primary sources. **Catawba is
+a distinct language**: its vocabulary is evidence for reconstruction and must never become
+Woccon vocabulary. [`content_language.py`](content_language.py) classifies each document by its
+Drive folder — matched on whole path segments, since `Articles/Resurrecting Coastal Catawban …
+Woccon Language` is a *Woccon* source whose title contains "Catawba".
+
+| Folder | `content_language` | Effect |
+| --- | --- | --- |
+| `Catawba Language/` | `catawba` | Extracted with the Catawba prompt into `catawba_entries`; staged in `woccon_language/catawba_staging/`; never merged into the Woccon lexicon |
+| `Catawba Nation - Context/` | `context` | Non-linguistic; no vocabulary extracted |
+| everything else | `woccon` | Unchanged behaviour |
+
+Guards are layered so no single failure leaks Catawba into the lexicon: the extraction prompt
+asks for a different JSON key (`catawba_entries`), `extract_one_file` drops `lexicon_entries`
+from non-Woccon sources even if the model returns them, staging is a separate directory,
+`merge_staging.load_staging_files` refuses non-Woccon files, and `SourceDocument.content_language`
+blocks `PendingLexicon` inserts in the panel. Override folder names with `CATAWBA_FOLDER_NAMES`
+/ `CONTEXT_FOLDER_NAMES` (pipe-separated).
+
+```bash
+python scripts/test_content_language_guard.py   # verifies every layer, incl. a rogue-model case
+```
+
 **Diacritic-stripped scans:** scanned journal PDFs embed an OCR text layer that reads as dense
 clean English while having dropped every phonetic character, so a character-count check scores
 them as good text. `pages_with_lossy_text_layer()` also routes image-backed pages with no
 phonetic characters to vision OCR (`PDF_OCR_RECHECK_ASCII_SCANS`, `PDF_OCR_SCAN_IMAGE_COVERAGE`).
+Every Catawba source acquired so far (Speck 1934, Lieber 1858, Gatschet 1900) is diacritic-
+stripped and needs this pass before it is usable for cognate work.
 
 ```bash
 python scripts/reocr_lossy_pdf.py --pdf data/ingest_sources/<file>.pdf --dry-run   # list pages

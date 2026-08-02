@@ -416,12 +416,26 @@ def process_document(
         on_progress=on_progress,
         extraction_focus=getattr(doc, "extraction_focus", None) or "general",
         grammar_lineage=getattr(doc, "grammar_lineage", None),
+        content_language=getattr(doc, "content_language", None),
     )
 
     _set_document_progress(db, doc, 92, "Resolving provenance")
 
+    from content_language import allows_woccon_lexicon
+
+    doc_language = getattr(doc, "content_language", None) or "woccon"
+    raw_lexicon = result.get("lexicon_entries") or []
+    if raw_lexicon and not allows_woccon_lexicon(doc_language):
+        # Final safety net before anything reaches PendingLexicon: a Catawba or non-linguistic
+        # document cannot contribute Woccon vocabulary regardless of what extraction returned.
+        log.warning(
+            "Document %s has content_language=%s; discarding %d lexicon entries",
+            doc.id, doc_language, len(raw_lexicon),
+        )
+        raw_lexicon = []
+
     extracted_lexicon = []
-    for e in result.get("lexicon_entries") or []:
+    for e in raw_lexicon:
         prov = resolve_lexicon_provenance(
             e,
             text,

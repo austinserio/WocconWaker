@@ -333,6 +333,24 @@ def _validate_extraction(raw: Dict[str, Any]) -> Tuple[bool, Dict[str, Any], Dic
             "source_page": _coerce_int(e.get("source_page")),
             "source_excerpt": _cap_excerpt(e.get("source_excerpt"), MAX_LEXICON_EXCERPT),
         })
+    normalized_catawba = []
+    for e in raw.get("catawba_entries") or []:
+        if not isinstance(e, dict):
+            continue
+        form = str(e.get("catawba") or e.get("catawba_form") or "").strip()
+        eng = str(e.get("english") or e.get("meaning") or "").strip()
+        if not form or not eng:
+            continue
+        normalized_catawba.append({
+            "catawba": form,
+            "english": eng,
+            "pos": str(e.get("pos") or e.get("part_of_speech") or "").strip() or "unknown",
+            "woccon_cited": str(e.get("woccon_cited") or "").strip() or None,
+            "source_page": _coerce_int(e.get("source_page")),
+            "source_excerpt": _cap_excerpt(e.get("source_excerpt"), MAX_LEXICON_EXCERPT),
+        })
+    audit["raw_catawba_count"] = len(raw.get("catawba_entries") or [])
+
     normalized_grammar = [_normalize_note(g, excerpt_max=MAX_GRAMMAR_EXCERPT, excerpt_fallback=MAX_GRAMMAR_EXCERPT_FALLBACK) for g in grammar if g]
     normalized_pronunciation = [_normalize_note(p) for p in pronunciation if p]
     normalized_cultural = [_normalize_note(c) for c in cultural if c]
@@ -341,6 +359,7 @@ def _validate_extraction(raw: Dict[str, Any]) -> Tuple[bool, Dict[str, Any], Dic
     normalized_cultural = [n for n in normalized_cultural if n]
     return True, {
         "lexicon_entries": normalized_lexicon,
+        "catawba_entries": normalized_catawba,
         "grammar_notes": normalized_grammar,
         "pronunciation_notes": normalized_pronunciation,
         "cultural_notes": normalized_cultural,
@@ -539,17 +558,38 @@ def extract_one_file(
     extraction_focus: str = "general",
     grammar_lineage: Optional[str] = None,
     previous_lexicon: Optional[List[Dict[str, Any]]] = None,
+    content_language: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
     Run extraction on a single file's text. When the file fits in MAX_WHOLE_FILE_CHARS,
     send the whole file in one LLM call (no input chunking). Otherwise chunk and merge.
     Dedupe within this file only. Returns dict with lexicon_entries, grammar_notes, etc.
     """
+    from content_language import (
+        CONTENT_LANGUAGES,
+        CATAWBA,
+        CONTEXT,
+        allows_woccon_lexicon,
+        classify_path,
+    )
+
+    # The panel passes a document title rather than a Drive folder path, so it supplies the
+    # language explicitly; bulk ingest infers it from the folder.
+    content_lang = content_language if content_language in CONTENT_LANGUAGES else classify_path(path)
+    if content_lang == CATAWBA:
+        # Catawba sources are comparative evidence; they must never reach the Woccon prompt.
+        extraction_focus, grammar_lineage = "catawba_lexicon", None
+        log.info("Catawba source %s: extracting to catawba_entries, Woccon lexicon disabled", path)
+    elif content_lang == CONTEXT:
+        log.info("Non-linguistic source %s: lexicon extraction disabled", path)
+
     file_lexicon: List[Dict[str, Any]] = []
+    file_catawba: List[Dict[str, Any]] = []
     file_grammar: List[Dict[str, Any]] = []
     file_pronunciation: List[Dict[str, Any]] = []
     file_cultural: List[Dict[str, Any]] = []
     seen_lexicon: set = set()
+    seen_catawba: set = set()
     seen_notes: set = set()
     file_audit = _empty_extraction_audit()
 
@@ -568,7 +608,29 @@ def extract_one_file(
 
     def merge_extraction(extracted: Dict[str, Any]) -> None:
         _accumulate_validation_audit(extracted)
-        for e in extracted.get("lexicon_entries", []):
+        for e in extracted.get("catawba_entries", []):
+            form = (e.get("catawba") or "").strip()
+            english = (e.get("english") or "").strip()
+            key = _lexicon_dedup_key(form, english)
+            if not form or not english or key in seen_catawba:
+                continue
+            seen_catawba.add(key)
+            file_catawba.append(e)
+        # Structural guard: a non-Woccon source contributes no Woccon lexicon, whatever the
+        # model returned. Its grammar and pronunciation notes are still wanted, so this drops
+        # only the lexicon bucket rather than returning early.
+        incoming_lexicon = extracted.get("lexicon_entries") or []
+        if not allows_woccon_lexicon(content_lang):
+            if incoming_lexicon:
+                file_audit["dropped_non_woccon_source"] = (
+                    int(file_audit.get("dropped_non_woccon_source") or 0) + len(incoming_lexicon)
+                )
+                log.warning(
+                    "Dropped %d lexicon_entries from non-Woccon source %s (content_language=%s)",
+                    len(incoming_lexicon), path, content_lang,
+                )
+            incoming_lexicon = []
+        for e in incoming_lexicon:
             woccon = (e.get("woccon") or "").strip()
             english = (e.get("english") or "").strip()
             key = _lexicon_dedup_key(woccon, english)
@@ -735,7 +797,9 @@ def extract_one_file(
             parse_list_document,
         )
 
-        if hybrid_enabled_for_path(path):
+        # The hybrid parser writes straight into file_lexicon, so it must respect the same
+        # language guard even though its filename profiles only match Woccon list documents.
+        if hybrid_enabled_for_path(path) and allows_woccon_lexicon(content_lang):
             profile = list_doc_profile(path)
             section = "english_woccon" if profile == "english_woccon" else "lawson"
             parser_entries = parse_list_document(text, section=section)
@@ -783,11 +847,14 @@ def extract_one_file(
         log.warning("Hybrid list extract failed for %s: %s", path, exc)
 
     file_audit["kept_lexicon_count"] = len(file_lexicon)
+    file_audit["kept_catawba_count"] = len(file_catawba)
 
     return {
         "source_path": path,
         "source_url": source_url or (_source_url(file_id) if file_id else None),
+        "content_language": content_lang,
         "lexicon_entries": file_lexicon,
+        "catawba_entries": file_catawba,
         "grammar_notes": file_grammar,
         "pronunciation_notes": file_pronunciation,
         "cultural_notes": file_cultural,
@@ -896,17 +963,25 @@ def extract_per_file(
 
 def _write_one_file_staging(file_data: Dict[str, Any], staging_dir: str) -> str:
     """Write one file's staging JSON. Returns the staging filename (for manifest/sync_state)."""
+    from content_language import WOCCON, staging_dir_for
+
     path = file_data.get("source_path") or "unknown"
+    language = file_data.get("content_language") or WOCCON
+    staging_dir = staging_dir_for(language, staging_dir)
+    os.makedirs(staging_dir, exist_ok=True)
     safe = _safe_filename(path)
     file_path = os.path.join(staging_dir, safe)
     payload = {
         "source_path": path,
         "source_url": file_data.get("source_url"),
+        "content_language": language,
         "lexicon_entries": file_data.get("lexicon_entries") or [],
         "grammar_notes": file_data.get("grammar_notes") or [],
         "pronunciation_notes": file_data.get("pronunciation_notes") or [],
         "cultural_notes": file_data.get("cultural_notes") or [],
     }
+    if file_data.get("catawba_entries"):
+        payload["catawba_entries"] = file_data["catawba_entries"]
     if file_data.get("audit"):
         payload["audit"] = file_data["audit"]
     with open(file_path, "w", encoding="utf-8") as f:
