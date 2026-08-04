@@ -7,6 +7,7 @@ from panel_api.schemas import (
     CanonicalRuleOut,
     CitationOut,
     DuplicateMatchPreview,
+    PendingCatawbaOut,
     PendingLexiconOut,
     PendingRuleOut,
 )
@@ -110,6 +111,10 @@ def pending_rule_out(db, row) -> PendingRuleOut:
         if match_row:
             extra["duplicate_match"] = _duplicate_match_preview(db, match_row, match_type)
     return _attach_citation(db, row, PendingRuleOut, extra)
+
+
+def pending_catawba_out(db, row) -> PendingCatawbaOut:
+    return _attach_citation(db, row, PendingCatawbaOut)
 
 
 def canonical_lexicon_out(

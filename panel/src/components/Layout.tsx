@@ -4,19 +4,21 @@ import { useEffect, useState } from "react";
 import { AuthProvider } from "../context/AuthContext";
 import { isAdmin, canWrite, ROLE_LABELS, normalizeRole } from "../utils/roles";
 
-const nav = [
-  { to: "/rules", label: "Grammar rules", minAccess: "member" as const },
-  { to: "/dictionary", label: "Dictionary", minAccess: "member" as const },
+const publicNav = [
+  { to: "/rules", label: "Grammar rules" },
+  { to: "/dictionary", label: "Dictionary" },
+  { to: "/comparative", label: "Comparative" },
+];
+
+const authNav = [
   { to: "/pending", label: "Pending review", minAccess: "worker" as const },
   { to: "/upload", label: "Upload", minAccess: "worker" as const },
   { to: "/library", label: "Library", minAccess: "member" as const },
-  { to: "/comparative", label: "Comparative", minAccess: "member" as const },
   { to: "/commit", label: "Commit", minAccess: "admin" as const },
   { to: "/audit", label: "Audit log", minAccess: "admin" as const },
   { to: "/users", label: "Team", minAccess: "admin" as const },
 ];
-
-function canSeeNav(item: (typeof nav)[0], role: string) {
+function canSeeNav(item: (typeof authNav)[0], role: string) {
   if (item.minAccess === "admin") return isAdmin(role);
   if (item.minAccess === "worker") return canWrite(role);
   return true;
@@ -27,8 +29,10 @@ export default function Layout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api<User>("/auth/me").then(setUser).catch(() => navigate("/login"));
-  }, [navigate]);
+    api<User | null>("/auth/me")
+      .then((u) => setUser(u))
+      .catch(() => setUser(null));
+  }, []);
 
   const logout = () => {
     clearToken();
@@ -56,32 +60,56 @@ export default function Layout() {
           </div>
 
           <nav className="flex flex-col gap-0.5 flex-1">
-            {nav.map((item) => {
-              if (!user || !canSeeNav(item, user.role)) return null;
-              return (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) =>
-                    `nav-link ${isActive ? "nav-link-active" : ""}`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              );
-            })}
+            {publicNav.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "nav-link-active" : ""}`
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+            {user &&
+              authNav.map((item) => {
+                if (!canSeeNav(item, user.role)) return null;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    className={({ isActive }) =>
+                      `nav-link ${isActive ? "nav-link-active" : ""}`
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                );
+              })}
           </nav>
 
           <div className="mt-6 pt-4 border-t border-render-border px-2">
-            <p className="text-xs text-render-text truncate" title={user?.email}>
-              {user?.display_name || user?.email}
-            </p>
-            <p className="text-[10px] text-render-subtle mt-0.5">
-              {ROLE_LABELS[role] || role}
-            </p>
-            <button type="button" onClick={logout} className="btn-ghost mt-3 w-full justify-start">
-              Log out
-            </button>
+            {user ? (
+              <>
+                <p className="text-xs text-render-text truncate" title={user.email}>
+                  {user.display_name || user.email}
+                </p>
+                <p className="text-[10px] text-render-subtle mt-0.5">
+                  {ROLE_LABELS[role] || role}
+                </p>
+                <button type="button" onClick={logout} className="btn-ghost mt-3 w-full justify-start">
+                  Log out
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => navigate("/login")}
+                className="btn-ghost w-full justify-start"
+              >
+                Sign in
+              </button>
+            )}
           </div>
         </aside>
 

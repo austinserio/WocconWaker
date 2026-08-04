@@ -11,10 +11,12 @@ if str(ROOT) not in sys.path:
 
 from panel_api.services.pronunciation_audio import (  # noqa: E402
     audio_filename,
+    is_publicly_fetchable_base,
     is_speakable_pronunciation,
     prepare_tts_text,
     pronunciation_content_hash,
     pronunciation_audio_url,
+    public_base_url,
 )
 
 
@@ -32,15 +34,9 @@ def test_is_speakable():
     assert not is_speakable_pronunciation("[Carter, 173]")
     assert not is_speakable_pronunciation("[Rudes(2000), 240]")
     assert not is_speakable_pronunciation("wind blowing angry")
+    assert is_speakable_pronunciation("way ayk")
+    assert is_speakable_pronunciation("hay")
     assert not is_speakable_pronunciation("")
-
-
-def test_synthesis_speed_short():
-    from panel_api.services.pronunciation_audio import synthesis_speed_for_guide
-
-    assert synthesis_speed_for_guide("hA", 0.8) == 0.55
-    assert synthesis_speed_for_guide("ɹˈu ʧA hɑ", 0.8) == 0.65
-    assert synthesis_speed_for_guide("jAn dɑ ɹA wɑwə", 0.8) == 0.8
 
 
 def test_hash_stable():
@@ -59,13 +55,49 @@ def test_audio_url_missing_file():
     assert pronunciation_audio_url("nonexistent-guide-xyz-abc") is None
 
 
+def test_public_base_url_rejects_localhost(monkeypatch=None):
+    import os
+
+    saved = {
+        k: os.environ.get(k)
+        for k in (
+            "PUBLIC_WEBHOOK_BASE_URL",
+            "AZURE_CONTAINER_APP_WEBHOOK_URL",
+            "PANEL_PUBLIC_BASE_URL",
+        )
+    }
+    try:
+        os.environ.pop("PUBLIC_WEBHOOK_BASE_URL", None)
+        os.environ.pop("AZURE_CONTAINER_APP_WEBHOOK_URL", None)
+        os.environ["PANEL_PUBLIC_BASE_URL"] = "http://localhost:5173"
+        assert public_base_url() is None
+
+        os.environ.pop("PANEL_PUBLIC_BASE_URL", None)
+        os.environ["PUBLIC_WEBHOOK_BASE_URL"] = "https://woccon-dev.example.com"
+        assert public_base_url() == "https://woccon-dev.example.com"
+    finally:
+        for k, v in saved.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+
+
+def test_is_publicly_fetchable_base():
+    assert is_publicly_fetchable_base("https://woccon-dev.example.com")
+    assert not is_publicly_fetchable_base("http://woccon-dev.example.com")
+    assert not is_publicly_fetchable_base("https://localhost:8000")
+    assert not is_publicly_fetchable_base("https://127.0.0.1")
+
+
 def main() -> int:
     test_prepare_tts_text()
     test_is_speakable()
-    test_synthesis_speed_short()
     test_hash_stable()
     test_audio_filename()
     test_audio_url_missing_file()
+    test_public_base_url_rejects_localhost()
+    test_is_publicly_fetchable_base()
     print("ok")
     return 0
 

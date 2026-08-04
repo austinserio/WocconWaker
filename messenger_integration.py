@@ -134,6 +134,55 @@ class MessengerIntegration:
         
         return None
     
+    def send_audio_attachment(
+        self, recipient_id: str, audio_url: str, *, is_reusable: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Send an audio attachment (MP3/M4A) via public HTTPS URL.
+
+        Facebook fetches the URL server-side; it must be reachable on the public internet.
+        """
+        if not self.page_access_token:
+            log.error("[MessengerIntegration] PAGE_ACCESS_TOKEN is not set")
+            return {}
+
+        params = {"access_token": self.page_access_token}
+        payload = {
+            "recipient": {"id": recipient_id},
+            "messaging_type": "RESPONSE",
+            "message": {
+                "attachment": {
+                    "type": "audio",
+                    "payload": {
+                        "url": audio_url,
+                        "is_reusable": is_reusable,
+                    },
+                }
+            },
+        }
+
+        try:
+            response = requests.post(
+                self.api_url, params=params, json=payload, timeout=15
+            )
+            if response.status_code != 200:
+                log.error(
+                    "[MessengerIntegration] Failed to send audio to %s: HTTP %s – %s",
+                    recipient_id,
+                    response.status_code,
+                    response.text,
+                )
+            else:
+                log.info(
+                    "[MessengerIntegration] Sent audio attachment to %s: %s",
+                    recipient_id,
+                    audio_url,
+                )
+            return response.json()
+        except Exception as e:
+            log.error("[MessengerIntegration] Exception sending audio: %s", e)
+            return {}
+
     def send_message(self, recipient_id: str, message_text: str) -> Dict[str, Any]:
         """
         Send a text message to a specific user.

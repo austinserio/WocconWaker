@@ -7,7 +7,7 @@ import os
 import re
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 from panel_api.services.pronunciation import normalize_pronunciation
 
@@ -21,13 +21,20 @@ _CITATION_RE = re.compile(
     r"\[(?:Carter|Rudes|Waccamaw|\*\*)|^\[[^\]]*\d{3,4}",
     re.I,
 )
-# Multi-word English glosses / explanations, not phonetic respellings.
-_KNOWN_GLOSS_PHRASES = frozenset(
+# Common English words that together form semantic glosses (not phonetic respellings).
+_COMMON_GLOSS_WORDS = frozenset(
     {
-        "little man",
-        "wind blowing angry",
-        "tree lined river place",
-        "acorn tree",
+        "little",
+        "man",
+        "woman",
+        "wind",
+        "blowing",
+        "angry",
+        "tree",
+        "lined",
+        "river",
+        "place",
+        "acorn",
     }
 )
 
@@ -40,6 +47,17 @@ def prepare_tts_text(pronunciation: str | None) -> str | None:
     return clean.replace("-", " ").strip() or None
 
 
+def _looks_like_english_gloss(clean: str) -> bool:
+    """True for multi-word semantic explanations, not space-separated syllable respellings."""
+    if " " not in clean or "-" in clean:
+        return False
+    words = [w for w in clean.split() if w.isalpha()]
+    if len(words) < 2 or not all(w.islower() for w in words):
+        return False
+    # Respellings often use non-words (ayk, wahw); glosses use ordinary English.
+    return all(w in _COMMON_GLOSS_WORDS for w in words)
+
+
 def is_speakable_pronunciation(pronunciation: str | None) -> bool:
     """True when the string looks like a syllable guide, not a grammar note or gloss."""
     clean = normalize_pronunciation(pronunciation)
@@ -49,15 +67,8 @@ def is_speakable_pronunciation(pronunciation: str | None) -> bool:
         return False
     if _CITATION_RE.search(clean):
         return False
-    if clean.lower() in _KNOWN_GLOSS_PHRASES:
+    if _looks_like_english_gloss(clean):
         return False
-    if not re.search(r"[a-zA-Z]", clean):
-        return False
-    # Multi-word lowercase English with no hyphens → semantic gloss, not phonetics.
-    if " " in clean and "-" not in clean:
-        words = [w for w in clean.split() if w.isalpha()]
-        if len(words) >= 2 and all(w.islower() for w in words):
-            return False
     return True
 
 
@@ -157,7 +168,7 @@ def manifest_entry_for_pronunciation(
 
 
 def pronunciation_audio_url(pronunciation: str | None) -> str | None:
-    """Public URL when a pre-generated clip exists for this guide."""
+    """Relative API path when a pre-generated clip exists for this guide."""
     if not is_speakable_pronunciation(pronunciation):
         return None
     entry = manifest_entry_for_pronunciation(pronunciation)
@@ -170,6 +181,42 @@ def pronunciation_audio_url(pronunciation: str | None) -> str | None:
     if not path.is_file():
         return None
     return f"/api/pronunciation-audio/{quote(filename)}"
+
+
+def is_publicly_fetchable_base(url: str) -> bool:
+    """True when Facebook can fetch an attachment URL (HTTPS, non-localhost)."""
+    parsed = urlparse((url or "").strip())
+    if parsed.scheme != "https":
+        return False
+    host = (parsed.hostname or "").lower()
+    if not host:
+        return False
+    if host in ("localhost", "127.0.0.1", "0.0.0.0", "::1") or host.endswith(".local"):
+        return False
+    return True
+
+
+def public_base_url() -> str | None:
+    """HTTPS base for externally reachable assets (Messenger audio attachments, etc.)."""
+    for key in (
+        "PUBLIC_WEBHOOK_BASE_URL",
+        "AZURE_CONTAINER_APP_WEBHOOK_URL",
+    ):
+        value = (os.environ.get(key) or "").strip().rstrip("/")
+        if value and is_publicly_fetchable_base(value):
+            return value
+    return None
+
+
+def public_pronunciation_audio_url(pronunciation: str | None) -> str | None:
+    """Absolute HTTPS URL when a clip exists and a public base URL is configured."""
+    rel = pronunciation_audio_url(pronunciation)
+    if not rel:
+        return None
+    base = public_base_url()
+    if not base:
+        return None
+    return f"{base}{rel}"
 
 
 def load_manifest(audio_dir: Path | None = None) -> dict[str, Any]:

@@ -7,7 +7,10 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      "/api": { target: "http://127.0.0.1:8000", changeOrigin: true },
+      "/api": {
+        target: `http://127.0.0.1:${process.env.WOCCON_BACKEND_PORT || process.env.PORT || "8000"}`,
+        changeOrigin: true,
+      },
     },
   },
 });

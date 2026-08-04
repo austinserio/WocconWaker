@@ -29,57 +29,67 @@ export default function App() {
       <Route path="/accept-invite" element={<AcceptInvite />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route
-        path="/"
-        element={
-          <PrivateRoute>
-            <Layout />
-          </PrivateRoute>
-        }
-      >
+      <Route path="/" element={<Layout />}>
         <Route index element={<Navigate to="/rules" replace />} />
         <Route path="rules" element={<Rules />} />
         <Route path="dictionary" element={<Dictionary />} />
+        <Route path="comparative" element={<Comparative />} />
         <Route
           path="pending"
           element={
-            <WorkerRoute>
-              <Pending />
-            </WorkerRoute>
+            <PrivateRoute>
+              <WorkerRoute>
+                <Pending />
+              </WorkerRoute>
+            </PrivateRoute>
           }
         />
         <Route
           path="upload"
           element={
-            <WorkerRoute>
-              <Upload />
-            </WorkerRoute>
+            <PrivateRoute>
+              <WorkerRoute>
+                <Upload />
+              </WorkerRoute>
+            </PrivateRoute>
           }
         />
-        <Route path="library" element={<Library />} />
-        <Route path="comparative" element={<Comparative />} />
+        <Route
+          path="library"
+          element={
+            <PrivateRoute>
+              <Library />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="commit"
           element={
-            <AdminRoute>
-              <Commit />
-            </AdminRoute>
+            <PrivateRoute>
+              <AdminRoute>
+                <Commit />
+              </AdminRoute>
+            </PrivateRoute>
           }
         />
         <Route
           path="audit"
           element={
-            <AdminRoute>
-              <Audit />
-            </AdminRoute>
+            <PrivateRoute>
+              <AdminRoute>
+                <Audit />
+              </AdminRoute>
+            </PrivateRoute>
           }
         />
         <Route
           path="users"
           element={
-            <AdminRoute>
-              <Users />
-            </AdminRoute>
+            <PrivateRoute>
+              <AdminRoute>
+                <Users />
+              </AdminRoute>
+            </PrivateRoute>
           }
         />
       </Route>

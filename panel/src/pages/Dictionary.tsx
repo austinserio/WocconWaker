@@ -1,13 +1,22 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { api, LexiconEntry, LexiconListResponse } from "../api";
+import {
+  api,
+  LexiconEntry,
+  LexiconListResponse,
+  PendingCatawba,
+  PendingCatawbaListResponse,
+  PendingCatawbaStats,
+} from "../api";
 import { LexiconEntryEditor } from "../components/LexiconEditPanel";
 import { LexiconEntryCard } from "../components/LexiconEntryCard";
+import { SourceCitation } from "../components/SourceCitation";
 import { EmptyState, PageHeader, Spinner } from "../components/ui";
 import { LexiconTaxonomy } from "../lexiconTaxonomy";
 import { useAuth } from "../context/AuthContext";
 
 type ViewMode = "base" | "all" | "units";
+type DictLanguage = "woccon" | "catawba";
 
 interface LexiconGroup {
   teaching_unit: string;
@@ -28,6 +37,8 @@ export default function Dictionary() {
   const { canWrite } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialView = (searchParams.get("view") as ViewMode) || "base";
+  const initialLang = (searchParams.get("lang") as DictLanguage) || "woccon";
+  const initialDoc = searchParams.get("doc") || "";
 
   const [taxonomy, setTaxonomy] = useState<LexiconTaxonomy | null>(null);
   const [groups, setGroups] = useState<LexiconGroup[]>([]);
@@ -36,6 +47,7 @@ export default function Dictionary() {
   const [stats, setStats] = useState<LexiconStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>(initialView);
+  const [dictLanguage, setDictLanguage] = useState<DictLanguage>(initialLang);
   const [activeUnit, setActiveUnit] = useState<string | null>(null);
   const [wordClassFilter, setWordClassFilter] = useState<string | null>(null);
   const [bandFilter, setBandFilter] = useState<string | null>(null);
@@ -48,12 +60,25 @@ export default function Dictionary() {
   const [allSort, setAllSort] = useState<"woccon" | "english">("woccon");
   const pageSize = 100;
 
+  const [catawbaItems, setCatawbaItems] = useState<PendingCatawba[]>([]);
+  const [catawbaTotal, setCatawbaTotal] = useState(0);
+  const [catawbaPage, setCatawbaPage] = useState(1);
+  const [catawbaSort, setCatawbaSort] = useState<"catawba" | "english">("catawba");
+  const [catawbaStats, setCatawbaStats] = useState<PendingCatawbaStats | null>(null);
+  const [catawbaDocFilter, setCatawbaDocFilter] = useState(initialDoc);
+
   useEffect(() => {
     api<LexiconTaxonomy>("/lexicon/taxonomy").then(setTaxonomy);
+    api<PendingCatawbaStats>("/pending/catawba/stats").then(setCatawbaStats);
   }, []);
 
-  const load = useCallback(() => {
-    setLoading(true);
+  useEffect(() => {
+    if (initialDoc) {
+      setDictLanguage("catawba");
+    }
+  }, [initialDoc]);
+
+  const loadWoccon = useCallback(() => {
     const params = new URLSearchParams();
     if (wordClassFilter) params.set("word_class", wordClassFilter);
     if (bandFilter) params.set("lesson_band", bandFilter);
@@ -78,37 +103,60 @@ export default function Dictionary() {
       requests.push(api<LexiconGroup[]>(`/lexicon/grouped?${params}`));
     }
 
-    Promise.allSettled(requests)
-      .then((results) => {
-        const statsResult = results[0];
-        if (statsResult.status === "fulfilled") {
-          setStats(statsResult.value as LexiconStats);
-        }
-        const dataResult = results[1];
-        if (dataResult.status !== "fulfilled") return;
-        if (viewMode === "base") {
-          const resp = dataResult.value as LexiconListResponse;
-          setBaseItems(resp.items);
-        } else if (viewMode === "all") {
-          const resp = dataResult.value as LexiconListResponse;
-          setAllItems(resp.items);
-          setAllTotal(resp.total);
-        } else {
-          const g = dataResult.value as LexiconGroup[];
-          setGroups(g);
-          setActiveUnit((prev) => prev ?? g[0]?.teaching_unit ?? null);
-        }
-      })
-      .finally(() => setLoading(false));
+    return Promise.allSettled(requests).then((results) => {
+      const statsResult = results[0];
+      if (statsResult.status === "fulfilled") {
+        setStats(statsResult.value as LexiconStats);
+      }
+      const dataResult = results[1];
+      if (dataResult.status !== "fulfilled") return;
+      if (viewMode === "base") {
+        const resp = dataResult.value as LexiconListResponse;
+        setBaseItems(resp.items);
+      } else if (viewMode === "all") {
+        const resp = dataResult.value as LexiconListResponse;
+        setAllItems(resp.items);
+        setAllTotal(resp.total);
+      } else {
+        const g = dataResult.value as LexiconGroup[];
+        setGroups(g);
+        setActiveUnit((prev) => prev ?? g[0]?.teaching_unit ?? null);
+      }
+    });
   }, [viewMode, wordClassFilter, bandFilter, search, allPage, allSort]);
+
+  const loadCatawba = useCallback(() => {
+    const params = new URLSearchParams({
+      status: "approved",
+      page: String(catawbaPage),
+      page_size: String(pageSize),
+      sort: catawbaSort,
+    });
+    if (search.trim()) params.set("q", search.trim());
+    if (catawbaDocFilter) params.set("document_id", catawbaDocFilter);
+    return api<PendingCatawbaListResponse>(`/pending/catawba/dictionary?${params}`).then((resp) => {
+      setCatawbaItems(resp.items);
+      setCatawbaTotal(resp.total);
+    });
+  }, [catawbaPage, catawbaSort, search, catawbaDocFilter]);
+
+  const load = useCallback(() => {
+    setLoading(true);
+    const promise = dictLanguage === "catawba" ? loadCatawba() : loadWoccon();
+    promise.finally(() => setLoading(false));
+  }, [dictLanguage, loadCatawba, loadWoccon]);
 
   useEffect(() => {
     load();
   }, [load]);
 
   useEffect(() => {
-    setSearchParams(viewMode === "base" ? {} : { view: viewMode }, { replace: true });
-  }, [viewMode, setSearchParams]);
+    const params: Record<string, string> = { lang: dictLanguage };
+    if (dictLanguage === "woccon" && viewMode !== "base") {
+      params.view = viewMode;
+    }
+    setSearchParams(params, { replace: true });
+  }, [viewMode, dictLanguage, setSearchParams]);
 
   const activeGroup = useMemo(() => {
     if (!activeUnit) return groups[0];
@@ -124,6 +172,16 @@ export default function Dictionary() {
   }, [taxonomy, stats]);
 
   const reclassify = async () => {
+    if (
+      !window.confirm(
+        "Re-run automatic teaching tags on every Woccon entry?\n\n" +
+          "This updates teaching unit, word class, and lesson band from each word's English gloss and POS. " +
+          "It does not change Woccon/English forms or delete entries.\n\n" +
+          "Manual tag edits will be overwritten. There is no undo."
+      )
+    ) {
+      return;
+    }
     setReclassifying(true);
     try {
       await api("/lexicon/reclassify", { method: "POST" });
@@ -138,6 +196,14 @@ export default function Dictionary() {
     setEditId(null);
     setExpandedId(null);
     if (mode === "all") setAllPage(1);
+  };
+
+  const setLanguage = (lang: DictLanguage) => {
+    setDictLanguage(lang);
+    setEditId(null);
+    setExpandedId(null);
+    setAllPage(1);
+    setCatawbaPage(1);
   };
 
   const renderEntries = (entries: LexiconEntry[], showExpand: boolean) => (
@@ -166,6 +232,28 @@ export default function Dictionary() {
     </ul>
   );
 
+  const renderCatawbaEntries = () => (
+    <ul className="space-y-2">
+      {catawbaItems.map((entry) => (
+        <li key={entry.id} className="panel-card p-4">
+          <p className="text-sm text-render-text">
+            <span className="font-semibold text-amber-100">{entry.catawba}</span>
+            <span className="text-render-muted"> — {entry.english}</span>
+            {entry.pos && (
+              <span className="text-render-subtle text-xs ml-1">({entry.pos})</span>
+            )}
+          </p>
+          {entry.woccon_cited && (
+            <p className="text-xs text-render-subtle mt-1">
+              Woccon cited in source: {entry.woccon_cited}
+            </p>
+          )}
+          <SourceCitation citation={entry.citation} />
+        </li>
+      ))}
+    </ul>
+  );
+
   if (!taxonomy) {
     return (
       <div className="flex items-center gap-2 text-render-muted py-8">
@@ -175,60 +263,148 @@ export default function Dictionary() {
     );
   }
 
-  const subtitle = stats
+  const wocconSubtitle = stats
     ? `${stats.base_count ?? 0} base words · ${stats.variant_count ?? 0} linked variants · ${stats.total} total`
     : "Teaching-oriented vocabulary";
+
+  const catawbaSubtitle = catawbaStats
+    ? `${catawbaStats.total_approved} approved · ${catawbaStats.total_pending} pending · comparative evidence only`
+    : "Catawba comparative vocabulary";
 
   return (
     <div>
       <PageHeader
         title="Dictionary"
-        subtitle={subtitle}
+        subtitle={dictLanguage === "woccon" ? wocconSubtitle : catawbaSubtitle}
         action={
-          canWrite ? (
-            <button
-              type="button"
-              onClick={reclassify}
-              disabled={reclassifying}
-              className="btn-secondary text-xs"
-            >
-              {reclassifying ? "Reclassifying…" : "Reclassify all"}
-            </button>
-          ) : undefined
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex rounded-full border border-white/10 p-0.5">
+              <button
+                type="button"
+                onClick={() => setLanguage("woccon")}
+                className={`pill-tab text-xs py-1 px-3 rounded-full ${
+                  dictLanguage === "woccon" ? "pill-tab-active" : "pill-tab-inactive"
+                }`}
+              >
+                Woccon
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage("catawba")}
+                className={`pill-tab text-xs py-1 px-3 rounded-full ${
+                  dictLanguage === "catawba" ? "pill-tab-active" : "pill-tab-inactive"
+                }`}
+              >
+                Catawba
+              </button>
+            </div>
+            {canWrite && dictLanguage === "woccon" && (
+              <button
+                type="button"
+                onClick={reclassify}
+                disabled={reclassifying}
+                className="btn-secondary text-xs"
+              >
+                {reclassifying ? "Reclassifying…" : "Reclassify all"}
+              </button>
+            )}
+          </div>
         }
       />
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        {(
-          [
-            ["base", "Base vocabulary"],
-            ["all", "All entries"],
-            ["units", "By teaching unit"],
-          ] as const
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setMode(id)}
-            className={`pill-tab text-xs py-1 ${viewMode === id ? "pill-tab-active" : "pill-tab-inactive"}`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      {dictLanguage === "catawba" && (
+        <div className="panel-card p-4 mb-4 border-amber-500/20 bg-amber-500/5">
+          <p className="text-sm text-render-text">
+            Approved Catawba entries from staged comparative sources. These support cognate
+            reconstruction only — they never enter the Woccon Commit flow.
+          </p>
+        </div>
+      )}
+
+      {dictLanguage === "woccon" && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {(
+            [
+              ["base", "Base vocabulary"],
+              ["all", "All entries"],
+              ["units", "By teaching unit"],
+            ] as const
+          ).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setMode(id)}
+              className={`pill-tab text-xs py-1 ${viewMode === id ? "pill-tab-active" : "pill-tab-inactive"}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
 
       <input
         type="search"
-        placeholder="Search Woccon or English…"
+        placeholder={
+          dictLanguage === "catawba"
+            ? "Search Catawba, English, or cited Woccon…"
+            : "Search Woccon or English…"
+        }
         value={search}
         onChange={(e) => {
           setSearch(e.target.value);
           setAllPage(1);
+          setCatawbaPage(1);
         }}
         className="input-field mb-4 max-w-md"
       />
 
-      {viewMode !== "base" && (
+      {dictLanguage === "catawba" && (
+        <>
+          <div className="flex flex-wrap gap-3 mb-4 items-end">
+            <label className="text-sm text-render-muted">
+              Source
+              <select
+                className="input-field text-sm ml-2 min-w-[220px]"
+                value={catawbaDocFilter}
+                onChange={(e) => {
+                  setCatawbaDocFilter(e.target.value);
+                  setCatawbaPage(1);
+                }}
+              >
+                <option value="">All Catawba sources</option>
+                {(catawbaStats?.sources ?? []).map((s) => (
+                  <option key={s.document_id} value={s.document_id}>
+                    {s.title} ({s.approved_count} approved)
+                  </option>
+                ))}
+              </select>
+            </label>
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="text-xs text-render-subtle">Sort:</span>
+              <button
+                type="button"
+                onClick={() => setCatawbaSort("catawba")}
+                className={`pill-tab text-xs py-1 ${
+                  catawbaSort === "catawba" ? "pill-tab-active" : "pill-tab-inactive"
+                }`}
+              >
+                Catawba
+              </button>
+              <button
+                type="button"
+                onClick={() => setCatawbaSort("english")}
+                className={`pill-tab text-xs py-1 ${
+                  catawbaSort === "english" ? "pill-tab-active" : "pill-tab-inactive"
+                }`}
+              >
+                English
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {dictLanguage === "woccon" && viewMode !== "base" && (
         <>
           <div className="flex flex-wrap gap-2 mb-4">
             <span className="text-xs text-render-subtle self-center mr-1">Word class:</span>
@@ -278,7 +454,7 @@ export default function Dictionary() {
         </>
       )}
 
-      {viewMode === "all" && (
+      {dictLanguage === "woccon" && viewMode === "all" && (
         <div className="flex flex-wrap gap-2 mb-4 items-center">
           <span className="text-xs text-render-subtle">Sort:</span>
           <button
@@ -303,6 +479,36 @@ export default function Dictionary() {
           <Spinner />
           <span className="text-sm">Loading…</span>
         </div>
+      ) : dictLanguage === "catawba" ? (
+        catawbaItems.length === 0 ? (
+          <EmptyState message="No approved Catawba entries match these filters." />
+        ) : (
+          <>
+            <p className="text-xs text-render-subtle mb-4">
+              Showing {(catawbaPage - 1) * pageSize + 1}–
+              {Math.min(catawbaPage * pageSize, catawbaTotal)} of {catawbaTotal}
+            </p>
+            {renderCatawbaEntries()}
+            <div className="flex gap-2 mt-4">
+              <button
+                type="button"
+                disabled={catawbaPage <= 1}
+                onClick={() => setCatawbaPage((p) => p - 1)}
+                className="btn-secondary text-xs"
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                disabled={catawbaPage * pageSize >= catawbaTotal}
+                onClick={() => setCatawbaPage((p) => p + 1)}
+                className="btn-secondary text-xs"
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )
       ) : viewMode === "base" ? (
         baseItems.length === 0 ? (
           <EmptyState message="No base vocabulary imported yet. Sync from Library." />

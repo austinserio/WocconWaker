@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException, Query, Response
 from sqlalchemy import func, or_
 
 from panel_api.db import CanonicalLexicon, PendingLexicon, SourceDocument
-from panel_api.deps import CurrentUser, DbSession, RequireAdmin, RequireWorker
+from panel_api.deps import DbSession, RequireAdmin, RequireWorker
 from panel_api.lexicon_taxonomy import (
     LESSON_BAND_IDS,
     TEACHING_UNIT_IDS,
@@ -123,12 +123,12 @@ def _lexicon_query(
 
 
 @router.get("/taxonomy")
-def get_lexicon_taxonomy(user: CurrentUser):
+def get_lexicon_taxonomy():
     return lexicon_taxonomy_payload()
 
 
 @router.get("/stats")
-def lexicon_stats(db: DbSession, user: CurrentUser):
+def lexicon_stats(db: DbSession):
     total = db.query(func.count(CanonicalLexicon.id)).scalar() or 0
     base_count = (
         db.query(func.count(CanonicalLexicon.id))
@@ -186,7 +186,6 @@ def lexicon_stats(db: DbSession, user: CurrentUser):
 @router.get("/grouped", response_model=List[LexiconGroupOut])
 def list_lexicon_grouped(
     db: DbSession,
-    user: CurrentUser,
     word_class: Optional[str] = Query(None),
     lesson_band: Optional[str] = Query(None),
     q: Optional[str] = Query(None),
@@ -244,7 +243,6 @@ def list_lexicon_grouped(
 @router.get("/base", response_model=LexiconListResponse)
 def list_base_lexicon(
     db: DbSession,
-    user: CurrentUser,
     q: Optional[str] = Query(None),
     page: int = Query(1, ge=1),
     page_size: int = Query(200, ge=1, le=500),
@@ -278,7 +276,6 @@ def list_base_lexicon(
 @router.get("", response_model=LexiconListResponse)
 def list_lexicon(
     db: DbSession,
-    user: CurrentUser,
     q: Optional[str] = Query(None),
     teaching_unit: Optional[str] = Query(None),
     word_class: Optional[str] = Query(None),
@@ -324,7 +321,7 @@ def reclassify_lexicon(db: DbSession, admin: RequireAdmin):
 
 
 @router.get("/{entry_id}/variants", response_model=List[CanonicalLexiconOut])
-def list_lexicon_variants(entry_id: str, db: DbSession, user: CurrentUser):
+def list_lexicon_variants(entry_id: str, db: DbSession):
     base = db.get(CanonicalLexicon, entry_id)
     if not base or not base.is_base_entry:
         raise HTTPException(status_code=404, detail="Base entry not found")
@@ -338,7 +335,7 @@ def list_lexicon_variants(entry_id: str, db: DbSession, user: CurrentUser):
 
 
 @router.get("/{entry_id}", response_model=CanonicalLexiconOut)
-def get_lexicon(entry_id: str, db: DbSession, user: CurrentUser):
+def get_lexicon(entry_id: str, db: DbSession):
     row = db.get(CanonicalLexicon, entry_id)
     if not row:
         raise HTTPException(status_code=404, detail="Not found")

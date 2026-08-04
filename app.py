@@ -395,6 +395,35 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
             else:
                 messenger.send_message(user_id, "ℹ️ Typing indicators were not disabled for your account.")
             return
+
+        # Pronunciation queries: serve pre-generated clips when available (panel Listen parity)
+        if assistant_ready.is_set():
+            from messenger_pronunciation import (
+                format_pronunciation_text,
+                parse_pronunciation_query,
+                resolve_pronunciation_response,
+            )
+
+            pron_target = parse_pronunciation_query(text)
+            if pron_target:
+                lexicon = assistant.dictionary.get("lexicon") or []
+                pron_result = resolve_pronunciation_response(lexicon, pron_target)
+                if pron_result:
+                    if typing_indicator_active:
+                        messenger.send_typing_indicator(user_id, False)
+                        typing_indicator_active = False
+                    reply_text = format_pronunciation_text(pron_result)
+                    if pron_result.get("has_audio"):
+                        audio_resp = messenger.send_audio_attachment(
+                            user_id, pron_result["audio_url"]
+                        )
+                        if audio_resp.get("error"):
+                            reply_text += (
+                                "\n\n(I couldn't attach the audio clip; "
+                                "use the pronunciation guide above.)"
+                            )
+                    messenger.send_message(user_id, reply_text)
+                    return
             
         # Process the message with WocconAssistant
         print(f"[TRACE] Before assistant.reply: user_id={user_id}")

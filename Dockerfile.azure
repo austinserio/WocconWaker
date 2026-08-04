@@ -19,6 +19,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+# Pre-generated Kokoro clips (gitignored locally; must exist on build host)
+COPY data/pronunciation_audio/ data/pronunciation_audio/
 COPY --from=panel-build /panel/dist ./panel/dist
 
 EXPOSE 8000

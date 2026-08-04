@@ -8,7 +8,7 @@ from sqlalchemy import or_
 
 from panel_api.config import get_settings
 from panel_api.db import CanonicalRule
-from panel_api.deps import CurrentUser, DbSession, RequireAdmin, RequireWorker
+from panel_api.deps import DbSession, RequireAdmin, RequireWorker
 from panel_api.schemas import CanonicalRuleOut, CanonicalRulePatch, RuleGroupOut, RuleReorderRequest
 from panel_api.services.audit import write_audit
 from panel_api.services.duplicates import normalize_text
@@ -60,12 +60,12 @@ def _rule_query(
 
 
 @router.get("/taxonomy")
-def get_taxonomy(user: CurrentUser):
+def get_taxonomy():
     return taxonomy_payload()
 
 
 @router.get("/stats")
-def rule_stats(db: DbSession, user: CurrentUser, category: str = Query("grammar")):
+def rule_stats(db: DbSession, category: str = Query("grammar")):
     rows = db.query(CanonicalRule).filter(CanonicalRule.category == category).all()
     by_domain: dict = defaultdict(int)
     by_pos: dict = defaultdict(int)
@@ -85,7 +85,6 @@ def rule_stats(db: DbSession, user: CurrentUser, category: str = Query("grammar"
 @router.get("/grouped", response_model=List[RuleGroupOut])
 def list_rules_grouped(
     db: DbSession,
-    user: CurrentUser,
     category: str = Query("grammar"),
     pos_tag: Optional[str] = Query(None),
     construction_type: Optional[str] = Query(None),
@@ -131,7 +130,6 @@ def list_rules_grouped(
 @router.get("", response_model=List[CanonicalRuleOut])
 def list_rules(
     db: DbSession,
-    user: CurrentUser,
     category: Optional[str] = Query(None),
     grammar_domain: Optional[str] = Query(None),
     pos_tag: Optional[str] = Query(None),
@@ -150,7 +148,7 @@ def list_rules(
 
 
 @router.get("/legacy")
-def legacy_rules(user: CurrentUser):
+def legacy_rules():
     settings = get_settings()
     path = Path(settings.rules_legacy_path)
     if not path.is_file():

@@ -108,12 +108,12 @@ export default function Comparative() {
             placeholder="Filter by gloss…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="input max-w-xs"
+            className="input-field text-sm max-w-md"
           />
           <select
             value={tierFilter}
             onChange={(e) => setTierFilter(e.target.value)}
-            className="input max-w-[10rem]"
+            className="input-field text-sm max-w-[10rem]"
           >
             <option value="">All tiers</option>
             <option value="certain">Certain</option>
@@ -127,7 +127,7 @@ export default function Comparative() {
           <select
             value={kindFilter}
             onChange={(e) => setKindFilter(e.target.value)}
-            className="input max-w-[12rem]"
+            className="input-field text-sm max-w-[12rem]"
           >
             <option value="">All kinds</option>
             <option value="sister_wc">Sister W↔C</option>

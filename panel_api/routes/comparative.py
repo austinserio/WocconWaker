@@ -7,7 +7,7 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Query
 
 from panel_api.db import CognateRuleExample, CognateSet, CorrespondenceRule
-from panel_api.deps import CurrentUser, DbSession, RequireAdmin
+from panel_api.deps import DbSession
 from panel_api.schemas import (
     CognateRuleExampleOut,
     CognateSetListResponse,
@@ -77,7 +77,6 @@ def _rule_out(row: CorrespondenceRule, example_ids: Optional[List[str]] = None) 
 @router.get("/cognate-sets", response_model=CognateSetListResponse)
 def list_cognate_sets(
     db: DbSession,
-    user: CurrentUser,
     gloss: Optional[str] = Query(None),
     evidence_tier: Optional[str] = Query(None),
     rudes_appendix: Optional[int] = Query(None),
@@ -107,7 +106,7 @@ def list_cognate_sets(
 
 
 @router.get("/cognate-sets/{cognate_id}", response_model=CognateSetOut)
-def get_cognate_set(cognate_id: str, db: DbSession, user: CurrentUser):
+def get_cognate_set(cognate_id: str, db: DbSession):
     row = db.get(CognateSet, cognate_id)
     if not row:
         raise HTTPException(status_code=404, detail="Cognate set not found")
@@ -122,7 +121,6 @@ def get_cognate_set(cognate_id: str, db: DbSession, user: CurrentUser):
 @router.get("/correspondence-rules", response_model=CorrespondenceRuleListResponse)
 def list_correspondence_rules(
     db: DbSession,
-    user: CurrentUser,
     rule_kind: Optional[str] = Query(None),
     correspondence_status: Optional[str] = Query(None),
     environment: Optional[str] = Query(None),
@@ -149,7 +147,7 @@ def list_correspondence_rules(
 
 
 @router.get("/correspondence-rules/{rule_id}", response_model=CorrespondenceRuleOut)
-def get_correspondence_rule(rule_id: str, db: DbSession, user: CurrentUser):
+def get_correspondence_rule(rule_id: str, db: DbSession):
     row = db.get(CorrespondenceRule, rule_id)
     if not row:
         raise HTTPException(status_code=404, detail="Correspondence rule not found")

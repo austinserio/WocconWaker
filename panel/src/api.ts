@@ -26,8 +26,10 @@ export async function api<T>(
   }
   const res = await fetch(`/api${path}`, { ...options, headers });
   if (res.status === 401) {
-    clearToken();
-    window.location.href = "/panel/login";
+    if (token) {
+      clearToken();
+      window.location.href = "/panel/login";
+    }
     throw new Error("Unauthorized");
   }
   if (!res.ok) {
@@ -191,6 +193,176 @@ export interface PendingRule {
   citation?: CitationOut | null;
 }
 
+export interface PendingCatawba {
+  id: string;
+  source_document_id?: string | null;
+  catawba: string;
+  english: string;
+  pos: string;
+  woccon_cited?: string | null;
+  source_url?: string;
+  status: string;
+  reviewer_notes?: string;
+  source_page?: number | null;
+  source_page_end?: number | null;
+  source_excerpt?: string | null;
+  provenance_status?: string | null;
+  citation?: CitationOut | null;
+  created_at: string;
+}
+
+export interface PendingCatawbaSource {
+  document_id: string;
+  title: string;
+  staging_path?: string | null;
+  short_title?: string | null;
+  year?: string | null;
+  pending_count: number;
+  approved_count: number;
+  rejected_count: number;
+  staging_vocabulary: number;
+}
+
+export interface PendingCatawbaStats {
+  total_pending: number;
+  total_approved: number;
+  total_rejected: number;
+  sources: PendingCatawbaSource[];
+  link_review?: {
+    queue_path?: string;
+    total?: number;
+    scholar_conflict?: number;
+    gloss_only?: number;
+    generated_at?: string;
+  } | null;
+}
+
+export interface PendingCatawbaListResponse {
+  items: PendingCatawba[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+
+export type ComparativeLinkType = "new_cognate" | "seed_gap" | "scholar_conflict" | "crosscheck";
+export type ComparativeLinkDecision = "approved" | "rejected" | "alias" | "unsure";
+
+export type SameWordConfidence = "high" | "medium" | "low" | "risky";
+
+export interface SameWordPrefixWarning {
+  detected: boolean;
+  form_a_prefix?: string | null;
+  form_b_prefix?: string | null;
+  form_a_label?: string | null;
+  form_b_label?: string | null;
+  stem_similarity?: number | null;
+  message?: string | null;
+}
+
+export interface SameWordCheck {
+  form_similarity: number;
+  comparison?: string | null;
+  woccon_staging_similarity?: number | null;
+  rudes_staging_similarity?: number | null;
+  prefix_warning?: SameWordPrefixWarning | null;
+  pos_warning?: {
+    detected: boolean;
+    woccon_pos?: string | null;
+    staging_pos?: string | null;
+    message?: string | null;
+  } | null;
+  woccon_pos?: string | null;
+  staging_pos?: string | null;
+  gloss_only_risk: boolean;
+  source_gloss?: string | null;
+  source_excerpt?: string | null;
+  review_prompt: string;
+  same_word_confidence: SameWordConfidence;
+}
+
+export interface ComparativeLink {
+  item_key: string;
+  item_type: ComparativeLinkType;
+  gloss: string;
+  woccon?: string | null;
+  lawson_form?: string | null;
+  woccon_reconstituted?: string | null;
+  rudes_catawba?: string | null;
+  staging_catawba?: string | null;
+  woccon_pos?: string | null;
+  catawba_pos?: string | null;
+  pos_clash?: boolean | null;
+  recommended_action?: string | null;
+  source?: string | null;
+  source_path?: string | null;
+  seed_id?: string | null;
+  match_kind?: string | null;
+  form_similarity?: number | null;
+  confidence?: string | null;
+  action?: string | null;
+  rudes_appendix?: number | null;
+  evidence_tier?: string | null;
+  priority?: number | null;
+  decision?: ComparativeLinkDecision | null;
+  reviewer_note?: string | null;
+  decided_at?: string | null;
+  status: "open" | "resolved";
+  same_word_check?: SameWordCheck | null;
+  seed_apply?: {
+    updated_catawba: number;
+    aliases_added: number;
+    new_rows: number;
+    skipped: number;
+  } | null;
+  seed_pool_size?: number | null;
+}
+
+export interface ComparativeLinkStats {
+  total: number;
+  open: number;
+  resolved: number;
+  generated_at?: string | null;
+  instructions?: string | null;
+  queue_path?: string | null;
+  by_type: Record<
+    string,
+    { total: number; open: number; resolved: number }
+  >;
+  same_word?: Partial<Record<SameWordConfidence, number>> | null;
+  seed_pool_size?: number | null;
+  panel_decisions_applied_at?: string | null;
+}
+
+export interface CatawbaGrammarDraft {
+  id: string;
+  draft_type: "morpheme" | "compound" | "sense" | string;
+  status: string;
+  confidence?: string | null;
+  source_path?: string | null;
+  source_excerpt?: string | null;
+  payload: Record<string, unknown>;
+  reviewer_note?: string | null;
+  created_at?: string | null;
+  decided_at?: string | null;
+}
+
+export interface CatawbaGrammarStats {
+  pending: number;
+  approved_morphemes: number;
+  approved_compounds: number;
+  approved_senses: number;
+}
+
+export interface StagingSyncResponse {
+  documents_registered: number;
+  documents_updated: number;
+  catawba_pending_imported: number;
+  catawba_sources: number;
+  woccon_sources: number;
+  context_sources: number;
+  errors: string[];
+}
+
 export interface PendingLexiconCreate {
   woccon: string;
   english: string;
@@ -275,6 +447,9 @@ export interface SourceDocument {
   grammar_lineage?: string | null;
   /** woccon | catawba | context. Catawba sources are comparative evidence, not Woccon vocabulary. */
   content_language?: string | null;
+  staging_path?: string | null;
+  has_pdf?: boolean;
+  has_staging?: boolean;
   work_group_key?: string | null;
   work_group_label?: string | null;
   merged_sources?: MergedSource[];
