@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Generate or verify pronunciation MP3s for CI / Docker build.
+# Primary operator workflow: generate on UIC, pull via pull_uic_pronunciation_audio.sh, commit.
+# This script is the GitHub Actions fallback when committed clips are missing.
 # Requires: Python 3.10–3.12, espeak-ng, ffmpeg, pip install -r requirements-tts.txt
 #
 # Usage:

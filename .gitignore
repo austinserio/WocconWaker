@@ -11,5 +11,7 @@ venv/
 .env.local
 cloudflared.yml
 data/
+!data/pronunciation_audio/
+!data/pronunciation_audio/**
 panel/node_modules/
 panel/dist/

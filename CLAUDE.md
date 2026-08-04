@@ -17,6 +17,7 @@ python app.py
 
 # Control panel only (backend + Vite dev server)
 ./run-panel-dev.sh
+# If port 8000 is busy (e.g. Caddy): PORT=8003 LOCAL_LLM=false ./run-panel-dev.sh
 
 # CLI interface only
 python woccon_cli.py
@@ -35,9 +36,33 @@ WOCCON_MODE=hybrid python app.py     # Both CLI and server
 # Run morphological analyzer tests
 python woccon_analyzer_test.py
 
+# Pronunciation audio helpers (speakability, manifest URLs)
+python3 scripts/test_pronunciation_audio.py
+.venv-tts/bin/python scripts/test_kokoro_phonemes.py   # requires requirements-tts.txt
+
 # Start webhook test server for Messenger integration
 python webhook_test_server.py
 ```
+
+### Pronunciation audio (Kokoro batch TTS)
+Pre-generated MP3 clips for English-Woccon guides; panel **Listen** uses them when available.
+
+**Full reference:** [docs/PRONUNCIATION_AUDIO.md](docs/PRONUNCIATION_AUDIO.md)
+
+**Primary workflow:** batch-generate on **UIC** (`/root/WocconWaker`, `.venv-tts`, CPU Kokoro — not Qwen), then pull or commit for deploy:
+
+```bash
+# On UIC after deploy:
+HF_HOME=data/hf_cache .venv-tts/bin/python scripts/generate_pronunciation_audio.py \
+  --staging woccon_language/drive_staging/English-Woccon.json
+
+# Pull to Mac for commit / docker build:
+./scripts/pull_uic_pronunciation_audio.sh
+```
+
+Mac dev (optional): same generator locally. Messenger **serves** clips from Azure prod, not UIC.
+
+Output: `data/pronunciation_audio/` + `manifest.json`. Served at `GET /api/pronunciation-audio/{filename}`.
 
 ### Dependencies
 ```bash
@@ -197,9 +222,11 @@ python scripts/parse_carter_sets.py --write    # link Carter 1980 sets into the 
 - `GET /admin/ingest-drive/status` - Last ingest result
 - `POST /admin/reload-language` - Reload dictionary/rules and rebuild RAG (same auth as ingest; optional body: `dict_path`, `rules_path`)
 - `POST /admin/extract-document` - Extract one document (same auth as ingest). JSON or multipart `.txt`.
-- **Control panel** (`panel_api`, JWT): `POST /api/auth/login/json`, `POST /api/documents`, `GET /api/pending/*`, `GET /api/rules`, `PATCH /api/rules/reorder`, `GET /api/lexicon`, `POST /api/admin/commit`. See [docs/CONTROL_PANEL.md](docs/CONTROL_PANEL.md). Env: `DATABASE_URL`, `JWT_SECRET`, `PANEL_ADMIN_EMAIL`, `PANEL_ADMIN_PASSWORD`, `PANEL_CORS_ORIGINS`, `WOCCON_UPLOAD_DIR`, `DUPLICATE_THRESHOLD`.
-- **Reconstruction methodology:** [docs/RECONSTRUCTION_METHODOLOGY.md](docs/RECONSTRUCTION_METHODOLOGY.md) — Rudes/Carter method, Catawba vs PSC roles, rule kinds, next steps.
-- **Reconstruction engineering roadmap:** [docs/RECONSTRUCTION_ROADMAP.md](docs/RECONSTRUCTION_ROADMAP.md) — comparative pipeline, hybrid model stack, grammar tiers, phased DoD.
+- **Control panel** (`panel_api`, JWT): `POST /api/auth/login/json`, `POST /api/documents`, `GET /api/pending/*`, `GET /api/rules`, `PATCH /api/rules/reorder`, `GET /api/lexicon`, `GET /api/pronunciation-audio/{filename}`, `POST /api/admin/commit`. See [docs/CONTROL_PANEL.md](docs/CONTROL_PANEL.md). Env: `DATABASE_URL`, `JWT_SECRET`, `PANEL_ADMIN_EMAIL`, `PANEL_ADMIN_PASSWORD`, `PANEL_CORS_ORIGINS`, `WOCCON_UPLOAD_DIR`, `DUPLICATE_THRESHOLD`.
+- Pronunciation audio (Kokoro batch, panel Listen): [docs/PRONUNCIATION_AUDIO.md](docs/PRONUNCIATION_AUDIO.md)
+- Reconstruction methodology: [docs/RECONSTRUCTION_METHODOLOGY.md](docs/RECONSTRUCTION_METHODOLOGY.md) — Rudes/Carter method, Catawba vs PSC roles, rule kinds, calibration gate, next steps.
+- Reconstruction engineering roadmap: [docs/RECONSTRUCTION_ROADMAP.md](docs/RECONSTRUCTION_ROADMAP.md) — comparative pipeline, hybrid model stack, grammar tiers, phased DoD.
+- Agent handoff (reconstruction): [docs/RECONSTRUCTION_AGENT_HANDOFF.md](docs/RECONSTRUCTION_AGENT_HANDOFF.md) — north star (calibration), lanes, panel map, blockers, commands for new agents.
 
 ## Notes
 

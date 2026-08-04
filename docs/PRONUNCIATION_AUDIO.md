@@ -6,6 +6,24 @@ Pre-generated MP3 clips for **English-Woccon community pronunciation guides**. T
 
 ---
 
+## Where things run (read this first)
+
+Kokoro batch generation and MP3 **serving** are separate steps.
+
+| Step | Where | Notes |
+|------|-------|-------|
+| **Batch generation** | **UIC server** (primary workflow) | SSH to `/root/WocconWaker`, run `generate_pronunciation_audio.py` in `.venv-tts`. Kokoro is **CPU-only** — does not use Qwen/llama-server, so it can run while GPU ingest is idle or in parallel. |
+| **Mac dev** | Optional | Same script works locally for panel dev / QA (`PORT=8003 ./run-panel-dev.sh`). |
+| **GitHub Actions** | Fallback only | `.github/workflows/deploy-azure-foundry.yml` can regenerate clips before `docker build` if committed/pulled clips are missing. Slower (model download); prefer UIC batch + commit or rsync. |
+| **Serving (panel dev)** | Mac backend | `GET /api/pronunciation-audio/{filename}` from `data/pronunciation_audio/` on disk. |
+| **Serving (Messenger prod)** | **Azure Container App** | MP3s baked into the Docker image (or mounted). Facebook fetches `PUBLIC_WEBHOOK_BASE_URL/api/pronunciation-audio/...` — **not** UIC. |
+
+**Operator workflow (Aug 2026):** generate on UIC → pull or commit `data/pronunciation_audio/` + `manifest.json` → deploy (Azure CD or local `docker build`). See [Deploy / CD](#deploy--cd) below.
+
+**UIC SSH:** `info@urbanindigenouscollective.org@100.71.124.8`, key `~/.ssh/uic-learning-deploy`, repo root `/root/WocconWaker` (or `INGEST_REMOTE_ROOT` from `.env`). Same host as Qwen ingest — see [RECONSTRUCTION_AGENT_HANDOFF.md](RECONSTRUCTION_AGENT_HANDOFF.md).
+
+---
+
 ## Architecture
 
 ```mermaid
@@ -39,30 +57,69 @@ flowchart LR
 
 ---
 
-## CI / Azure deploy
+## Deploy / CD
 
-GitHub Actions (`.github/workflows/deploy-azure-foundry.yml`) generates MP3s **before** `docker build`:
+Clips must exist under `data/pronunciation_audio/` before `docker build -f Dockerfile.azure` (see `Dockerfile.azure` manifest check).
 
-1. Install Python 3.12, `espeak-ng`, `ffmpeg`, and `requirements-tts.txt`
-2. Restore/cache `data/hf_cache` + `data/pronunciation_audio` (keyed on staging JSON + generator code)
-3. Run `./scripts/ci_generate_pronunciation_audio.sh` (skips clips that already exist)
-4. Build `Dockerfile.azure` — image includes `data/pronunciation_audio/` + `manifest.json`
+### Recommended: UIC batch → commit to git
 
-**Runtime impact:** ~10–15 min on first deploy or when staging/guides change; ~1–3 min when cache hits (manifest verify only, no Kokoro load).
+~254 MP3s + `manifest.json` ≈ **4–5 MB** — small enough to commit. Simplest CD: no Kokoro download on every GitHub Actions run.
 
-**Local Docker build:** run the same script first:
+1. Regenerate on UIC when guides change (see [UIC batch generation](#uic-batch-generation-primary) below).
+2. Pull to Mac: `./scripts/pull_uic_pronunciation_audio.sh` (or rsync manually).
+3. Commit `data/pronunciation_audio/` (add a `.gitignore` exception for this directory only).
+4. Push → GitHub Actions builds image with committed clips (CI verify-only when cache hits).
 
-```bash
-pip install -r requirements-tts.txt   # in .venv-tts
-HF_HOME=data/hf_cache ./scripts/ci_generate_pronunciation_audio.sh
-docker build -f Dockerfile.azure .
-```
+**Why commit:** deploys stay fast and do not depend on UIC uptime during CI. Diff noise is low (~250 binary files, rarely all change at once).
+
+### Alternative: UIC batch → rsync before deploy
+
+If you prefer not to commit MP3s: generate on UIC, `./scripts/pull_uic_pronunciation_audio.sh`, then local `docker build` / push. GitHub Actions would still need committed clips or its Kokoro fallback step.
+
+### Fallback: GitHub Actions Kokoro batch
+
+`.github/workflows/deploy-azure-foundry.yml` runs `./scripts/ci_generate_pronunciation_audio.sh` before `docker build` when clips are not already present:
+
+1. Install Python 3.12, `espeak-ng`, `ffmpeg`, `requirements-tts.txt`
+2. Restore/cache `data/hf_cache` + `data/pronunciation_audio`
+3. Generate missing clips from staging JSON
+4. Build and push image
+
+**Runtime impact:** ~10–15 min on first deploy or when staging/guides change; ~1–3 min when committed clips or cache hit (verify only).
+
+**Do not** call UIC from CI as a remote TTS API — that would need a new HTTP endpoint, tunnel uptime, and would couple prod deploys to the home server. Batch on UIC, ship files.
 
 **Messenger audio URLs:** set `PUBLIC_WEBHOOK_BASE_URL=https://<container-app-fqdn>` in Azure. `./scripts/sync-azure-container-env.sh` sets this from the Container App FQDN automatically.
 
 ---
 
 ## Quick start
+
+### UIC batch generation (primary)
+
+After syncing code to UIC (`scripts/deploy_uic_ingest.sh` or your usual deploy):
+
+```bash
+# On UIC (WSL), from /root/WocconWaker:
+python3.12 -m venv .venv-tts && source .venv-tts/bin/activate
+pip install -r requirements-tts.txt
+# Linux: apt install espeak-ng ffmpeg  (once)
+
+HF_HOME=data/hf_cache .venv-tts/bin/python scripts/generate_pronunciation_audio.py \
+  --staging woccon_language/drive_staging/English-Woccon.json
+
+# Regenerate everything:
+HF_HOME=data/hf_cache .venv-tts/bin/python scripts/generate_pronunciation_audio.py \
+  --force --staging woccon_language/drive_staging/English-Woccon.json
+```
+
+Pull clips to Mac for commit or local Docker build:
+
+```bash
+./scripts/pull_uic_pronunciation_audio.sh
+```
+
+One-time UIC setup: Python 3.12, `espeak-ng`, `ffmpeg`, `.venv-tts` + `requirements-tts.txt`. Kokoro model caches under `data/hf_cache/` on UIC (same as Mac).
 
 ### 1. TTS runtime (isolated venv — do not mix with main `.venv`)
 
@@ -73,7 +130,7 @@ pip install -r requirements-tts.txt
 # macOS: brew install espeak-ng ffmpeg
 ```
 
-### 2. Generate clips
+### 2. Generate clips (Mac or UIC)
 
 From **panel DB** (default):
 
@@ -271,11 +328,12 @@ curl -sf http://127.0.0.1:8003/health
 
 ### What works
 
-- Kokoro **af_heart** @ **0.8** speed on **CPU** (`.venv-tts`)
+- Kokoro **af_heart** @ **0.8** speed on **CPU** (`.venv-tts`) — **primary generation on UIC server**, not Qwen
 - Batch-only generation — not live on-demand TTS during panel use
 - CAPS → IPA stress pipeline for community guides
 - Speakability filters for ingest noise (citations, glosses)
 - Human-readable MP3 filenames for debugging
+- **Deploy path:** UIC batch → commit or `./scripts/pull_uic_pronunciation_audio.sh` → Azure image; Messenger serves from Azure, not UIC
 
 ### What **not** to do (regression lessons)
 
@@ -292,9 +350,10 @@ These were tried and **made quality worse across the board**:
 
 1. **Upstream:** Fix LLM/parser rows that store citations or glosses as `pronunciation`
 2. **Merge:** Copy pronunciation from base entry to display when variant is null
-3. **UIC cron:** Queue `generate_pronunciation_audio.py` when GPU/LLM idle (batch only)
+3. **UIC cron:** Queue `generate_pronunciation_audio.py` after ingest when guides change (CPU batch; optional `wait_for_uic_llm_idle.sh` wrapper — not required since Kokoro does not use GPU)
 4. **Quality:** Per-guide QA list in `--sample-only` before full `--force`
 5. **R6-c+:** Export bundles / public dictionary with audio URLs
+6. **Git:** Commit `data/pronunciation_audio/` so CD skips GHA Kokoro download (see [Deploy / CD](#deploy--cd))
 
 ---
 

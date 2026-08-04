@@ -1,8 +1,9 @@
 # Build and deploy WocconWaker to Azure Container Apps (Foundry mode) on push to main.
 # Container env vars and secrets are managed in Azure; CI only builds and rolls out the image.
 #
-# Before docker build, CI batch-generates Kokoro pronunciation MP3s from staging JSON
-# (see scripts/ci_generate_pronunciation_audio.sh). Clips are baked into the image.
+# Primary MP3 workflow: batch on UIC (Kokoro CPU), commit or pull data/pronunciation_audio/.
+# Fallback: CI runs scripts/ci_generate_pronunciation_audio.sh before docker build when clips
+# are not already in the repo / cache. Clips are baked into the image.
 #
 # Secrets (Settings → Secrets and variables → Actions → Secrets):
 #   AZURE_CREDENTIALS (JSON: clientId, clientSecret, subscriptionId, tenantId from create-for-rbac --sdk-auth)
