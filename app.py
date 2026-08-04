@@ -413,16 +413,19 @@ async def process_message(user_id: str, text: str, source: str = 'text'):
                         messenger.send_typing_indicator(user_id, False)
                         typing_indicator_active = False
                     reply_text = format_pronunciation_text(pron_result)
+                    # Text first, then audio as a separate message (Facebook mishandles
+                    # audio-then-text or bundled sends in the pronunciation flow).
+                    messenger.send_message(user_id, reply_text)
                     if pron_result.get("has_audio"):
                         audio_resp = messenger.send_audio_attachment(
                             user_id, pron_result["audio_url"]
                         )
                         if audio_resp.get("error"):
-                            reply_text += (
-                                "\n\n(I couldn't attach the audio clip; "
-                                "use the pronunciation guide above.)"
+                            messenger.send_message(
+                                user_id,
+                                "(I couldn't attach the audio clip; "
+                                "use the pronunciation guide above.)",
                             )
-                    messenger.send_message(user_id, reply_text)
                     return
             
         # Process the message with WocconAssistant
