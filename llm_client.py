@@ -225,12 +225,12 @@ def llm_chat(
     if _allow_anthropic_fallback() and _use_anthropic():
         return _anthropic_chat(model, messages, options)
 
+    if last_error:
+        return last_error
     if _is_local_llm():
         return {"message": {"content": _LOCAL_UNREACHABLE_MSG}}
     if _use_anthropic() and not _allow_anthropic_fallback():
         return {"message": {"content": _ANTHROPIC_DISABLED_MSG}}
-    if last_error:
-        return last_error
     return {"message": {"content": _NO_BACKEND_MSG}}
 
 
