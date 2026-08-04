@@ -1,6 +1,19 @@
 """Normalize community pronunciation guides for storage and display."""
 import re
 
+_MULTI_ALT_RE = re.compile(r"\s+or\s+", re.I)
+_HYPHENATED_GUIDE_RE = re.compile(r"^[a-z][a-z-]*$", re.I)
+
+
+def _strip_dangling_parens(value: str) -> str:
+    """Fix guides like 'AY-JAH-OH) or (YAH' missing an opening parenthesis."""
+    s = value.strip()
+    if s.endswith(")") and not s.startswith("("):
+        s = s[:-1].strip()
+    if s.startswith("(") and not s.endswith(")"):
+        s = s[1:].strip()
+    return s
+
 
 def normalize_pronunciation(value: str | None) -> str | None:
     """Strip wrapping parentheses, slashes, and whitespace from a pronunciation guide."""
@@ -48,14 +61,29 @@ def pronunciation_guide_candidates(value: str | None) -> list[str]:
 
     for group in re.findall(r"\(([^)]+)\)", raw):
         add(group)
-    if re.search(r"\s+or\s+", raw, re.I):
-        for part in re.split(r"\s+or\s+", raw, flags=re.I):
-            add(part)
-    add(raw)
+    if _MULTI_ALT_RE.search(raw):
+        first_alt = _strip_dangling_parens(_MULTI_ALT_RE.split(raw, maxsplit=1)[0])
+        add(first_alt)
+        for part in _MULTI_ALT_RE.split(raw):
+            add(_strip_dangling_parens(part))
+    dangling = re.match(r"^([A-Za-z-]+)\)\s*(?:or\s|$)", raw)
+    if dangling:
+        add(dangling.group(1))
+    add(_strip_dangling_parens(raw))
     return out
 
 
 def primary_pronunciation_guide(value: str | None) -> str | None:
     """Return the best single guide string for display/TTS lookup."""
     candidates = pronunciation_guide_candidates(value)
-    return candidates[0] if candidates else None
+    if not candidates:
+        return None
+    for candidate in candidates:
+        if _HYPHENATED_GUIDE_RE.match(candidate) and not _MULTI_ALT_RE.search(candidate):
+            return candidate
+    for candidate in candidates:
+        if not _MULTI_ALT_RE.search(candidate) and not (
+            candidate.endswith(")") and not candidate.startswith("(")
+        ):
+            return candidate
+    return candidates[0]

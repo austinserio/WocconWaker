@@ -99,7 +99,37 @@ def test_normalize_multi_alternative():
 
     assert normalize_pronunciation("(AY-JAH-OH) or (YAH)") == "(AY-JAH-OH) or (YAH)"
     assert primary_pronunciation_guide("(AY-JAH-OH) or (YAH)") == "AY-JAH-OH"
+    assert primary_pronunciation_guide("AY-JAH-OH) or (YAH") == "AY-JAH-OH"
     assert pronunciation_guide_candidates("(AY-JAH-OH) or (YAH)")[0] == "AY-JAH-OH"
+
+
+def test_resolve_ejau_mangled_only():
+    import os
+
+    os.environ["PUBLIC_WEBHOOK_BASE_URL"] = "https://example.test"
+    lexicon = [
+        {
+            "woccon": "ejau",
+            "english": "water",
+            "pronunciation": "AY-JAH-OH) or (YAH",
+        },
+    ]
+    result = resolve_pronunciation_response(lexicon, "ejau")
+    assert result is not None
+    assert result["pronunciation"] == "AY-JAH-OH"
+
+
+def test_resolve_water_prefers_ejau_over_eau():
+    import json
+    from pathlib import Path
+
+    lexicon = json.loads(
+        Path("woccon_language/dictionary_unified.json").read_text(encoding="utf-8")
+    )["lexicon"]
+    result = resolve_pronunciation_response(lexicon, "water")
+    assert result is not None
+    assert result["woccon"] == "ejau"
+    assert result["pronunciation"] == "ay-jah-oo"
 
 
 def test_resolve_ejau_water_audio():
@@ -135,6 +165,8 @@ def main() -> int:
     test_resolve_without_audio()
     test_format_text_fallback()
     test_normalize_multi_alternative()
+    test_resolve_ejau_mangled_only()
+    test_resolve_water_prefers_ejau_over_eau()
     test_resolve_ejau_water_audio()
     print("ok")
     return 0
