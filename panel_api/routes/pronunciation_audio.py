@@ -51,8 +51,8 @@ def _head_audio(path: Path) -> Response:
     )
 
 
-@router.head("/h/{content_hash}.mp3")
-def head_pronunciation_audio_hash(content_hash: str):
+@router.head("/clip/{content_hash}")
+def head_pronunciation_audio_clip(content_hash: str):
     """HEAD for Messenger hash URLs (alphanumeric path, no encoding issues)."""
     path = audio_path_for_content_hash(content_hash, get_pronunciation_audio_dir())
     if path is None:
@@ -60,8 +60,8 @@ def head_pronunciation_audio_hash(content_hash: str):
     return _head_audio(path)
 
 
-@router.get("/h/{content_hash}.mp3")
-def get_pronunciation_audio_hash(content_hash: str):
+@router.get("/clip/{content_hash}")
+def get_pronunciation_audio_clip(content_hash: str):
     """Return a cached MP3 clip by stable pronunciation content hash."""
     path = audio_path_for_content_hash(content_hash, get_pronunciation_audio_dir())
     if path is None:
@@ -69,9 +69,16 @@ def get_pronunciation_audio_hash(content_hash: str):
     return _audio_file_response(path)
 
 
+def _reject_reserved_filename(filename: str) -> None:
+    decoded = unquote(filename)
+    if decoded.startswith("clip/"):
+        raise HTTPException(status_code=404, detail="Audio clip not found")
+
+
 @router.head("/{filename:path}")
 def head_pronunciation_audio(filename: str):
     """HEAD for Facebook/Messenger URL probes (must not return 405)."""
+    _reject_reserved_filename(filename)
     path = _resolve_audio_path(filename)
     return _head_audio(path)
 
