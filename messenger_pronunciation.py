@@ -159,7 +159,7 @@ def resolve_pronunciation_response(
 
     audio_url = None
     if pronunciation and is_speakable_pronunciation(pronunciation):
-        audio_url = public_pronunciation_audio_url(pronunciation)
+        audio_url = public_pronunciation_audio_url(pronunciation, messenger=True)
 
     return {
         "woccon": woccon,

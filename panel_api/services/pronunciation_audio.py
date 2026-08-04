@@ -199,6 +199,42 @@ def resolve_pronunciation_with_audio(
     return None
 
 
+def pronunciation_audio_hash_url(pronunciation: str | None) -> str | None:
+    """Stable hash-only API path for external fetchers (Messenger, etc.)."""
+    for candidate in pronunciation_guide_candidates(pronunciation):
+        if not is_speakable_pronunciation(candidate):
+            continue
+        content_hash = pronunciation_content_hash(candidate)
+        if not content_hash:
+            continue
+        entry = manifest_entry_for_pronunciation(candidate)
+        if not entry:
+            continue
+        filename = entry.get("filename")
+        if not filename:
+            continue
+        path = audio_file_path(filename)
+        if not path.is_file():
+            continue
+        return f"/api/pronunciation-audio/h/{content_hash}.mp3"
+    return None
+
+
+def audio_path_for_content_hash(content_hash: str, audio_dir: Path | None = None) -> Path | None:
+    """Resolve a manifest clip path from its pronunciation content hash."""
+    if not re.fullmatch(r"[0-9a-f]{40}", content_hash or ""):
+        return None
+    manifest = load_manifest(audio_dir)
+    entry = manifest.get("entries", {}).get(content_hash)
+    if not isinstance(entry, dict):
+        return None
+    filename = entry.get("filename")
+    if not filename:
+        return None
+    path = audio_file_path(filename, audio_dir)
+    return path if path.is_file() else None
+
+
 def is_publicly_fetchable_base(url: str) -> bool:
     """True when Facebook can fetch an attachment URL (HTTPS, non-localhost)."""
     parsed = urlparse((url or "").strip())
@@ -224,9 +260,17 @@ def public_base_url() -> str | None:
     return None
 
 
-def public_pronunciation_audio_url(pronunciation: str | None) -> str | None:
+def public_pronunciation_audio_url(
+    pronunciation: str | None,
+    *,
+    messenger: bool = False,
+) -> str | None:
     """Absolute HTTPS URL when a clip exists and a public base URL is configured."""
-    rel = pronunciation_audio_url(pronunciation)
+    rel = (
+        pronunciation_audio_hash_url(pronunciation)
+        if messenger
+        else pronunciation_audio_url(pronunciation)
+    )
     if not rel:
         return None
     base = public_base_url()

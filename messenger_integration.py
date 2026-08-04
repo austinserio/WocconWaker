@@ -197,26 +197,35 @@ class MessengerIntegration:
     def _send_audio_via_attachment_upload(
         self, recipient_id: str, audio_url: str, *, is_reusable: bool = True
     ) -> Dict[str, Any]:
-        """Upload clip to Graph first, then send by attachment_id."""
+        """Fetch clip bytes locally, upload to Graph, then send by attachment_id."""
         params = {"access_token": self.page_access_token}
         upload_url = self.api_url.replace("/me/messages", "/me/message_attachments")
-        upload_payload = {
-            "message": {
-                "attachment": {
-                    "type": "audio",
-                    "payload": {
-                        "url": audio_url,
-                        "is_reusable": is_reusable,
-                    },
+        try:
+            fetch_resp = requests.get(audio_url, timeout=20)
+            if fetch_resp.status_code != 200 or not fetch_resp.content:
+                log.error(
+                    "[MessengerIntegration] Could not fetch audio bytes (url=%s): HTTP %s",
+                    audio_url,
+                    fetch_resp.status_code,
+                )
+                return {"error": {"message": "Failed to fetch audio clip", "url": audio_url}}
+
+            upload_payload = {
+                "message": {
+                    "attachment": {
+                        "type": "audio",
+                        "payload": {"is_reusable": is_reusable},
+                    }
                 }
             }
-        }
-        try:
             upload_resp = requests.post(
                 upload_url,
                 params=params,
                 data={"message": json.dumps(upload_payload)},
-                timeout=20,
+                files={
+                    "filedata": ("pronunciation.mp3", fetch_resp.content, "audio/mpeg"),
+                },
+                timeout=30,
             )
             upload_data = upload_resp.json() if upload_resp.content else {}
             attachment_id = upload_data.get("attachment_id")
@@ -263,7 +272,7 @@ class MessengerIntegration:
                 audio_url,
                 e,
             )
-            return {}
+            return {"error": {"message": str(e), "url": audio_url}}
 
     def send_message(self, recipient_id: str, message_text: str) -> Dict[str, Any]:
         """

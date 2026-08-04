@@ -125,8 +125,8 @@ def test_resolve_ejau_water_audio():
     assert result["woccon"] == "ejau"
     assert result["pronunciation"] == "ay-jah-oo"
     assert result["has_audio"] is True
-    assert result["audio_url"].startswith("https://example.test/api/pronunciation-audio/")
-    assert "ejau" in result["audio_url"]
+    assert result["audio_url"].startswith("https://example.test/api/pronunciation-audio/h/")
+    assert "68e905ba6ac1fa508b6814f81e4e4a16140d82f4" in result["audio_url"]
 
 
 def main() -> int:
