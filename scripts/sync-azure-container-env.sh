@@ -34,6 +34,8 @@ fi
 # Always use the Container App FQDN for invite links in Azure (ignore localhost from .env).
 PANEL_PUBLIC_BASE_URL="https://${FQDN}"
 PANEL_CORS_ORIGINS="https://${FQDN}"
+PUBLIC_WEBHOOK_BASE_URL="https://${FQDN}"
+AZURE_CONTAINER_APP_WEBHOOK_URL="https://${FQDN}"
 
 echo "=== Sync Azure Container App env ==="
 echo "App:     $APP"
@@ -97,6 +99,8 @@ ENV_VARS=(
   "PANEL_ADMIN_EMAIL=${PANEL_ADMIN_EMAIL:-}"
   "PANEL_CORS_ORIGINS=${PANEL_CORS_ORIGINS}"
   "PANEL_PUBLIC_BASE_URL=${PANEL_PUBLIC_BASE_URL}"
+  "PUBLIC_WEBHOOK_BASE_URL=${PUBLIC_WEBHOOK_BASE_URL}"
+  "AZURE_CONTAINER_APP_WEBHOOK_URL=${AZURE_CONTAINER_APP_WEBHOOK_URL}"
   "WOCCON_UPLOAD_DIR=${WOCCON_UPLOAD_DIR:-data/uploads}"
   "INGEST_SOURCES_DIR=${INGEST_SOURCES_DIR:-data/ingest_sources}"
   "INGEST_TEXT_CACHE_DIR=${INGEST_TEXT_CACHE_DIR:-data/ingest_text_cache}"

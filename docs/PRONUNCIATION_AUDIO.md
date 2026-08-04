@@ -39,6 +39,29 @@ flowchart LR
 
 ---
 
+## CI / Azure deploy
+
+GitHub Actions (`.github/workflows/deploy-azure-foundry.yml`) generates MP3s **before** `docker build`:
+
+1. Install Python 3.12, `espeak-ng`, `ffmpeg`, and `requirements-tts.txt`
+2. Restore/cache `data/hf_cache` + `data/pronunciation_audio` (keyed on staging JSON + generator code)
+3. Run `./scripts/ci_generate_pronunciation_audio.sh` (skips clips that already exist)
+4. Build `Dockerfile.azure` — image includes `data/pronunciation_audio/` + `manifest.json`
+
+**Runtime impact:** ~10–15 min on first deploy or when staging/guides change; ~1–3 min when cache hits (manifest verify only, no Kokoro load).
+
+**Local Docker build:** run the same script first:
+
+```bash
+pip install -r requirements-tts.txt   # in .venv-tts
+HF_HOME=data/hf_cache ./scripts/ci_generate_pronunciation_audio.sh
+docker build -f Dockerfile.azure .
+```
+
+**Messenger audio URLs:** set `PUBLIC_WEBHOOK_BASE_URL=https://<container-app-fqdn>` in Azure. `./scripts/sync-azure-container-env.sh` sets this from the Container App FQDN automatically.
+
+---
+
 ## Quick start
 
 ### 1. TTS runtime (isolated venv — do not mix with main `.venv`)

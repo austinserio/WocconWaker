@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Batch-generate MP3 pronunciation clips from lexicon guides via Kokoro (CPU).
 
+Full docs: docs/PRONUNCIATION_AUDIO.md
+
 Output files use human-readable names:
   roosome - Acorns (rue-sa-may).mp3
 
@@ -26,7 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from panel_api.services.kokoro_phonemes import build_phoneme_string, prepare_kokoro_text
+from panel_api.services.kokoro_phonemes import prepare_kokoro_text
 from panel_api.services.pronunciation_audio import (  # noqa: E402
     audio_file_path,
     audio_filename,
@@ -37,7 +39,6 @@ from panel_api.services.pronunciation_audio import (  # noqa: E402
     pick_primary_lexicon_row,
     pronunciation_content_hash,
     save_manifest,
-    synthesis_speed_for_guide,
     unique_audio_filename,
 )
 
@@ -292,8 +293,14 @@ def main() -> int:
 
     generated = 0
     skipped = 0
+    pending_hashes = [
+        content_hash
+        for content_hash in grouped
+        if args.force or not audio_file_path(planned[content_hash], audio_dir).is_file()
+    ]
+
     pipeline = None
-    if not args.dry_run:
+    if not args.dry_run and pending_hashes:
         print(f"Loading Kokoro pipeline (lang={args.lang_code}, voice={args.voice}, speed={args.speed})")
         pipeline = _load_kokoro_pipeline(args.lang_code)
 
@@ -309,11 +316,8 @@ def main() -> int:
             generated += 1
         else:
             print(f"Generating {filename}: {info['tts_text']!r}")
-            phonemes = build_phoneme_string(info["pronunciation"])
-            speed = synthesis_speed_for_guide(phonemes, args.speed)
-            pad_ms = 350 if phonemes and len(phonemes.replace(" ", "")) <= 4 else 0
-            audio = _synthesize_kokoro(pipeline, info["tts_text"], args.voice, speed)
-            _write_mp3(audio, mp3_path, pad_ms=pad_ms)
+            audio = _synthesize_kokoro(pipeline, info["tts_text"], args.voice, args.speed)
+            _write_mp3(audio, mp3_path)
             generated += 1
 
         manifest["entries"][content_hash] = {
@@ -327,9 +331,7 @@ def main() -> int:
             "woccon_ids": info["woccon_ids"],
             "lexicon_rows": info["lexicon_rows"],
             "voice": args.voice,
-            "speed": synthesis_speed_for_guide(
-                build_phoneme_string(info["pronunciation"]), args.speed
-            ),
+            "speed": args.speed,
             "model": "Kokoro-82M",
         }
 

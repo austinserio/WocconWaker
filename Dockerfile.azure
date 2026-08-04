@@ -19,9 +19,11 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-# Pre-generated Kokoro clips (gitignored locally; must exist on build host)
-COPY data/pronunciation_audio/ data/pronunciation_audio/
 COPY --from=panel-build /panel/dist ./panel/dist
+# CI generates clips before docker build (scripts/ci_generate_pronunciation_audio.sh).
+RUN test -s data/pronunciation_audio/manifest.json \
+  && test "$(find data/pronunciation_audio -maxdepth 1 -name '*.mp3' | wc -l)" -gt 0 \
+  || (echo "Missing pronunciation audio — run scripts/ci_generate_pronunciation_audio.sh before docker build" && exit 1)
 
 EXPOSE 8000
 

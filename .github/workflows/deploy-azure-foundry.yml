@@ -1,6 +1,9 @@
 # Build and deploy WocconWaker to Azure Container Apps (Foundry mode) on push to main.
 # Container env vars and secrets are managed in Azure; CI only builds and rolls out the image.
 #
+# Before docker build, CI batch-generates Kokoro pronunciation MP3s from staging JSON
+# (see scripts/ci_generate_pronunciation_audio.sh). Clips are baked into the image.
+#
 # Secrets (Settings → Secrets and variables → Actions → Secrets):
 #   AZURE_CREDENTIALS (JSON: clientId, clientSecret, subscriptionId, tenantId from create-for-rbac --sdk-auth)
 #
@@ -9,6 +12,9 @@
 #   AZURE_CONTAINER_APP_NAME – Container App name (production: wocconwaker-app-central)
 # Optional variable:
 #   ACR_IMAGE_NAME – Docker image repository name (default: wocconwaker)
+#
+# After deploy, run ./scripts/sync-azure-container-env.sh locally (or ensure Azure has
+# PUBLIC_WEBHOOK_BASE_URL=https://<container-app-fqdn>) so Messenger can attach audio URLs.
 
 name: Deploy to Azure (Foundry)
 
@@ -20,6 +26,8 @@ env:
   RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
   CONTAINER_APP_NAME: ${{ vars.AZURE_CONTAINER_APP_NAME }}
   IMAGE_NAME: ${{ vars.ACR_IMAGE_NAME || 'wocconwaker' }}
+  HF_HOME: data/hf_cache
+  PRONUNCIATION_STAGING: woccon_language/drive_staging/English-Woccon.json
 
 jobs:
   build-and-deploy:
@@ -42,6 +50,39 @@ jobs:
             echo "::error::Set repository variable AZURE_CONTAINER_APP_NAME"
             exit 1
           fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-tts.txt
+
+      - name: Install TTS system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends espeak-ng ffmpeg
+
+      - name: Cache Kokoro model and pronunciation clips
+        uses: actions/cache@v4
+        id: pronunciation-cache
+        with:
+          path: |
+            data/hf_cache
+            data/pronunciation_audio
+          key: pronunciation-${{ hashFiles('requirements-tts.txt', 'woccon_language/drive_staging/English-Woccon.json', 'scripts/generate_pronunciation_audio.py', 'scripts/ci_generate_pronunciation_audio.sh', 'panel_api/services/kokoro_phonemes.py', 'panel_api/services/pronunciation_audio.py', 'panel_api/services/pronunciation.py') }}
+          restore-keys: |
+            pronunciation-
+
+      - name: Install TTS Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-tts.txt
+
+      - name: Generate pronunciation MP3s
+        run: |
+          chmod +x scripts/ci_generate_pronunciation_audio.sh
+          ./scripts/ci_generate_pronunciation_audio.sh
 
       - name: Azure Login
         uses: azure/login@v2
@@ -90,6 +131,7 @@ jobs:
           echo "fqdn=$FQDN" >> $GITHUB_OUTPUT
           if [ -n "$FQDN" ]; then
             echo "Webhook URL: https://${FQDN}/webhook"
+            echo "Set PUBLIC_WEBHOOK_BASE_URL=https://${FQDN} in Azure (./scripts/sync-azure-container-env.sh)"
           fi
 
       - name: Summary
@@ -99,4 +141,10 @@ jobs:
           if [ -n "${{ steps.url.outputs.fqdn }}" ]; then
             echo "- App URL: https://${{ steps.url.outputs.fqdn }}" >> $GITHUB_STEP_SUMMARY
             echo "- Messenger webhook: https://${{ steps.url.outputs.fqdn }}/webhook" >> $GITHUB_STEP_SUMMARY
+            echo "- Set \`PUBLIC_WEBHOOK_BASE_URL=https://${{ steps.url.outputs.fqdn }}\` via \`./scripts/sync-azure-container-env.sh\` for Messenger audio attachments" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ "${{ steps.pronunciation-cache.outputs.cache-hit }}" = "true" ]; then
+            echo "- Pronunciation audio: restored from cache" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Pronunciation audio: regenerated (Kokoro batch)" >> $GITHUB_STEP_SUMMARY
           fi
