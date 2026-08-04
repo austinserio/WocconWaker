@@ -138,14 +138,26 @@ class MessengerIntegration:
         self, recipient_id: str, audio_url: str, *, is_reusable: bool = True
     ) -> Dict[str, Any]:
         """
-        Send an audio attachment (MP3/M4A) via public HTTPS URL.
+        Send an audio attachment (MP3/M4A).
 
-        Facebook fetches the URL server-side; it must be reachable on the public internet.
-        Falls back to message_attachments upload when direct URL send fails.
+        Prefers local byte upload for pronunciation clips (avoids Facebook URL fetch
+        failures and container self-HTTP hairpin). Falls back to public URL attachment.
         """
         if not self.page_access_token:
             log.error("[MessengerIntegration] PAGE_ACCESS_TOKEN is not set")
             return {}
+
+        local_bytes = self._read_local_audio_bytes(audio_url)
+        if local_bytes:
+            uploaded = self._send_audio_bytes_via_attachment_upload(
+                recipient_id, local_bytes, is_reusable=is_reusable, source=audio_url
+            )
+            if uploaded and not uploaded.get("error"):
+                return uploaded
+            log.warning(
+                "[MessengerIntegration] Local byte upload failed (url=%s); trying URL attachment",
+                audio_url,
+            )
 
         params = {"access_token": self.page_access_token}
         payload = {
@@ -182,10 +194,12 @@ class MessengerIntegration:
                 response.status_code,
                 response.text,
             )
-            fallback = self._send_audio_via_attachment_upload(
-                recipient_id, audio_url, is_reusable=is_reusable
-            )
-            return fallback or data
+            if not local_bytes:
+                fallback = self._send_audio_via_attachment_upload(
+                    recipient_id, audio_url, is_reusable=is_reusable
+                )
+                return fallback or data
+            return data
         except Exception as e:
             log.error(
                 "[MessengerIntegration] Exception sending audio (url=%s): %s",
@@ -194,28 +208,41 @@ class MessengerIntegration:
             )
             return {}
 
-    def _read_audio_bytes(self, audio_url: str) -> bytes | None:
-        """Load clip bytes from disk when URL is our pronunciation endpoint, else HTTP GET."""
+    def _read_local_audio_bytes(self, audio_url: str) -> bytes | None:
+        """Load pronunciation clip bytes from disk when URL is our hash/clip endpoint."""
         match = re.search(
             r"/api/pronunciation-audio/(?:clip|h)/([0-9a-f]{40})(?:\.mp3)?",
             audio_url or "",
             re.I,
         )
-        if match:
-            try:
-                from panel_api.services.pronunciation_audio import audio_path_for_content_hash
-
-                path = audio_path_for_content_hash(match.group(1).lower())
-                if path and path.is_file():
-                    return path.read_bytes()
-            except Exception as e:
-                log.warning(
-                    "[MessengerIntegration] Local audio read failed (url=%s): %s",
-                    audio_url,
-                    e,
-                )
+        if not match:
+            return None
         try:
-            fetch_resp = requests.get(audio_url, timeout=20)
+            from panel_api.services.pronunciation_audio import audio_path_for_content_hash
+
+            path = audio_path_for_content_hash(match.group(1).lower())
+            if path and path.is_file():
+                return path.read_bytes()
+            log.warning(
+                "[MessengerIntegration] Local audio file missing for hash %s (url=%s)",
+                match.group(1)[:12],
+                audio_url,
+            )
+        except Exception as e:
+            log.warning(
+                "[MessengerIntegration] Local audio read failed (url=%s): %s",
+                audio_url,
+                e,
+            )
+        return None
+
+    def _read_audio_bytes(self, audio_url: str) -> bytes | None:
+        """Load clip bytes from disk when possible, else HTTP GET (external URLs only)."""
+        local = self._read_local_audio_bytes(audio_url)
+        if local:
+            return local
+        try:
+            fetch_resp = requests.get(audio_url, timeout=10)
             if fetch_resp.status_code == 200 and fetch_resp.content:
                 return fetch_resp.content
             log.error(
@@ -231,17 +258,18 @@ class MessengerIntegration:
             )
         return None
 
-    def _send_audio_via_attachment_upload(
-        self, recipient_id: str, audio_url: str, *, is_reusable: bool = True
+    def _send_audio_bytes_via_attachment_upload(
+        self,
+        recipient_id: str,
+        audio_bytes: bytes,
+        *,
+        is_reusable: bool = True,
+        source: str = "",
     ) -> Dict[str, Any]:
-        """Fetch clip bytes locally, upload to Graph, then send by attachment_id."""
+        """Upload clip bytes to Graph, then send by attachment_id."""
         params = {"access_token": self.page_access_token}
         upload_url = self.api_url.replace("/me/messages", "/me/message_attachments")
         try:
-            audio_bytes = self._read_audio_bytes(audio_url)
-            if not audio_bytes:
-                return {"error": {"message": "Failed to fetch audio clip", "url": audio_url}}
-
             upload_payload = {
                 "message": {
                     "attachment": {
@@ -263,8 +291,8 @@ class MessengerIntegration:
             attachment_id = upload_data.get("attachment_id")
             if upload_resp.status_code != 200 or not attachment_id:
                 log.error(
-                    "[MessengerIntegration] Audio upload fallback failed (url=%s): HTTP %s – %s",
-                    audio_url,
+                    "[MessengerIntegration] Audio byte upload failed (source=%s): HTTP %s – %s",
+                    source,
                     upload_resp.status_code,
                     upload_resp.text,
                 )
@@ -288,23 +316,44 @@ class MessengerIntegration:
                 log.info(
                     "[MessengerIntegration] Sent audio via attachment_id to %s: %s",
                     recipient_id,
-                    audio_url,
+                    source or "bytes",
                 )
                 return send_data
             log.error(
-                "[MessengerIntegration] attachment_id send failed (url=%s): HTTP %s – %s",
-                audio_url,
+                "[MessengerIntegration] attachment_id send failed (source=%s): HTTP %s – %s",
+                source,
                 send_resp.status_code,
                 send_resp.text,
             )
             return send_data
         except Exception as e:
             log.error(
+                "[MessengerIntegration] Exception in audio byte upload (source=%s): %s",
+                source,
+                e,
+            )
+            return {}
+
+    def _send_audio_via_attachment_upload(
+        self, recipient_id: str, audio_url: str, *, is_reusable: bool = True
+    ) -> Dict[str, Any]:
+        """Fetch clip bytes, upload to Graph, then send by attachment_id."""
+        params = {"access_token": self.page_access_token}
+        upload_url = self.api_url.replace("/me/messages", "/me/message_attachments")
+        try:
+            audio_bytes = self._read_audio_bytes(audio_url)
+            if not audio_bytes:
+                return {"error": {"message": "Failed to fetch audio clip", "url": audio_url}}
+            return self._send_audio_bytes_via_attachment_upload(
+                recipient_id, audio_bytes, is_reusable=is_reusable, source=audio_url
+            )
+        except Exception as e:
+            log.error(
                 "[MessengerIntegration] Exception in audio upload fallback (url=%s): %s",
                 audio_url,
                 e,
             )
-            return {"error": {"message": str(e), "url": audio_url}}
+            return {}
 
     def send_message(self, recipient_id: str, message_text: str) -> Dict[str, Any]:
         """
