@@ -194,6 +194,43 @@ class MessengerIntegration:
             )
             return {}
 
+    def _read_audio_bytes(self, audio_url: str) -> bytes | None:
+        """Load clip bytes from disk when URL is our pronunciation endpoint, else HTTP GET."""
+        match = re.search(
+            r"/api/pronunciation-audio/(?:clip|h)/([0-9a-f]{40})(?:\.mp3)?",
+            audio_url or "",
+            re.I,
+        )
+        if match:
+            try:
+                from panel_api.services.pronunciation_audio import audio_path_for_content_hash
+
+                path = audio_path_for_content_hash(match.group(1).lower())
+                if path and path.is_file():
+                    return path.read_bytes()
+            except Exception as e:
+                log.warning(
+                    "[MessengerIntegration] Local audio read failed (url=%s): %s",
+                    audio_url,
+                    e,
+                )
+        try:
+            fetch_resp = requests.get(audio_url, timeout=20)
+            if fetch_resp.status_code == 200 and fetch_resp.content:
+                return fetch_resp.content
+            log.error(
+                "[MessengerIntegration] Could not fetch audio bytes (url=%s): HTTP %s",
+                audio_url,
+                fetch_resp.status_code,
+            )
+        except Exception as e:
+            log.error(
+                "[MessengerIntegration] Could not fetch audio bytes (url=%s): %s",
+                audio_url,
+                e,
+            )
+        return None
+
     def _send_audio_via_attachment_upload(
         self, recipient_id: str, audio_url: str, *, is_reusable: bool = True
     ) -> Dict[str, Any]:
@@ -201,13 +238,8 @@ class MessengerIntegration:
         params = {"access_token": self.page_access_token}
         upload_url = self.api_url.replace("/me/messages", "/me/message_attachments")
         try:
-            fetch_resp = requests.get(audio_url, timeout=20)
-            if fetch_resp.status_code != 200 or not fetch_resp.content:
-                log.error(
-                    "[MessengerIntegration] Could not fetch audio bytes (url=%s): HTTP %s",
-                    audio_url,
-                    fetch_resp.status_code,
-                )
+            audio_bytes = self._read_audio_bytes(audio_url)
+            if not audio_bytes:
                 return {"error": {"message": "Failed to fetch audio clip", "url": audio_url}}
 
             upload_payload = {
@@ -223,7 +255,7 @@ class MessengerIntegration:
                 params=params,
                 data={"message": json.dumps(upload_payload)},
                 files={
-                    "filedata": ("pronunciation.mp3", fetch_resp.content, "audio/mpeg"),
+                    "filedata": ("pronunciation.mp3", audio_bytes, "audio/mpeg"),
                 },
                 timeout=30,
             )

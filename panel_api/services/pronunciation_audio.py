@@ -216,7 +216,7 @@ def pronunciation_audio_hash_url(pronunciation: str | None) -> str | None:
         path = audio_file_path(filename)
         if not path.is_file():
             continue
-        return f"/api/pronunciation-audio/clip/{content_hash}"
+        return f"/api/pronunciation-audio/h/{content_hash}.mp3"
     return None
 
 

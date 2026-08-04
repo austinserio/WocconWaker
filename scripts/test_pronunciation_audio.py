@@ -59,10 +59,10 @@ def test_audio_url_missing_file():
 
 def test_hash_url_for_ejau():
     rel = pronunciation_audio_hash_url("ay-jah-oo")
-    assert rel == "/api/pronunciation-audio/clip/68e905ba6ac1fa508b6814f81e4e4a16140d82f4"
+    assert rel == "/api/pronunciation-audio/h/68e905ba6ac1fa508b6814f81e4e4a16140d82f4.mp3"
     path = audio_path_for_content_hash("68e905ba6ac1fa508b6814f81e4e4a16140d82f4")
     assert path is not None
-    assert path.name == "ejau - Water (ay-jah-oo)__2.mp3"
+    assert path.name == "ejau - Water (ay-jah-oo).mp3"
 
 
 def test_public_base_url_rejects_localhost(monkeypatch=None):

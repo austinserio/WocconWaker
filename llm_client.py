@@ -249,7 +249,7 @@ def _anthropic_chat(
     if not api_key:
         log.error("ANTHROPIC_API_KEY not set")
         return {"message": {"content": "Error: ANTHROPIC_API_KEY not set."}}
-    model_id = (os.getenv("ANTHROPIC_MODEL") or model or "claude-sonnet-4-20250514").strip()
+    model_id = (os.getenv("ANTHROPIC_MODEL") or model or "claude-3-5-sonnet-20241022").strip()
     max_tokens = options.get("num_predict", 4096)
     anthropic_messages = []
     for m in messages:
@@ -343,7 +343,7 @@ def _anthropic_vision_chat(
         os.getenv("PDF_OCR_MODEL")
         or os.getenv("ANTHROPIC_MODEL")
         or model
-        or "claude-sonnet-4-20250514"
+        or "claude-3-5-sonnet-20241022"
     ).strip()
     max_tokens = options.get("num_predict", 4096)
     content: List[Dict[str, Any]] = []
