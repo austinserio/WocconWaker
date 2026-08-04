@@ -10,7 +10,7 @@ from panel_api.services.pronunciation_audio import audio_file_path, get_pronunci
 router = APIRouter(prefix="/pronunciation-audio", tags=["pronunciation-audio"])
 
 
-@router.get("/{filename:path}")
+@router.api_route("/{filename:path}", methods=["GET", "HEAD"])
 def get_pronunciation_audio(filename: str):
     """Return a cached MP3 clip by human-readable filename."""
     decoded = unquote(filename)

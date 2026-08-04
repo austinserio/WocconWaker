@@ -90,11 +90,52 @@ def test_format_text_fallback():
     assert "pronunciation guide" in no_guide.lower()
 
 
+def test_normalize_multi_alternative():
+    from panel_api.services.pronunciation import (
+        normalize_pronunciation,
+        primary_pronunciation_guide,
+        pronunciation_guide_candidates,
+    )
+
+    assert normalize_pronunciation("(AY-JAH-OH) or (YAH)") == "(AY-JAH-OH) or (YAH)"
+    assert primary_pronunciation_guide("(AY-JAH-OH) or (YAH)") == "AY-JAH-OH"
+    assert pronunciation_guide_candidates("(AY-JAH-OH) or (YAH)")[0] == "AY-JAH-OH"
+
+
+def test_resolve_ejau_water_audio():
+    import os
+    from pathlib import Path
+
+    lexicon = [
+        {
+            "woccon": "ejau (ay-jah-oo) -or- Ya- (yah) (ay-ja-oo) or (ya)",
+            "english": "Water",
+            "pronunciation": "(AY-JAH-OH) or (YAH)",
+        },
+        {
+            "woccon": "ejau",
+            "english": "water",
+            "pronunciation": "ay-jah-oo",
+            "is_base_entry": True,
+        },
+    ]
+    os.environ["PUBLIC_WEBHOOK_BASE_URL"] = "https://example.test"
+    result = resolve_pronunciation_response(lexicon, "water")
+    assert result is not None
+    assert result["woccon"] == "ejau"
+    assert result["pronunciation"] == "ay-jah-oo"
+    assert result["has_audio"] is True
+    assert result["audio_url"].startswith("https://example.test/api/pronunciation-audio/")
+    assert "ejau" in result["audio_url"]
+
+
 def main() -> int:
     test_parse_pronunciation_query()
     test_find_lexicon_entry()
     test_resolve_without_audio()
     test_format_text_fallback()
+    test_normalize_multi_alternative()
+    test_resolve_ejau_water_audio()
     print("ok")
     return 0
 

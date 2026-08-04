@@ -9,7 +9,10 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote, urlparse
 
-from panel_api.services.pronunciation import normalize_pronunciation
+from panel_api.services.pronunciation import (
+    normalize_pronunciation,
+    pronunciation_guide_candidates,
+)
 
 # Skip guides that look like grammar notes rather than speakable syllables.
 _NON_GUIDE_RE = re.compile(
@@ -169,18 +172,31 @@ def manifest_entry_for_pronunciation(
 
 def pronunciation_audio_url(pronunciation: str | None) -> str | None:
     """Relative API path when a pre-generated clip exists for this guide."""
-    if not is_speakable_pronunciation(pronunciation):
+    resolved = resolve_pronunciation_with_audio(pronunciation)
+    if not resolved:
         return None
-    entry = manifest_entry_for_pronunciation(pronunciation)
-    if not entry:
-        return None
-    filename = entry.get("filename")
-    if not filename:
-        return None
-    path = audio_file_path(filename)
-    if not path.is_file():
-        return None
-    return f"/api/pronunciation-audio/{quote(filename)}"
+    _guide, rel = resolved
+    return rel
+
+
+def resolve_pronunciation_with_audio(
+    pronunciation: str | None,
+) -> tuple[str, str] | None:
+    """Return (matched guide, relative API path) for the first clip-backed variant."""
+    for candidate in pronunciation_guide_candidates(pronunciation):
+        if not is_speakable_pronunciation(candidate):
+            continue
+        entry = manifest_entry_for_pronunciation(candidate)
+        if not entry:
+            continue
+        filename = entry.get("filename")
+        if not filename:
+            continue
+        path = audio_file_path(filename)
+        if not path.is_file():
+            continue
+        return candidate, f"/api/pronunciation-audio/{quote(filename)}"
+    return None
 
 
 def is_publicly_fetchable_base(url: str) -> bool:

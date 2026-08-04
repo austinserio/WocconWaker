@@ -141,6 +141,7 @@ class MessengerIntegration:
         Send an audio attachment (MP3/M4A) via public HTTPS URL.
 
         Facebook fetches the URL server-side; it must be reachable on the public internet.
+        Falls back to message_attachments upload when direct URL send fails.
         """
         if not self.page_access_token:
             log.error("[MessengerIntegration] PAGE_ACCESS_TOKEN is not set")
@@ -165,22 +166,103 @@ class MessengerIntegration:
             response = requests.post(
                 self.api_url, params=params, json=payload, timeout=15
             )
-            if response.status_code != 200:
-                log.error(
-                    "[MessengerIntegration] Failed to send audio to %s: HTTP %s – %s",
-                    recipient_id,
-                    response.status_code,
-                    response.text,
-                )
-            else:
+            data = response.json() if response.content else {}
+            if response.status_code == 200 and not data.get("error"):
                 log.info(
                     "[MessengerIntegration] Sent audio attachment to %s: %s",
                     recipient_id,
                     audio_url,
                 )
-            return response.json()
+                return data
+
+            log.error(
+                "[MessengerIntegration] Failed to send audio to %s (url=%s): HTTP %s – %s",
+                recipient_id,
+                audio_url,
+                response.status_code,
+                response.text,
+            )
+            fallback = self._send_audio_via_attachment_upload(
+                recipient_id, audio_url, is_reusable=is_reusable
+            )
+            return fallback or data
         except Exception as e:
-            log.error("[MessengerIntegration] Exception sending audio: %s", e)
+            log.error(
+                "[MessengerIntegration] Exception sending audio (url=%s): %s",
+                audio_url,
+                e,
+            )
+            return {}
+
+    def _send_audio_via_attachment_upload(
+        self, recipient_id: str, audio_url: str, *, is_reusable: bool = True
+    ) -> Dict[str, Any]:
+        """Upload clip to Graph first, then send by attachment_id."""
+        params = {"access_token": self.page_access_token}
+        upload_url = self.api_url.replace("/me/messages", "/me/message_attachments")
+        upload_payload = {
+            "message": {
+                "attachment": {
+                    "type": "audio",
+                    "payload": {
+                        "url": audio_url,
+                        "is_reusable": is_reusable,
+                    },
+                }
+            }
+        }
+        try:
+            upload_resp = requests.post(
+                upload_url,
+                params=params,
+                data={"message": json.dumps(upload_payload)},
+                timeout=20,
+            )
+            upload_data = upload_resp.json() if upload_resp.content else {}
+            attachment_id = upload_data.get("attachment_id")
+            if upload_resp.status_code != 200 or not attachment_id:
+                log.error(
+                    "[MessengerIntegration] Audio upload fallback failed (url=%s): HTTP %s – %s",
+                    audio_url,
+                    upload_resp.status_code,
+                    upload_resp.text,
+                )
+                return upload_data
+
+            send_payload = {
+                "recipient": {"id": recipient_id},
+                "messaging_type": "RESPONSE",
+                "message": {
+                    "attachment": {
+                        "type": "audio",
+                        "payload": {"attachment_id": attachment_id},
+                    }
+                },
+            }
+            send_resp = requests.post(
+                self.api_url, params=params, json=send_payload, timeout=15
+            )
+            send_data = send_resp.json() if send_resp.content else {}
+            if send_resp.status_code == 200 and not send_data.get("error"):
+                log.info(
+                    "[MessengerIntegration] Sent audio via attachment_id to %s: %s",
+                    recipient_id,
+                    audio_url,
+                )
+                return send_data
+            log.error(
+                "[MessengerIntegration] attachment_id send failed (url=%s): HTTP %s – %s",
+                audio_url,
+                send_resp.status_code,
+                send_resp.text,
+            )
+            return send_data
+        except Exception as e:
+            log.error(
+                "[MessengerIntegration] Exception in audio upload fallback (url=%s): %s",
+                audio_url,
+                e,
+            )
             return {}
 
     def send_message(self, recipient_id: str, message_text: str) -> Dict[str, Any]:

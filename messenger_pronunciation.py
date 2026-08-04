@@ -4,10 +4,15 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from panel_api.services.pronunciation import normalize_pronunciation
+from panel_api.services.pronunciation import (
+    normalize_pronunciation,
+    primary_pronunciation_guide,
+    pronunciation_guide_candidates,
+)
 from panel_api.services.pronunciation_audio import (
     is_speakable_pronunciation,
     public_pronunciation_audio_url,
+    resolve_pronunciation_with_audio,
 )
 
 # Capture the word/phrase after common pronunciation questions.
@@ -46,6 +51,22 @@ def parse_pronunciation_query(text: str) -> str | None:
     return None
 
 
+def _prefer_lexicon_entry(entries: list[dict[str, Any]]) -> dict[str, Any]:
+    """Prefer canonical base rows over noisy LLM duplicates for the same gloss."""
+
+    def sort_key(entry: dict[str, Any]) -> tuple[int, int, int, str]:
+        woccon = (entry.get("woccon") or "").strip()
+        simple_woccon = 0 if re.fullmatch(r"[\w-]+", woccon) else 1
+        return (
+            0 if entry.get("is_base_entry") else 1,
+            simple_woccon,
+            len(woccon),
+            woccon.lower(),
+        )
+
+    return sorted(entries, key=sort_key)[0]
+
+
 def find_lexicon_entry(lexicon: list[dict[str, Any]], target: str) -> dict[str, Any] | None:
     """Match a lexicon row by Woccon form or English gloss."""
     target = _clean_target(target)
@@ -57,15 +78,20 @@ def find_lexicon_entry(lexicon: list[dict[str, Any]], target: str) -> dict[str, 
         if (entry.get("woccon") or "").lower() == tl:
             return entry
 
+    eng_matches: list[dict[str, Any]] = []
     for entry in lexicon:
         eng = (entry.get("english") or "").lower()
         if not eng:
             continue
         if eng == tl:
-            return entry
+            eng_matches.append(entry)
+            continue
         for part in re.split(r"[,;/]", eng):
             if part.strip() == tl:
-                return entry
+                eng_matches.append(entry)
+                break
+    if eng_matches:
+        return _prefer_lexicon_entry(eng_matches)
 
     eng_matches = [
         e for e in lexicon if tl in (e.get("english") or "").lower()
@@ -85,21 +111,31 @@ def find_lexicon_entry(lexicon: list[dict[str, Any]], target: str) -> dict[str, 
 def _pronunciation_for_entry(
     lexicon: list[dict[str, Any]], entry: dict[str, Any]
 ) -> str | None:
-    pron = normalize_pronunciation(entry.get("pronunciation"))
-    if pron:
-        return pron
+    candidates: list[str] = []
+    seen: set[str] = set()
+
+    def add(raw: str | None) -> None:
+        for guide in pronunciation_guide_candidates(raw):
+            key = guide.casefold()
+            if key in seen:
+                continue
+            seen.add(key)
+            candidates.append(guide)
+
+    add(entry.get("pronunciation"))
     eng = (entry.get("english") or "").lower()
-    if not eng:
-        return None
-    for row in lexicon:
-        if not row.get("is_base_entry"):
-            continue
-        if (row.get("english") or "").lower() != eng:
-            continue
-        base_pron = normalize_pronunciation(row.get("pronunciation"))
-        if base_pron:
-            return base_pron
-    return None
+    if eng:
+        for row in lexicon:
+            if not row.get("is_base_entry"):
+                continue
+            if (row.get("english") or "").lower() != eng:
+                continue
+            add(row.get("pronunciation"))
+
+    for guide in candidates:
+        if resolve_pronunciation_with_audio(guide):
+            return guide
+    return candidates[0] if candidates else None
 
 
 def resolve_pronunciation_response(
@@ -116,6 +152,8 @@ def resolve_pronunciation_response(
         return None
 
     pronunciation = _pronunciation_for_entry(lexicon, entry)
+    if pronunciation:
+        pronunciation = primary_pronunciation_guide(pronunciation) or pronunciation
     woccon = (entry.get("woccon") or "").strip()
     english = (entry.get("english") or "").strip()
 
